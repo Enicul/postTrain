@@ -148,6 +148,49 @@ Status:
 Open. If router work resumes, add forced train anchors for real-tool-style
 capex/source-support deep research before adopting social repair as canonical.
 
+## F-2026-06-30-019 - Risk contract v0.1 fixed schema but failed real medium transfer
+
+Symptom:
+
+`risk_contract_repair_v0.1` added the `medium` label and achieved strong internal
+metrics:
+
+```text
+internal test accuracy: 0.9928
+internal test macro F1: 0.9073
+medium recall on internal test: 16/16
+```
+
+But realistic holdouts failed:
+
+```text
+golden_v0.1_risk_all: accuracy 0.3923, macro F1 0.3349, medium recall 0/69
+long_research_repair_25_risk_all: accuracy 0.0000, macro F1 0.0000, medium recall 0/25
+```
+
+Cause:
+
+The synthetic medium rows taught short, explicit risk-review phrasing. The real
+holdouts express medium risk through long research memo structure, partial
+support, missing risk coverage, and user-decision nuance. The model learned the
+new label exists but not the real phrasing distribution.
+
+Change:
+
+Recorded `risk_contract_repair_v0.1` as a useful failed checkpoint and updated
+the TODO to build `risk_contract_repair_v0.1b` from real long-research
+medium-risk rows.
+
+Effect:
+
+We now have evidence for the interview story: adding a label schema is not
+enough; post-training data must cover the real trajectory language where the
+verifier will be used.
+
+Status:
+
+Open. Do not start GPU fine-tuning from risk v0.1.
+
 ## F-2026-06-30-001 - Python 3.9 `datetime.UTC` import failure
 
 Symptom:

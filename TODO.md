@@ -47,11 +47,17 @@
 
 ## P1 - Risk Reviewer Improvement
 
-- [ ] Inspect risk reviewer confusion matrix.
-- [ ] Decide whether target should be `risk_level`, `requires_human_gate`, or a
+- [x] Inspect risk reviewer confusion matrix.
+- [x] Decide whether target should be `risk_level`, `requires_human_gate`, or a
   multi-label risk flag task.
-- [ ] Add high-risk negative examples: all-in, leverage, direct buy/sell,
+- [x] Add high-risk negative examples: all-in, leverage, direct buy/sell,
   unsupported confidence, missing risk.
+- [x] Build `risk_contract_repair_v0.1` with `medium`, human-gate,
+  overconfidence, position sizing, panic selling, and missing-risk cases.
+- [x] Run risk-only CPU baseline and realistic holdout under summary recording.
+- [ ] Build `risk_contract_repair_v0.1b` with real long-research medium-risk
+  examples. v0.1 added the `medium` schema but collapsed on realistic medium
+  holdouts.
 
 ## P1 - Router Boundary Repair
 
@@ -90,10 +96,12 @@
   to `fast_answer`.
 - [ ] Repair `router_social_boundary_repair_v0.1` tradeoff: keep the golden
   social improvement while restoring real-tool trace accuracy to 1.0.
-- [ ] Build `risk_contract_repair_v0.1` with `medium` and human-gate semantics.
-- [ ] Build `citation_contract_repair_v0.1` that separates:
+- [x] Build `risk_contract_repair_v0.1` with `medium` and human-gate semantics.
+- [x] Build `citation_contract_repair_v0.1` that separates:
   `candidate_evidence`, `verified_support`, `partial_support`, `insufficient`,
   and `contradicts`.
+- [ ] Collect real official/IR/SEC/press-release/transcript/news spans under
+  `citation_contract_repair_v0.1`.
 - [x] Rerun router CPU baseline after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.
   Use default summary recording unless a full error-analysis run is explicitly

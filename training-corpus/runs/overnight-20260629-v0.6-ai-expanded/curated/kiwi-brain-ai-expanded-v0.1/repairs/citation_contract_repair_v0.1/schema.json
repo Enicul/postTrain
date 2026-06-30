@@ -1,0 +1,55 @@
+{
+  "contract_id": "citation_contract_repair_v0.1",
+  "created_at": "2026-06-30T15:00:00Z",
+  "purpose": "Separate evidence retrieval from verified claim support before training a citation verifier.",
+  "input_required_fields": [
+    "claim",
+    "evidence_span",
+    "source_url",
+    "source_class",
+    "as_of"
+  ],
+  "optional_fields": [
+    "evidence_id",
+    "evidence_title",
+    "claim_scope",
+    "ticker",
+    "captured_at",
+    "published_at",
+    "point_in_time_allowed"
+  ],
+  "labels": {
+    "candidate_evidence": {
+      "definition": "The span is relevant enough to inspect, but support has not been established.",
+      "allowed_as_final_support": false,
+      "training_use": "retrieval/ranking positive, citation verifier negative-or-neutral"
+    },
+    "verified_support": {
+      "definition": "The span directly supports the claim under point-in-time constraints.",
+      "allowed_as_final_support": true,
+      "training_use": "citation verifier positive"
+    },
+    "partial_support": {
+      "definition": "The span supports only part of a composite claim or supports a weaker version of it.",
+      "allowed_as_final_support": false,
+      "training_use": "hard boundary negative for overclaiming"
+    },
+    "insufficient": {
+      "definition": "The span is topical or adjacent but does not provide enough evidence for the claim.",
+      "allowed_as_final_support": false,
+      "training_use": "hard negative"
+    },
+    "contradicts": {
+      "definition": "The span conflicts with or materially weakens the claim.",
+      "allowed_as_final_support": false,
+      "training_use": "contradiction/risk evidence"
+    }
+  },
+  "guardrails": [
+    "A headline can be candidate_evidence but is rarely verified_support for a financial thesis.",
+    "A social post is opinion evidence unless backed by official or auditable source spans.",
+    "Composite claims require each subclaim to be supported or the label becomes partial_support.",
+    "Any source published after as_of is temporal_leakage and cannot be verified_support.",
+    "Do not train final-answer citation correctness from candidate_evidence rows without relabeling."
+  ]
+}

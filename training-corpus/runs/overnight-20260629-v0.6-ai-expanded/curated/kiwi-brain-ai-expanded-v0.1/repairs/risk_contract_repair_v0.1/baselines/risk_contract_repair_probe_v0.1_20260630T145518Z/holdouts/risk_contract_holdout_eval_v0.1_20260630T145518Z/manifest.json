@@ -1,0 +1,24 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "command": "training-corpus/scripts/evaluate_baseline_holdouts.py --baseline-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts --run-id risk_contract_holdout_eval_v0.1_20260630T145518Z --record-mode summary",
+  "created_at": "2026-06-30T14:55:34Z",
+  "cwd": "/Users/lucine/Documents/Job/projects/postTrain",
+  "git": {
+    "branch": "main",
+    "commit": "7dee1eb0abe37cb9e9dccd6e710d65eaf3d30518",
+    "diff_stat": "",
+    "status_short": "?? training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/\n?? training-corpus/scripts/build_risk_contract_repair_v01.py"
+  },
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z",
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full holdout prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "risk_contract_holdout_eval_v0.1_20260630T145518Z"
+}

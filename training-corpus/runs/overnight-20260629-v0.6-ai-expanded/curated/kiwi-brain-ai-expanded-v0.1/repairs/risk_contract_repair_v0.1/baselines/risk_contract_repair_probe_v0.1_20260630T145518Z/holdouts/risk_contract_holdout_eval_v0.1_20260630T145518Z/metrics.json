@@ -1,0 +1,208 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "completed_at": "2026-06-30T14:55:34Z",
+  "created_at": "2026-06-30T14:55:34Z",
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "holdouts": {
+    "golden_v0.1_risk_all": {
+      "artifacts": {
+        "error_sample_rows": 110,
+        "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z/golden_v0.1_risk_all/error_samples.jsonl",
+        "errors": 110,
+        "mode": "summary",
+        "prediction_sample_rows": 181,
+        "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z/golden_v0.1_risk_all/prediction_samples.jsonl",
+        "rows": 181
+      },
+      "classification_report": {
+        "accuracy": 0.39226519337016574,
+        "high": {
+          "f1-score": 0.6511627906976745,
+          "precision": 0.9130434782608695,
+          "recall": 0.5060240963855421,
+          "support": 83.0
+        },
+        "low": {
+          "f1-score": 0.35365853658536583,
+          "precision": 0.21481481481481482,
+          "recall": 1.0,
+          "support": 29.0
+        },
+        "macro avg": {
+          "f1-score": 0.3349404424276801,
+          "precision": 0.37595276435856145,
+          "recall": 0.5020080321285141,
+          "support": 181.0
+        },
+        "medium": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 69.0
+        },
+        "weighted avg": {
+          "f1-score": 0.3552630341927215,
+          "precision": 0.4531062890899547,
+          "recall": 0.39226519337016574,
+          "support": 181.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            42,
+            41,
+            0
+          ],
+          [
+            0,
+            29,
+            0
+          ],
+          [
+            4,
+            65,
+            0
+          ]
+        ]
+      },
+      "dataset": "risk_reviewer",
+      "holdout": "golden_v0.1_risk_all",
+      "metrics": {
+        "accuracy_all_rows": 0.3923,
+        "accuracy_seen_labels_only": 0.3923,
+        "comparable_rows": 181,
+        "macro_f1_all_labels": 0.3349,
+        "macro_f1_seen_labels_only": 0.3349,
+        "rows": 181,
+        "schema_gap": false,
+        "unseen_true_labels": [],
+        "weighted_f1_all_labels": 0.3553
+      },
+      "model_labels": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "prediction_distribution": {
+        "high": 46,
+        "low": 135
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/all.jsonl",
+      "true_label_distribution": {
+        "high": 83,
+        "low": 29,
+        "medium": 69
+      },
+      "why": "Older risk reviewer rows with partial-support research-risk phrasing."
+    },
+    "long_research_repair_25_risk_all": {
+      "artifacts": {
+        "error_sample_rows": 25,
+        "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z/long_research_repair_25_risk_all/error_samples.jsonl",
+        "errors": 25,
+        "mode": "summary",
+        "prediction_sample_rows": 25,
+        "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z/long_research_repair_25_risk_all/prediction_samples.jsonl",
+        "rows": 25
+      },
+      "classification_report": {
+        "accuracy": 0.0,
+        "high": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "low": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "macro avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        },
+        "medium": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        },
+        "weighted avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            25,
+            0
+          ]
+        ]
+      },
+      "dataset": "risk_reviewer",
+      "holdout": "long_research_repair_25_risk_all",
+      "metrics": {
+        "accuracy_all_rows": 0.0,
+        "accuracy_seen_labels_only": 0.0,
+        "comparable_rows": 25,
+        "macro_f1_all_labels": 0.0,
+        "macro_f1_seen_labels_only": 0.0,
+        "rows": 25,
+        "schema_gap": false,
+        "unseen_true_labels": [],
+        "weighted_f1_all_labels": 0.0
+      },
+      "model_labels": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "prediction_distribution": {
+        "low": 25
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/risk_reviewer/all.jsonl",
+      "true_label_distribution": {
+        "medium": 25
+      },
+      "why": "Long research memo risk labels with medium-risk and human-gate fields."
+    }
+  },
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full holdout prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "risk_contract_holdout_eval_v0.1_20260630T145518Z"
+}

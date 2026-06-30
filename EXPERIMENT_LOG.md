@@ -693,3 +693,98 @@ Next:
 
 Move to `risk_contract_repair_v0.1`. Router social repair can be revisited with
 forced train anchors for real-tool-style capex/source-support deep research.
+
+## EXP-2026-06-30-011 - Risk contract repair v0.1
+
+Goal:
+
+Add an explicit `medium` risk contract and human-gate semantics before any GPU
+fine-tuning.
+
+Data:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/risk_reviewer
+```
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/build_risk_contract_repair_v01.py
+
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/repaired_datasets \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines \
+  --run-id risk_contract_repair_probe_v0.1_20260630T145518Z \
+  --datasets risk_reviewer \
+  --record-mode summary
+
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
+  --baseline-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts \
+  --run-id risk_contract_holdout_eval_v0.1_20260630T145518Z \
+  --record-mode summary
+```
+
+Artifacts:
+
+```text
+training-corpus/scripts/build_risk_contract_repair_v01.py
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z
+```
+
+Metrics:
+
+| Eval | Accuracy | Macro F1 | Medium behavior |
+| --- | ---: | ---: | --- |
+| internal dev | 0.9970 | 0.9622 | 20/20 medium recall |
+| internal test | 0.9928 | 0.9073 | 16/16 medium recall |
+| golden_v0.1_risk_all | 0.3923 | 0.3349 | 0/69 medium recall |
+| long_research_repair_25_risk_all | 0.0000 | 0.0000 | 0/25 medium recall |
+
+Failure:
+
+The repair fixed the schema gap but did not transfer to real medium-risk
+long-research phrasing. See `F-2026-06-30-019`.
+
+Decision:
+
+Do not start GPU fine-tuning from this risk checkpoint. Build
+`risk_contract_repair_v0.1b` with real long-research medium examples before
+treating the risk reviewer as usable.
+
+Next:
+
+Move citation verifier work to schema design while risk repair waits for real
+medium examples.
+
+## EXP-2026-06-30-012 - Citation contract design v0.1
+
+Goal:
+
+Separate "candidate evidence" from actual span-level claim support before
+training the next citation verifier.
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/schema.json
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/REPORT.md
+```
+
+Label contract:
+
+```text
+candidate_evidence
+verified_support
+partial_support
+insufficient
+contradicts
+```
+
+Decision:
+
+No training run yet. First collect real paragraph spans from official/IR/SEC,
+press release, transcript, and reputable news sources under this contract.

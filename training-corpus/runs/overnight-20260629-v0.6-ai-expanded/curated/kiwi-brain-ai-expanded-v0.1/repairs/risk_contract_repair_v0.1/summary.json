@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-06-30T14:55:09Z",
+  "decision": "Adds medium risk and explicit human-gate boundary rows. This is still a contract repair, not proof that a production risk gate is safe.",
+  "expanded_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1",
+  "generated_distribution": {
+    "dev": {
+      "high": 18,
+      "low": 6,
+      "medium": 20
+    },
+    "test": {
+      "high": 32,
+      "low": 9,
+      "medium": 16
+    },
+    "train": {
+      "high": 82,
+      "low": 51,
+      "medium": 96
+    }
+  },
+  "generated_rows": 330,
+  "original_distribution": {
+    "dev": {
+      "high": 1067,
+      "low": 533
+    },
+    "test": {
+      "high": 1067,
+      "low": 533
+    },
+    "train": {
+      "high": 5334,
+      "low": 2666
+    }
+  },
+  "original_rows": 11200,
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1",
+  "repair_id": "risk_contract_repair_v0.1",
+  "repaired_distribution": {
+    "dev": {
+      "high": 1085,
+      "low": 539,
+      "medium": 20
+    },
+    "test": {
+      "high": 1099,
+      "low": 542,
+      "medium": 16
+    },
+    "train": {
+      "high": 5416,
+      "low": 2717,
+      "medium": 96
+    }
+  },
+  "total_rows": 11530
+}

@@ -1,0 +1,17 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "created_at": "2026-06-30T14:55:18Z",
+  "datasets": [
+    "risk_reviewer"
+  ],
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "risk_contract_repair_probe_v0.1_20260630T145518Z",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/repaired_datasets"
+}

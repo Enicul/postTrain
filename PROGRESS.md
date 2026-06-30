@@ -37,6 +37,84 @@ This candidate improves `golden_v0.1_router_all` to 0.9012, but slightly
 regresses `real_tool_trace_pilot_10_router` to 0.9000. Keep router v0.1c as the
 canonical checkpoint until that tradeoff is repaired.
 
+Six-hour plan checkpoint:
+
+```text
+docs/NEXT_6H_PLAN_20260630.md
+```
+
+Runtime/KIWI card repairs completed in the Agent workspace before continuing
+postTrain:
+
+- Cloudflare Access no longer trusts localhost tunnel traffic as an auth bypass.
+- Empty password login fails closed in password mode.
+- Static default auth tokens were replaced with per-process random tokens unless
+  explicit env tokens are set.
+- Gateway settings reject localhost/private/link-local DNS targets in public
+  modes.
+- Codex search is bounded and races against DuckDuckGo fallback.
+- Thesis reasoning-only stream no longer triggers a second non-streaming LLM call.
+- Semantic memory sync is debounced on hot search paths.
+- Chat pipeline DB session scope is shortened around long market/search/LLM calls.
+- Watch and guardian loops now use bounded concurrency for slow external work.
+
+Risk contract repair checkpoint:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1
+```
+
+What changed:
+
+- Added 330 contract rows covering `low`, `medium`, and `high`.
+- Added explicit `requires_human_gate` labels for high-risk cases.
+- Added cases for all-in, leverage, panic selling, retirement concentration,
+  guaranteed returns, ignored bearish evidence, position sizing, and
+  medium-risk watch-trigger questions.
+
+Risk-only CPU baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z
+```
+
+Internal result:
+
+| Split | Accuracy | Macro F1 | Medium support | Medium F1 |
+| --- | ---: | ---: | ---: | ---: |
+| dev | 0.9970 | 0.9622 | 20 | 0.8889 |
+| test | 0.9928 | 0.9073 | 16 | 0.7273 |
+
+Realistic holdout:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1/baselines/risk_contract_repair_probe_v0.1_20260630T145518Z/holdouts/risk_contract_holdout_eval_v0.1_20260630T145518Z
+```
+
+| Holdout | Rows | Accuracy | Macro F1 | Decision |
+| --- | ---: | ---: | ---: | --- |
+| golden_v0.1_risk_all | 181 | 0.3923 | 0.3349 | medium transfer failed |
+| long_research_repair_25_risk_all | 25 | 0.0000 | 0.0000 | all medium rows predicted low |
+
+Decision:
+
+`risk_contract_repair_v0.1` fixed the label schema but not the real medium-risk
+behavior. Do not use it for GPU fine-tuning yet. Next risk work should add real
+long-research medium examples.
+
+Citation contract checkpoint:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1
+```
+
+Decision:
+
+Use five citation labels before training: `candidate_evidence`,
+`verified_support`, `partial_support`, `insufficient`, and `contradicts`.
+Do not train `citation_verifier_repair_v0.3` until real paragraph spans are
+collected under this contract.
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,
