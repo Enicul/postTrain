@@ -36,6 +36,7 @@ datasets/
 baselines/specialist_cpu_baselines_v0.1/
 baselines/specialist_cpu_first_training_20260630T030852Z/
 repairs/citation_verifier_repair_v0.1/
+repairs/citation_verifier_repair_v0.2/
 ```
 
 ## Baseline Results
@@ -94,6 +95,42 @@ Do not start citation-verifier GPU fine-tuning yet. Build
 `citation_verifier_repair_v0.2` with more hard negatives, cleaner positive
 official spans, partial-support boundary cases, and rare negative examples.
 
+## Citation Verifier Repair v0.2
+
+Repair pack:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2
+```
+
+What changed:
+
+- Added `build_citation_repair_v02.py`.
+- Generated train-only citation candidates from the original frozen train split.
+- Kept dev/test unchanged for comparability.
+- Ran a local ablation before choosing which generated rows to train on.
+- Selected dataset-specific augmentation instead of using every synthetic row.
+
+Selected strategy:
+
+| Dataset | Train rows | Added rows |
+| --- | ---: | --- |
+| citation_verifier_url | 178 | hard negatives + missing evidence |
+| citation_support_binary | 148 | hard negatives only |
+
+Repair probe results:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy | Status |
+| --- | ---: | ---: | ---: | --- |
+| v0.2 citation_verifier_url | 0.3871 | 0.3333 | 0.4839 | improved, still not enough |
+| v0.2 citation_support_binary | 0.4194 | 0.4139 | 0.5806 | improved, still not enough |
+
+Decision:
+
+v0.2 is a real repair signal, but it is still not strong enough for citation
+verifier GPU fine-tuning. The next step is real span audit, not more synthetic
+flooding.
+
 ## Learning Source Registry
 
 `LEARNING_SOURCES.md` has been added as the canonical place to record external
@@ -114,6 +151,10 @@ python3 training-corpus/scripts/train_specialist_baselines.py --run-id smoke_rou
 python3 training-corpus/scripts/train_specialist_baselines.py --run-id specialist_cpu_first_training_20260630T030852Z
 python3 training-corpus/scripts/repair_citation_verifier.py --repair-id citation_verifier_repair_v0.1
 python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/repaired_datasets --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines --run-id citation_repair_probe_v0.1 --datasets citation_verifier_url,citation_support_binary
+python3 -m py_compile training-corpus/scripts/build_citation_repair_v02.py training-corpus/scripts/train_specialist_baselines.py
+python3 training-corpus/scripts/build_citation_repair_v02.py --help
+python3 training-corpus/scripts/build_citation_repair_v02.py
+python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines --run-id citation_repair_probe_v0.2 --datasets citation_verifier_url,citation_support_binary
 git push -u origin main
 ```
 
@@ -127,9 +168,9 @@ The imported baseline checkpoint reports:
 
 Continue citation verifier data repair and learning-source registry:
 
-1. build `citation_verifier_repair_v0.2`,
-2. add hard negatives and cleaner positive / partial / insufficient examples,
-3. rerun the repair baseline,
+1. add real official positive spans and audited paragraph spans,
+2. add partial-support boundary cases and rare insufficient / contradict rows,
+3. rerun the repair baseline as `citation_verifier_repair_v0.3`,
 4. only then decide whether a small LLM verifier is worth GPU time,
 5. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

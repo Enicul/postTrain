@@ -123,3 +123,24 @@ Consequence:
 The next citation-verifier work should add better data rather than train a
 larger model: hard negatives, clean positive official spans, partial-support
 boundary cases, and more insufficient/contradict examples.
+
+## D-2026-06-30-008 - Treat v0.2 as data-repair evidence, not GPU readiness
+
+Decision:
+
+Do not start citation-verifier GPU fine-tuning after
+`citation_verifier_repair_v0.2`.
+
+Why:
+
+The targeted train-only repair improved the five-way and binary probes, but both
+tasks still underperform the majority baseline on test accuracy. The ablation
+also showed that adding every synthetic row can hurt the cleaner binary support
+boundary, so more synthetic volume is not automatically better.
+
+Consequence:
+
+The next citation-verifier iteration should prioritize audited real evidence
+spans: official positive paragraphs, partial-support boundaries, and rare
+contradict / insufficient rows. GPU work should wait until the repair baseline
+is strong enough to make model capacity the likely bottleneck.

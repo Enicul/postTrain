@@ -248,3 +248,62 @@ Create citation_verifier_repair_v0.2 with more hard negatives, clean positive
 official spans, partial-support boundary cases, and rare insufficient/contradict
 examples. Do not start citation-verifier GPU fine-tuning before this repair.
 ```
+
+## CP-2026-06-30-007 - Citation verifier repair v0.2
+
+Status:
+
+```text
+complete
+```
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/build_citation_repair_v02.py
+
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets \
+  --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines \
+  --run-id citation_repair_probe_v0.2 \
+  --datasets citation_verifier_url,citation_support_binary
+```
+
+Output:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2
+```
+
+Artifacts:
+
+```text
+README.md
+manifest.json
+candidate_generation_pool.jsonl
+repaired_datasets/citation_verifier_url/
+repaired_datasets/citation_support_binary/
+baselines/citation_repair_probe_v0.2/
+```
+
+Metrics:
+
+| Dataset / probe | Train rows | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | ---: | ---: | ---: | ---: |
+| citation_verifier_url | 178 | 0.3871 | 0.3333 | 0.4839 |
+| citation_support_binary | 148 | 0.4194 | 0.4139 | 0.5806 |
+
+Decision:
+
+The v0.2 repair improved both probe families, especially five-way macro F1, but
+still did not beat the majority baseline on test accuracy. Continue data repair
+before GPU fine-tuning.
+
+Resume:
+
+```text
+Create citation_verifier_repair_v0.3 from audited real citation spans: official
+positive paragraphs, partial-support boundaries, and rare contradict /
+insufficient rows. Keep dev/test fixed or create a separately named audited
+golden set if the evaluation split changes.
+```

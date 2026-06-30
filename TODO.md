@@ -30,13 +30,16 @@
 - [x] Add repaired citation-span audit set.
 - [x] Rerun `train_specialist_baselines.py`.
 - [x] Log before/after metrics in `EXPERIMENT_LOG.md`.
-- [ ] Build `citation_verifier_repair_v0.2` with hard negatives that share
+- [x] Build `citation_verifier_repair_v0.2` with hard negatives that share
   topical overlap but do not support the exact claim.
-- [ ] Add cleaner positive official-source spans for composite claims.
+- [ ] Add cleaner positive official-source spans for composite claims from real
+  official/IR/SEC/press-release paragraphs.
 - [ ] Add partial-support boundary cases where one evidence span supports only
   part of the claim.
 - [ ] Add more `insufficient` and `contradicts` rows before trusting five-way
   support typing.
+- [ ] Build `citation_verifier_repair_v0.3` from audited real spans instead of
+  relying on synthetic train augmentation.
 
 ## P1 - Risk Reviewer Improvement
 

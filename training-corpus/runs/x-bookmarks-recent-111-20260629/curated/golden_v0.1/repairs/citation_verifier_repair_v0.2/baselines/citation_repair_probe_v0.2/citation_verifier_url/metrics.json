@@ -1,0 +1,379 @@
+{
+  "artifacts": {
+    "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/metrics.json",
+    "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/model.joblib",
+    "predictions": {
+      "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_dev.jsonl",
+      "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_test.jsonl",
+      "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_train.jsonl"
+    }
+  },
+  "dataset": "citation_verifier_url",
+  "labels": [
+    "contradicts",
+    "insufficient",
+    "not_supported",
+    "partial_support",
+    "supports"
+  ],
+  "majority_baseline": {
+    "accuracy": 0.4839,
+    "macro_f1": 0.163,
+    "predicted_label": "not_supported"
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.3333333333333333,
+        "contradicts": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "insufficient": {
+          "f1-score": 0.6666666666666666,
+          "precision": 0.6666666666666666,
+          "recall": 0.6666666666666666,
+          "support": 3.0
+        },
+        "macro avg": {
+          "f1-score": 0.258029689608637,
+          "precision": 0.26153846153846155,
+          "recall": 0.25487179487179484,
+          "support": 27.0
+        },
+        "not_supported": {
+          "f1-score": 0.3076923076923077,
+          "precision": 0.3076923076923077,
+          "recall": 0.3076923076923077,
+          "support": 13.0
+        },
+        "partial_support": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1.0
+        },
+        "supports": {
+          "f1-score": 0.3157894736842105,
+          "precision": 0.3333333333333333,
+          "recall": 0.3,
+          "support": 10.0
+        },
+        "weighted avg": {
+          "f1-score": 0.33918128654970764,
+          "precision": 0.345679012345679,
+          "recall": 0.3333333333333333,
+          "support": 27.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            4,
+            1,
+            6
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            7,
+            0,
+            3
+          ]
+        ]
+      },
+      "label_distribution": {
+        "insufficient": 3,
+        "not_supported": 13,
+        "partial_support": 1,
+        "supports": 10
+      },
+      "metrics": {
+        "accuracy": 0.3333,
+        "macro_f1": 0.258,
+        "weighted_f1": 0.3392
+      },
+      "prediction_distribution": {
+        "contradicts": 1,
+        "insufficient": 3,
+        "not_supported": 13,
+        "partial_support": 1,
+        "supports": 9
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.3870967741935484,
+        "contradicts": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "insufficient": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "macro avg": {
+          "f1-score": 0.33333333333333337,
+          "precision": 0.3341176470588235,
+          "recall": 0.3352380952380952,
+          "support": 31.0
+        },
+        "not_supported": {
+          "f1-score": 0.5,
+          "precision": 0.47058823529411764,
+          "recall": 0.5333333333333333,
+          "support": 15.0
+        },
+        "partial_support": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 6.0
+        },
+        "supports": {
+          "f1-score": 0.16666666666666666,
+          "precision": 0.2,
+          "recall": 0.14285714285714285,
+          "support": 7.0
+        },
+        "weighted avg": {
+          "f1-score": 0.3763440860215054,
+          "precision": 0.3696394686907021,
+          "recall": 0.3870967741935484,
+          "support": 31.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            8,
+            1,
+            4
+          ],
+          [
+            3,
+            0,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            6,
+            0,
+            1
+          ]
+        ]
+      },
+      "label_distribution": {
+        "insufficient": 3,
+        "not_supported": 15,
+        "partial_support": 6,
+        "supports": 7
+      },
+      "metrics": {
+        "accuracy": 0.3871,
+        "macro_f1": 0.3333,
+        "weighted_f1": 0.3763
+      },
+      "prediction_distribution": {
+        "contradicts": 5,
+        "insufficient": 3,
+        "not_supported": 17,
+        "partial_support": 1,
+        "supports": 5
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.8202247191011236,
+        "contradicts": {
+          "f1-score": 0.6666666666666666,
+          "precision": 0.5,
+          "recall": 1.0,
+          "support": 4.0
+        },
+        "insufficient": {
+          "f1-score": 0.967032967032967,
+          "precision": 0.9361702127659575,
+          "recall": 1.0,
+          "support": 44.0
+        },
+        "macro avg": {
+          "f1-score": 0.7544342788993952,
+          "precision": 0.7442037395228885,
+          "recall": 0.8046476761619189,
+          "support": 178.0
+        },
+        "not_supported": {
+          "f1-score": 0.8228571428571428,
+          "precision": 0.8181818181818182,
+          "recall": 0.8275862068965517,
+          "support": 87.0
+        },
+        "partial_support": {
+          "f1-score": 0.5714285714285714,
+          "precision": 0.6666666666666666,
+          "recall": 0.5,
+          "support": 20.0
+        },
+        "supports": {
+          "f1-score": 0.7441860465116279,
+          "precision": 0.8,
+          "recall": 0.6956521739130435,
+          "support": 23.0
+        },
+        "weighted avg": {
+          "f1-score": 0.81657044462375,
+          "precision": 0.8208238251508632,
+          "recall": 0.8202247191011236,
+          "support": 178.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            44,
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            3,
+            72,
+            4,
+            4
+          ],
+          [
+            0,
+            0,
+            10,
+            10,
+            0
+          ],
+          [
+            0,
+            0,
+            6,
+            1,
+            16
+          ]
+        ]
+      },
+      "label_distribution": {
+        "contradicts": 4,
+        "insufficient": 44,
+        "not_supported": 87,
+        "partial_support": 20,
+        "supports": 23
+      },
+      "metrics": {
+        "accuracy": 0.8202,
+        "macro_f1": 0.7544,
+        "weighted_f1": 0.8166
+      },
+      "prediction_distribution": {
+        "contradicts": 8,
+        "insufficient": 47,
+        "not_supported": 88,
+        "partial_support": 15,
+        "supports": 20
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+    "Feature text is built from input fields only; label fields are not included as model features."
+  ],
+  "rows": {
+    "dev": 27,
+    "test": 31,
+    "train": 178
+  },
+  "target": "support_type",
+  "train_distribution": {
+    "contradicts": 4,
+    "insufficient": 44,
+    "not_supported": 87,
+    "partial_support": 20,
+    "supports": 23
+  },
+  "why": "Feature repair probe: include source URL/domain as source-quality context without trace-id leakage."
+}

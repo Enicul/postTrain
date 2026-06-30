@@ -1,0 +1,23 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "command": "training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines --run-id citation_repair_probe_v0.2 --datasets citation_verifier_url,citation_support_binary",
+  "created_at": "2026-06-30T05:29:47Z",
+  "cwd": "/Users/lucine/Documents/Job/projects/postTrain",
+  "datasets": [
+    "citation_verifier_url",
+    "citation_support_binary"
+  ],
+  "git": {
+    "branch": "main",
+    "commit": "409c2eee107caa8cffbed50dd1b11565ce45c622",
+    "diff_stat": "CHECKPOINTS.md    | 59 +++++++++++++++++++++++++++++++++\n DECISIONS.md      | 21 ++++++++++++\n EXPERIMENT_LOG.md | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++++++\n FAILURE_LOG.md    | 43 ++++++++++++++++++++++++\n PROGRESS.md       | 47 ++++++++++++++++++++++++--\n TODO.md           |  7 ++--\n docs/DATASETS.md  | 44 +++++++++++++++++++++++++\n 7 files changed, 315 insertions(+), 5 deletions(-)",
+    "status_short": "M CHECKPOINTS.md\n M DECISIONS.md\n M EXPERIMENT_LOG.md\n M FAILURE_LOG.md\n M PROGRESS.md\n M TODO.md\n M docs/DATASETS.md\n?? training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/\n?? training-corpus/scripts/build_citation_repair_v02.py"
+  },
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2",
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "run_id": "citation_repair_probe_v0.2",
+  "sklearn_version": "1.6.1",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets"
+}

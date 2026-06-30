@@ -70,6 +70,47 @@ This repair clarified failure modes but did not make the citation verifier ready
 for GPU fine-tuning. Next data work should add hard negatives, cleaner positive
 official spans, partial-support boundary cases, and rare negative examples.
 
+## Citation Verifier Repair v0.2
+
+Path:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2
+```
+
+Purpose:
+
+Run a train-only targeted augmentation loop based on the v0.1 failure taxonomy.
+The original dev/test splits are unchanged, so v0.2 can be compared with v0.1.
+
+Known contents:
+
+- `candidate_generation_pool.jsonl`,
+- `manifest.json`,
+- `repaired_datasets/citation_verifier_url`,
+- `repaired_datasets/citation_support_binary`,
+- `baselines/citation_repair_probe_v0.2`.
+
+Selected training strategy:
+
+| Dataset | Train rows | Generated rows used |
+| --- | ---: | --- |
+| citation_verifier_url | 178 | hard negatives + missing evidence |
+| citation_support_binary | 148 | hard negatives only |
+
+Key result:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | ---: | ---: | ---: |
+| v0.2 citation_verifier_url | 0.3871 | 0.3333 | 0.4839 |
+| v0.2 citation_support_binary | 0.4194 | 0.4139 | 0.5806 |
+
+Decision:
+
+This repair shows that the taxonomy is actionable, but the verifier is still not
+GPU-ready. Next data work should use audited real spans rather than more
+synthetic flooding.
+
 ## Data Boundaries
 
 - X/social/bookmark material is a seed, not truth.
@@ -85,3 +126,6 @@ official spans, partial-support boundary cases, and rare negative examples.
 - Risk data is enough for weak baseline, but target design may need adjustment.
 - Citation data is not yet good enough for GPU fine-tuning; v0.1 repair shows
   the main gap is data/schema quality, not just model capacity.
+- Citation verifier repair v0.2 improves the repair probes, but it still does
+  not beat the majority baseline on test accuracy. Continue real-span audit
+  before GPU fine-tuning.

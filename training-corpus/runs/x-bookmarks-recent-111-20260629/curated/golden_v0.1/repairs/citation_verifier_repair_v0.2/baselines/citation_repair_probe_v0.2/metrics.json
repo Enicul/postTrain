@@ -1,0 +1,603 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "completed_at": "2026-06-30T05:29:48Z",
+  "created_at": "2026-06-30T05:29:47Z",
+  "datasets": {
+    "citation_support_binary": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_support_binary/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_support_binary/model.joblib",
+        "predictions": {
+          "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_support_binary/predictions_dev.jsonl",
+          "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_support_binary/predictions_test.jsonl",
+          "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_support_binary/predictions_train.jsonl"
+        }
+      },
+      "dataset": "citation_support_binary",
+      "labels": [
+        "no_support",
+        "some_support"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.5806,
+        "macro_f1": 0.3673,
+        "predicted_label": "no_support"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.4074074074074074,
+            "macro avg": {
+              "f1-score": 0.4065934065934066,
+              "precision": 0.41666666666666663,
+              "recall": 0.4147727272727273,
+              "support": 27.0
+            },
+            "no_support": {
+              "f1-score": 0.42857142857142855,
+              "precision": 0.5,
+              "recall": 0.375,
+              "support": 16.0
+            },
+            "some_support": {
+              "f1-score": 0.38461538461538464,
+              "precision": 0.3333333333333333,
+              "recall": 0.45454545454545453,
+              "support": 11.0
+            },
+            "weighted avg": {
+              "f1-score": 0.41066341066341067,
+              "precision": 0.43209876543209874,
+              "recall": 0.4074074074074074,
+              "support": 27.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "no_support",
+              "some_support"
+            ],
+            "rows": [
+              [
+                6,
+                10
+              ],
+              [
+                6,
+                5
+              ]
+            ]
+          },
+          "label_distribution": {
+            "no_support": 16,
+            "some_support": 11
+          },
+          "metrics": {
+            "accuracy": 0.4074,
+            "macro_f1": 0.4066,
+            "weighted_f1": 0.4107
+          },
+          "prediction_distribution": {
+            "no_support": 12,
+            "some_support": 15
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.41935483870967744,
+            "macro avg": {
+              "f1-score": 0.41386554621848737,
+              "precision": 0.41666666666666663,
+              "recall": 0.4145299145299145,
+              "support": 31.0
+            },
+            "no_support": {
+              "f1-score": 0.47058823529411764,
+              "precision": 0.5,
+              "recall": 0.4444444444444444,
+              "support": 18.0
+            },
+            "some_support": {
+              "f1-score": 0.35714285714285715,
+              "precision": 0.3333333333333333,
+              "recall": 0.38461538461538464,
+              "support": 13.0
+            },
+            "weighted avg": {
+              "f1-score": 0.42301436703713746,
+              "precision": 0.4301075268817204,
+              "recall": 0.41935483870967744,
+              "support": 31.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "no_support",
+              "some_support"
+            ],
+            "rows": [
+              [
+                8,
+                10
+              ],
+              [
+                8,
+                5
+              ]
+            ]
+          },
+          "label_distribution": {
+            "no_support": 18,
+            "some_support": 13
+          },
+          "metrics": {
+            "accuracy": 0.4194,
+            "macro_f1": 0.4139,
+            "weighted_f1": 0.423
+          },
+          "prediction_distribution": {
+            "no_support": 16,
+            "some_support": 15
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.6959459459459459,
+            "macro avg": {
+              "f1-score": 0.6800384338217631,
+              "precision": 0.6904239766081871,
+              "recall": 0.7307862679955703,
+              "support": 148.0
+            },
+            "no_support": {
+              "f1-score": 0.7513812154696132,
+              "precision": 0.8947368421052632,
+              "recall": 0.6476190476190476,
+              "support": 105.0
+            },
+            "some_support": {
+              "f1-score": 0.6086956521739131,
+              "precision": 0.4861111111111111,
+              "recall": 0.813953488372093,
+              "support": 43.0
+            },
+            "weighted avg": {
+              "f1-score": 0.709925274782349,
+              "precision": 0.7760145013434486,
+              "recall": 0.6959459459459459,
+              "support": 148.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "no_support",
+              "some_support"
+            ],
+            "rows": [
+              [
+                68,
+                37
+              ],
+              [
+                8,
+                35
+              ]
+            ]
+          },
+          "label_distribution": {
+            "no_support": 105,
+            "some_support": 43
+          },
+          "metrics": {
+            "accuracy": 0.6959,
+            "macro_f1": 0.68,
+            "weighted_f1": 0.7099
+          },
+          "prediction_distribution": {
+            "no_support": 76,
+            "some_support": 72
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features."
+      ],
+      "rows": {
+        "dev": 27,
+        "test": 31,
+        "train": 148
+      },
+      "target": "support_binary",
+      "train_distribution": {
+        "no_support": 105,
+        "some_support": 43
+      },
+      "why": "Schema repair probe: first determine whether a span gives any support before five-way support typing."
+    },
+    "citation_verifier_url": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/model.joblib",
+        "predictions": {
+          "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_dev.jsonl",
+          "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_test.jsonl",
+          "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/citation_verifier_url/predictions_train.jsonl"
+        }
+      },
+      "dataset": "citation_verifier_url",
+      "labels": [
+        "contradicts",
+        "insufficient",
+        "not_supported",
+        "partial_support",
+        "supports"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.4839,
+        "macro_f1": 0.163,
+        "predicted_label": "not_supported"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.3333333333333333,
+            "contradicts": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 0.0
+            },
+            "insufficient": {
+              "f1-score": 0.6666666666666666,
+              "precision": 0.6666666666666666,
+              "recall": 0.6666666666666666,
+              "support": 3.0
+            },
+            "macro avg": {
+              "f1-score": 0.258029689608637,
+              "precision": 0.26153846153846155,
+              "recall": 0.25487179487179484,
+              "support": 27.0
+            },
+            "not_supported": {
+              "f1-score": 0.3076923076923077,
+              "precision": 0.3076923076923077,
+              "recall": 0.3076923076923077,
+              "support": 13.0
+            },
+            "partial_support": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 1.0
+            },
+            "supports": {
+              "f1-score": 0.3157894736842105,
+              "precision": 0.3333333333333333,
+              "recall": 0.3,
+              "support": 10.0
+            },
+            "weighted avg": {
+              "f1-score": 0.33918128654970764,
+              "precision": 0.345679012345679,
+              "recall": 0.3333333333333333,
+              "support": 27.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                4,
+                1,
+                6
+              ],
+              [
+                0,
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                7,
+                0,
+                3
+              ]
+            ]
+          },
+          "label_distribution": {
+            "insufficient": 3,
+            "not_supported": 13,
+            "partial_support": 1,
+            "supports": 10
+          },
+          "metrics": {
+            "accuracy": 0.3333,
+            "macro_f1": 0.258,
+            "weighted_f1": 0.3392
+          },
+          "prediction_distribution": {
+            "contradicts": 1,
+            "insufficient": 3,
+            "not_supported": 13,
+            "partial_support": 1,
+            "supports": 9
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.3870967741935484,
+            "contradicts": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 0.0
+            },
+            "insufficient": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 3.0
+            },
+            "macro avg": {
+              "f1-score": 0.33333333333333337,
+              "precision": 0.3341176470588235,
+              "recall": 0.3352380952380952,
+              "support": 31.0
+            },
+            "not_supported": {
+              "f1-score": 0.5,
+              "precision": 0.47058823529411764,
+              "recall": 0.5333333333333333,
+              "support": 15.0
+            },
+            "partial_support": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 6.0
+            },
+            "supports": {
+              "f1-score": 0.16666666666666666,
+              "precision": 0.2,
+              "recall": 0.14285714285714285,
+              "support": 7.0
+            },
+            "weighted avg": {
+              "f1-score": 0.3763440860215054,
+              "precision": 0.3696394686907021,
+              "recall": 0.3870967741935484,
+              "support": 31.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                3,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                8,
+                1,
+                4
+              ],
+              [
+                3,
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0,
+                1
+              ]
+            ]
+          },
+          "label_distribution": {
+            "insufficient": 3,
+            "not_supported": 15,
+            "partial_support": 6,
+            "supports": 7
+          },
+          "metrics": {
+            "accuracy": 0.3871,
+            "macro_f1": 0.3333,
+            "weighted_f1": 0.3763
+          },
+          "prediction_distribution": {
+            "contradicts": 5,
+            "insufficient": 3,
+            "not_supported": 17,
+            "partial_support": 1,
+            "supports": 5
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.8202247191011236,
+            "contradicts": {
+              "f1-score": 0.6666666666666666,
+              "precision": 0.5,
+              "recall": 1.0,
+              "support": 4.0
+            },
+            "insufficient": {
+              "f1-score": 0.967032967032967,
+              "precision": 0.9361702127659575,
+              "recall": 1.0,
+              "support": 44.0
+            },
+            "macro avg": {
+              "f1-score": 0.7544342788993952,
+              "precision": 0.7442037395228885,
+              "recall": 0.8046476761619189,
+              "support": 178.0
+            },
+            "not_supported": {
+              "f1-score": 0.8228571428571428,
+              "precision": 0.8181818181818182,
+              "recall": 0.8275862068965517,
+              "support": 87.0
+            },
+            "partial_support": {
+              "f1-score": 0.5714285714285714,
+              "precision": 0.6666666666666666,
+              "recall": 0.5,
+              "support": 20.0
+            },
+            "supports": {
+              "f1-score": 0.7441860465116279,
+              "precision": 0.8,
+              "recall": 0.6956521739130435,
+              "support": 23.0
+            },
+            "weighted avg": {
+              "f1-score": 0.81657044462375,
+              "precision": 0.8208238251508632,
+              "recall": 0.8202247191011236,
+              "support": 178.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                4,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                44,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                3,
+                72,
+                4,
+                4
+              ],
+              [
+                0,
+                0,
+                10,
+                10,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                1,
+                16
+              ]
+            ]
+          },
+          "label_distribution": {
+            "contradicts": 4,
+            "insufficient": 44,
+            "not_supported": 87,
+            "partial_support": 20,
+            "supports": 23
+          },
+          "metrics": {
+            "accuracy": 0.8202,
+            "macro_f1": 0.7544,
+            "weighted_f1": 0.8166
+          },
+          "prediction_distribution": {
+            "contradicts": 8,
+            "insufficient": 47,
+            "not_supported": 88,
+            "partial_support": 15,
+            "supports": 20
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features."
+      ],
+      "rows": {
+        "dev": 27,
+        "test": 31,
+        "train": 178
+      },
+      "target": "support_type",
+      "train_distribution": {
+        "contradicts": 4,
+        "insufficient": 44,
+        "not_supported": 87,
+        "partial_support": 20,
+        "supports": 23
+      },
+      "why": "Feature repair probe: include source URL/domain as source-quality context without trace-id leakage."
+    }
+  },
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2",
+  "run_id": "citation_repair_probe_v0.2",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets"
+}

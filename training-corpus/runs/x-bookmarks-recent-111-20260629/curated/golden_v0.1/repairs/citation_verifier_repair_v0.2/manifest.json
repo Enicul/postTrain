@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-06-30T05:29:46Z",
+  "generation_counts": {
+    "ablation_decision": {
+      "citation_support_binary": "original + hard_negative_cross_trace_overlap",
+      "citation_verifier_url": "original + hard_negative_cross_trace_overlap + missing_evidence_insufficient"
+    },
+    "candidate_generation_counts": {
+      "atomic_positive_from_supports_claim_part": 34,
+      "hard_negative_cross_trace_overlap": 40,
+      "missing_evidence_insufficient": 30,
+      "original": 108,
+      "partial_support_boundary_upsample": 20
+    },
+    "selected_generation_counts": {
+      "citation_support_binary": {
+        "hard_negative_cross_trace_overlap": 40,
+        "original": 108
+      },
+      "citation_verifier_url": {
+        "hard_negative_cross_trace_overlap": 40,
+        "missing_evidence_insufficient": 30,
+        "original": 108
+      }
+    }
+  },
+  "git": {
+    "branch": "main",
+    "commit": "409c2eee107caa8cffbed50dd1b11565ce45c622",
+    "status_short": "M CHECKPOINTS.md\n M DECISIONS.md\n M EXPERIMENT_LOG.md\n M FAILURE_LOG.md\n M PROGRESS.md\n M TODO.md\n M docs/DATASETS.md\n?? training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/\n?? training-corpus/scripts/build_citation_repair_v02.py"
+  },
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "input_rows": {
+    "dev": 27,
+    "test": 31,
+    "train": 108
+  },
+  "leakage_controls": [
+    "train_only_augmentation",
+    "dev_test_unchanged",
+    "trace_id_provenance_only",
+    "missing_url_empty_string"
+  ],
+  "output_rows": {
+    "citation_support_binary": {
+      "dev": 27,
+      "test": 31,
+      "train": 148
+    },
+    "citation_verifier_url": {
+      "dev": 27,
+      "test": 31,
+      "train": 178
+    }
+  },
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "repair_id": "citation_verifier_repair_v0.2"
+}

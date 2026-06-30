@@ -1,0 +1,9 @@
+{
+  "completed": [
+    "citation_verifier_url",
+    "citation_support_binary"
+  ],
+  "run_id": "citation_repair_probe_v0.2",
+  "status": "complete",
+  "ts": "2026-06-30T05:29:48Z"
+}

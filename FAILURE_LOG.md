@@ -27,6 +27,49 @@ Status:
 
 Fixed.
 
+## F-2026-06-30-009 - All v0.2 generated citation rows hurt binary support
+
+Symptom:
+
+The first v0.2 repair attempt used every generated row in both repaired
+datasets. It improved the five-way probe's macro F1 versus v0.1, but it made the
+binary `some_support` / `no_support` probe worse:
+
+```text
+all generated rows binary test: accuracy 0.3548, macro F1 0.3376
+v0.1 binary test: accuracy 0.3871, macro F1 0.3767
+```
+
+Cause:
+
+The generated pool mixed several purposes: atomic positive rows, hard negatives,
+missing-evidence insufficient rows, and partial-support upsampling. That volume
+helped expose five-way boundaries but flooded the binary training split with
+synthetic boundary cases and weakened the cleaner support/no-support decision.
+
+Change:
+
+Ran a local ablation and selected different train-only augmentation policies:
+
+```text
+citation_verifier_url = original + hard_negative_cross_trace_overlap + missing_evidence_insufficient
+citation_support_binary = original + hard_negative_cross_trace_overlap
+```
+
+Effect:
+
+The selected strategy recovered and improved both repair probes:
+
+```text
+v0.2 citation_verifier_url test: accuracy 0.3871, macro F1 0.3333
+v0.2 citation_support_binary test: accuracy 0.4194, macro F1 0.4139
+```
+
+Status:
+
+Fixed in `citation_verifier_repair_v0.2`, but the broader citation verifier
+still needs real audited spans before GPU fine-tuning.
+
 ## F-2026-06-30-002 - Event logger keyword collision
 
 Symptom:

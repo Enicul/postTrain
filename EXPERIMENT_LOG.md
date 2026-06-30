@@ -219,3 +219,102 @@ partial_support_boundary
 rare_negative_class_boundary
 source_quality_feature_missing
 ```
+
+## EXP-2026-06-30-004 - Citation verifier repair v0.2
+
+Goal:
+
+Test whether targeted train-only citation augmentation can improve the weak
+v0.1 repair probes without leaking dev/test information.
+
+Data:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2
+```
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/build_citation_repair_v02.py
+
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets \
+  --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines \
+  --run-id citation_repair_probe_v0.2 \
+  --datasets citation_verifier_url,citation_support_binary
+```
+
+Artifacts:
+
+```text
+training-corpus/scripts/build_citation_repair_v02.py
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/README.md
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/manifest.json
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/candidate_generation_pool.jsonl
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets/
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines/citation_repair_probe_v0.2/
+```
+
+Candidate generation:
+
+| Rule | Candidate rows |
+| --- | ---: |
+| atomic_positive_from_supports_claim_part | 34 |
+| hard_negative_cross_trace_overlap | 40 |
+| missing_evidence_insufficient | 30 |
+| partial_support_boundary_upsample | 20 |
+
+Local ablation:
+
+| Strategy | Five-way test acc / macro F1 | Binary test acc / macro F1 | Decision |
+| --- | --- | --- | --- |
+| original URL probe | 0.2581 / 0.1390 | 0.3871 / 0.3767 | weak baseline |
+| hard negatives only | 0.3548 / 0.2400 | 0.4194 / 0.4139 | best binary repair |
+| missing-evidence only | 0.2581 / 0.2944 | 0.3871 / 0.3845 | helps five-way macro F1 |
+| hard negatives + missing evidence | 0.3871 / 0.3333 | 0.3871 / 0.3845 | best five-way repair |
+| all generated rows | 0.2581 / 0.2575 | 0.3548 / 0.3376 | hurt binary boundary |
+
+Selected training strategy:
+
+| Dataset | Train rows | Selected generated rows |
+| --- | ---: | --- |
+| citation_verifier_url | 178 | hard negatives + missing evidence |
+| citation_support_binary | 148 | hard negatives only |
+
+Metrics:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy | Interpretation |
+| --- | ---: | ---: | ---: | --- |
+| original citation_verifier | 0.2581 | 0.1441 | 0.4839 | failed baseline |
+| v0.1 citation_verifier_url | 0.2581 | 0.1390 | 0.4839 | URL/domain alone did not help |
+| v0.1 citation_support_binary | 0.3871 | 0.3767 | 0.5806 | clearer but weak |
+| v0.2 citation_verifier_url | 0.3871 | 0.3333 | 0.4839 | targeted repair improved five-way macro F1 |
+| v0.2 citation_support_binary | 0.4194 | 0.4139 | 0.5806 | targeted hard negatives improved binary macro F1 |
+
+Failures:
+
+- Adding every generated row hurt the binary support task. Synthetic data can
+  flood the training split and blur a cleaner decision boundary.
+- v0.2 still does not beat the majority baseline on accuracy. This is an
+  improvement, not a green light for GPU fine-tuning.
+- The repair is train-only and synthetic-derived. It still needs real official
+  paragraph spans and manually/LLM-audited support boundaries.
+
+Decision:
+
+Keep citation-verifier work in the data-repair phase. v0.2 proves that the
+failure taxonomy is actionable, but the next repair should collect higher
+quality real evidence spans instead of scaling model size.
+
+Next:
+
+Build a small human/LLM-audited citation golden set with:
+
+```text
+official positive spans
+partial-support boundaries
+rare contradicts / insufficient rows
+source-quality labels
+```
