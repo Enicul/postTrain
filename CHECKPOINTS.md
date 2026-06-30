@@ -509,3 +509,45 @@ Continue data-contract repair. New runs should use summary mode by default and
 inspect `error_samples*.jsonl`, not full `errors.jsonl`, unless a full-mode run
 is explicitly requested.
 ```
+
+## CP-2026-06-30-012 - Router contract repair v0.1c
+
+Status:
+
+```text
+complete
+```
+
+Current router repair checkpoint:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c
+```
+
+Canonical baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z
+```
+
+Canonical holdout eval:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/holdouts/router_contract_repair_holdout_eval_v0.1c_20260630T143256Z
+```
+
+Key results:
+
+| Holdout | Old acc | v0.1c acc | Schema gap after repair |
+| --- | ---: | ---: | --- |
+| golden_v0.1_router_all | 0.3023 | 0.8895 | no |
+| long_research_repair_25_router_all | 0.4800 | 0.9600 | no |
+| real_tool_trace_pilot_10_router | 0.0000 | 1.0000 | no |
+
+Resume:
+
+```text
+Do not start GPU router fine-tuning yet. Next router step is
+router_social_boundary_repair_v0.1 for long social/bookmark claims that are
+still sometimes downgraded to fast_answer.
+```

@@ -168,3 +168,23 @@ Future agents should read `docs/RECORDING_PROTOCOL.md` before running
 experiments. Git should carry scripts, configs, docs, summaries, small baseline
 artifacts, and capped samples. Heavy outputs belong on the server, in object
 storage, releases, or Git LFS.
+
+## D-2026-06-30-010 - Treat router v0.1c as contract repair, not GPU readiness
+
+Decision:
+
+Use `router_contract_repair_v0.1c` as the current router repair checkpoint.
+
+Why:
+
+It fixes the most important label-contract gap: the router can now emit
+`risk_review` and `clarification_needed`, and real tool trace routing improved
+from 0.0 to 1.0 accuracy on the pilot holdout. However, golden social/bookmark
+rows still show a separate failure mode where long evidence-verification claims
+can be misrouted to `fast_answer`.
+
+Consequence:
+
+The next router work should be social/bookmark boundary repair, not GPU
+fine-tuning. Router v0.1c is strong enough to show the data-contract repair loop
+in interviews, but not enough to claim production router quality.

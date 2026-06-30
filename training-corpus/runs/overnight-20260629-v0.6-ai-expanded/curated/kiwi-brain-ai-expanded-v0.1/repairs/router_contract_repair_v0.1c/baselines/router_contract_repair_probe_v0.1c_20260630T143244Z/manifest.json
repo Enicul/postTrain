@@ -1,0 +1,28 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "command": "training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/repaired_datasets --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines --run-id router_contract_repair_probe_v0.1c_20260630T143244Z --datasets router_classifier",
+  "created_at": "2026-06-30T14:32:45Z",
+  "cwd": "/Users/lucine/Documents/Job/projects/postTrain",
+  "datasets": [
+    "router_classifier"
+  ],
+  "git": {
+    "branch": "main",
+    "commit": "1570a4b01edb95bb3454d68a48e34d70d1981c68",
+    "diff_stat": "",
+    "status_short": "?? training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/\n?? training-corpus/scripts/build_router_contract_repair_v01.py"
+  },
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z",
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "router_contract_repair_probe_v0.1c_20260630T143244Z",
+  "sklearn_version": "1.6.1",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/repaired_datasets"
+}

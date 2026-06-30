@@ -582,3 +582,70 @@ has been explicitly chosen for a full row-level analysis run.
 Next:
 
 Continue with data-contract repair using the new recording mode.
+
+## EXP-2026-06-30-009 - Router contract repair v0.1c
+
+Goal:
+
+Repair the router label contract before any learned router or GPU SFT/DPO work.
+
+Why:
+
+The expanded router baseline had high internal metrics but failed realistic
+holdouts. It lacked `risk_review` and `clarification_needed`, and real tool
+traces were mostly misrouted as `financial_calculation`.
+
+Script:
+
+```text
+training-corpus/scripts/build_router_contract_repair_v01.py
+```
+
+Canonical repair pack:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c
+```
+
+Canonical baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z
+```
+
+Canonical holdout eval:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/holdouts/router_contract_repair_holdout_eval_v0.1c_20260630T143256Z
+```
+
+Repair data:
+
+| Split | Rows | clarification_needed | risk_review |
+| --- | ---: | ---: | ---: |
+| train | 7047 | 173 | 250 |
+| dev | 1410 | 31 | 47 |
+| test | 1422 | 39 | 53 |
+
+Iteration trail:
+
+| Run | Result | Decision |
+| --- | --- | --- |
+| v0.1 | real tool trace improved 0.0 -> 0.5, but every real trace became `deep_research` | add real-tool-style evidence/risk boundary rows |
+| v0.1b | real tool trace stayed 0.5, overcorrected toward `evidence_check`/`risk_review` | add real-tool-style deep-research positive rows |
+| v0.1c | real tool trace reached 1.0 and schema gap disappeared | use as current router checkpoint |
+
+Holdout comparison:
+
+| Holdout | Old expanded acc | v0.1c acc | Old schema gap | v0.1c schema gap |
+| --- | ---: | ---: | --- | --- |
+| golden_v0.1_router_all | 0.3023 | 0.8895 | yes | no |
+| long_research_repair_25_router_all | 0.4800 | 0.9600 | no | no |
+| real_tool_trace_pilot_10_router | 0.0000 | 1.0000 | yes | no |
+
+Remaining failure:
+
+Golden social/bookmark rows still expose a boundary where long social claims
+asking for evidence verification can be downgraded to `fast_answer`. This should
+be a targeted `router_social_boundary_repair_v0.1`, not a reason to start GPU
+training yet.

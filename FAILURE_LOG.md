@@ -32,6 +32,91 @@ Remaining risk:
 Older run directories still contain full row-level files and old READMEs. Treat
 them as historical artifacts; do not copy that pattern into new runs.
 
+## F-2026-06-30-015 - Router repair first pass overgeneralized real tool traces
+
+Symptom:
+
+`router_contract_repair_v0.1` improved real tool trace accuracy from 0.0 to 0.5,
+but predicted every real tool trace as `deep_research`.
+
+Cause:
+
+Only a few real-tool-style `evidence_check` and `risk_review` examples were
+present in train. The classifier learned that the real-tool trace context itself
+mostly implied `deep_research`.
+
+Change:
+
+Generated `router_contract_repair_v0.1b` with more real-tool-style
+`evidence_check` and `risk_review` boundary rows.
+
+Effect:
+
+The model overcorrected: real tool trace accuracy remained 0.5, but predictions
+shifted toward `evidence_check` and `risk_review`.
+
+Status:
+
+Fixed in v0.1c by adding real-tool-style `deep_research` positive rows for
+memo/thesis/SEC filings/capex/FCF/risk synthesis prompts.
+
+## F-2026-06-30-016 - Router repair canonical run id typo
+
+Symptom:
+
+The first router repair probe used:
+
+```text
+router_contract_repair_probe_v0.1_20260630Tsummary
+```
+
+Cause:
+
+The run id was manually typed instead of generated with a real UTC timestamp.
+
+Change:
+
+Reran the same v0.1 probe with:
+
+```text
+router_contract_repair_probe_v0.1_20260630T142954Z
+```
+
+Effect:
+
+The non-canonical run is preserved as process evidence, but the timestamped run
+is used for reporting.
+
+Status:
+
+Fixed.
+
+## F-2026-06-30-017 - Social bookmark long claims still sometimes downgrade to fast_answer
+
+Symptom:
+
+In `router_contract_repair_v0.1c`, real tool trace routing is fixed, but
+`golden_v0.1_router_all` still has social/bookmark rows where long market
+narratives asking for evidence verification are predicted as `fast_answer`.
+
+Cause:
+
+The v0.1c repair focused on real-tool-style boundaries. It did not yet add enough
+social/bookmark-specific long-claim boundary rows.
+
+Change:
+
+Not repaired yet.
+
+Effect:
+
+`golden_v0.1_router_all` improved from 0.3023 to 0.8895, but under-trigger rate
+remains 0.1325.
+
+Status:
+
+Open. Next repair should be `router_social_boundary_repair_v0.1`.
+
 ## F-2026-06-30-001 - Python 3.9 `datetime.UTC` import failure
 
 Symptom:

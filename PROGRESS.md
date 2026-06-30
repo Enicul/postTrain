@@ -13,6 +13,20 @@ Recording protocol update:
 - full row-level prediction dumps require explicit `--record-mode full`;
 - see `docs/RECORDING_PROTOCOL.md`.
 
+Latest router repair checkpoint:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c
+```
+
+Router v0.1c repaired the missing-label contract and real-tool trace shortcut:
+
+| Holdout | Old expanded acc | v0.1c acc |
+| --- | ---: | ---: |
+| golden_v0.1_router_all | 0.3023 | 0.8895 |
+| long_research_repair_25_router_all | 0.4800 | 0.9600 |
+| real_tool_trace_pilot_10_router | 0.0000 | 1.0000 |
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,
@@ -292,12 +306,12 @@ The imported baseline checkpoint reports:
 
 Repair the data contracts exposed by realistic holdout eval v0.1:
 
-1. build a router boundary repair set from real tool traces and old golden rows;
-2. add `risk_review` and `clarification_needed` to expanded router training;
-3. add `medium` and human-gate semantics to expanded risk training;
-4. define citation label mapping for candidate evidence vs verified support;
-5. rerun expanded baseline as a repair probe before any GPU fine-tuning;
-6. keep repaired runs in summary recording mode unless full row-level analysis is
+1. build `router_social_boundary_repair_v0.1` for long social/bookmark claims
+   that still downgrade to `fast_answer`;
+2. build `risk_contract_repair_v0.1` with `medium` and human-gate semantics;
+3. define citation label mapping for candidate evidence vs verified support;
+4. rerun repaired baselines as probes before any GPU fine-tuning;
+5. keep repaired runs in summary recording mode unless full row-level analysis is
    explicitly needed;
-7. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
+6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

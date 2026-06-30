@@ -1,0 +1,660 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "completed_at": "2026-06-30T14:32:49Z",
+  "created_at": "2026-06-30T14:32:45Z",
+  "datasets": {
+    "router_classifier": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/model.joblib",
+        "prediction_records": {
+          "dev": {
+            "error_sample_rows": 3,
+            "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/error_samples_dev.jsonl",
+            "errors": 3,
+            "mode": "summary",
+            "prediction_sample_rows": 200,
+            "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/prediction_samples_dev.jsonl",
+            "rows": 1410
+          },
+          "test": {
+            "error_sample_rows": 5,
+            "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/error_samples_test.jsonl",
+            "errors": 5,
+            "mode": "summary",
+            "prediction_sample_rows": 200,
+            "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/prediction_samples_test.jsonl",
+            "rows": 1422
+          },
+          "train": {
+            "error_sample_rows": 31,
+            "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/error_samples_train.jsonl",
+            "errors": 31,
+            "mode": "summary",
+            "prediction_sample_rows": 200,
+            "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/router_classifier/prediction_samples_train.jsonl",
+            "rows": 7047
+          }
+        }
+      },
+      "dataset": "router_classifier",
+      "labels": [
+        "clarification_needed",
+        "deep_research",
+        "evidence_check",
+        "fast_answer",
+        "financial_calculation",
+        "news_retrieval",
+        "price_lookup",
+        "risk_review"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.1702,
+        "macro_f1": 0.0364,
+        "predicted_label": "deep_research"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.997872340425532,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 31.0
+            },
+            "deep_research": {
+              "f1-score": 0.99609375,
+              "precision": 0.99609375,
+              "recall": 0.99609375,
+              "support": 256.0
+            },
+            "evidence_check": {
+              "f1-score": 0.9935205183585313,
+              "precision": 0.9956709956709957,
+              "recall": 0.9913793103448276,
+              "support": 232.0
+            },
+            "fast_answer": {
+              "f1-score": 0.9976798143851509,
+              "precision": 0.9953703703703703,
+              "recall": 1.0,
+              "support": 215.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 217.0
+            },
+            "macro avg": {
+              "f1-score": 0.9984117603429603,
+              "precision": 0.9983918895051708,
+              "recall": 0.9984341325431034,
+              "support": 1410.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 206.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 206.0
+            },
+            "risk_review": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 47.0
+            },
+            "weighted avg": {
+              "f1-score": 0.997870865497863,
+              "precision": 0.9978725536349649,
+              "recall": 0.997872340425532,
+              "support": 1410.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                31,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                255,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                230,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                215,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                217,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                206,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                206,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                47
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 31,
+            "deep_research": 256,
+            "evidence_check": 232,
+            "fast_answer": 215,
+            "financial_calculation": 217,
+            "news_retrieval": 206,
+            "price_lookup": 206,
+            "risk_review": 47
+          },
+          "metrics": {
+            "accuracy": 0.9979,
+            "macro_f1": 0.9984,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 1.0,
+            "under_trigger_rate": 0.0,
+            "weighted_f1": 0.9979
+          },
+          "prediction_distribution": {
+            "clarification_needed": 31,
+            "deep_research": 256,
+            "evidence_check": 231,
+            "fast_answer": 216,
+            "financial_calculation": 217,
+            "news_retrieval": 206,
+            "price_lookup": 206,
+            "risk_review": 47
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.9964838255977496,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 39.0
+            },
+            "deep_research": {
+              "f1-score": 0.995850622406639,
+              "precision": 1.0,
+              "recall": 0.9917355371900827,
+              "support": 242.0
+            },
+            "evidence_check": {
+              "f1-score": 0.9900199600798403,
+              "precision": 0.992,
+              "recall": 0.9880478087649402,
+              "support": 251.0
+            },
+            "fast_answer": {
+              "f1-score": 0.9931350114416476,
+              "precision": 0.9863636363636363,
+              "recall": 1.0,
+              "support": 217.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 210.0
+            },
+            "macro avg": {
+              "f1-score": 0.9973756992410159,
+              "precision": 0.9972954545454545,
+              "recall": 0.9974729182443779,
+              "support": 1422.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 204.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 206.0
+            },
+            "risk_review": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 53.0
+            },
+            "weighted avg": {
+              "f1-score": 0.996484640003716,
+              "precision": 0.9965069684183607,
+              "recall": 0.9964838255977496,
+              "support": 1422.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                240,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                248,
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                217,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                210,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                204,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                206,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                53
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 39,
+            "deep_research": 242,
+            "evidence_check": 251,
+            "fast_answer": 217,
+            "financial_calculation": 210,
+            "news_retrieval": 204,
+            "price_lookup": 206,
+            "risk_review": 53
+          },
+          "metrics": {
+            "accuracy": 0.9965,
+            "macro_f1": 0.9974,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 1.0,
+            "under_trigger_rate": 0.0,
+            "weighted_f1": 0.9965
+          },
+          "prediction_distribution": {
+            "clarification_needed": 39,
+            "deep_research": 240,
+            "evidence_check": 250,
+            "fast_answer": 220,
+            "financial_calculation": 210,
+            "news_retrieval": 204,
+            "price_lookup": 206,
+            "risk_review": 53
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.9956009649496239,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 173.0
+            },
+            "deep_research": {
+              "f1-score": 0.9938800489596084,
+              "precision": 0.9991796554552912,
+              "recall": 0.9886363636363636,
+              "support": 1232.0
+            },
+            "evidence_check": {
+              "f1-score": 0.991701244813278,
+              "precision": 0.9966638865721434,
+              "recall": 0.9867877786952931,
+              "support": 1211.0
+            },
+            "fast_answer": {
+              "f1-score": 0.9879518072289156,
+              "precision": 0.9761904761904762,
+              "recall": 1.0,
+              "support": 1066.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 1071.0
+            },
+            "macro avg": {
+              "f1-score": 0.9964411366232212,
+              "precision": 0.9965042522772388,
+              "recall": 0.9964280177914571,
+              "support": 7047.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 1023.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 1021.0
+            },
+            "risk_review": {
+              "f1-score": 0.9979959919839679,
+              "precision": 1.0,
+              "recall": 0.996,
+              "support": 250.0
+            },
+            "weighted avg": {
+              "f1-score": 0.9956103380572063,
+              "precision": 0.9956816162592355,
+              "recall": 0.9956009649496239,
+              "support": 7047.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                173,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1218,
+                4,
+                10,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1195,
+                15,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                1066,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                1071,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1023,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1021,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                249
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 173,
+            "deep_research": 1232,
+            "evidence_check": 1211,
+            "fast_answer": 1066,
+            "financial_calculation": 1071,
+            "news_retrieval": 1023,
+            "price_lookup": 1021,
+            "risk_review": 250
+          },
+          "metrics": {
+            "accuracy": 0.9956,
+            "macro_f1": 0.9964,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 0.9992,
+            "under_trigger_rate": 0.0074,
+            "weighted_f1": 0.9956
+          },
+          "prediction_distribution": {
+            "clarification_needed": 173,
+            "deep_research": 1219,
+            "evidence_check": 1199,
+            "fast_answer": 1092,
+            "financial_calculation": 1071,
+            "news_retrieval": 1023,
+            "price_lookup": 1021,
+            "risk_review": 249
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features.",
+        "Default recording is summary mode to avoid large local JSONL writes."
+      ],
+      "recording": {
+        "error_sample_limit": 200,
+        "full_row_outputs_default": false,
+        "mode": "summary",
+        "prediction_sample_limit": 200
+      },
+      "rows": {
+        "dev": 1410,
+        "test": 1422,
+        "train": 7047
+      },
+      "target": "route_label",
+      "train_distribution": {
+        "clarification_needed": 173,
+        "deep_research": 1232,
+        "evidence_check": 1211,
+        "fast_answer": 1066,
+        "financial_calculation": 1071,
+        "news_retrieval": 1023,
+        "price_lookup": 1021,
+        "risk_review": 250
+      },
+      "why": "Coordinator routing baseline before learned router or prompt-harness replacement."
+    }
+  },
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "router_contract_repair_probe_v0.1c_20260630T143244Z",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/repaired_datasets"
+}

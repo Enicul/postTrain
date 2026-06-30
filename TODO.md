@@ -79,17 +79,20 @@
 
 ## P1 - Data Contract Repair v0.1
 
-- [ ] Build `router_contract_repair_v0.1` from real tool trace rows and old
+- [x] Build `router_contract_repair_v0.1` from real tool trace rows and old
   golden router rows.
-- [ ] Add router labels missing from expanded data:
+- [x] Add router labels missing from expanded data:
   `risk_review` and `clarification_needed`.
-- [ ] Add router boundary rows for `evidence_check` vs `deep_research` and
+- [x] Add router boundary rows for `evidence_check` vs `deep_research` and
   `financial_calculation` vs research tasks.
+- [ ] Build `router_social_boundary_repair_v0.1` for long X/bookmark market
+  narratives that ask for evidence verification but are still sometimes routed
+  to `fast_answer`.
 - [ ] Build `risk_contract_repair_v0.1` with `medium` and human-gate semantics.
 - [ ] Build `citation_contract_repair_v0.1` that separates:
   `candidate_evidence`, `verified_support`, `partial_support`, `insufficient`,
   and `contradicts`.
-- [ ] Rerun CPU baselines after contract repair and compare against
+- [x] Rerun router CPU baseline after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.
   Use default summary recording unless a full error-analysis run is explicitly
   needed.

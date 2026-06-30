@@ -1,0 +1,203 @@
+{
+  "artifacts": {
+    "error_sample_rows": 1,
+    "error_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/holdouts/router_contract_repair_holdout_eval_v0.1c_20260630T143256Z/long_research_repair_25_router_all/error_samples.jsonl",
+    "errors": 1,
+    "mode": "summary",
+    "prediction_sample_rows": 25,
+    "prediction_samples": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_contract_repair_v0.1c/baselines/router_contract_repair_probe_v0.1c_20260630T143244Z/holdouts/router_contract_repair_holdout_eval_v0.1c_20260630T143256Z/long_research_repair_25_router_all/prediction_samples.jsonl",
+    "rows": 25
+  },
+  "classification_report": {
+    "accuracy": 0.96,
+    "clarification_needed": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "deep_research": {
+      "f1-score": 0.9795918367346939,
+      "precision": 1.0,
+      "recall": 0.96,
+      "support": 25.0
+    },
+    "evidence_check": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "fast_answer": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "financial_calculation": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "macro avg": {
+      "f1-score": 0.12244897959183673,
+      "precision": 0.125,
+      "recall": 0.12,
+      "support": 25.0
+    },
+    "news_retrieval": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "price_lookup": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "risk_review": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "weighted avg": {
+      "f1-score": 0.9795918367346939,
+      "precision": 1.0,
+      "recall": 0.96,
+      "support": 25.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "clarification_needed",
+      "deep_research",
+      "evidence_check",
+      "fast_answer",
+      "financial_calculation",
+      "news_retrieval",
+      "price_lookup",
+      "risk_review"
+    ],
+    "rows": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        24,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "dataset": "router_classifier",
+  "holdout": "long_research_repair_25_router_all",
+  "metrics": {
+    "accuracy_all_rows": 0.96,
+    "accuracy_seen_labels_only": 0.96,
+    "comparable_rows": 25,
+    "macro_f1_all_labels": 0.1224,
+    "macro_f1_seen_labels_only": 0.1224,
+    "over_trigger_rate": null,
+    "rows": 25,
+    "safety_recall": null,
+    "schema_gap": false,
+    "under_trigger_rate": 0.0,
+    "unseen_true_labels": [],
+    "weighted_f1_all_labels": 0.9796
+  },
+  "model_labels": [
+    "clarification_needed",
+    "deep_research",
+    "evidence_check",
+    "fast_answer",
+    "financial_calculation",
+    "news_retrieval",
+    "price_lookup",
+    "risk_review"
+  ],
+  "prediction_distribution": {
+    "deep_research": 24,
+    "evidence_check": 1
+  },
+  "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/router_classifier/all.jsonl",
+  "true_label_distribution": {
+    "deep_research": 25
+  },
+  "why": "Long research router rows that should generally route to deep research."
+}
