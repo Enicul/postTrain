@@ -97,3 +97,32 @@ Not repaired in this repo yet.
 Status:
 
 Open.
+
+## F-2026-06-30-005 - HTTPS GitHub push could not read username
+
+Symptom:
+
+```text
+fatal: could not read Username for 'https://github.com': Device not configured
+```
+
+Cause:
+
+The new clone initially used the HTTPS remote, but this local environment does
+not have an interactive GitHub HTTPS credential flow available.
+
+Change:
+
+Changed the remote to SSH:
+
+```bash
+git remote set-url origin git@github.com:Enicul/postTrain.git
+```
+
+Effect:
+
+`git push -u origin main` succeeded and `main` now tracks `origin/main`.
+
+Status:
+
+Fixed.

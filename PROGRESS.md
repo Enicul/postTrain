@@ -14,6 +14,14 @@ Imported from the Agent/KIWI workspace:
 - baseline requirements,
 - first CPU baseline run artifacts.
 
+Initial GitHub push is complete.
+
+```text
+remote: git@github.com:Enicul/postTrain.git
+branch: main
+initial commit: 7d64753 docs: initialize post-training artifact repo
+```
+
 ## Current Checkpoint
 
 ```text
@@ -47,6 +55,8 @@ baselines/specialist_cpu_baselines_v0.1/
 ```bash
 python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
 python3 training-corpus/scripts/train_specialist_baselines.py --help
+python3 training-corpus/scripts/train_specialist_baselines.py --run-id smoke_router_only2 --datasets router_classifier --out-root /tmp/posttrain-baseline-smoke2
+git push -u origin main
 ```
 
 The imported baseline checkpoint reports:

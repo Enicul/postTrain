@@ -15,7 +15,7 @@ Local path:
 Remote:
 
 ```text
-https://github.com/Enicul/postTrain
+git@github.com:Enicul/postTrain.git
 ```
 
 Branch:
@@ -30,6 +30,13 @@ What exists:
 - golden v0.1 data,
 - specialist CPU baseline script,
 - first baseline run artifacts.
+
+GitHub state:
+
+```text
+main pushed
+initial commit: 7d64753 docs: initialize post-training artifact repo
+```
 
 Resume:
 

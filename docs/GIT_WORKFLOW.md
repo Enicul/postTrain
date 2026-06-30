@@ -3,8 +3,11 @@
 ## Remote
 
 ```text
-https://github.com/Enicul/postTrain
+git@github.com:Enicul/postTrain.git
 ```
+
+Use SSH in this local environment. HTTPS push failed once because GitHub
+credentials could not be read non-interactively.
 
 ## Push Cadence
 
