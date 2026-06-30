@@ -27,6 +27,7 @@ main
 What exists:
 
 - root operating docs,
+- learning-source registry,
 - golden v0.1 data,
 - specialist CPU baseline script,
 - first baseline run artifacts.
@@ -102,4 +103,32 @@ Next resume point:
 
 ```text
 Start with citation_verifier/predictions_test.jsonl and create an error taxonomy.
+```
+
+## CP-2026-06-30-004 - Learning source registry
+
+Status:
+
+```text
+created
+```
+
+Path:
+
+```text
+LEARNING_SOURCES.md
+```
+
+What exists:
+
+- reusable entry template,
+- first GLM ARC entry,
+- explicit extracted / not-adopted / why-not structure,
+- mapping from GLM ARC to KIWI/postTrain architecture.
+
+Resume:
+
+```text
+Add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer entries using the same
+structure before turning those notes into architecture or training changes.
 ```

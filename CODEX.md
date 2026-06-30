@@ -12,7 +12,12 @@ git status --short
 sed -n '1,220p' PROGRESS.md
 sed -n '1,220p' TODO.md
 sed -n '1,220p' CHECKPOINTS.md
+sed -n '1,220p' LEARNING_SOURCES.md
 ```
+
+If the task is purely operational, `LEARNING_SOURCES.md` can be skimmed. If the
+task changes architecture, data strategy, or interview framing, read the
+relevant source entry before proposing work.
 
 Then inspect the relevant script, data, or run directory before proposing work.
 
@@ -60,8 +65,9 @@ After a run:
 3. Inspect row-level predictions for suspicious failures.
 4. Update `EXPERIMENT_LOG.md`.
 5. Update `FAILURE_LOG.md` if metrics are weak or an error occurred.
-6. Update `PROGRESS.md` and `TODO.md`.
-7. Commit and push if the checkpoint is useful.
+6. Update `LEARNING_SOURCES.md` if a model report or paper changed the design.
+7. Update `PROGRESS.md` and `TODO.md`.
+8. Commit and push if the checkpoint is useful.
 
 ## What Not To Overclaim
 

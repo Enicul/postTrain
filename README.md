@@ -38,7 +38,9 @@ Every agent should read these files first:
 3. `PROGRESS.md` - current status and last known checkpoint.
 4. `TODO.md` - prioritized next work.
 5. `CHECKPOINTS.md` - where to resume from.
-6. `EXPERIMENT_LOG.md` and `FAILURE_LOG.md` - what happened and what broke.
+6. `LEARNING_SOURCES.md` - what we extracted from external model reports and
+   what we deliberately did not adopt.
+7. `EXPERIMENT_LOG.md` and `FAILURE_LOG.md` - what happened and what broke.
 
 ## Current Baseline
 
@@ -74,6 +76,7 @@ CODEX.md
 PROGRESS.md
 TODO.md
 CHECKPOINTS.md
+LEARNING_SOURCES.md
 EXPERIMENT_LOG.md
 FAILURE_LOG.md
 DECISIONS.md

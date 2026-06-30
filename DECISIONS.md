@@ -65,3 +65,21 @@ Consequence:
 
 No GPU work on `calculation_verifier` until a separate task family proves that a
 model is needed.
+
+## D-2026-06-30-005 - Record learning sources as adopt / not-adopt decisions
+
+Decision:
+
+Maintain `LEARNING_SOURCES.md` as a source-to-system registry.
+
+Why:
+
+The interview artifact needs to show how we learned from GLM, Qwen, DeepSeek,
+Kimi, MiniMax, WebExplorer, and other post-training systems without blindly
+copying them. Each source should record what we extracted, why it matters, what
+we did not adopt, and why it does not fit our current resources or domain.
+
+Consequence:
+
+Any future architecture or training-plan change inspired by an external source
+should update `LEARNING_SOURCES.md` before it is treated as a project decision.

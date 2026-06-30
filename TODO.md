@@ -2,11 +2,25 @@
 
 ## P0 - Repo Hygiene
 
-- [ ] Commit and push initial repo scaffold to `Enicul/postTrain`.
+- [x] Commit and push initial repo scaffold to `Enicul/postTrain`.
 - [ ] Confirm GitHub renders `README.md`, `AGENTS.md`, `CODEX.md`,
   `PROGRESS.md`, and `TODO.md`.
 - [ ] Decide whether `model.joblib` artifacts stay in Git or move to release/LFS
   later. Current baseline artifacts are small enough for Git.
+
+## P0 - Learning Source Registry
+
+- [x] Add `LEARNING_SOURCES.md` as the canonical source-to-decision registry.
+- [x] Add GLM ARC entry: what we extracted, why, what we did not adopt, and why
+  not.
+- [ ] Add Qwen entries: Qwen2.5 assistant stability, Qwen3 routing/thinking
+  control, Qwen3-Coder/agentic trajectory, Qwen2.5-Math self-improvement.
+- [ ] Add DeepSeek entries: helpful/harmless reward model, R1/GRPO/RLVR,
+  Harness framing, specialist/verifier implications.
+- [ ] Add Kimi entries: k1.5 long2short, K2 agentic action trajectory,
+  Kimi-Researcher evidence-chain reward.
+- [ ] Add MiniMax/WebExplorer entries: teacher-assisted data synthesis,
+  environment construction, student self-exploration, verifier reward.
 
 ## P1 - Citation Verifier Repair
 

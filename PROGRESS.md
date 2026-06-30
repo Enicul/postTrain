@@ -20,6 +20,7 @@ Initial GitHub push is complete.
 remote: git@github.com:Enicul/postTrain.git
 branch: main
 initial commit: 7d64753 docs: initialize post-training artifact repo
+latest pushed commit: bfb27f8 docs: record push checkpoint and ssh remote
 ```
 
 ## Current Checkpoint
@@ -50,6 +51,17 @@ baselines/specialist_cpu_baselines_v0.1/
 - Citation verifier failed on held-out data; this is now a data-quality and
   feature-design problem before GPU work.
 
+## Learning Source Registry
+
+`LEARNING_SOURCES.md` has been added as the canonical place to record external
+model reports and what we extracted from them.
+
+Current source entries:
+
+| Source | Status | Extracted use |
+| --- | --- | --- |
+| GLM ARC: Agentic + Reasoning + Coding | adopted as architecture framing | use ARC to explain why KIWI needs reasoning, verifier-rich tasks, and agentic loops, while not claiming a GLM-scale unified model |
+
 ## Last Verified Commands
 
 ```bash
@@ -67,10 +79,12 @@ The imported baseline checkpoint reports:
 
 ## Next Best Step
 
-Commit and push this initialization, then start citation verifier repair:
+Start citation verifier repair and continue the learning-source registry:
 
 1. inspect citation test prediction errors,
 2. identify label/schema problems,
 3. add a repaired citation verifier dataset,
 4. rerun the CPU baseline,
-5. compare metrics and log the change.
+5. compare metrics and log the change,
+6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
+   same extracted / not-adopted structure.

@@ -11,9 +11,11 @@ At the start of every session:
 2. Read `CODEX.md` if you are Codex.
 3. Read `PROGRESS.md` and `TODO.md`.
 4. Read `CHECKPOINTS.md` for the latest resumable state.
-5. Read relevant entries in `EXPERIMENT_LOG.md` and `FAILURE_LOG.md`.
-6. Run `git status --short`.
-7. Before changing files, identify which log/docs must be updated.
+5. Read `LEARNING_SOURCES.md` when the task touches model reports, papers,
+   post-training strategy, or interview framing.
+6. Read relevant entries in `EXPERIMENT_LOG.md` and `FAILURE_LOG.md`.
+7. Run `git status --short`.
+8. Before changing files, identify which log/docs must be updated.
 
 ## Project Goal
 
@@ -30,6 +32,8 @@ The artifact must show:
 - what was changed,
 - what improved or did not improve,
 - where to resume.
+- which external lessons shaped the system, and which tempting ideas were not
+  adopted.
 
 ## Non-Negotiable Rules
 
@@ -59,6 +63,28 @@ predictions or outputs for error analysis
 ```
 
 Every experiment must be logged in `EXPERIMENT_LOG.md`.
+
+## Learning Source Protocol
+
+When a paper, model report, blog post, or company system design changes our
+plan, update `LEARNING_SOURCES.md`.
+
+Each source entry must include:
+
+```text
+source links
+core idea
+what we extracted
+why we extracted it
+what we did not adopt
+why not
+mapping to KIWI/postTrain
+concrete action
+status
+```
+
+This prevents vague claims like "we learned from Qwen/DeepSeek/Kimi". The repo
+must show the exact system or data decision that came from the reading.
 
 If anything breaks, add or update `FAILURE_LOG.md` with:
 
@@ -119,5 +145,6 @@ Before finishing a session, update:
 3. `EXPERIMENT_LOG.md` if anything was run.
 4. `FAILURE_LOG.md` if anything failed or underperformed.
 5. `CHECKPOINTS.md` if there is a new resume point.
+6. `LEARNING_SOURCES.md` if a source changed the plan.
 
 Then run verification commands and record the result in your final message.
