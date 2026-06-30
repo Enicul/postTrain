@@ -144,3 +144,27 @@ The next citation-verifier iteration should prioritize audited real evidence
 spans: official positive paragraphs, partial-support boundaries, and rare
 contradict / insufficient rows. GPU work should wait until the repair baseline
 is strong enough to make model capacity the likely bottleneck.
+
+## D-2026-06-30-009 - Use summary-first local recording
+
+Decision:
+
+Local runs now default to summary-first recording. Scripts should write metrics,
+manifests, checkpoints, phase-level events, capped prediction samples, and capped
+error samples. Full row-level predictions, full rollout dumps, and large
+checkpoints require an explicit `--record-mode full` or external artifact-store
+decision.
+
+Why:
+
+The old protocol was useful for tiny baselines, but full append-only logs and
+full prediction dumps can overload the local machine as data grows. The
+interview artifact needs enough evidence to resume, audit, and explain failure
+decisions, not every row by default.
+
+Consequence:
+
+Future agents should read `docs/RECORDING_PROTOCOL.md` before running
+experiments. Git should carry scripts, configs, docs, summaries, small baseline
+artifacts, and capped samples. Heavy outputs belong on the server, in object
+storage, releases, or Git LFS.

@@ -50,7 +50,10 @@ The artifact must show:
 
 ## Experiment Protocol
 
-Every experiment should produce:
+Use summary-first recording. Read `docs/RECORDING_PROTOCOL.md` before creating
+new run artifacts.
+
+Every experiment should produce a bounded local record:
 
 ```text
 config.json
@@ -59,8 +62,14 @@ logs/checkpoint.json
 logs/events.jsonl
 metrics.json
 README.md
-predictions or outputs for error analysis
+prediction_samples or output_samples for error analysis
+error_samples for failure analysis
 ```
+
+`logs/events.jsonl` should contain phase-level events only, not per-row logs.
+Full row-level `predictions_*.jsonl` or rollout dumps are not written by default.
+Use explicit full recording only when needed and only when the output target can
+handle it.
 
 Every experiment must be logged in `EXPERIMENT_LOG.md`.
 
@@ -135,6 +144,7 @@ data: repair citation span labels for verifier baseline
 - Generated trajectory: training/eval substrate.
 - Negative path: DPO pair, regression, or failure taxonomy case.
 - Baseline prediction: error-analysis artifact.
+- Prediction sample: capped error-analysis artifact.
 
 ## Handoff Requirements
 

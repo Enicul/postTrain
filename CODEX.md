@@ -62,12 +62,16 @@ After a run:
 
 1. Read `logs/checkpoint.json`.
 2. Read `metrics.json`.
-3. Inspect row-level predictions for suspicious failures.
+3. Inspect metrics, confusion matrices, and capped error/prediction samples for
+   suspicious failures. Do not assume full row-level predictions exist.
 4. Update `EXPERIMENT_LOG.md`.
 5. Update `FAILURE_LOG.md` if metrics are weak or an error occurred.
 6. Update `LEARNING_SOURCES.md` if a model report or paper changed the design.
 7. Update `PROGRESS.md` and `TODO.md`.
 8. Commit and push if the checkpoint is useful.
+
+Use `docs/RECORDING_PROTOCOL.md`: local runs default to summary mode. Full
+prediction or rollout dumps require an explicit `--record-mode full` decision.
 
 ## What Not To Overclaim
 

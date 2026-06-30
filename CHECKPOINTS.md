@@ -466,8 +466,46 @@ mapping between `candidate_evidence`, `partial_support`, `insufficient`,
 Resume:
 
 ```text
-Start with real_tool_trace_pilot_10_router/errors.jsonl and
-golden_v0.1_router_all/errors.jsonl. Build a router boundary repair dataset
-that includes real tool traces, risk_review, clarification_needed, and
-evidence_check vs deep_research distinctions.
+Start with metrics/confusion matrices and capped error samples. For older runs,
+`real_tool_trace_pilot_10_router/errors.jsonl` and
+`golden_v0.1_router_all/errors.jsonl` exist, but new runs should use
+`error_samples*.jsonl` by default. Build a router boundary repair dataset that
+includes real tool traces, risk_review, clarification_needed, and evidence_check
+vs deep_research distinctions.
+```
+
+## CP-2026-06-30-011 - Recording protocol migration
+
+Status:
+
+```text
+complete
+```
+
+Changed:
+
+- Added `docs/RECORDING_PROTOCOL.md`.
+- `train_specialist_baselines.py` now defaults to summary recording.
+- `evaluate_baseline_holdouts.py` now defaults to summary recording.
+- Full row-level output requires `--record-mode full`.
+- `AGENTS.md`, `CODEX.md`, `docs/SERVER_RUNBOOK.md`, `DECISIONS.md`,
+  `FAILURE_LOG.md`, `PROGRESS.md`, and `TODO.md` now point future work toward
+  bounded local artifacts.
+
+Verified:
+
+```text
+python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py training-corpus/scripts/evaluate_baseline_holdouts.py
+python3 training-corpus/scripts/train_specialist_baselines.py --help
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --help
+router-only summary smoke in /tmp/posttrain-recording-smoke
+holdout summary smoke in /tmp/posttrain-holdout-recording-smoke
+```
+
+Resume:
+
+```text
+Continue data-contract repair. New runs should use summary mode by default and
+inspect `error_samples*.jsonl`, not full `errors.jsonl`, unless a full-mode run
+is explicitly requested.
 ```

@@ -7,6 +7,12 @@ Last updated: 2026-06-30
 The repo has been initialized as a standalone post-training artifact repo for
 KIWI interview preparation.
 
+Recording protocol update:
+
+- local experiments now use summary-first recording by default;
+- full row-level prediction dumps require explicit `--record-mode full`;
+- see `docs/RECORDING_PROTOCOL.md`.
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,
@@ -291,5 +297,7 @@ Repair the data contracts exposed by realistic holdout eval v0.1:
 3. add `medium` and human-gate semantics to expanded risk training;
 4. define citation label mapping for candidate evidence vs verified support;
 5. rerun expanded baseline as a repair probe before any GPU fine-tuning;
-6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
+6. keep repaired runs in summary recording mode unless full row-level analysis is
+   explicitly needed;
+7. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

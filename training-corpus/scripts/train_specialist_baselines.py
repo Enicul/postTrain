@@ -73,6 +73,17 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def sampled_rows(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if limit <= 0 or not rows:
+        return []
+    if len(rows) <= limit:
+        return rows
+    if limit == 1:
+        return [rows[0]]
+    step = (len(rows) - 1) / (limit - 1)
+    return [rows[round(index * step)] for index in range(limit)]
+
+
 def append_event(path: Path, event: str, **payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     row = {"ts": now_utc(), "event": event, **payload}
@@ -355,7 +366,15 @@ DATASETS: dict[str, dict[str, Any]] = {
 }
 
 
-def train_one(dataset: str, data_dir: Path, out_dir: Path, events_path: Path) -> dict[str, Any]:
+def train_one(
+    dataset: str,
+    data_dir: Path,
+    out_dir: Path,
+    events_path: Path,
+    record_mode: str,
+    prediction_sample_limit: int,
+    error_sample_limit: int,
+) -> dict[str, Any]:
     spec = DATASETS[dataset]
     text_fn: Callable[[dict[str, Any]], str] = spec["text_fn"]
     label_fn: Callable[[dict[str, Any]], str] = spec["label_fn"]
@@ -385,12 +404,39 @@ def train_one(dataset: str, data_dir: Path, out_dir: Path, events_path: Path) ->
     joblib.dump(model, ds_out / "model.joblib")
 
     evaluations: dict[str, Any] = {}
-    predictions_by_split: dict[str, list[dict[str, Any]]] = {}
+    prediction_artifacts: dict[str, Any] = {}
     for split, rows in split_rows.items():
         evaluation, predictions = evaluate(model, rows, labels, text_fn, label_fn, dataset)
         evaluations[split] = evaluation
-        predictions_by_split[split] = predictions
-        write_jsonl(ds_out / f"predictions_{split}.jsonl", predictions)
+        errors = [item for item in predictions if not item["correct"]]
+        if record_mode == "full":
+            prediction_path = ds_out / f"predictions_{split}.jsonl"
+            error_path = ds_out / f"errors_{split}.jsonl"
+            write_jsonl(prediction_path, predictions)
+            write_jsonl(error_path, errors)
+            prediction_artifacts[split] = {
+                "mode": "full",
+                "rows": len(predictions),
+                "errors": len(errors),
+                "predictions": str(prediction_path),
+                "errors_file": str(error_path),
+            }
+        else:
+            prediction_sample_path = ds_out / f"prediction_samples_{split}.jsonl"
+            error_sample_path = ds_out / f"error_samples_{split}.jsonl"
+            prediction_samples = sampled_rows(predictions, prediction_sample_limit)
+            error_samples = sampled_rows(errors, error_sample_limit)
+            write_jsonl(prediction_sample_path, prediction_samples)
+            write_jsonl(error_sample_path, error_samples)
+            prediction_artifacts[split] = {
+                "mode": "summary",
+                "rows": len(predictions),
+                "errors": len(errors),
+                "prediction_sample_rows": len(prediction_samples),
+                "error_sample_rows": len(error_samples),
+                "prediction_samples": str(prediction_sample_path),
+                "error_samples": str(error_sample_path),
+            }
         append_event(events_path, "eval_complete", dataset=dataset, split=split, metrics=evaluation["metrics"])
 
     majority = majority_baseline(
@@ -414,11 +460,18 @@ def train_one(dataset: str, data_dir: Path, out_dir: Path, events_path: Path) ->
         "artifacts": {
             "model": str(ds_out / "model.joblib"),
             "metrics": str(ds_out / "metrics.json"),
-            "predictions": {split: str(ds_out / f"predictions_{split}.jsonl") for split in split_rows},
+            "prediction_records": prediction_artifacts,
+        },
+        "recording": {
+            "mode": record_mode,
+            "prediction_sample_limit": prediction_sample_limit,
+            "error_sample_limit": error_sample_limit,
+            "full_row_outputs_default": False,
         },
         "notes": [
             "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
             "Feature text is built from input fields only; label fields are not included as model features.",
+            "Default recording is summary mode to avoid large local JSONL writes.",
         ],
     }
     write_json(ds_out / "metrics.json", summary)
@@ -461,7 +514,9 @@ def build_readme(out_dir: Path, run_summary: dict[str, Any]) -> None:
             "- `manifest.json`: environment and git state.",
             "- `<dataset>/model.joblib`: trained sklearn baseline.",
             "- `<dataset>/metrics.json`: metrics and confusion matrix.",
-            "- `<dataset>/predictions_*.jsonl`: row-level predictions for error analysis.",
+            "- `<dataset>/prediction_samples_*.jsonl`: capped row-level prediction samples.",
+            "- `<dataset>/error_samples_*.jsonl`: capped row-level error samples.",
+            "- Full row-level `predictions_*.jsonl` are only written with `--record-mode full`.",
             "",
             "## How To Re-run",
             "",
@@ -488,6 +543,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data-dir", type=Path, default=None, help="Directory containing datasets/<name>/{train,dev,test}.jsonl")
     parser.add_argument("--out-root", type=Path, default=None, help="Directory under which run artifacts are written")
     parser.add_argument("--run-id", default=None)
+    parser.add_argument(
+        "--record-mode",
+        choices=["summary", "full"],
+        default="summary",
+        help="summary writes capped samples only; full writes every prediction/error row.",
+    )
+    parser.add_argument("--prediction-sample-limit", type=int, default=200)
+    parser.add_argument("--error-sample-limit", type=int, default=200)
     parser.add_argument(
         "--datasets",
         default="router_classifier,risk_reviewer,citation_verifier",
@@ -519,6 +582,12 @@ def main() -> int:
         "datasets": selected,
         "model_family": "sklearn_tfidf_logistic_regression",
         "boundary": "CPU baseline only; not a production post-training model.",
+        "recording": {
+            "mode": args.record_mode,
+            "prediction_sample_limit": args.prediction_sample_limit,
+            "error_sample_limit": args.error_sample_limit,
+            "rationale": "Protect local machine by avoiding full prediction JSONL writes unless explicitly requested.",
+        },
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     write_json(out_dir / "config.json", config)
@@ -546,7 +615,15 @@ def main() -> int:
                 {"ts": now_utc(), "status": "running", "run_id": run_id, "current": dataset, "completed": completed},
             )
             append_event(events_path, "dataset_start", dataset=dataset)
-            results[dataset] = train_one(dataset, data_dir, out_dir, events_path)
+            results[dataset] = train_one(
+                dataset,
+                data_dir,
+                out_dir,
+                events_path,
+                args.record_mode,
+                args.prediction_sample_limit,
+                args.error_sample_limit,
+            )
             completed.append(dataset)
             append_event(events_path, "dataset_complete", dataset=dataset)
     except Exception as exc:

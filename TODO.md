@@ -7,6 +7,10 @@
   `PROGRESS.md`, and `TODO.md`.
 - [x] Decide whether `model.joblib` artifacts stay in Git or move to release/LFS
   later. Current baseline artifacts are small enough for Git.
+- [x] Add summary-first recording protocol to avoid local overload from full
+  append-only logs and row-level prediction dumps.
+- [ ] Audit older run READMEs that still advertise full `predictions_*.jsonl`
+  as the default artifact.
 
 ## P0 - Learning Source Registry
 
@@ -87,6 +91,8 @@
   and `contradicts`.
 - [ ] Rerun CPU baselines after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.
+  Use default summary recording unless a full error-analysis run is explicitly
+  needed.
 
 ## P2 - WebExplorer-Style Seed-to-Task Generator
 

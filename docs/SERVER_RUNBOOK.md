@@ -23,9 +23,15 @@ python3 -m pip install -r training-corpus/requirements-baseline.txt
 ```bash
 python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
 python3 training-corpus/scripts/train_specialist_baselines.py --help
+python3 -m py_compile training-corpus/scripts/evaluate_baseline_holdouts.py
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --help
 ```
 
 ## Re-run Specialist Baselines
+
+Default recording is summary-first. It writes metrics, checkpoint, phase events,
+and capped prediction/error samples. It does not write full row-level prediction
+dumps unless `--record-mode full` is passed.
 
 ```bash
 python3 training-corpus/scripts/train_specialist_baselines.py \
@@ -40,6 +46,14 @@ cat "$RUN_DIR/logs/checkpoint.json"
 sed -n '1,140p' "$RUN_DIR/README.md"
 ```
 
+Use full recording only for a deliberate deep error-analysis run:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --record-mode full \
+  --run-id specialist_cpu_baselines_full_$(date -u +%Y%m%dT%H%M%SZ)
+```
+
 ## After Run
 
 Update:
@@ -51,6 +65,10 @@ Update:
 - `TODO.md`
 
 Then commit and push.
+
+Do not commit large GPU checkpoints, full rollout dumps, or large prediction
+files. Keep those on the server, in object storage, or in a release/LFS-style
+artifact store.
 
 ## GPU Work Later
 

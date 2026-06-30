@@ -76,6 +76,17 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def sampled_rows(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if limit <= 0 or not rows:
+        return []
+    if len(rows) <= limit:
+        return rows
+    if limit == 1:
+        return [rows[0]]
+    step = (len(rows) - 1) / (limit - 1)
+    return [rows[round(index * step)] for index in range(limit)]
+
+
 def append_event(path: Path, event: str, **payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
@@ -326,6 +337,16 @@ def build_readme(out_dir: Path, run_summary: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
+            "## Recording Mode",
+            "",
+            f"- mode: `{run_summary['recording']['mode']}`",
+            f"- prediction sample limit: `{run_summary['recording']['prediction_sample_limit']}`",
+            f"- error sample limit: `{run_summary['recording']['error_sample_limit']}`",
+            "",
+            "Default holdout runs write capped samples instead of full row-level",
+            "prediction files. Use `--record-mode full` only when full error",
+            "analysis is necessary and the output location can handle it.",
+            "",
             "## Reading The Metrics",
             "",
             "- `accuracy_all_rows` treats unseen labels as failures. This is useful for",
@@ -347,6 +368,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--golden-dir", type=Path, default=DEFAULT_GOLDEN_DIR)
     parser.add_argument("--out-root", type=Path, default=None)
     parser.add_argument("--run-id", default=None)
+    parser.add_argument(
+        "--record-mode",
+        choices=["summary", "full"],
+        default="summary",
+        help="summary writes capped samples only; full writes every prediction/error row.",
+    )
+    parser.add_argument("--prediction-sample-limit", type=int, default=200)
+    parser.add_argument("--error-sample-limit", type=int, default=200)
     return parser.parse_args()
 
 
@@ -369,6 +398,12 @@ def main() -> int:
         "golden_dir": str(golden_dir),
         "out_dir": str(out_dir),
         "boundary": "External holdout evaluation only; no training.",
+        "recording": {
+            "mode": args.record_mode,
+            "prediction_sample_limit": args.prediction_sample_limit,
+            "error_sample_limit": args.error_sample_limit,
+            "rationale": "Protect local machine by avoiding full holdout prediction JSONL writes unless explicitly requested.",
+        },
     }
     write_json(out_dir / "config.json", config)
     write_json(
@@ -423,11 +458,35 @@ def main() -> int:
                 "source_path": str(spec["path"]),
                 **summary,
             }
-            results[name] = result
             holdout_dir = out_dir / name
+            errors = [item for item in predictions if not item["correct"]]
+            if args.record_mode == "full":
+                write_jsonl(holdout_dir / "predictions.jsonl", predictions)
+                write_jsonl(holdout_dir / "errors.jsonl", errors)
+                artifact_summary = {
+                    "mode": "full",
+                    "rows": len(predictions),
+                    "errors": len(errors),
+                    "predictions": str(holdout_dir / "predictions.jsonl"),
+                    "errors_file": str(holdout_dir / "errors.jsonl"),
+                }
+            else:
+                prediction_samples = sampled_rows(predictions, args.prediction_sample_limit)
+                error_samples = sampled_rows(errors, args.error_sample_limit)
+                write_jsonl(holdout_dir / "prediction_samples.jsonl", prediction_samples)
+                write_jsonl(holdout_dir / "error_samples.jsonl", error_samples)
+                artifact_summary = {
+                    "mode": "summary",
+                    "rows": len(predictions),
+                    "errors": len(errors),
+                    "prediction_sample_rows": len(prediction_samples),
+                    "error_sample_rows": len(error_samples),
+                    "prediction_samples": str(holdout_dir / "prediction_samples.jsonl"),
+                    "error_samples": str(holdout_dir / "error_samples.jsonl"),
+                }
+            result["artifacts"] = artifact_summary
+            results[name] = result
             write_json(holdout_dir / "metrics.json", result)
-            write_jsonl(holdout_dir / "predictions.jsonl", predictions)
-            write_jsonl(holdout_dir / "errors.jsonl", [item for item in predictions if not item["correct"]])
             completed.append(name)
             append_event(events_path, "holdout_complete", holdout=name, metrics=summary["metrics"])
             write_json(checkpoint_path, {"ts": now_utc(), "status": "running", "run_id": run_id, "completed": completed})

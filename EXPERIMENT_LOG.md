@@ -533,3 +533,52 @@ router: add real_tool_trace rows, risk_review, clarification_needed,
 risk: add medium and human-gate semantics
 citation: separate candidate evidence from verified support labels
 ```
+
+## EXP-2026-06-30-008 - Recording protocol migration
+
+Goal:
+
+Move future local runs from full row-level recording to summary-first recording.
+
+Why:
+
+The old artifact contract was useful while the datasets were tiny, but it
+encouraged every experiment to write full prediction and error JSONL files. That
+pattern can overload the local machine as KIWI data expands into long research
+trajectories, real tool traces, social radar captures, and larger holdout sets.
+
+Changed:
+
+- Added `docs/RECORDING_PROTOCOL.md`.
+- Patched `train_specialist_baselines.py` to default to `--record-mode summary`.
+- Patched `evaluate_baseline_holdouts.py` to default to `--record-mode summary`.
+- Added explicit `--record-mode full` only for deliberate deep error-analysis
+  runs.
+- Updated agent, Codex, server, progress, todo, checkpoint, decision, and failure
+  docs so future agents do not copy the old full-output pattern.
+
+Verification:
+
+```bash
+python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py training-corpus/scripts/evaluate_baseline_holdouts.py
+python3 training-corpus/scripts/train_specialist_baselines.py --help
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --help
+python3 training-corpus/scripts/train_specialist_baselines.py --run-id smoke_summary_router --datasets router_classifier --out-root /tmp/posttrain-recording-smoke
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --run-id smoke_summary_holdout --out-root /tmp/posttrain-holdout-recording-smoke
+find /tmp/posttrain-recording-smoke /tmp/posttrain-holdout-recording-smoke -type f \( -name 'predictions*.jsonl' -o -name 'errors.jsonl' -o -name 'errors_*.jsonl' \) -print
+```
+
+Result:
+
+The smoke runs wrote `prediction_samples*.jsonl` and `error_samples*.jsonl`
+only. The final `find` command returned no full `predictions*.jsonl` or
+`errors*.jsonl` files.
+
+Decision:
+
+Use summary mode for all local repair and baseline work unless the output target
+has been explicitly chosen for a full row-level analysis run.
+
+Next:
+
+Continue with data-contract repair using the new recording mode.

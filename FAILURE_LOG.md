@@ -2,6 +2,36 @@
 
 Failures are first-class evidence. Record them instead of hiding them.
 
+## F-2026-06-30-014 - Old artifact protocol could overload local machine
+
+Symptom:
+
+The old experiment protocol encouraged keeping `events.jsonl`, full
+`predictions_*.jsonl`, full `errors.jsonl`, metrics, models, and README files for
+every run. This is manageable for tiny CPU baselines but becomes risky once data
+expands into large trajectory and holdout sets.
+
+Cause:
+
+We treated every row-level output as a default local/Git artifact instead of
+separating resumability evidence from heavy analysis dumps.
+
+Change:
+
+Added `docs/RECORDING_PROTOCOL.md` and changed the baseline/evaluation scripts
+to default to summary-first recording with capped prediction/error samples.
+Full row-level outputs now require explicit `--record-mode full`.
+
+Effect:
+
+Future runs preserve checkpoint, metrics, failure samples, and decision evidence
+without writing full prediction dumps by default.
+
+Remaining risk:
+
+Older run directories still contain full row-level files and old READMEs. Treat
+them as historical artifacts; do not copy that pattern into new runs.
+
 ## F-2026-06-30-001 - Python 3.9 `datetime.UTC` import failure
 
 Symptom:
