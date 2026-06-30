@@ -318,3 +318,128 @@ partial-support boundaries
 rare contradicts / insufficient rows
 source-quality labels
 ```
+
+## EXP-2026-06-30-005 - Import KIWI ai-expanded v0.1 curated checkpoint
+
+Goal:
+
+Bring the larger Agent/KIWI v0.6 curated training pack into the standalone
+`postTrain` repo so it can be moved to a server without depending on the Agent
+workspace.
+
+Source data:
+
+```text
+/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Command:
+
+```bash
+rsync -a --delete \
+  /Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ \
+  training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/
+```
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Imported selected rows:
+
+| Dataset | Train | Dev | Test |
+| --- | ---: | ---: | ---: |
+| calculation_verifier | 2,000 | 500 | 500 |
+| citation_verifier | 6,000 | 1,200 | 1,200 |
+| event_extractor | 6,000 | 1,200 | 1,200 |
+| grpo_rollouts | 8,000 | 1,600 | 1,600 |
+| memo_quality_scorer | 8,000 | 1,600 | 1,600 |
+| preference_pairs | 8,000 | 1,600 | 1,600 |
+| risk_reviewer | 8,000 | 1,600 | 1,600 |
+| router_classifier | 6,000 | 1,200 | 1,200 |
+| sft_trajectories | 8,000 | 1,600 | 1,600 |
+
+Failures:
+
+None during import.
+
+Decision:
+
+Use this as the next checkpoint for expanded-data baselines, but preserve the
+smaller `golden_v0.1` as the stricter social/bookmark-derived trace pack.
+
+Next:
+
+Run CPU baselines on the expanded data and then evaluate against harder
+realistic holdouts.
+
+## EXP-2026-06-30-006 - AI expanded CPU baseline v0.1
+
+Goal:
+
+Establish a measurable CPU floor on the larger `kiwi-brain-ai-expanded-v0.1`
+datasets before GPU small-model work.
+
+Data:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Code change:
+
+`train_specialist_baselines.py` was updated to support the newer expanded
+schema:
+
+- `risk_reviewer` now reads `user_query`, `symbol`, `task_family`,
+  `draft_memo`, and `cited_evidence_ids`;
+- `citation_verifier` now reads `evidence_text`, `evidence_id`, and `source`;
+- `citation_verifier` accepts `label.verdict` and maps `supported` to
+  `supports`.
+
+Canonical command:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines \
+  --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Metrics:
+
+| Specialist | Target | Train | Dev | Test | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| router_classifier | route_label | 6,000 | 1,200 | 1,200 | 1.0000 | 1.0000 | 0.1667 |
+| risk_reviewer | risk_level | 8,000 | 1,600 | 1,600 | 1.0000 | 1.0000 | 0.6669 |
+| citation_verifier | support/verdict | 6,000 | 1,200 | 1,200 | 0.9000 | 0.8978 | 0.3333 |
+
+Failures / caveats:
+
+- First run used a placeholder timestamp in the run id
+  `specialist_cpu_ai_expanded_v0.1_20260630T000000Z`. It is non-canonical and
+  superseded by the timestamped run above.
+- Router and risk reviewer scores are too clean to treat as proof of real-world
+  generalization. The expanded data is balanced and template-heavy.
+- Citation verifier improved strongly, but synthetic mismatched and
+  missing-evidence negatives likely make the task easier than real citation
+  grounding.
+
+Decision:
+
+The expanded datasets are useful as a GPU-readiness and pipeline sanity
+checkpoint, but the next step must be realistic holdout evaluation before
+claiming model quality.
+
+Next:
+
+Evaluate the expanded router/risk/citation baselines on real tool traces,
+long-research episodes, and harder evidence-chain negatives.

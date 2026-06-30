@@ -39,6 +39,18 @@ repairs/citation_verifier_repair_v0.1/
 repairs/citation_verifier_repair_v0.2/
 ```
 
+Latest expanded checkpoint:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Canonical expanded CPU baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
 ## Baseline Results
 
 | Specialist | Target | Test accuracy | Test macro F1 | Status |
@@ -131,6 +143,50 @@ v0.2 is a real repair signal, but it is still not strong enough for citation
 verifier GPU fine-tuning. The next step is real span audit, not more synthetic
 flooding.
 
+## AI Expanded v0.1 Import + CPU Baseline
+
+Imported curated v0.6 data from the Agent/KIWI workspace into this standalone
+repo:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Source curation summary:
+
+| Dataset | Train | Dev | Test |
+| --- | ---: | ---: | ---: |
+| router_classifier | 6,000 | 1,200 | 1,200 |
+| risk_reviewer | 8,000 | 1,600 | 1,600 |
+| citation_verifier | 6,000 | 1,200 | 1,200 |
+| sft_trajectories | 8,000 | 1,600 | 1,600 |
+| preference_pairs | 8,000 | 1,600 | 1,600 |
+| grpo_rollouts | 8,000 | 1,600 | 1,600 |
+
+Canonical baseline run:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines \
+  --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Results:
+
+| Specialist | Target | Test accuracy | Test macro F1 | Majority accuracy | Interpretation |
+| --- | --- | ---: | ---: | ---: | --- |
+| router_classifier | route_label | 1.0000 | 1.0000 | 0.1667 | easy-distribution baseline; needs realistic holdout |
+| risk_reviewer | risk_level | 1.0000 | 1.0000 | 0.6669 | easy binary schema; do not overclaim |
+| citation_verifier | support/verdict | 0.9000 | 0.8978 | 0.3333 | much better than golden v0.1, but synthetic/easy negatives likely help |
+
+Decision:
+
+The expanded schema is learnable and useful for GPU-readiness plumbing, but the
+near-perfect router/risk scores indicate an easy/template-heavy distribution.
+Before GPU fine-tuning, run external holdouts from real/long-research traces and
+add harder boundary examples.
+
 ## Learning Source Registry
 
 `LEARNING_SOURCES.md` has been added as the canonical place to record external
@@ -155,6 +211,9 @@ python3 -m py_compile training-corpus/scripts/build_citation_repair_v02.py train
 python3 training-corpus/scripts/build_citation_repair_v02.py --help
 python3 training-corpus/scripts/build_citation_repair_v02.py
 python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/repaired_datasets --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.2/baselines --run-id citation_repair_probe_v0.2 --datasets citation_verifier_url,citation_support_binary
+rsync -a --delete /Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/
+python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
+python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
 git push -u origin main
 ```
 
@@ -166,11 +225,14 @@ The imported baseline checkpoint reports:
 
 ## Next Best Step
 
-Continue citation verifier data repair and learning-source registry:
+Run realistic holdout evaluation for the expanded baseline, then continue
+citation verifier data repair and learning-source registry:
 
-1. add real official positive spans and audited paragraph spans,
-2. add partial-support boundary cases and rare insufficient / contradict rows,
-3. rerun the repair baseline as `citation_verifier_repair_v0.3`,
-4. only then decide whether a small LLM verifier is worth GPU time,
-5. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
+1. evaluate expanded router/risk/citation baselines on real tool traces and
+   long-research holdout rows,
+2. add real official positive spans and audited paragraph spans,
+3. add partial-support boundary cases and rare insufficient / contradict rows,
+4. rerun the repair baseline as `citation_verifier_repair_v0.3`,
+5. only then decide whether a small LLM verifier is worth GPU time,
+6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

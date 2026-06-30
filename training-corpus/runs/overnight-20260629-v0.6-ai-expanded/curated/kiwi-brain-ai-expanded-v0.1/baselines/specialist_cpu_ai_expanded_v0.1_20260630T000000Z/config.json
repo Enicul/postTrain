@@ -1,0 +1,13 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "created_at": "2026-06-30T08:01:56Z",
+  "datasets": [
+    "router_classifier",
+    "risk_reviewer",
+    "citation_verifier"
+  ],
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T000000Z",
+  "run_id": "specialist_cpu_ai_expanded_v0.1_20260630T000000Z",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1"
+}

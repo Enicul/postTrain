@@ -1,0 +1,480 @@
+{
+  "datasets": {
+    "calculation_verifier": {
+      "dev": {
+        "deduped": 944,
+        "duplicates": 413,
+        "label_counts_raw": {
+          "price_change_pct": 1357
+        },
+        "label_counts_selected": {
+          "price_change_pct": 500
+        },
+        "raw": 1357,
+        "selected": 500,
+        "written": 500
+      },
+      "test": {
+        "deduped": 885,
+        "duplicates": 413,
+        "label_counts_raw": {
+          "price_change_pct": 1298
+        },
+        "label_counts_selected": {
+          "price_change_pct": 500
+        },
+        "raw": 1298,
+        "selected": 500,
+        "written": 500
+      },
+      "train": {
+        "deduped": 4248,
+        "duplicates": 1947,
+        "label_counts_raw": {
+          "price_change_pct": 6195
+        },
+        "label_counts_selected": {
+          "price_change_pct": 2000
+        },
+        "raw": 6195,
+        "selected": 2000,
+        "written": 2000
+      }
+    },
+    "citation_verifier": {
+      "dev": {
+        "deduped": 19374,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "not_supported": 8806,
+          "supported": 8806,
+          "unverifiable": 1762
+        },
+        "label_counts_selected": {
+          "not_supported": 400,
+          "supported": 400,
+          "unverifiable": 400
+        },
+        "raw": 19374,
+        "selected": 1200,
+        "written": 1200
+      },
+      "test": {
+        "deduped": 18703,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "not_supported": 8501,
+          "supported": 8501,
+          "unverifiable": 1701
+        },
+        "label_counts_selected": {
+          "not_supported": 400,
+          "supported": 400,
+          "unverifiable": 400
+        },
+        "raw": 18703,
+        "selected": 1200,
+        "written": 1200
+      },
+      "train": {
+        "deduped": 73837,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "not_supported": 33562,
+          "supported": 33562,
+          "unverifiable": 6713
+        },
+        "label_counts_selected": {
+          "not_supported": 2000,
+          "supported": 2000,
+          "unverifiable": 2000
+        },
+        "raw": 73837,
+        "selected": 6000,
+        "written": 6000
+      }
+    },
+    "event_extractor": {
+      "dev": {
+        "deduped": 10163,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "market_news_headline": 5332,
+          "market_price_bar": 1357,
+          "sec_filing": 3474
+        },
+        "label_counts_selected": {
+          "market_news_headline": 400,
+          "market_price_bar": 400,
+          "sec_filing": 400
+        },
+        "raw": 10163,
+        "selected": 1200,
+        "written": 1200
+      },
+      "test": {
+        "deduped": 9799,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "market_news_headline": 5144,
+          "market_price_bar": 1298,
+          "sec_filing": 3357
+        },
+        "label_counts_selected": {
+          "market_news_headline": 400,
+          "market_price_bar": 400,
+          "sec_filing": 400
+        },
+        "raw": 9799,
+        "selected": 1200,
+        "written": 1200
+      },
+      "train": {
+        "deduped": 39757,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "market_news_headline": 23634,
+          "market_price_bar": 6195,
+          "sec_filing": 9928
+        },
+        "label_counts_selected": {
+          "market_news_headline": 2000,
+          "market_price_bar": 2000,
+          "sec_filing": 2000
+        },
+        "raw": 39757,
+        "selected": 6000,
+        "written": 6000
+      }
+    },
+    "grpo_rollouts": {
+      "dev": {
+        "deduped": 29161,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "rollout": 29161
+        },
+        "label_counts_selected": {
+          "rollout": 1600
+        },
+        "raw": 29161,
+        "selected": 1600,
+        "written": 1600
+      },
+      "test": {
+        "deduped": 27971,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "rollout": 27971
+        },
+        "label_counts_selected": {
+          "rollout": 1600
+        },
+        "raw": 27971,
+        "selected": 1600,
+        "written": 1600
+      },
+      "train": {
+        "deduped": 126487,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "rollout": 126487
+        },
+        "label_counts_selected": {
+          "rollout": 8000
+        },
+        "raw": 126487,
+        "selected": 8000,
+        "written": 8000
+      }
+    },
+    "memo_quality_scorer": {
+      "dev": {
+        "deduped": 43424,
+        "duplicates": 14898,
+        "label_counts_raw": {
+          "good": 29161,
+          "needs_revision": 2714,
+          "poor": 26447
+        },
+        "label_counts_selected": {
+          "good": 534,
+          "needs_revision": 533,
+          "poor": 533
+        },
+        "raw": 58322,
+        "selected": 1600,
+        "written": 1600
+      },
+      "test": {
+        "deduped": 41536,
+        "duplicates": 14406,
+        "label_counts_raw": {
+          "good": 27971,
+          "needs_revision": 2596,
+          "poor": 25375
+        },
+        "label_counts_selected": {
+          "good": 534,
+          "needs_revision": 533,
+          "poor": 533
+        },
+        "raw": 55942,
+        "selected": 1600,
+        "written": 1600
+      },
+      "train": {
+        "deduped": 198200,
+        "duplicates": 54774,
+        "label_counts_raw": {
+          "good": 126487,
+          "needs_revision": 12390,
+          "poor": 114097
+        },
+        "label_counts_selected": {
+          "good": 2668,
+          "needs_revision": 2666,
+          "poor": 2666
+        },
+        "raw": 252974,
+        "selected": 8000,
+        "written": 8000
+      }
+    },
+    "preference_pairs": {
+      "dev": {
+        "deduped": 29161,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "strong": 29161
+        },
+        "label_counts_selected": {
+          "strong": 1600
+        },
+        "raw": 29161,
+        "selected": 1600,
+        "written": 1600
+      },
+      "test": {
+        "deduped": 27971,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "strong": 27971
+        },
+        "label_counts_selected": {
+          "strong": 1600
+        },
+        "raw": 27971,
+        "selected": 1600,
+        "written": 1600
+      },
+      "train": {
+        "deduped": 126487,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "strong": 126487
+        },
+        "label_counts_selected": {
+          "strong": 8000
+        },
+        "raw": 126487,
+        "selected": 8000,
+        "written": 8000
+      }
+    },
+    "risk_reviewer": {
+      "dev": {
+        "deduped": 43424,
+        "duplicates": 14898,
+        "label_counts_raw": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 5428,
+          "no_flags": 47466,
+          "risk_review_passed": 5428
+        },
+        "label_counts_selected": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 534,
+          "no_flags": 533,
+          "risk_review_passed": 533
+        },
+        "raw": 58322,
+        "selected": 1600,
+        "written": 1600
+      },
+      "test": {
+        "deduped": 41536,
+        "duplicates": 14406,
+        "label_counts_raw": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 5192,
+          "no_flags": 45558,
+          "risk_review_passed": 5192
+        },
+        "label_counts_selected": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 534,
+          "no_flags": 533,
+          "risk_review_passed": 533
+        },
+        "raw": 55942,
+        "selected": 1600,
+        "written": 1600
+      },
+      "train": {
+        "deduped": 198200,
+        "duplicates": 54774,
+        "label_counts_raw": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 24780,
+          "no_flags": 203414,
+          "risk_review_passed": 24780
+        },
+        "label_counts_selected": {
+          "missing_risk_or_invalidation|missing_supporting_evidence": 2668,
+          "no_flags": 2666,
+          "risk_review_passed": 2666
+        },
+        "raw": 252974,
+        "selected": 8000,
+        "written": 8000
+      }
+    },
+    "router_classifier": {
+      "dev": {
+        "deduped": 17641,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "deep_research": 4071,
+          "evidence_check": 2714,
+          "fast_answer": 2714,
+          "financial_calculation": 2714,
+          "news_retrieval": 2714,
+          "price_lookup": 2714
+        },
+        "label_counts_selected": {
+          "deep_research": 200,
+          "evidence_check": 200,
+          "fast_answer": 200,
+          "financial_calculation": 200,
+          "news_retrieval": 200,
+          "price_lookup": 200
+        },
+        "raw": 17641,
+        "selected": 1200,
+        "written": 1200
+      },
+      "test": {
+        "deduped": 16874,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "deep_research": 3894,
+          "evidence_check": 2596,
+          "fast_answer": 2596,
+          "financial_calculation": 2596,
+          "news_retrieval": 2596,
+          "price_lookup": 2596
+        },
+        "label_counts_selected": {
+          "deep_research": 200,
+          "evidence_check": 200,
+          "fast_answer": 200,
+          "financial_calculation": 200,
+          "news_retrieval": 200,
+          "price_lookup": 200
+        },
+        "raw": 16874,
+        "selected": 1200,
+        "written": 1200
+      },
+      "train": {
+        "deduped": 80535,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "deep_research": 18585,
+          "evidence_check": 12390,
+          "fast_answer": 12390,
+          "financial_calculation": 12390,
+          "news_retrieval": 12390,
+          "price_lookup": 12390
+        },
+        "label_counts_selected": {
+          "deep_research": 1000,
+          "evidence_check": 1000,
+          "fast_answer": 1000,
+          "financial_calculation": 1000,
+          "news_retrieval": 1000,
+          "price_lookup": 1000
+        },
+        "raw": 80535,
+        "selected": 6000,
+        "written": 6000
+      }
+    },
+    "sft_trajectories": {
+      "dev": {
+        "deduped": 29161,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "citation_support": 8806,
+          "financial_calculation": 1357,
+          "memo_quality": 1357,
+          "router": 17641
+        },
+        "label_counts_selected": {
+          "citation_support": 400,
+          "financial_calculation": 400,
+          "memo_quality": 400,
+          "router": 400
+        },
+        "raw": 29161,
+        "selected": 1600,
+        "written": 1600
+      },
+      "test": {
+        "deduped": 27971,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "citation_support": 8501,
+          "financial_calculation": 1298,
+          "memo_quality": 1298,
+          "router": 16874
+        },
+        "label_counts_selected": {
+          "citation_support": 400,
+          "financial_calculation": 400,
+          "memo_quality": 400,
+          "router": 400
+        },
+        "raw": 27971,
+        "selected": 1600,
+        "written": 1600
+      },
+      "train": {
+        "deduped": 126487,
+        "duplicates": 0,
+        "label_counts_raw": {
+          "citation_support": 33562,
+          "financial_calculation": 6195,
+          "memo_quality": 6195,
+          "router": 80535
+        },
+        "label_counts_selected": {
+          "citation_support": 2000,
+          "financial_calculation": 2000,
+          "memo_quality": 2000,
+          "router": 2000
+        },
+        "raw": 126487,
+        "selected": 8000,
+        "written": 8000
+      }
+    }
+  },
+  "notes": [
+    "Deterministic curation pass; no LLM calls.",
+    "Chronological split from source run is preserved.",
+    "Rows are deduplicated by task/input key and balanced by label family where possible.",
+    "High-signal rows are preferred for risk, memo, SFT, DPO, and GRPO datasets.",
+    "Router rows are rebuilt from tasks/all.jsonl with as_of and symbol context to avoid date-free template leakage.",
+    "Citation verifier rows are augmented with synthetic mismatched and missing-evidence negatives.",
+    "High-risk router rows are normalized to require a human gate, based on Claude brain audit feedback."
+  ],
+  "pack_id": "kiwi-brain-ai-expanded-v0.1",
+  "run_dir": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded"
+}

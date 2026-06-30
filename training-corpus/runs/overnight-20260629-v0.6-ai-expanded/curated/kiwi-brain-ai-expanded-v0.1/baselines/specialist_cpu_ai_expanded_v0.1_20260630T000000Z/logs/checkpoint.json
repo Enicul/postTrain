@@ -1,0 +1,10 @@
+{
+  "completed": [
+    "router_classifier",
+    "risk_reviewer",
+    "citation_verifier"
+  ],
+  "run_id": "specialist_cpu_ai_expanded_v0.1_20260630T000000Z",
+  "status": "complete",
+  "ts": "2026-06-30T08:02:09Z"
+}

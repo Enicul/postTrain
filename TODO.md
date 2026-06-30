@@ -55,6 +55,24 @@
 - [ ] Keep safety recall as a hard metric.
 - [ ] Add long-research holdout to the unified runner.
 
+## P1 - AI Expanded Baseline / Holdout Evaluation
+
+- [x] Import `kiwi-brain-ai-expanded-v0.1` into the standalone `postTrain`
+  repo.
+- [x] Patch `train_specialist_baselines.py` for the expanded v0.6 schema.
+- [x] Run canonical expanded CPU baseline:
+  `specialist_cpu_ai_expanded_v0.1_20260630T080225Z`.
+- [x] Record the non-canonical placeholder timestamp run as a failure instead
+  of silently deleting it.
+- [ ] Build realistic holdout evaluator for real tool traces, long-research
+  episodes, and evidence-chain negatives.
+- [ ] Run expanded router/risk/citation baselines on that holdout.
+- [ ] Diagnose why router/risk reach 1.0 on the expanded split: template
+  leakage, label shortcuts, split similarity, or genuinely easy task.
+- [ ] Add boundary cases before GPU fine-tuning: over-routing,
+  under-routing, high-risk safety recall, partial support, stale evidence, and
+  contradiction handling.
+
 ## P2 - WebExplorer-Style Seed-to-Task Generator
 
 - [ ] Convert raw X/Weibo/Xiaohongshu/official seeds into:
@@ -65,6 +83,8 @@
 
 ## P2 - GPU Post-Training
 
+- [ ] Do not start GPU LoRA/SFT/DPO/GRPO until the expanded baseline is tested
+  on realistic holdouts.
 - [ ] Run Qwen 0.5B/1.5B/3B LoRA SFT for structured specialist JSON outputs.
 - [ ] Try DPO on strong-vs-weak trajectory pairs.
 - [ ] Try tiny GRPO/RLVR only on verifiable subtasks: routing, schema,

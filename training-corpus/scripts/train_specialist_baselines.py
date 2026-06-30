@@ -136,8 +136,13 @@ def risk_text(row: dict[str, Any]) -> str:
     inp = input_obj(row)
     return "\n".join(
         [
+            f"user_query: {stringify(inp.get('user_query') or inp.get('user_request'))}",
+            f"symbol: {stringify(inp.get('symbol'))}",
+            f"task_family: {stringify(inp.get('task_family'))}",
             f"claim: {stringify(inp.get('claim'))}",
+            f"draft_memo: {stringify(inp.get('draft_memo'))}",
             f"evidence_summary: {stringify(inp.get('evidence_summary'))}",
+            f"cited_evidence_ids: {stringify(inp.get('cited_evidence_ids'))}",
             f"verdict: {stringify(inp.get('verdict'))}",
             f"source: {stringify((row.get('provenance') or {}).get('source_url'))}",
         ]
@@ -149,8 +154,10 @@ def citation_text(row: dict[str, Any]) -> str:
     return "\n".join(
         [
             f"claim: {stringify(inp.get('claim'))}",
-            f"evidence_span: {stringify(inp.get('evidence_span'))}",
+            f"evidence_span: {stringify(inp.get('evidence_span') or inp.get('evidence_text'))}",
+            f"evidence_id: {stringify(inp.get('evidence_id'))}",
             f"source_class: {stringify(inp.get('source_class'))}",
+            f"source: {stringify(inp.get('source'))}",
         ]
     )
 
@@ -166,8 +173,10 @@ def citation_text_with_url(row: dict[str, Any]) -> str:
     return "\n".join(
         [
             f"claim: {stringify(inp.get('claim'))}",
-            f"evidence_span: {stringify(inp.get('evidence_span'))}",
+            f"evidence_span: {stringify(inp.get('evidence_span') or inp.get('evidence_text'))}",
+            f"evidence_id: {stringify(inp.get('evidence_id'))}",
             f"source_class: {stringify(inp.get('source_class'))}",
+            f"source: {stringify(inp.get('source'))}",
             f"source_domain: {source_domain(source_url)}",
             f"source_url: {stringify(source_url)}",
         ]
@@ -183,7 +192,13 @@ def risk_label(row: dict[str, Any]) -> str:
 
 
 def citation_label(row: dict[str, Any]) -> str:
-    return stringify(label_obj(row).get("support_type"))
+    label = label_obj(row)
+    value = label.get("support_type") or label.get("verdict")
+    if value == "supported":
+        value = "supports"
+    elif value == "unsupported":
+        value = "not_supported"
+    return stringify(value)
 
 
 def citation_binary_label(row: dict[str, Any]) -> str:

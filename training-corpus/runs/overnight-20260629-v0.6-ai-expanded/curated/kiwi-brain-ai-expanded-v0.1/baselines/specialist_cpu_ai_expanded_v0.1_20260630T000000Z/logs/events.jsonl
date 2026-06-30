@@ -1,0 +1,32 @@
+{"event": "run_start", "run_id": "specialist_cpu_ai_expanded_v0.1_20260630T000000Z", "selected": ["router_classifier", "risk_reviewer", "citation_verifier"], "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "dataset_start", "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/router_classifier/train.jsonl", "rows": 6000, "split": "train", "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/router_classifier/dev.jsonl", "rows": 1200, "split": "dev", "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/router_classifier/test.jsonl", "rows": 1200, "split": "test", "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "train_start", "labels": ["deep_research", "evidence_check", "fast_answer", "financial_calculation", "news_retrieval", "price_lookup"], "train_rows": 6000, "ts": "2026-06-30T08:01:56Z"}
+{"dataset": "router_classifier", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T08:01:58Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.0, "weighted_f1": 1.0}, "split": "train", "ts": "2026-06-30T08:01:58Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.0, "weighted_f1": 1.0}, "split": "dev", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.0, "weighted_f1": 1.0}, "split": "test", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "router_classifier", "event": "dataset_complete", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "dataset_start", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/risk_reviewer/train.jsonl", "rows": 8000, "split": "train", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/risk_reviewer/dev.jsonl", "rows": 1600, "split": "dev", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/risk_reviewer/test.jsonl", "rows": 1600, "split": "test", "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "train_start", "labels": ["high", "low"], "train_rows": 8000, "ts": "2026-06-30T08:01:59Z"}
+{"dataset": "risk_reviewer", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T08:02:02Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "weighted_f1": 1.0}, "split": "train", "ts": "2026-06-30T08:02:04Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "weighted_f1": 1.0}, "split": "dev", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 1.0, "macro_f1": 1.0, "weighted_f1": 1.0}, "split": "test", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "risk_reviewer", "event": "dataset_complete", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "dataset_start", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/citation_verifier/train.jsonl", "rows": 6000, "split": "train", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/citation_verifier/dev.jsonl", "rows": 1200, "split": "dev", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/citation_verifier/test.jsonl", "rows": 1200, "split": "test", "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "train_start", "labels": ["not_supported", "supports", "unverifiable"], "train_rows": 6000, "ts": "2026-06-30T08:02:05Z"}
+{"dataset": "citation_verifier", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T08:02:07Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.9488, "macro_f1": 0.9481, "weighted_f1": 0.9481}, "split": "train", "ts": "2026-06-30T08:02:08Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.9017, "macro_f1": 0.8992, "weighted_f1": 0.8992}, "split": "dev", "ts": "2026-06-30T08:02:08Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.9, "macro_f1": 0.8978, "weighted_f1": 0.8978}, "split": "test", "ts": "2026-06-30T08:02:09Z"}
+{"dataset": "citation_verifier", "event": "dataset_complete", "ts": "2026-06-30T08:02:09Z"}
+{"completed": ["router_classifier", "risk_reviewer", "citation_verifier"], "event": "run_complete", "run_id": "specialist_cpu_ai_expanded_v0.1_20260630T000000Z", "ts": "2026-06-30T08:02:09Z"}

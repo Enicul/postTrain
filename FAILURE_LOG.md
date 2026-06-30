@@ -27,6 +27,75 @@ Status:
 
 Fixed.
 
+## F-2026-06-30-010 - Expanded baseline first run used placeholder timestamp
+
+Symptom:
+
+The first expanded-data baseline run completed successfully, but its run id used
+a placeholder timestamp:
+
+```text
+specialist_cpu_ai_expanded_v0.1_20260630T000000Z
+```
+
+Cause:
+
+The command was launched with a manually typed placeholder run id instead of a
+real UTC timestamp.
+
+Change:
+
+Reran the same baseline with a canonical timestamped run id:
+
+```text
+specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Effect:
+
+The canonical run completed and is the one referenced in progress docs and
+experiment logs. The placeholder run should be treated as a superseded duplicate
+and not used as the resume point.
+
+Status:
+
+Fixed; canonical run recorded.
+
+## F-2026-06-30-011 - Expanded baseline scores are probably template-easy
+
+Symptom:
+
+The expanded CPU baseline reported perfect held-out accuracy for
+`router_classifier` and `risk_reviewer`:
+
+```text
+router_classifier test accuracy / macro F1: 1.0000 / 1.0000
+risk_reviewer test accuracy / macro F1: 1.0000 / 1.0000
+```
+
+Cause:
+
+The expanded checkpoint is balanced and heavily template/synthetic. The split is
+chronological, but many labels are recoverable from highly regular query/memo
+patterns. This makes it useful for pipeline validation but not enough to prove
+realistic generalization.
+
+Change:
+
+Recorded the result as an easy-distribution baseline rather than a final model
+quality claim. The next step is to add realistic holdout evaluation from real
+tool traces, long-research traces, and harder boundary examples.
+
+Effect:
+
+The expanded baseline is useful as a GPU-readiness sanity check, while the
+interview story remains honest: high synthetic performance must be tested
+against harder, provenance-rich holdouts.
+
+Status:
+
+Open until external holdout evaluation is added.
+
 ## F-2026-06-30-009 - All v0.2 generated citation rows hurt binary support
 
 Symptom:

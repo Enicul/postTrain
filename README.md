@@ -44,7 +44,7 @@ Every agent should read these files first:
 
 ## Current Baseline
 
-First CPU specialist baseline:
+First CPU specialist baseline on the smaller `golden_v0.1` pack:
 
 ```bash
 python3 -m pip install -r training-corpus/requirements-baseline.txt
@@ -68,6 +68,30 @@ training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/
   baselines/specialist_cpu_baselines_v0.1/
 ```
 
+Expanded CPU specialist baseline on `kiwi-brain-ai-expanded-v0.1`:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines \
+  --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Current results on the expanded pack:
+
+| Specialist | Target | Test accuracy | Test macro F1 | Status |
+| --- | --- | ---: | ---: | --- |
+| router_classifier | route_label | 1.0000 | 1.0000 | easy split; needs realistic holdout |
+| risk_reviewer | risk_level | 1.0000 | 1.0000 | easy binary schema; needs edge cases |
+| citation_verifier | support/verdict | 0.9000 | 0.8978 | learnable, but needs harder real spans |
+
+Interpretation:
+
+The expanded pack proves the pipeline can ingest larger KIWI datasets and run
+repeatable baselines. It does not yet prove real-world generalization. The next
+step is to evaluate these checkpoints on real tool traces, long-research
+episodes, and harder evidence-chain negatives before GPU fine-tuning.
+
 ## Repo Map
 
 ```text
@@ -88,6 +112,7 @@ training-corpus/
   requirements-baseline.txt
   scripts/train_specialist_baselines.py
   runs/.../golden_v0.1/
+  runs/.../kiwi-brain-ai-expanded-v0.1/
 ```
 
 ## Boundary

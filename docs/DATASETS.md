@@ -8,6 +8,60 @@ Path:
 training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1
 ```
 
+## Current Expanded Data
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Purpose:
+
+This is the larger server-portable pack imported from the Agent/KIWI workspace.
+It is useful for pipeline readiness, small specialist training preparation, and
+future SFT/DPO/GRPO formatting work. It should not replace `golden_v0.1` as the
+strict failure-analysis pack.
+
+Imported selected rows:
+
+| Dataset | Train | Dev | Test | Intended use |
+| --- | ---: | ---: | ---: | --- |
+| calculation_verifier | 2,000 | 500 | 500 | deterministic calculation task data |
+| citation_verifier | 6,000 | 1,200 | 1,200 | claim-evidence support classifier |
+| event_extractor | 6,000 | 1,200 | 1,200 | structured market/filing/news event extraction |
+| grpo_rollouts | 8,000 | 1,600 | 1,600 | future verifiable RL rollout substrate |
+| memo_quality_scorer | 8,000 | 1,600 | 1,600 | memo quality / revision classifier |
+| preference_pairs | 8,000 | 1,600 | 1,600 | future DPO / preference tuning pairs |
+| risk_reviewer | 8,000 | 1,600 | 1,600 | risk/safety review classifier |
+| router_classifier | 6,000 | 1,200 | 1,200 | coordinator route classifier |
+| sft_trajectories | 8,000 | 1,600 | 1,600 | structured trajectory SFT rows |
+
+CPU baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Baseline result:
+
+| Specialist | Test accuracy | Test macro F1 | Judgment |
+| --- | ---: | ---: | --- |
+| router_classifier | 1.0000 | 1.0000 | likely template-easy; needs realistic holdout |
+| risk_reviewer | 1.0000 | 1.0000 | likely easy binary schema; needs boundary cases |
+| citation_verifier | 0.9000 | 0.8978 | learnable, but synthetic negatives may be easier than real grounding |
+
+Data quality judgment:
+
+- Expanded data is useful for GPU-readiness and end-to-end artifact packaging.
+- The split is balanced and learnable, but likely too template-heavy for
+  real-world claims.
+- Router/risk specialists need external holdouts: real user queries, long
+  research traces, high-risk edge cases, and over/under-routing probes.
+- Citation verification still needs audited official paragraphs, citation
+  spans, partial-support boundaries, and contradictions before claiming
+  real grounding quality.
+
 ## Golden Specialist Datasets
 
 | Dataset | Rows | Train | Dev | Test | Purpose |
@@ -129,3 +183,6 @@ synthetic flooding.
 - Citation verifier repair v0.2 improves the repair probes, but it still does
   not beat the majority baseline on test accuracy. Continue real-span audit
   before GPU fine-tuning.
+- AI expanded v0.1 is large enough to test training plumbing, but its easy
+  router/risk metrics mean the next quality step is realistic holdout
+  evaluation, not immediate overclaiming.

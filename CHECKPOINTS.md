@@ -307,3 +307,110 @@ positive paragraphs, partial-support boundaries, and rare contradict /
 insufficient rows. Keep dev/test fixed or create a separately named audited
 golden set if the evaluation split changes.
 ```
+
+## CP-2026-06-30-008 - AI expanded v0.1 data checkpoint
+
+Status:
+
+```text
+imported
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Source:
+
+```text
+/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1
+```
+
+Import command:
+
+```bash
+rsync -a --delete \
+  /Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ \
+  training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/
+```
+
+Selected rows:
+
+| Dataset | Train | Dev | Test |
+| --- | ---: | ---: | ---: |
+| calculation_verifier | 2,000 | 500 | 500 |
+| citation_verifier | 6,000 | 1,200 | 1,200 |
+| event_extractor | 6,000 | 1,200 | 1,200 |
+| grpo_rollouts | 8,000 | 1,600 | 1,600 |
+| memo_quality_scorer | 8,000 | 1,600 | 1,600 |
+| preference_pairs | 8,000 | 1,600 | 1,600 |
+| risk_reviewer | 8,000 | 1,600 | 1,600 |
+| router_classifier | 6,000 | 1,200 | 1,200 |
+| sft_trajectories | 8,000 | 1,600 | 1,600 |
+
+Decision:
+
+This checkpoint is the larger server-portable training pack. Keep
+`golden_v0.1` as the smaller, stricter social/bookmark-derived pack and use
+this expanded pack for pipeline/GPU-readiness checks.
+
+Resume:
+
+```text
+Use the canonical baseline in CP-2026-06-30-009. Do not judge model quality from
+the expanded train/dev/test split alone; add realistic holdout evaluation first.
+```
+
+## CP-2026-06-30-009 - AI expanded CPU baseline v0.1
+
+Status:
+
+```text
+complete
+```
+
+Canonical command:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 \
+  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines \
+  --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Output:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Metrics:
+
+| Specialist | Target | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | --- | ---: | ---: | ---: |
+| router_classifier | route_label | 1.0000 | 1.0000 | 0.1667 |
+| risk_reviewer | risk_level | 1.0000 | 1.0000 | 0.6669 |
+| citation_verifier | support/verdict | 0.9000 | 0.8978 | 0.3333 |
+
+Failure preserved:
+
+An earlier run used the placeholder id
+`specialist_cpu_ai_expanded_v0.1_20260630T000000Z`. It is retained as a
+non-canonical artifact and documented in `FAILURE_LOG.md`; use the timestamped
+run above for reporting.
+
+Decision:
+
+The expanded data is learnable, but router/risk scores are too clean to claim
+real-world generalization. Treat this as a CPU sanity baseline and GPU-readiness
+checkpoint, not as proof that the specialists are production-ready.
+
+Resume:
+
+```text
+Build a realistic holdout evaluator for real tool traces, long-research
+episodes, and harder evidence-chain negatives. Run this checkpoint against that
+holdout before starting LoRA/SFT/DPO/GRPO.
+```

@@ -1,0 +1,263 @@
+{
+  "artifacts": {
+    "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/citation_verifier/metrics.json",
+    "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/citation_verifier/model.joblib",
+    "predictions": {
+      "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/citation_verifier/predictions_dev.jsonl",
+      "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/citation_verifier/predictions_test.jsonl",
+      "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/citation_verifier/predictions_train.jsonl"
+    }
+  },
+  "dataset": "citation_verifier",
+  "labels": [
+    "not_supported",
+    "supports",
+    "unverifiable"
+  ],
+  "majority_baseline": {
+    "accuracy": 0.3333,
+    "macro_f1": 0.1667,
+    "predicted_label": "not_supported"
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.9016666666666666,
+        "macro avg": {
+          "f1-score": 0.8991630777751345,
+          "precision": 0.9045480769177295,
+          "recall": 0.9016666666666667,
+          "support": 1200.0
+        },
+        "not_supported": {
+          "f1-score": 0.8406593406593407,
+          "precision": 0.9329268292682927,
+          "recall": 0.765,
+          "support": 400.0
+        },
+        "supports": {
+          "f1-score": 0.9062870699881376,
+          "precision": 0.8623024830699775,
+          "recall": 0.955,
+          "support": 400.0
+        },
+        "unverifiable": {
+          "f1-score": 0.9505428226779252,
+          "precision": 0.9184149184149184,
+          "recall": 0.985,
+          "support": 400.0
+        },
+        "weighted avg": {
+          "f1-score": 0.8991630777751345,
+          "precision": 0.9045480769177296,
+          "recall": 0.9016666666666666,
+          "support": 1200.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "not_supported",
+          "supports",
+          "unverifiable"
+        ],
+        "rows": [
+          [
+            306,
+            61,
+            33
+          ],
+          [
+            16,
+            382,
+            2
+          ],
+          [
+            6,
+            0,
+            394
+          ]
+        ]
+      },
+      "label_distribution": {
+        "not_supported": 400,
+        "supports": 400,
+        "unverifiable": 400
+      },
+      "metrics": {
+        "accuracy": 0.9017,
+        "macro_f1": 0.8992,
+        "weighted_f1": 0.8992
+      },
+      "prediction_distribution": {
+        "not_supported": 328,
+        "supports": 443,
+        "unverifiable": 429
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.9,
+        "macro avg": {
+          "f1-score": 0.8978259370279535,
+          "precision": 0.9067758529965659,
+          "recall": 0.9,
+          "support": 1200.0
+        },
+        "not_supported": {
+          "f1-score": 0.8361111111111111,
+          "precision": 0.940625,
+          "recall": 0.7525,
+          "support": 400.0
+        },
+        "supports": {
+          "f1-score": 0.8944954128440367,
+          "precision": 0.826271186440678,
+          "recall": 0.975,
+          "support": 400.0
+        },
+        "unverifiable": {
+          "f1-score": 0.9628712871287128,
+          "precision": 0.9534313725490197,
+          "recall": 0.9725,
+          "support": 400.0
+        },
+        "weighted avg": {
+          "f1-score": 0.8978259370279535,
+          "precision": 0.9067758529965658,
+          "recall": 0.9,
+          "support": 1200.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "not_supported",
+          "supports",
+          "unverifiable"
+        ],
+        "rows": [
+          [
+            301,
+            80,
+            19
+          ],
+          [
+            10,
+            390,
+            0
+          ],
+          [
+            9,
+            2,
+            389
+          ]
+        ]
+      },
+      "label_distribution": {
+        "not_supported": 400,
+        "supports": 400,
+        "unverifiable": 400
+      },
+      "metrics": {
+        "accuracy": 0.9,
+        "macro_f1": 0.8978,
+        "weighted_f1": 0.8978
+      },
+      "prediction_distribution": {
+        "not_supported": 320,
+        "supports": 472,
+        "unverifiable": 408
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.9488333333333333,
+        "macro avg": {
+          "f1-score": 0.9481370177993256,
+          "precision": 0.9513610568890251,
+          "recall": 0.9488333333333333,
+          "support": 6000.0
+        },
+        "not_supported": {
+          "f1-score": 0.9189045466631215,
+          "precision": 0.9812606473594548,
+          "recall": 0.864,
+          "support": 2000.0
+        },
+        "supports": {
+          "f1-score": 0.9484978540772532,
+          "precision": 0.906563354603464,
+          "recall": 0.9945,
+          "support": 2000.0
+        },
+        "unverifiable": {
+          "f1-score": 0.977008652657602,
+          "precision": 0.9662591687041565,
+          "recall": 0.988,
+          "support": 2000.0
+        },
+        "weighted avg": {
+          "f1-score": 0.9481370177993255,
+          "precision": 0.9513610568890251,
+          "recall": 0.9488333333333333,
+          "support": 6000.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "not_supported",
+          "supports",
+          "unverifiable"
+        ],
+        "rows": [
+          [
+            1728,
+            204,
+            68
+          ],
+          [
+            10,
+            1989,
+            1
+          ],
+          [
+            23,
+            1,
+            1976
+          ]
+        ]
+      },
+      "label_distribution": {
+        "not_supported": 2000,
+        "supports": 2000,
+        "unverifiable": 2000
+      },
+      "metrics": {
+        "accuracy": 0.9488,
+        "macro_f1": 0.9481,
+        "weighted_f1": 0.9481
+      },
+      "prediction_distribution": {
+        "not_supported": 1761,
+        "supports": 2194,
+        "unverifiable": 2045
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+    "Feature text is built from input fields only; label fields are not included as model features."
+  ],
+  "rows": {
+    "dev": 1200,
+    "test": 1200,
+    "train": 6000
+  },
+  "target": "support_type",
+  "train_distribution": {
+    "not_supported": 2000,
+    "supports": 2000,
+    "unverifiable": 2000
+  },
+  "why": "Claim-evidence support classifier baseline before small verifier fine-tuning."
+}
