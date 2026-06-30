@@ -102,3 +102,24 @@ Consequence:
 If future GPU checkpoints or model files become large, move those to releases,
 external object storage, or Git LFS. For now, small CPU baseline artifacts stay
 versioned in the repo.
+
+## D-2026-06-30-007 - Citation verifier needs data repair before GPU work
+
+Decision:
+
+Do not start citation-verifier GPU fine-tuning after `citation_verifier_repair_v0.1`.
+
+Why:
+
+The repair probe clarified the failure but did not produce a strong enough
+baseline. Adding normalized source URL/domain did not improve the five-way task
+meaningfully. The binary any-support task improved macro F1 relative to the
+five-way baseline, but it still did not beat the majority baseline on accuracy.
+The trace-id leakage probe improved metrics, but trace identity is not a valid
+model feature.
+
+Consequence:
+
+The next citation-verifier work should add better data rather than train a
+larger model: hard negatives, clean positive official spans, partial-support
+boundary cases, and more insufficient/contradict examples.

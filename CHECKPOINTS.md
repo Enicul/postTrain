@@ -186,3 +186,65 @@ Start citation-verifier repair from the new run's
 citation_verifier/predictions_test.jsonl. Group errors by source mismatch,
 partial support, ambiguous label, insufficient evidence, and synthetic artifact.
 ```
+
+## CP-2026-06-30-006 - Citation verifier repair v0.1
+
+Status:
+
+```text
+complete
+```
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/repair_citation_verifier.py \
+  --repair-id citation_verifier_repair_v0.1
+
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/repaired_datasets \
+  --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines \
+  --run-id citation_repair_probe_v0.1 \
+  --datasets citation_verifier_url,citation_support_binary
+```
+
+Output:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1
+```
+
+Artifacts:
+
+```text
+README.md
+error_taxonomy.md
+error_taxonomy.json
+test_error_audit.jsonl
+probe_metrics.json
+repaired_datasets/citation_verifier_url/
+repaired_datasets/citation_support_binary/
+baselines/citation_repair_probe_v0.1/
+```
+
+Metrics:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | ---: | ---: | ---: |
+| original citation_verifier | 0.2581 | 0.1441 | 0.4839 |
+| citation_verifier_url | 0.2581 | 0.1390 | 0.4839 |
+| citation_support_binary | 0.3871 | 0.3767 | 0.5806 |
+
+Decision:
+
+The repair loop clarified the failure but did not make citation verification
+ready for GPU fine-tuning. `trace_id` helps but is leakage; source URL/domain is
+valid context but insufficient; binary support is clearer but still weak.
+
+Resume:
+
+```text
+Create citation_verifier_repair_v0.2 with more hard negatives, clean positive
+official spans, partial-support boundary cases, and rare insufficient/contradict
+examples. Do not start citation-verifier GPU fine-tuning before this repair.
+```

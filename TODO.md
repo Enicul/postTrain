@@ -24,12 +24,19 @@
 
 ## P1 - Citation Verifier Repair
 
-- [ ] Inspect `citation_verifier/predictions_test.jsonl`.
-- [ ] Group errors by failure type: source mismatch, partial support, ambiguous
+- [x] Inspect `citation_verifier/predictions_test.jsonl`.
+- [x] Group errors by failure type: source mismatch, partial support, ambiguous
   label, insufficient evidence, synthetic artifact.
-- [ ] Add repaired citation-span audit set.
-- [ ] Rerun `train_specialist_baselines.py`.
-- [ ] Log before/after metrics in `EXPERIMENT_LOG.md`.
+- [x] Add repaired citation-span audit set.
+- [x] Rerun `train_specialist_baselines.py`.
+- [x] Log before/after metrics in `EXPERIMENT_LOG.md`.
+- [ ] Build `citation_verifier_repair_v0.2` with hard negatives that share
+  topical overlap but do not support the exact claim.
+- [ ] Add cleaner positive official-source spans for composite claims.
+- [ ] Add partial-support boundary cases where one evidence span supports only
+  part of the claim.
+- [ ] Add more `insufficient` and `contradicts` rows before trusting five-way
+  support typing.
 
 ## P1 - Risk Reviewer Improvement
 

@@ -35,6 +35,7 @@ Important subpaths:
 datasets/
 baselines/specialist_cpu_baselines_v0.1/
 baselines/specialist_cpu_first_training_20260630T030852Z/
+repairs/citation_verifier_repair_v0.1/
 ```
 
 ## Baseline Results
@@ -55,8 +56,43 @@ training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselin
 
 - Router is the first credible specialist baseline.
 - Risk reviewer is directionally useful but too weak to use as a gate alone.
-- Citation verifier failed on held-out data; this is now a data-quality and
-  feature-design problem before GPU work.
+- Citation verifier failed on held-out data. `citation_verifier_repair_v0.1`
+  produced an error taxonomy and repair probes, but the result still points to
+  data repair before GPU work.
+
+## Citation Verifier Repair v0.1
+
+Repair pack:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1
+```
+
+Top error types:
+
+| Failure type | Count |
+| --- | ---: |
+| composite_claim | 22 |
+| support_boundary_confusion | 17 |
+| source_quality_feature_missing | 10 |
+| hard_negative_overaccepted | 8 |
+| partial_support_boundary | 6 |
+| rare_negative_class_boundary | 6 |
+| positive_support_missed | 5 |
+
+Repair probe results:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy | Status |
+| --- | ---: | ---: | ---: | --- |
+| original citation_verifier | 0.2581 | 0.1441 | 0.4839 | failed baseline |
+| citation_verifier_url | 0.2581 | 0.1390 | 0.4839 | source URL/domain alone did not help |
+| citation_support_binary | 0.3871 | 0.3767 | 0.5806 | clearer task, still weak |
+
+Decision:
+
+Do not start citation-verifier GPU fine-tuning yet. Build
+`citation_verifier_repair_v0.2` with more hard negatives, cleaner positive
+official spans, partial-support boundary cases, and rare negative examples.
 
 ## Learning Source Registry
 
@@ -76,6 +112,8 @@ python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
 python3 training-corpus/scripts/train_specialist_baselines.py --help
 python3 training-corpus/scripts/train_specialist_baselines.py --run-id smoke_router_only2 --datasets router_classifier --out-root /tmp/posttrain-baseline-smoke2
 python3 training-corpus/scripts/train_specialist_baselines.py --run-id specialist_cpu_first_training_20260630T030852Z
+python3 training-corpus/scripts/repair_citation_verifier.py --repair-id citation_verifier_repair_v0.1
+python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/repaired_datasets --out-root training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines --run-id citation_repair_probe_v0.1 --datasets citation_verifier_url,citation_support_binary
 git push -u origin main
 ```
 
@@ -87,12 +125,11 @@ The imported baseline checkpoint reports:
 
 ## Next Best Step
 
-Start citation verifier repair and continue the learning-source registry:
+Continue citation verifier data repair and learning-source registry:
 
-1. inspect citation test prediction errors,
-2. identify label/schema problems,
-3. add a repaired citation verifier dataset,
-4. rerun the CPU baseline,
-5. compare metrics and log the change,
-6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
+1. build `citation_verifier_repair_v0.2`,
+2. add hard negatives and cleaner positive / partial / insufficient examples,
+3. rerun the repair baseline,
+4. only then decide whether a small LLM verifier is worth GPU time,
+5. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

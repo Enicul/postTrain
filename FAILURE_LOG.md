@@ -52,35 +52,6 @@ Status:
 
 Fixed.
 
-## F-2026-06-30-006 - One-off metric summary assumed wrong schema
-
-Symptom:
-
-```text
-KeyError: 'splits'
-```
-
-Cause:
-
-The training run completed, but the first ad hoc inspection script assumed
-`metrics.json` had a top-level per-dataset `splits` key. The baseline artifact
-stores split-level row information in prediction files and detailed metrics,
-not in that key.
-
-Change:
-
-The inspection was rerun using row counts from
-`predictions_train.jsonl`, `predictions_dev.jsonl`, and
-`predictions_test.jsonl`.
-
-Effect:
-
-The run summary was recovered without changing training code or artifacts.
-
-Status:
-
-Fixed.
-
 ## F-2026-06-30-003 - Citation verifier baseline failed on held-out data
 
 Symptom:
@@ -96,12 +67,16 @@ semantics, and the golden citation set still needs span/label audit.
 
 Change:
 
-No model-side fix yet. Decision is to repair data before GPU fine-tuning.
+Generated `citation_verifier_repair_v0.1`, including an error taxonomy,
+row-level audit file, repaired dataset variants, and a repair probe baseline.
+The repair probe showed that source URL/domain alone does not fix the five-way
+task, and a binary support schema is clearer but still weak.
 
 Effect:
 
-This failure created the next task: citation-span quality repair and label
-schema audit.
+This failure created the next task: add more hard negatives, clean positive
+official spans, partial-support spans, and rare negative examples before GPU
+fine-tuning.
 
 Status:
 
@@ -151,6 +126,89 @@ git remote set-url origin git@github.com:Enicul/postTrain.git
 Effect:
 
 `git push -u origin main` succeeded and `main` now tracks `origin/main`.
+
+Status:
+
+Fixed.
+
+## F-2026-06-30-006 - One-off metric summary assumed wrong schema
+
+Symptom:
+
+```text
+KeyError: 'splits'
+```
+
+Cause:
+
+The training run completed, but the first ad hoc inspection script assumed
+`metrics.json` had a top-level per-dataset `splits` key. The baseline artifact
+stores split-level row information in prediction files and detailed metrics,
+not in that key.
+
+Change:
+
+The inspection was rerun using row counts from
+`predictions_train.jsonl`, `predictions_dev.jsonl`, and
+`predictions_test.jsonl`.
+
+Effect:
+
+The run summary was recovered without changing training code or artifacts.
+
+Status:
+
+Fixed.
+
+## F-2026-06-30-007 - Ad hoc source-domain probe did not stringify URLs
+
+Symptom:
+
+```text
+TypeError: a bytes-like object is required, not 'str'
+```
+
+Cause:
+
+A scratch source-domain probe assumed every `source_url` value would behave like
+a normal string before URL parsing and domain normalization.
+
+Change:
+
+The formal `repair_citation_verifier.py` script uses `str(url or "")` before
+calling `urlparse`.
+
+Effect:
+
+The repair builder handles missing or non-string URL values robustly.
+
+Status:
+
+Fixed.
+
+## F-2026-06-30-008 - Scratch source URL probe leaked missingness as `None`
+
+Symptom:
+
+A scratch probe suggested that adding `source_url` improved five-way citation
+test accuracy much more than the formal repair pack later showed.
+
+Cause:
+
+The scratch text builder rendered missing URLs as the literal token `None`.
+That gave the classifier an unintended missing-evidence feature and overstated
+the effect of source URL features.
+
+Change:
+
+`repair_citation_verifier.py` normalizes missing source URLs to empty strings
+and records a separate leakage probe for `trace_id`, which remains
+diagnostic-only.
+
+Effect:
+
+The honest repair result is weaker but more reliable:
+`citation_verifier_url` stayed at `0.2581` test accuracy and `0.1390` macro F1.
 
 Status:
 

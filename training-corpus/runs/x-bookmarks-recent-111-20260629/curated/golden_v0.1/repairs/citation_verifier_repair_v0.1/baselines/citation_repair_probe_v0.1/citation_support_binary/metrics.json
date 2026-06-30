@@ -1,0 +1,213 @@
+{
+  "artifacts": {
+    "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines/citation_repair_probe_v0.1/citation_support_binary/metrics.json",
+    "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines/citation_repair_probe_v0.1/citation_support_binary/model.joblib",
+    "predictions": {
+      "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines/citation_repair_probe_v0.1/citation_support_binary/predictions_dev.jsonl",
+      "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines/citation_repair_probe_v0.1/citation_support_binary/predictions_test.jsonl",
+      "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1/baselines/citation_repair_probe_v0.1/citation_support_binary/predictions_train.jsonl"
+    }
+  },
+  "dataset": "citation_support_binary",
+  "labels": [
+    "no_support",
+    "some_support"
+  ],
+  "majority_baseline": {
+    "accuracy": 0.5806,
+    "macro_f1": 0.3673,
+    "predicted_label": "no_support"
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.2962962962962963,
+        "macro avg": {
+          "f1-score": 0.2962962962962963,
+          "precision": 0.3068181818181818,
+          "recall": 0.3068181818181818,
+          "support": 27.0
+        },
+        "no_support": {
+          "f1-score": 0.2962962962962963,
+          "precision": 0.36363636363636365,
+          "recall": 0.25,
+          "support": 16.0
+        },
+        "some_support": {
+          "f1-score": 0.2962962962962963,
+          "precision": 0.25,
+          "recall": 0.36363636363636365,
+          "support": 11.0
+        },
+        "weighted avg": {
+          "f1-score": 0.2962962962962963,
+          "precision": 0.31734006734006737,
+          "recall": 0.2962962962962963,
+          "support": 27.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "no_support",
+          "some_support"
+        ],
+        "rows": [
+          [
+            4,
+            12
+          ],
+          [
+            7,
+            4
+          ]
+        ]
+      },
+      "label_distribution": {
+        "no_support": 16,
+        "some_support": 11
+      },
+      "metrics": {
+        "accuracy": 0.2963,
+        "macro_f1": 0.2963,
+        "weighted_f1": 0.2963
+      },
+      "prediction_distribution": {
+        "no_support": 11,
+        "some_support": 16
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.3870967741935484,
+        "macro avg": {
+          "f1-score": 0.3767195767195767,
+          "precision": 0.37815126050420167,
+          "recall": 0.37606837606837606,
+          "support": 31.0
+        },
+        "no_support": {
+          "f1-score": 0.45714285714285713,
+          "precision": 0.47058823529411764,
+          "recall": 0.4444444444444444,
+          "support": 18.0
+        },
+        "some_support": {
+          "f1-score": 0.2962962962962963,
+          "precision": 0.2857142857142857,
+          "recall": 0.3076923076923077,
+          "support": 13.0
+        },
+        "weighted avg": {
+          "f1-score": 0.38969107356204125,
+          "precision": 0.3930604499864462,
+          "recall": 0.3870967741935484,
+          "support": 31.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "no_support",
+          "some_support"
+        ],
+        "rows": [
+          [
+            8,
+            10
+          ],
+          [
+            9,
+            4
+          ]
+        ]
+      },
+      "label_distribution": {
+        "no_support": 18,
+        "some_support": 13
+      },
+      "metrics": {
+        "accuracy": 0.3871,
+        "macro_f1": 0.3767,
+        "weighted_f1": 0.3897
+      },
+      "prediction_distribution": {
+        "no_support": 17,
+        "some_support": 14
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.7685185185185185,
+        "macro avg": {
+          "f1-score": 0.7675419715884633,
+          "precision": 0.7775862068965518,
+          "recall": 0.7880143112701252,
+          "support": 108.0
+        },
+        "no_support": {
+          "f1-score": 0.782608695652174,
+          "precision": 0.9,
+          "recall": 0.6923076923076923,
+          "support": 65.0
+        },
+        "some_support": {
+          "f1-score": 0.7524752475247525,
+          "precision": 0.6551724137931034,
+          "recall": 0.8837209302325582,
+          "support": 43.0
+        },
+        "weighted avg": {
+          "f1-score": 0.7706111190829227,
+          "precision": 0.802522349936143,
+          "recall": 0.7685185185185185,
+          "support": 108.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "no_support",
+          "some_support"
+        ],
+        "rows": [
+          [
+            45,
+            20
+          ],
+          [
+            5,
+            38
+          ]
+        ]
+      },
+      "label_distribution": {
+        "no_support": 65,
+        "some_support": 43
+      },
+      "metrics": {
+        "accuracy": 0.7685,
+        "macro_f1": 0.7675,
+        "weighted_f1": 0.7706
+      },
+      "prediction_distribution": {
+        "no_support": 50,
+        "some_support": 58
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+    "Feature text is built from input fields only; label fields are not included as model features."
+  ],
+  "rows": {
+    "dev": 27,
+    "test": 31,
+    "train": 108
+  },
+  "target": "support_binary",
+  "train_distribution": {
+    "no_support": 65,
+    "some_support": 43
+  },
+  "why": "Schema repair probe: first determine whether a span gives any support before five-way support typing."
+}

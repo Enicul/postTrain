@@ -1,0 +1,37 @@
+{
+  "baseline_prediction_file": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_test.jsonl",
+  "baseline_run": "specialist_cpu_first_training_20260630T030852Z",
+  "confusion_counts": {
+    "insufficient->not_supported": 1,
+    "insufficient->partial_support": 2,
+    "not_supported->contradicts": 1,
+    "not_supported->partial_support": 5,
+    "not_supported->supports": 3,
+    "partial_support->contradicts": 2,
+    "partial_support->not_supported": 4,
+    "supports->not_supported": 5
+  },
+  "decision": {
+    "ad_hoc_probe_artifact": "An earlier scratch probe rendered missing source_url as the literal token 'None', which overstated source_url gains.",
+    "source_url_probe_result": "After missing source URLs are normalized to an empty string, source URL/domain does not solve the five-way task.",
+    "use_binary_stage": true,
+    "use_source_url_or_domain_as_model_feature": true,
+    "use_trace_id_as_model_feature": false,
+    "why_binary_stage": "Any-support detection is a clearer first-stage verifier than five-way support typing.",
+    "why_not_trace_id": "It improves probe metrics by leaking task identity and should remain diagnostic-only.",
+    "why_source_url": "Source identity is available at verification time and can encode source quality/context."
+  },
+  "failure_type_counts": {
+    "composite_claim": 22,
+    "hard_negative_overaccepted": 8,
+    "partial_support_boundary": 6,
+    "positive_support_missed": 5,
+    "rare_negative_class_boundary": 6,
+    "source_quality_feature_missing": 10,
+    "support_boundary_confusion": 17
+  },
+  "generated_at": "2026-06-30T05:15:17Z",
+  "repair_id": "citation_verifier_repair_v0.1",
+  "test_errors": 23,
+  "test_rows": 31
+}

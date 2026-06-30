@@ -34,6 +34,42 @@ Known contents:
 - 25 long2short pairs,
 - 50 evidence-chain negative regression cases.
 
+## Citation Verifier Repair v0.1
+
+Path:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/repairs/citation_verifier_repair_v0.1
+```
+
+Purpose:
+
+Diagnose why the first five-way `citation_verifier` baseline failed and create
+scoped repair probes without overwriting the frozen golden data.
+
+Known contents:
+
+- `error_taxonomy.md` and `error_taxonomy.json`,
+- `test_error_audit.jsonl`,
+- `probe_metrics.json`,
+- `repaired_datasets/citation_verifier_url`,
+- `repaired_datasets/citation_support_binary`,
+- `baselines/citation_repair_probe_v0.1`.
+
+Key result:
+
+| Dataset / probe | Test accuracy | Test macro F1 | Majority accuracy |
+| --- | ---: | ---: | ---: |
+| original citation_verifier | 0.2581 | 0.1441 | 0.4839 |
+| citation_verifier_url | 0.2581 | 0.1390 | 0.4839 |
+| citation_support_binary | 0.3871 | 0.3767 | 0.5806 |
+
+Decision:
+
+This repair clarified failure modes but did not make the citation verifier ready
+for GPU fine-tuning. Next data work should add hard negatives, cleaner positive
+official spans, partial-support boundary cases, and rare negative examples.
+
 ## Data Boundaries
 
 - X/social/bookmark material is a seed, not truth.
@@ -47,4 +83,5 @@ Known contents:
 
 - Router data is good enough for first baseline.
 - Risk data is enough for weak baseline, but target design may need adjustment.
-- Citation data is not yet good enough for GPU fine-tuning.
+- Citation data is not yet good enough for GPU fine-tuning; v0.1 repair shows
+  the main gap is data/schema quality, not just model capacity.

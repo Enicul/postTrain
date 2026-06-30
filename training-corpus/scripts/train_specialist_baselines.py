@@ -18,6 +18,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import urlparse
 
 import joblib
 import sklearn
@@ -154,6 +155,25 @@ def citation_text(row: dict[str, Any]) -> str:
     )
 
 
+def source_domain(url: Any) -> str:
+    parsed = urlparse(str(url or ""))
+    return parsed.netloc.lower().removeprefix("www.")
+
+
+def citation_text_with_url(row: dict[str, Any]) -> str:
+    inp = input_obj(row)
+    source_url = inp.get("source_url")
+    return "\n".join(
+        [
+            f"claim: {stringify(inp.get('claim'))}",
+            f"evidence_span: {stringify(inp.get('evidence_span'))}",
+            f"source_class: {stringify(inp.get('source_class'))}",
+            f"source_domain: {source_domain(source_url)}",
+            f"source_url: {stringify(source_url)}",
+        ]
+    )
+
+
 def router_label(row: dict[str, Any]) -> str:
     return stringify(label_obj(row).get("route_label"))
 
@@ -164,6 +184,14 @@ def risk_label(row: dict[str, Any]) -> str:
 
 def citation_label(row: dict[str, Any]) -> str:
     return stringify(label_obj(row).get("support_type"))
+
+
+def citation_binary_label(row: dict[str, Any]) -> str:
+    label = label_obj(row)
+    if label.get("support_binary"):
+        return stringify(label.get("support_binary"))
+    support_type = stringify(label.get("support_type") or label.get("original_support_type"))
+    return "some_support" if support_type in {"supports", "partial_support"} else "no_support"
 
 
 def build_pipeline(num_labels: int) -> Pipeline:
@@ -296,6 +324,18 @@ DATASETS: dict[str, dict[str, Any]] = {
         "label_fn": citation_label,
         "target": "support_type",
         "why": "Claim-evidence support classifier baseline before small verifier fine-tuning.",
+    },
+    "citation_verifier_url": {
+        "text_fn": citation_text_with_url,
+        "label_fn": citation_label,
+        "target": "support_type",
+        "why": "Feature repair probe: include source URL/domain as source-quality context without trace-id leakage.",
+    },
+    "citation_support_binary": {
+        "text_fn": citation_text_with_url,
+        "label_fn": citation_binary_label,
+        "target": "support_binary",
+        "why": "Schema repair probe: first determine whether a span gives any support before five-way support typing.",
     },
 }
 
@@ -436,7 +476,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--datasets",
         default="router_classifier,risk_reviewer,citation_verifier",
-        help="Comma-separated subset: router_classifier,risk_reviewer,citation_verifier",
+        help=f"Comma-separated subset: {','.join(DATASETS)}",
     )
     return parser.parse_args()
 
