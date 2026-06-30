@@ -134,6 +134,34 @@ REAL_TOOL_DEEP_RESEARCH_TEMPLATES = [
     "{ticker} 的 thesis、风险和 invalidation trigger 需要怎样综合？",
 ]
 
+SOCIAL_EVIDENCE_CHECK_TEMPLATES = [
+    "我收藏到一条关于 {ticker} 的市场观点：有人说 {ticker} 是 AI 基建最大受益者。请帮我判断它有没有可靠证据支持，哪些部分需要官方来源验证，风险点是什么？",
+    "我在 X 看到一条关于 {ticker} 的长帖，里面说需求拐点已经确认。请先做 evidence check，不要直接快速回答。",
+    "博主说 {ticker} 的最新叙事已经被官方数据验证。请判断 citation 是否支持这个 claim。",
+    "这条收藏把 {ticker} 和 AI agent 主题联系起来，请区分事实、观点和需要继续验证的来源。",
+    "我收藏的帖子声称 {ticker} 的市场地位被低估，请检查证据是否足够支持，不要写完整投研报告。",
+]
+
+SOCIAL_DEEP_RESEARCH_TEMPLATES = [
+    "我收藏到一条关于 {ticker} 的复杂市场观点，涉及 AI 产业链、估值、竞争格局和风险。请做多来源 research memo，而不是两句话解释。",
+    "这条 X 长帖把 {ticker}、行业供需和宏观风险串在一起，请帮我做完整 thesis / risk / invalidation 分析。",
+    "博主对 {ticker} 的观点包含多个 tickers、产业链推演和买卖窗口，请用官方来源和反方证据做 deep research。",
+    "这条收藏里的 {ticker} 观点同时涉及财报、新闻、估值和风险，请生成证据优先的研究 memo。",
+]
+
+SOCIAL_RISK_REVIEW_TEMPLATES = [
+    "我收藏到一条关于 {ticker} 的市场观点：博主说只要拿住就不可能亏钱。请判断风险，不要直接给快速答案。",
+    "有人在 X 上说应该梭哈 {ticker}，请先做 risk review，检查过度自信和仓位风险。",
+    "这条帖子建议满仓 {ticker} 等待翻倍，请判断它是否违反风险边界。",
+    "博主说 {ticker} 现在是黄金买点且不用担心回撤，请先触发 risk review。",
+]
+
+SOCIAL_AGENT_ARCHIVE_TEMPLATES = [
+    "我收藏到一条关于 AI agent memory 的帖子，没有明确金融决策。请把它作为 Agent Research 归档，不要误当成买卖建议。",
+    "这条收藏是关于 WebExplorer / self-improvement 的 agent 研究资料，请判断是否应进入 Agent Research，而不是金融 deep research。",
+    "我收藏了一条关于 post-training harness 的观点，帮我做 source check 并标到 Agent Research。",
+]
+
 
 def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -440,6 +468,60 @@ def generated_boundary_rows() -> list[dict[str, Any]]:
                     narrative_tags=["real_tool_trace", "complete_tool_trace", "thesis_synthesis"],
                 )
             )
+        for index, template in enumerate(SOCIAL_EVIDENCE_CHECK_TEMPLATES):
+            rows.append(
+                router_row(
+                    sample_id=f"router_social_evidence_check_{ticker}_{index:02d}",
+                    query=template.format(ticker=ticker),
+                    route="evidence_check",
+                    risk_level="medium",
+                    required_tools=["source_search", "citation_verifier"],
+                    needs_realtime_data=True,
+                    needs_citation=True,
+                    requires_human_gate=False,
+                    reason="Long social/bookmark market claim asks for evidence verification; it is not a fast-answer concept question.",
+                    symbol=ticker,
+                    generation_rule="social_bookmark_claim_verification",
+                    page_context="x_bookmark_market_narrative_recent_111",
+                    narrative_tags=["social_bookmark", "claim_verification", "not_fast_answer"],
+                )
+            )
+        for index, template in enumerate(SOCIAL_DEEP_RESEARCH_TEMPLATES):
+            rows.append(
+                router_row(
+                    sample_id=f"router_social_deep_research_{ticker}_{index:02d}",
+                    query=template.format(ticker=ticker),
+                    route="deep_research",
+                    risk_level="medium",
+                    required_tools=["news_search", "company_ir", "sec_edgar", "price_api", "risk_reviewer"],
+                    needs_realtime_data=True,
+                    needs_citation=True,
+                    requires_human_gate=False,
+                    reason="Multi-source social/bookmark market narrative needs thesis, risk, and invalidation synthesis.",
+                    symbol=ticker,
+                    generation_rule="social_bookmark_multi_source_research",
+                    page_context="x_bookmark_market_narrative_recent_111",
+                    narrative_tags=["social_bookmark", "multi_source_thesis", "not_fast_answer"],
+                )
+            )
+        for index, template in enumerate(SOCIAL_RISK_REVIEW_TEMPLATES):
+            rows.append(
+                router_row(
+                    sample_id=f"router_social_risk_review_{ticker}_{index:02d}",
+                    query=template.format(ticker=ticker),
+                    route="risk_review",
+                    risk_level="high",
+                    required_tools=["risk_reviewer", "portfolio_context", "clarification_prompt"],
+                    needs_realtime_data=False,
+                    needs_citation=True,
+                    requires_human_gate=True,
+                    reason="Social/bookmark claim includes all-in, no-loss, full-position, or overconfident advice; risk review has priority.",
+                    symbol=ticker,
+                    generation_rule="social_bookmark_risk_review",
+                    page_context="x_bookmark_market_narrative_recent_111",
+                    narrative_tags=["social_bookmark", "market_risk_or_positioning", "risk_review"],
+                )
+            )
     for index, template in enumerate(CLARIFICATION_TEMPLATES * 30):
         sample_id = f"router_contract_clarification_needed_{index:03d}"
         rows.append(
@@ -455,6 +537,25 @@ def generated_boundary_rows() -> list[dict[str, Any]]:
                 reason="The request is missing ticker, link, screenshot, or referent; clarify before searching or advising.",
                 symbol=None,
                 generation_rule="missing_referent_or_input",
+            )
+        )
+    for index, template in enumerate(SOCIAL_AGENT_ARCHIVE_TEMPLATES * 20):
+        sample_id = f"router_social_agent_archive_{index:03d}"
+        rows.append(
+            router_row(
+                sample_id=sample_id,
+                query=template,
+                route="evidence_check",
+                risk_level="low",
+                required_tools=["source_search", "citation_verifier", "agent_research_archive"],
+                needs_realtime_data=False,
+                needs_citation=True,
+                requires_human_gate=False,
+                reason="Agent research bookmark needs source verification and archive routing, not a financial trade workflow.",
+                symbol=None,
+                generation_rule="social_bookmark_agent_research_archive",
+                page_context="x_bookmark_agent_research",
+                narrative_tags=["agent_research", "source_discovery_tooling", "not_financial_advice"],
             )
         )
     return rows

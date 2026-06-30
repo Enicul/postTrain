@@ -649,3 +649,47 @@ Golden social/bookmark rows still expose a boundary where long social claims
 asking for evidence verification can be downgraded to `fast_answer`. This should
 be a targeted `router_social_boundary_repair_v0.1`, not a reason to start GPU
 training yet.
+
+## EXP-2026-06-30-010 - Router social boundary candidate v0.1
+
+Goal:
+
+Reduce the remaining router failure where long X/bookmark market narratives that
+ask for evidence verification are downgraded to `fast_answer`.
+
+What changed:
+
+- Added social/bookmark generated boundary rows to
+  `build_router_contract_repair_v01.py`.
+- Generated `router_social_boundary_repair_v0.1`.
+- Ran router-only CPU baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z
+```
+
+- Ran holdout eval:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z/holdouts/router_social_boundary_holdout_eval_v0.1_20260630T143807Z
+```
+
+Result:
+
+| Holdout | Router v0.1c acc | Social v0.1 acc |
+| --- | ---: | ---: |
+| golden_v0.1_router_all | 0.8895 | 0.9012 |
+| long_research_repair_25_router_all | 0.9600 | 0.9600 |
+| real_tool_trace_pilot_10_router | 1.0000 | 0.9000 |
+
+Decision:
+
+Treat social v0.1 as a candidate/tradeoff repair, not the canonical router
+checkpoint. It improves golden social routing and safety recall, but it slightly
+regresses real-tool trace routing by classifying a GOOGL capex/source-support
+deep-research query as `evidence_check`.
+
+Next:
+
+Move to `risk_contract_repair_v0.1`. Router social repair can be revisited with
+forced train anchors for real-tool-style capex/source-support deep research.

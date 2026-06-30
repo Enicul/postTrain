@@ -1,0 +1,24 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "command": "training-corpus/scripts/evaluate_baseline_holdouts.py --baseline-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z --run-id router_social_boundary_holdout_eval_v0.1_20260630T143807Z",
+  "created_at": "2026-06-30T14:38:08Z",
+  "cwd": "/Users/lucine/Documents/Job/projects/postTrain",
+  "git": {
+    "branch": "main",
+    "commit": "6c80da6458a540428ef8dfc66912f392c8a67964",
+    "diff_stat": ".../scripts/build_router_contract_repair_v01.py    | 101 +++++++++++++++++++++\n 1 file changed, 101 insertions(+)",
+    "status_short": "M training-corpus/scripts/build_router_contract_repair_v01.py\n?? training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/"
+  },
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z/holdouts/router_social_boundary_holdout_eval_v0.1_20260630T143807Z",
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full holdout prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "router_social_boundary_holdout_eval_v0.1_20260630T143807Z"
+}

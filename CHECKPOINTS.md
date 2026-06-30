@@ -551,3 +551,49 @@ Do not start GPU router fine-tuning yet. Next router step is
 router_social_boundary_repair_v0.1 for long social/bookmark claims that are
 still sometimes downgraded to fast_answer.
 ```
+
+## CP-2026-06-30-013 - Router social boundary candidate v0.1
+
+Status:
+
+```text
+candidate
+```
+
+Candidate repair:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1
+```
+
+Baseline:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z
+```
+
+Holdout eval:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z/holdouts/router_social_boundary_holdout_eval_v0.1_20260630T143807Z
+```
+
+Results:
+
+| Holdout | Router v0.1c | Social v0.1 |
+| --- | ---: | ---: |
+| golden_v0.1_router_all | 0.8895 | 0.9012 |
+| long_research_repair_25_router_all | 0.9600 | 0.9600 |
+| real_tool_trace_pilot_10_router | 1.0000 | 0.9000 |
+
+Decision:
+
+Do not promote this to canonical yet. It improves social/bookmark routing but
+regresses one real-tool deep-research row.
+
+Resume:
+
+```text
+Next main task is risk_contract_repair_v0.1. Router social repair can resume
+later by adding real-tool-style capex/source-support deep-research anchors.
+```

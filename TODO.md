@@ -85,9 +85,11 @@
   `risk_review` and `clarification_needed`.
 - [x] Add router boundary rows for `evidence_check` vs `deep_research` and
   `financial_calculation` vs research tasks.
-- [ ] Build `router_social_boundary_repair_v0.1` for long X/bookmark market
+- [x] Build `router_social_boundary_repair_v0.1` for long X/bookmark market
   narratives that ask for evidence verification but are still sometimes routed
   to `fast_answer`.
+- [ ] Repair `router_social_boundary_repair_v0.1` tradeoff: keep the golden
+  social improvement while restoring real-tool trace accuracy to 1.0.
 - [ ] Build `risk_contract_repair_v0.1` with `medium` and human-gate semantics.
 - [ ] Build `citation_contract_repair_v0.1` that separates:
   `candidate_evidence`, `verified_support`, `partial_support`, `insufficient`,

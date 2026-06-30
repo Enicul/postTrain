@@ -188,3 +188,24 @@ Consequence:
 The next router work should be social/bookmark boundary repair, not GPU
 fine-tuning. Router v0.1c is strong enough to show the data-contract repair loop
 in interviews, but not enough to claim production router quality.
+
+## D-2026-06-30-011 - Keep social router repair as candidate, not canonical
+
+Decision:
+
+Do not replace `router_contract_repair_v0.1c` with
+`router_social_boundary_repair_v0.1` as the canonical router checkpoint yet.
+
+Why:
+
+The social repair improves the golden router holdout from 0.8895 to 0.9012 and
+restores golden safety recall to 1.0, but it regresses real tool trace routing
+from 1.0 to 0.9 by misrouting one GOOGL capex/source-support deep-research query
+as `evidence_check`.
+
+Consequence:
+
+The current portfolio story should present v0.1c as the canonical router repair
+and social v0.1 as a candidate/tradeoff run. The next main work is risk contract
+repair; router social work can resume after adding real-tool-style deep-research
+anchors.

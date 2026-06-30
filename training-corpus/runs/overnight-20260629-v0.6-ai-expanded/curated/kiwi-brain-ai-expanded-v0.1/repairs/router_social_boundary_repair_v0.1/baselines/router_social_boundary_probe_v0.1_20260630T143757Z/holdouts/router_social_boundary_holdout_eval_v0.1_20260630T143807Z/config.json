@@ -1,0 +1,14 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "created_at": "2026-06-30T14:38:08Z",
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1/baselines/router_social_boundary_probe_v0.1_20260630T143757Z/holdouts/router_social_boundary_holdout_eval_v0.1_20260630T143807Z",
+  "recording": {
+    "error_sample_limit": 200,
+    "mode": "summary",
+    "prediction_sample_limit": 200,
+    "rationale": "Protect local machine by avoiding full holdout prediction JSONL writes unless explicitly requested."
+  },
+  "run_id": "router_social_boundary_holdout_eval_v0.1_20260630T143807Z"
+}

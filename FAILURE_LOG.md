@@ -117,6 +117,37 @@ Status:
 
 Open. Next repair should be `router_social_boundary_repair_v0.1`.
 
+## F-2026-06-30-018 - Router social repair regressed one real-tool deep research row
+
+Symptom:
+
+`router_social_boundary_repair_v0.1` improved the golden router holdout from
+0.8895 to 0.9012, but real tool trace routing dropped from 1.0 to 0.9.
+
+The remaining real-tool error:
+
+```text
+GOOGL AI capex 相关判断需要哪些来源支持？
+expected: deep_research
+predicted: evidence_check
+```
+
+Cause:
+
+Adding social/bookmark evidence-check examples strengthened the model's tendency
+to treat "needs source support" phrasing as `evidence_check`, even when the query
+is asking for capex/thesis judgment that should remain `deep_research`.
+
+Change:
+
+Not fixed yet. The social repair is kept as a candidate rather than replacing
+the canonical router checkpoint.
+
+Status:
+
+Open. If router work resumes, add forced train anchors for real-tool-style
+capex/source-support deep research before adopting social repair as canonical.
+
 ## F-2026-06-30-001 - Python 3.9 `datetime.UTC` import failure
 
 Symptom:

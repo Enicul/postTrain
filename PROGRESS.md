@@ -27,6 +27,16 @@ Router v0.1c repaired the missing-label contract and real-tool trace shortcut:
 | long_research_repair_25_router_all | 0.4800 | 0.9600 |
 | real_tool_trace_pilot_10_router | 0.0000 | 1.0000 |
 
+Candidate social-boundary repair:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/router_social_boundary_repair_v0.1
+```
+
+This candidate improves `golden_v0.1_router_all` to 0.9012, but slightly
+regresses `real_tool_trace_pilot_10_router` to 0.9000. Keep router v0.1c as the
+canonical checkpoint until that tradeoff is repaired.
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,
@@ -306,9 +316,9 @@ The imported baseline checkpoint reports:
 
 Repair the data contracts exposed by realistic holdout eval v0.1:
 
-1. build `router_social_boundary_repair_v0.1` for long social/bookmark claims
-   that still downgrade to `fast_answer`;
-2. build `risk_contract_repair_v0.1` with `medium` and human-gate semantics;
+1. build `risk_contract_repair_v0.1` with `medium` and human-gate semantics;
+2. revisit router social repair only after adding real-tool-style capex/source
+   support deep-research anchors;
 3. define citation label mapping for candidate evidence vs verified support;
 4. rerun repaired baselines as probes before any GPU fine-tuning;
 5. keep repaired runs in summary recording mode unless full row-level analysis is
