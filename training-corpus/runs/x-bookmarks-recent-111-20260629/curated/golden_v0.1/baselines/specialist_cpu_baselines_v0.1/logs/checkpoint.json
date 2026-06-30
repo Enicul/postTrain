@@ -1,0 +1,10 @@
+{
+  "completed": [
+    "router_classifier",
+    "risk_reviewer",
+    "citation_verifier"
+  ],
+  "run_id": "specialist_cpu_baselines_v0.1",
+  "status": "complete",
+  "ts": "2026-06-30T02:14:00Z"
+}

@@ -1,0 +1,839 @@
+{
+  "dataset": {
+    "dev_rows": 47,
+    "long_research_repair_distribution": {
+      "deep_research": 25
+    },
+    "long_research_repair_holdout_rows": 25,
+    "test_distribution": {
+      "clarification_needed": 5,
+      "deep_research": 6,
+      "evidence_check": 7,
+      "fast_answer": 17,
+      "financial_calculation": 1,
+      "news_retrieval": 4,
+      "price_lookup": 5,
+      "risk_review": 3
+    },
+    "test_rows": 48,
+    "train_distribution": {
+      "clarification_needed": 18,
+      "deep_research": 39,
+      "evidence_check": 56,
+      "fast_answer": 58,
+      "financial_calculation": 21,
+      "news_retrieval": 21,
+      "price_lookup": 15,
+      "risk_review": 21
+    },
+    "train_rows": 249
+  },
+  "majority_baseline": {
+    "predicted_route": "fast_answer",
+    "test_accuracy": 0.3542
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.9787234042553191,
+        "clarification_needed": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "deep_research": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 8.0
+        },
+        "evidence_check": {
+          "f1-score": 0.8571428571428571,
+          "precision": 1.0,
+          "recall": 0.75,
+          "support": 4.0
+        },
+        "fast_answer": {
+          "f1-score": 0.967741935483871,
+          "precision": 0.9375,
+          "recall": 1.0,
+          "support": 15.0
+        },
+        "financial_calculation": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4.0
+        },
+        "macro avg": {
+          "f1-score": 0.978110599078341,
+          "precision": 0.9921875,
+          "recall": 0.96875,
+          "support": 47.0
+        },
+        "news_retrieval": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1.0
+        },
+        "price_lookup": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6.0
+        },
+        "risk_review": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6.0
+        },
+        "weighted avg": {
+          "f1-score": 0.9775468183155211,
+          "precision": 0.9800531914893617,
+          "recall": 0.9787234042553191,
+          "support": 47.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "clarification_needed",
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            15,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            6,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            6
+          ]
+        ]
+      },
+      "label_distribution": {
+        "clarification_needed": 3,
+        "deep_research": 8,
+        "evidence_check": 4,
+        "fast_answer": 15,
+        "financial_calculation": 4,
+        "news_retrieval": 1,
+        "price_lookup": 6,
+        "risk_review": 6
+      },
+      "metrics": {
+        "macro_f1": 0.9781,
+        "over_trigger_to_deep_or_risk": {
+          "candidate_count": 24,
+          "definition": "Actual fast_answer / clarification_needed / price_lookup predicted as deep_research or risk_review.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "route_accuracy": 0.9787,
+        "safety_recall": {
+          "candidate_count": 6,
+          "definition": "Rows with high risk or human gate routed to deep_research / risk_review / evidence_check.",
+          "hit_count": 6,
+          "recall": 1.0
+        },
+        "under_trigger_from_deep_or_risk": {
+          "candidate_count": 14,
+          "definition": "Actual deep_research / risk_review predicted as fast_answer / clarification_needed / price_lookup.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "weighted_f1": 0.9775
+      },
+      "prediction_distribution": {
+        "clarification_needed": 3,
+        "deep_research": 8,
+        "evidence_check": 3,
+        "fast_answer": 16,
+        "financial_calculation": 4,
+        "news_retrieval": 1,
+        "price_lookup": 6,
+        "risk_review": 6
+      }
+    },
+    "long_research_repair_holdout": {
+      "classification_report": {
+        "accuracy": 0.64,
+        "clarification_needed": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "deep_research": {
+          "f1-score": 0.7804878048780488,
+          "precision": 1.0,
+          "recall": 0.64,
+          "support": 25.0
+        },
+        "evidence_check": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "fast_answer": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "financial_calculation": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "macro avg": {
+          "f1-score": 0.0975609756097561,
+          "precision": 0.125,
+          "recall": 0.08,
+          "support": 25.0
+        },
+        "news_retrieval": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "price_lookup": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "risk_review": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "weighted avg": {
+          "f1-score": 0.7804878048780488,
+          "precision": 1.0,
+          "recall": 0.64,
+          "support": 25.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "clarification_needed",
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            16,
+            8,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "label_distribution": {
+        "deep_research": 25
+      },
+      "metrics": {
+        "macro_f1": 0.2602,
+        "over_trigger_to_deep_or_risk": {
+          "candidate_count": 0,
+          "definition": "Actual fast_answer / clarification_needed / price_lookup predicted as deep_research or risk_review.",
+          "hit_count": 0,
+          "rate": null
+        },
+        "route_accuracy": 0.64,
+        "safety_recall": {
+          "candidate_count": 0,
+          "definition": "Rows with high risk or human gate routed to deep_research / risk_review / evidence_check.",
+          "hit_count": 0,
+          "recall": null
+        },
+        "under_trigger_from_deep_or_risk": {
+          "candidate_count": 25,
+          "definition": "Actual deep_research / risk_review predicted as fast_answer / clarification_needed / price_lookup.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "weighted_f1": 0.7805
+      },
+      "prediction_distribution": {
+        "deep_research": 16,
+        "evidence_check": 8,
+        "financial_calculation": 1
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.9166666666666666,
+        "clarification_needed": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5.0
+        },
+        "deep_research": {
+          "f1-score": 0.9090909090909091,
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "support": 6.0
+        },
+        "evidence_check": {
+          "f1-score": 0.6666666666666666,
+          "precision": 0.8,
+          "recall": 0.5714285714285714,
+          "support": 7.0
+        },
+        "fast_answer": {
+          "f1-score": 0.918918918918919,
+          "precision": 0.85,
+          "recall": 1.0,
+          "support": 17.0
+        },
+        "financial_calculation": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1.0
+        },
+        "macro avg": {
+          "f1-score": 0.9368345618345618,
+          "precision": 0.95625,
+          "recall": 0.9255952380952381,
+          "support": 48.0
+        },
+        "news_retrieval": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4.0
+        },
+        "price_lookup": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5.0
+        },
+        "risk_review": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "weighted avg": {
+          "f1-score": 0.9113090363090363,
+          "precision": 0.9177083333333332,
+          "recall": 0.9166666666666666,
+          "support": 48.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "clarification_needed",
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            3,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            17,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            5,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        ]
+      },
+      "label_distribution": {
+        "clarification_needed": 5,
+        "deep_research": 6,
+        "evidence_check": 7,
+        "fast_answer": 17,
+        "financial_calculation": 1,
+        "news_retrieval": 4,
+        "price_lookup": 5,
+        "risk_review": 3
+      },
+      "metrics": {
+        "macro_f1": 0.9368,
+        "over_trigger_to_deep_or_risk": {
+          "candidate_count": 27,
+          "definition": "Actual fast_answer / clarification_needed / price_lookup predicted as deep_research or risk_review.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "route_accuracy": 0.9167,
+        "safety_recall": {
+          "candidate_count": 4,
+          "definition": "Rows with high risk or human gate routed to deep_research / risk_review / evidence_check.",
+          "hit_count": 4,
+          "recall": 1.0
+        },
+        "under_trigger_from_deep_or_risk": {
+          "candidate_count": 9,
+          "definition": "Actual deep_research / risk_review predicted as fast_answer / clarification_needed / price_lookup.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "weighted_f1": 0.9113
+      },
+      "prediction_distribution": {
+        "clarification_needed": 5,
+        "deep_research": 5,
+        "evidence_check": 5,
+        "fast_answer": 20,
+        "financial_calculation": 1,
+        "news_retrieval": 4,
+        "price_lookup": 5,
+        "risk_review": 3
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.8995983935742972,
+        "clarification_needed": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 18.0
+        },
+        "deep_research": {
+          "f1-score": 0.8450704225352113,
+          "precision": 0.9375,
+          "recall": 0.7692307692307693,
+          "support": 39.0
+        },
+        "evidence_check": {
+          "f1-score": 0.8484848484848485,
+          "precision": 0.9767441860465116,
+          "recall": 0.75,
+          "support": 56.0
+        },
+        "fast_answer": {
+          "f1-score": 0.8405797101449275,
+          "precision": 0.725,
+          "recall": 1.0,
+          "support": 58.0
+        },
+        "financial_calculation": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 21.0
+        },
+        "macro avg": {
+          "f1-score": 0.9355168726456234,
+          "precision": 0.9549055232558139,
+          "recall": 0.9279990842490842,
+          "support": 249.0
+        },
+        "news_retrieval": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 21.0
+        },
+        "price_lookup": {
+          "f1-score": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 15.0
+        },
+        "risk_review": {
+          "f1-score": 0.95,
+          "precision": 1.0,
+          "recall": 0.9047619047619048,
+          "support": 21.0
+        },
+        "weighted avg": {
+          "f1-score": 0.900307313985665,
+          "precision": 0.9209243952554403,
+          "recall": 0.8995983935742972,
+          "support": 249.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "clarification_needed",
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            18,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            30,
+            1,
+            8,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            42,
+            14,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            58,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            21,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            21,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            19
+          ]
+        ]
+      },
+      "label_distribution": {
+        "clarification_needed": 18,
+        "deep_research": 39,
+        "evidence_check": 56,
+        "fast_answer": 58,
+        "financial_calculation": 21,
+        "news_retrieval": 21,
+        "price_lookup": 15,
+        "risk_review": 21
+      },
+      "metrics": {
+        "macro_f1": 0.9355,
+        "over_trigger_to_deep_or_risk": {
+          "candidate_count": 91,
+          "definition": "Actual fast_answer / clarification_needed / price_lookup predicted as deep_research or risk_review.",
+          "hit_count": 0,
+          "rate": 0.0
+        },
+        "route_accuracy": 0.8996,
+        "safety_recall": {
+          "candidate_count": 22,
+          "definition": "Rows with high risk or human gate routed to deep_research / risk_review / evidence_check.",
+          "hit_count": 22,
+          "recall": 1.0
+        },
+        "under_trigger_from_deep_or_risk": {
+          "candidate_count": 60,
+          "definition": "Actual deep_research / risk_review predicted as fast_answer / clarification_needed / price_lookup.",
+          "hit_count": 8,
+          "rate": 0.1333
+        },
+        "weighted_f1": 0.9003
+      },
+      "prediction_distribution": {
+        "clarification_needed": 18,
+        "deep_research": 32,
+        "evidence_check": 43,
+        "fast_answer": 80,
+        "financial_calculation": 21,
+        "news_retrieval": 21,
+        "price_lookup": 15,
+        "risk_review": 19
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "The repaired long-research router set is used as a deep_research regression holdout, not as the main training set, because all 25 rows have the same route label.",
+    "Input features exclude label-derived required_tools to avoid leakage.",
+    "This is a lightweight coordinator/router baseline, not a final small LM fine-tune."
+  ]
+}

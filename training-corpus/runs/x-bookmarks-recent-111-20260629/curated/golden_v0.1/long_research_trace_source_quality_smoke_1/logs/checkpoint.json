@@ -1,0 +1,85 @@
+{
+  "status": "complete",
+  "summary": {
+    "available_task_count": 25,
+    "blocker_count": 0,
+    "blocker_counts": {},
+    "claim_count": 29,
+    "created_at": "2026-06-29T08:37:18.337240+00:00",
+    "data_boundary": "Read-only long research trajectory; memory writes are pending proposals only.",
+    "datasets": {
+      "citation_verifier": 24,
+      "long2short_pairs": 1,
+      "memo_quality_scorer": 1,
+      "memory_gate": 1,
+      "risk_reviewer": 1,
+      "router_classifier": 1
+    },
+    "error_count": 0,
+    "evidence_chain_eval_count": 1,
+    "memory_write_proposal_count": 1,
+    "opened_page_count": 9,
+    "opened_page_ok_count": 7,
+    "outputs": {
+      "blockers": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/blockers.jsonl",
+      "contradiction_regression_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/regression/contradiction_cases.jsonl",
+      "evidence_chain_evals": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/evidence_chain_evals.jsonl",
+      "evidence_chain_negative_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/regression/evidence_chain_negative_cases.jsonl",
+      "pending_memory_proposals": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/pending_memory_proposals.jsonl",
+      "source_registry": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/source_registry.jsonl",
+      "source_warnings": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/source_warnings.jsonl",
+      "traces": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/long_research_traces.jsonl"
+    },
+    "pilot_id": "long_research_trace_source_quality_smoke_1",
+    "regression": {
+      "contradiction_case_count": 1,
+      "contradiction_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/regression/contradiction_cases.jsonl",
+      "evidence_chain_negative_case_count": 2,
+      "evidence_chain_negative_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_smoke_1/regression/evidence_chain_negative_cases.jsonl"
+    },
+    "source_access_counts": {
+      "http_error": 1,
+      "not_opened": 6,
+      "ok": 7,
+      "paywall_or_forbidden": 3
+    },
+    "source_record_count": 17,
+    "source_warning_count": 0,
+    "source_warning_counts": {},
+    "step_counts": {
+      "compare_sources": 1,
+      "evidence_chain_eval": 1,
+      "extract_claims_1": 1,
+      "extract_claims_2": 1,
+      "extract_claims_3_risk": 1,
+      "extract_official_claims": 1,
+      "extract_risk_snippet_claims": 1,
+      "final_short_answer": 1,
+      "memory_read_gate": 1,
+      "memory_write_gate": 1,
+      "open_official_sources": 1,
+      "open_page_1": 1,
+      "open_page_2": 1,
+      "open_page_3_risk": 1,
+      "plan": 1,
+      "read_official_paragraphs": 1,
+      "read_paragraphs_1": 1,
+      "read_paragraphs_2": 1,
+      "read_paragraphs_3_risk": 1,
+      "reviewer": 1,
+      "revise_thesis": 1,
+      "rewrite": 1,
+      "search_query_1": 1,
+      "search_query_2": 1,
+      "search_query_3_risk": 1,
+      "source_registry": 1,
+      "write_memo": 1
+    },
+    "task_limit": 1,
+    "trace_count": 1,
+    "verdict_counts": {
+      "complete": 1
+    }
+  },
+  "ts": "2026-06-29T08:37:18.337419+00:00"
+}

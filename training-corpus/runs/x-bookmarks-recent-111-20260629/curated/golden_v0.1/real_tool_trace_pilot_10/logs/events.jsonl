@@ -1,0 +1,21 @@
+{"event": "start", "task_count": 10, "ts": "2026-06-29T06:41:08.636774+00:00"}
+{"event": "task_start", "symbol": "MU", "task_id": "real_trace_001_mu_memory_earnings", "ts": "2026-06-29T06:41:08.637041+00:00"}
+{"event": "task_done", "task_id": "real_trace_001_mu_memory_earnings", "ts": "2026-06-29T06:41:09.975565+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "NVDA", "task_id": "real_trace_002_nvda_ai_infra", "ts": "2026-06-29T06:41:09.975700+00:00"}
+{"event": "task_done", "task_id": "real_trace_002_nvda_ai_infra", "ts": "2026-06-29T06:41:11.158746+00:00", "verdict": "partial_tool_trace"}
+{"event": "task_start", "symbol": "MRVL", "task_id": "real_trace_003_mrvl_connectivity", "ts": "2026-06-29T06:41:11.158886+00:00"}
+{"event": "task_done", "task_id": "real_trace_003_mrvl_connectivity", "ts": "2026-06-29T06:41:12.073339+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "VRT", "task_id": "real_trace_004_vrt_power_infra", "ts": "2026-06-29T06:41:12.073525+00:00"}
+{"event": "task_done", "task_id": "real_trace_004_vrt_power_infra", "ts": "2026-06-29T06:41:13.119148+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "SPY", "task_id": "real_trace_005_spy_index_risk", "ts": "2026-06-29T06:41:13.119292+00:00"}
+{"event": "task_done", "task_id": "real_trace_005_spy_index_risk", "ts": "2026-06-29T06:41:14.129974+00:00", "verdict": "partial_tool_trace"}
+{"event": "task_start", "symbol": "AMD", "task_id": "real_trace_006_amd_datacenter", "ts": "2026-06-29T06:41:14.130158+00:00"}
+{"event": "task_done", "task_id": "real_trace_006_amd_datacenter", "ts": "2026-06-29T06:41:15.191813+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "LRCX", "task_id": "real_trace_007_lrcx_semicap", "ts": "2026-06-29T06:41:15.191979+00:00"}
+{"event": "task_done", "task_id": "real_trace_007_lrcx_semicap", "ts": "2026-06-29T06:41:16.312305+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "META", "task_id": "real_trace_008_meta_capex", "ts": "2026-06-29T06:41:16.312462+00:00"}
+{"event": "task_done", "task_id": "real_trace_008_meta_capex", "ts": "2026-06-29T06:41:17.487406+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "GOOGL", "task_id": "real_trace_009_googl_capex", "ts": "2026-06-29T06:41:17.487613+00:00"}
+{"event": "task_done", "task_id": "real_trace_009_googl_capex", "ts": "2026-06-29T06:41:18.580937+00:00", "verdict": "complete_tool_trace"}
+{"event": "task_start", "symbol": "SNDK", "task_id": "real_trace_010_sndk_memory_theme", "ts": "2026-06-29T06:41:18.581107+00:00"}
+{"event": "task_done", "task_id": "real_trace_010_sndk_memory_theme", "ts": "2026-06-29T06:41:19.534408+00:00", "verdict": "complete_tool_trace"}

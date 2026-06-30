@@ -1,0 +1,81 @@
+{
+  "available_task_count": 25,
+  "blocker_count": 0,
+  "blocker_counts": {},
+  "claim_count": 433,
+  "created_at": "2026-06-29T08:25:59.870470+00:00",
+  "data_boundary": "Read-only long research trajectory; memory writes are pending proposals only.",
+  "datasets": {
+    "citation_verifier": 433,
+    "long2short_pairs": 25,
+    "memo_quality_scorer": 25,
+    "memory_gate": 25,
+    "risk_reviewer": 25,
+    "router_classifier": 25
+  },
+  "error_count": 0,
+  "evidence_chain_eval_count": 25,
+  "memory_write_proposal_count": 24,
+  "opened_page_count": 211,
+  "opened_page_ok_count": 121,
+  "outputs": {
+    "blockers": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/blockers.jsonl",
+    "contradiction_regression_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/regression/contradiction_cases.jsonl",
+    "evidence_chain_evals": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/evidence_chain_evals.jsonl",
+    "evidence_chain_negative_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/regression/evidence_chain_negative_cases.jsonl",
+    "pending_memory_proposals": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/pending_memory_proposals.jsonl",
+    "source_registry": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/source_registry.jsonl",
+    "source_warnings": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/source_warnings.jsonl",
+    "traces": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/long_research_traces.jsonl"
+  },
+  "pilot_id": "long_research_trace_expanded_25",
+  "regression": {
+    "contradiction_case_count": 25,
+    "contradiction_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/regression/contradiction_cases.jsonl",
+    "evidence_chain_negative_case_count": 50,
+    "evidence_chain_negative_cases": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_expanded_25/regression/evidence_chain_negative_cases.jsonl"
+  },
+  "source_access_counts": {
+    "http_error": 4,
+    "no_readable_paragraphs": 47,
+    "not_opened": 128,
+    "ok": 121,
+    "paywall_or_forbidden": 39
+  },
+  "source_record_count": 339,
+  "source_warning_count": 1,
+  "source_warning_counts": {
+    "broad_search_no_results": 1
+  },
+  "step_counts": {
+    "compare_sources": 25,
+    "evidence_chain_eval": 25,
+    "extract_claims_1": 25,
+    "extract_claims_2": 25,
+    "extract_claims_3_risk": 25,
+    "extract_risk_snippet_claims": 25,
+    "final_short_answer": 25,
+    "memory_read_gate": 25,
+    "memory_write_gate": 25,
+    "open_page_1": 25,
+    "open_page_2": 25,
+    "open_page_3_risk": 25,
+    "plan": 25,
+    "read_paragraphs_1": 25,
+    "read_paragraphs_2": 25,
+    "read_paragraphs_3_risk": 25,
+    "reviewer": 25,
+    "revise_thesis": 25,
+    "rewrite": 25,
+    "search_query_1": 25,
+    "search_query_2": 25,
+    "search_query_3_risk": 25,
+    "source_registry": 25,
+    "write_memo": 25
+  },
+  "task_limit": 25,
+  "trace_count": 25,
+  "verdict_counts": {
+    "complete": 25
+  }
+}

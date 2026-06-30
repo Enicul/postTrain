@@ -1,0 +1,67 @@
+{
+  "outputs": {
+    "citation_verifier": {
+      "all": 166,
+      "label_counts": {
+        "contradicts": 4,
+        "insufficient": 20,
+        "not_supported": 75,
+        "partial_support": 27,
+        "supports": 40
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier",
+      "splits": {
+        "dev": 27,
+        "test": 31,
+        "train": 108
+      },
+      "synthetic_counts": {
+        "False": 74,
+        "True": 92
+      }
+    },
+    "risk_reviewer": {
+      "all": 181,
+      "label_counts": {
+        "high": 83,
+        "low": 29,
+        "medium": 69
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer",
+      "splits": {
+        "dev": 23,
+        "test": 37,
+        "train": 121
+      },
+      "synthetic_counts": {
+        "False": 25,
+        "True": 156
+      }
+    },
+    "router_classifier": {
+      "all": 344,
+      "label_counts": {
+        "clarification_needed": 26,
+        "deep_research": 53,
+        "evidence_check": 67,
+        "fast_answer": 90,
+        "financial_calculation": 26,
+        "news_retrieval": 26,
+        "price_lookup": 26,
+        "risk_review": 30
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier",
+      "splits": {
+        "dev": 47,
+        "test": 48,
+        "train": 249
+      },
+      "synthetic_counts": {
+        "False": 136,
+        "True": 208
+      }
+    }
+  },
+  "status": "complete",
+  "ts": "2026-06-29T06:41:57.365057+00:00"
+}

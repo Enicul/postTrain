@@ -1,0 +1,30 @@
+{
+  "completed_at": "2026-06-29T06:41:19.536128+00:00",
+  "created_at": "2026-06-29T06:41:08.636774+00:00",
+  "data_boundary": "This pilot proves read-only research tool execution, not trading execution.",
+  "error_count": 0,
+  "failure_taxonomy_counts": {
+    "missing_news_observation": 1,
+    "missing_primary_source": 1
+  },
+  "observation_span_count": 59,
+  "outputs": {
+    "errors": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/logs/errors.jsonl",
+    "events": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/logs/events.jsonl",
+    "observation_spans": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/observation_spans.jsonl",
+    "tool_calls": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/tool_calls.jsonl",
+    "traces": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/real_tool_traces.jsonl"
+  },
+  "pilot_id": "real_tool_trace_pilot_10",
+  "tool_call_count": 30,
+  "tool_status_counts": {
+    "market_price_lookup:ok": 10,
+    "news_search:ok": 10,
+    "sec_edgar:ok": 10
+  },
+  "trace_count": 10,
+  "verdict_counts": {
+    "complete_tool_trace": 8,
+    "partial_tool_trace": 2
+  }
+}

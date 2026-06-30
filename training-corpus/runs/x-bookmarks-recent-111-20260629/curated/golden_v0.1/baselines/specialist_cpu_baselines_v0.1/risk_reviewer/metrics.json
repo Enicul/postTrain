@@ -1,0 +1,260 @@
+{
+  "artifacts": {
+    "metrics": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_baselines_v0.1/risk_reviewer/metrics.json",
+    "model": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_baselines_v0.1/risk_reviewer/model.joblib",
+    "predictions": {
+      "dev": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_baselines_v0.1/risk_reviewer/predictions_dev.jsonl",
+      "test": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_baselines_v0.1/risk_reviewer/predictions_test.jsonl",
+      "train": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_baselines_v0.1/risk_reviewer/predictions_train.jsonl"
+    }
+  },
+  "dataset": "risk_reviewer",
+  "labels": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "majority_baseline": {
+    "accuracy": 0.4595,
+    "macro_f1": 0.2099,
+    "predicted_label": "high"
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.34782608695652173,
+        "high": {
+          "f1-score": 0.5,
+          "precision": 0.3888888888888889,
+          "recall": 0.7,
+          "support": 10.0
+        },
+        "low": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 4.0
+        },
+        "macro avg": {
+          "f1-score": 0.21428571428571427,
+          "precision": 0.1962962962962963,
+          "recall": 0.27037037037037037,
+          "support": 23.0
+        },
+        "medium": {
+          "f1-score": 0.14285714285714285,
+          "precision": 0.2,
+          "recall": 0.1111111111111111,
+          "support": 9.0
+        },
+        "weighted avg": {
+          "f1-score": 0.2732919254658385,
+          "precision": 0.24734299516908215,
+          "recall": 0.34782608695652173,
+          "support": 23.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            7,
+            0,
+            3
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            8,
+            0,
+            1
+          ]
+        ]
+      },
+      "label_distribution": {
+        "high": 10,
+        "low": 4,
+        "medium": 9
+      },
+      "metrics": {
+        "accuracy": 0.3478,
+        "macro_f1": 0.2143,
+        "weighted_f1": 0.2733
+      },
+      "prediction_distribution": {
+        "high": 18,
+        "medium": 5
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.5945945945945946,
+        "high": {
+          "f1-score": 0.6956521739130435,
+          "precision": 0.5517241379310345,
+          "recall": 0.9411764705882353,
+          "support": 17.0
+        },
+        "low": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 4.0
+        },
+        "macro avg": {
+          "f1-score": 0.39855072463768115,
+          "precision": 0.4339080459770115,
+          "recall": 0.4387254901960784,
+          "support": 37.0
+        },
+        "medium": {
+          "f1-score": 0.5,
+          "precision": 0.75,
+          "recall": 0.375,
+          "support": 16.0
+        },
+        "weighted avg": {
+          "f1-score": 0.535840188014101,
+          "precision": 0.5778191985088537,
+          "recall": 0.5945945945945946,
+          "support": 37.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            16,
+            0,
+            1
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            10,
+            0,
+            6
+          ]
+        ]
+      },
+      "label_distribution": {
+        "high": 17,
+        "low": 4,
+        "medium": 16
+      },
+      "metrics": {
+        "accuracy": 0.5946,
+        "macro_f1": 0.3986,
+        "weighted_f1": 0.5358
+      },
+      "prediction_distribution": {
+        "high": 29,
+        "medium": 8
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.5371900826446281,
+        "high": {
+          "f1-score": 0.6666666666666666,
+          "precision": 0.5045871559633027,
+          "recall": 0.9821428571428571,
+          "support": 56.0
+        },
+        "low": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 21.0
+        },
+        "macro avg": {
+          "f1-score": 0.3412698412698412,
+          "precision": 0.445973496432212,
+          "recall": 0.4031385281385281,
+          "support": 121.0
+        },
+        "medium": {
+          "f1-score": 0.35714285714285715,
+          "precision": 0.8333333333333334,
+          "recall": 0.22727272727272727,
+          "support": 44.0
+        },
+        "weighted avg": {
+          "f1-score": 0.43841007477371113,
+          "precision": 0.5365582429802613,
+          "recall": 0.5371900826446281,
+          "support": 121.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            55,
+            0,
+            1
+          ],
+          [
+            20,
+            0,
+            1
+          ],
+          [
+            34,
+            0,
+            10
+          ]
+        ]
+      },
+      "label_distribution": {
+        "high": 56,
+        "low": 21,
+        "medium": 44
+      },
+      "metrics": {
+        "accuracy": 0.5372,
+        "macro_f1": 0.3413,
+        "weighted_f1": 0.4384
+      },
+      "prediction_distribution": {
+        "high": 109,
+        "medium": 12
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+    "Feature text is built from input fields only; label fields are not included as model features."
+  ],
+  "rows": {
+    "dev": 23,
+    "test": 37,
+    "train": 121
+  },
+  "target": "risk_level",
+  "train_distribution": {
+    "high": 56,
+    "low": 21,
+    "medium": 44
+  },
+  "why": "Safety/risk classifier baseline for overconfidence, missing-risk, and gate policy."
+}

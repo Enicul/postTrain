@@ -1,0 +1,8 @@
+{"severity": "medium", "symbol": "AVGO", "trace_id": "long_trace_008_avgo_custom_silicon", "type": "official_seed_no_readable_pages"}
+{"severity": "medium", "symbol": "AMZN", "trace_id": "long_trace_011_amzn_aws_ai_capex", "type": "broad_search_no_results"}
+{"severity": "medium", "symbol": "TSLA", "trace_id": "long_trace_013_tsla_ai_robotics", "type": "broad_search_no_results"}
+{"severity": "medium", "symbol": "TSLA", "trace_id": "long_trace_013_tsla_ai_robotics", "type": "official_seed_no_readable_pages"}
+{"severity": "medium", "symbol": "ARM", "trace_id": "long_trace_016_arm_edge_ai", "type": "official_seed_no_readable_pages"}
+{"severity": "medium", "symbol": "AMAT", "trace_id": "long_trace_018_amat_wafer_equipment", "type": "official_seed_no_readable_pages"}
+{"severity": "medium", "symbol": "DELL", "trace_id": "long_trace_022_dell_ai_servers", "type": "official_seed_no_readable_pages"}
+{"severity": "medium", "symbol": "SNDK", "trace_id": "long_trace_024_sndk_storage_ai", "type": "official_seed_no_readable_pages"}

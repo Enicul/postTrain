@@ -1,0 +1,51 @@
+{"event": "start", "run_id": "long_research_trace_source_quality_repair_25", "task_count": 25, "task_limit": 25, "ts": "2026-06-29T08:37:37.824403+00:00"}
+{"event": "episode_start", "symbol": "MU", "task_id": "long_trace_001_mu_memory_cycle", "ts": "2026-06-29T08:37:37.824888+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_001_mu_memory_cycle", "ts": "2026-06-29T08:37:47.297592+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "NVDA", "task_id": "long_trace_002_nvda_ai_infra", "ts": "2026-06-29T08:37:47.299911+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_002_nvda_ai_infra", "ts": "2026-06-29T08:37:59.701715+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "MRVL", "task_id": "long_trace_003_mrvl_connectivity", "ts": "2026-06-29T08:37:59.702052+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_003_mrvl_connectivity", "ts": "2026-06-29T08:38:10.797330+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "META", "task_id": "long_trace_004_meta_capex_fcf", "ts": "2026-06-29T08:38:10.797635+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_004_meta_capex_fcf", "ts": "2026-06-29T08:38:27.503210+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "VRT", "task_id": "long_trace_005_vrt_power_infra", "ts": "2026-06-29T08:38:27.503545+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_005_vrt_power_infra", "ts": "2026-06-29T08:38:42.716403+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "AMD", "task_id": "long_trace_006_amd_ai_accelerator", "ts": "2026-06-29T08:38:42.716757+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_006_amd_ai_accelerator", "ts": "2026-06-29T08:38:56.689872+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "TSM", "task_id": "long_trace_007_tsm_ai_foundry", "ts": "2026-06-29T08:38:56.690127+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_007_tsm_ai_foundry", "ts": "2026-06-29T08:39:13.891058+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "AVGO", "task_id": "long_trace_008_avgo_custom_silicon", "ts": "2026-06-29T08:39:13.891404+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_008_avgo_custom_silicon", "ts": "2026-06-29T08:39:56.985217+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "MSFT", "task_id": "long_trace_009_msft_ai_capex", "ts": "2026-06-29T08:39:56.985555+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_009_msft_ai_capex", "ts": "2026-06-29T08:40:08.174583+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "GOOGL", "task_id": "long_trace_010_googl_ai_search_cloud", "ts": "2026-06-29T08:40:08.174952+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_010_googl_ai_search_cloud", "ts": "2026-06-29T08:40:24.152393+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "AMZN", "task_id": "long_trace_011_amzn_aws_ai_capex", "ts": "2026-06-29T08:40:24.152662+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_011_amzn_aws_ai_capex", "ts": "2026-06-29T08:40:35.978717+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "AAPL", "task_id": "long_trace_012_aapl_ai_device_cycle", "ts": "2026-06-29T08:40:35.979062+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_012_aapl_ai_device_cycle", "ts": "2026-06-29T08:40:52.764981+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "TSLA", "task_id": "long_trace_013_tsla_ai_robotics", "ts": "2026-06-29T08:40:52.765286+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_013_tsla_ai_robotics", "ts": "2026-06-29T08:41:03.522087+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "PLTR", "task_id": "long_trace_014_pltr_ai_software", "ts": "2026-06-29T08:41:03.522389+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_014_pltr_ai_software", "ts": "2026-06-29T08:41:28.541927+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "SMCI", "task_id": "long_trace_015_smci_server_supply_chain", "ts": "2026-06-29T08:41:28.542310+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_015_smci_server_supply_chain", "ts": "2026-06-29T08:41:40.485571+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "ARM", "task_id": "long_trace_016_arm_edge_ai", "ts": "2026-06-29T08:41:40.485976+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_016_arm_edge_ai", "ts": "2026-06-29T08:42:12.629725+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "ASML", "task_id": "long_trace_017_asml_euv_ai_cycle", "ts": "2026-06-29T08:42:12.630050+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_017_asml_euv_ai_cycle", "ts": "2026-06-29T08:42:25.556362+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "AMAT", "task_id": "long_trace_018_amat_wafer_equipment", "ts": "2026-06-29T08:42:25.556548+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_018_amat_wafer_equipment", "ts": "2026-06-29T08:42:58.071430+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "LRCX", "task_id": "long_trace_019_lrcx_memory_equipment", "ts": "2026-06-29T08:42:58.071799+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_019_lrcx_memory_equipment", "ts": "2026-06-29T08:43:16.702228+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "KLAC", "task_id": "long_trace_020_klac_process_control", "ts": "2026-06-29T08:43:16.702560+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_020_klac_process_control", "ts": "2026-06-29T08:43:31.281773+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "ANET", "task_id": "long_trace_021_anet_ai_networking", "ts": "2026-06-29T08:43:31.282080+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_021_anet_ai_networking", "ts": "2026-06-29T08:43:44.236161+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "DELL", "task_id": "long_trace_022_dell_ai_servers", "ts": "2026-06-29T08:43:44.236448+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_022_dell_ai_servers", "ts": "2026-06-29T08:44:34.082371+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "ORCL", "task_id": "long_trace_023_orcl_ai_cloud", "ts": "2026-06-29T08:44:34.082677+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_023_orcl_ai_cloud", "ts": "2026-06-29T08:44:50.062804+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "SNDK", "task_id": "long_trace_024_sndk_storage_ai", "ts": "2026-06-29T08:44:50.063218+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_024_sndk_storage_ai", "ts": "2026-06-29T08:45:01.496220+00:00", "verdict": "complete"}
+{"event": "episode_start", "symbol": "CRWV", "task_id": "long_trace_025_crwv_ai_cloud", "ts": "2026-06-29T08:45:01.496545+00:00"}
+{"blocker_count": 0, "event": "episode_done", "task_id": "long_trace_025_crwv_ai_cloud", "ts": "2026-06-29T08:45:16.477429+00:00", "verdict": "complete"}

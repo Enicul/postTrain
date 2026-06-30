@@ -1,0 +1,5 @@
+# CPU specialist baselines.
+# Install on a server with:
+#   python3 -m pip install -r training-corpus/requirements-baseline.txt
+scikit-learn>=1.0
+joblib>=1.1

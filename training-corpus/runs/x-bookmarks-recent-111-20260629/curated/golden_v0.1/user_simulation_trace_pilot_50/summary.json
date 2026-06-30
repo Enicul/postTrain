@@ -1,0 +1,54 @@
+{
+  "blocker_count": 18,
+  "blocker_counts": {
+    "missing_news_observation": 3,
+    "registry_tool_suggestion_overbroad": 15
+  },
+  "completed_at": "2026-06-29T07:20:05.584209+00:00",
+  "created_at": "2026-06-29T07:19:53.039391+00:00",
+  "data_boundary": "Simulated user inputs plus real read-only provider calls; no trading, no runtime DB writes.",
+  "datasets": {
+    "citation_verifier": 159,
+    "risk_reviewer": 50,
+    "router_classifier": 50
+  },
+  "error_count": 0,
+  "observation_span_count": 159,
+  "outputs": {
+    "blockers": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/user_simulation_trace_pilot_50/blockers.jsonl",
+    "observation_spans": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/user_simulation_trace_pilot_50/observation_spans.jsonl",
+    "tool_calls": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/user_simulation_trace_pilot_50/tool_calls.jsonl",
+    "traces": "/Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/user_simulation_trace_pilot_50/simulated_user_traces.jsonl"
+  },
+  "pilot_id": "user_simulation_trace_pilot_50",
+  "route_counts": {
+    "clarification_needed": 7,
+    "deep_research": 7,
+    "evidence_check": 7,
+    "fast_answer": 8,
+    "news_retrieval": 7,
+    "price_lookup": 7,
+    "risk_review": 7
+  },
+  "scenario_counts": {
+    "clarification_needed": 7,
+    "concept_fast_answer": 8,
+    "deep_research": 7,
+    "evidence_check": 7,
+    "latest_news": 7,
+    "price_lookup": 7,
+    "risk_review_all_in": 7
+  },
+  "tool_call_count": 77,
+  "tool_status_counts": {
+    "market_price_lookup:ok": 28,
+    "news_search:ok": 28,
+    "sec_edgar:ok": 21
+  },
+  "trace_count": 50,
+  "verdict_counts": {
+    "complete": 32,
+    "needs_clarification": 7,
+    "partial_or_blocked": 11
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "created_at": "2026-06-29T06:41:57.341772+00:00",
+  "data_boundary": "Social data is a narrative/user-language seed only; official/auditable spans carry verification labels.",
+  "datasets": {
+    "citation_verifier": {
+      "all": 166,
+      "label_counts": {
+        "contradicts": 4,
+        "insufficient": 20,
+        "not_supported": 75,
+        "partial_support": 27,
+        "supports": 40
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier",
+      "splits": {
+        "dev": 27,
+        "test": 31,
+        "train": 108
+      },
+      "synthetic_counts": {
+        "False": 74,
+        "True": 92
+      }
+    },
+    "risk_reviewer": {
+      "all": 181,
+      "label_counts": {
+        "high": 83,
+        "low": 29,
+        "medium": 69
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer",
+      "splits": {
+        "dev": 23,
+        "test": 37,
+        "train": 121
+      },
+      "synthetic_counts": {
+        "False": 25,
+        "True": 156
+      }
+    },
+    "router_classifier": {
+      "all": 344,
+      "label_counts": {
+        "clarification_needed": 26,
+        "deep_research": 53,
+        "evidence_check": 67,
+        "fast_answer": 90,
+        "financial_calculation": 26,
+        "news_retrieval": 26,
+        "price_lookup": 26,
+        "risk_review": 30
+      },
+      "path": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier",
+      "splits": {
+        "dev": 47,
+        "test": 48,
+        "train": 249
+      },
+      "synthetic_counts": {
+        "False": 136,
+        "True": 208
+      }
+    }
+  },
+  "frozen_inputs": {
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/datasets/market_narrative_router_seed/all.jsonl": {
+      "bytes": 163956,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/datasets__market_narrative_router_seed__all.jsonl",
+      "sha256": "830064e3f84576c9e82ba1997dfa2743bcb164874c408ba08e4f3c980806db2b"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/claim_evidence_spans.jsonl": {
+      "bytes": 61351,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__claim_evidence_spans.jsonl",
+      "sha256": "d55cd7c2c4521546a0063f3e450d88b03bf65057df8666dfcd8635a20f2178c6"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/datasets/citation_verifier/all.jsonl": {
+      "bytes": 58873,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__datasets__citation_verifier__all.jsonl",
+      "sha256": "2b37e71a3e1f130452af686544a8cd2152e82e3a51168083fef72e67c720dab3"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/datasets/risk_reviewer/all.jsonl": {
+      "bytes": 32847,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__datasets__risk_reviewer__all.jsonl",
+      "sha256": "f8d9d7bf244e7ac9f5309e3c475becd7fde8c26ef28eed7c4b270bc4a6e04fd0"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/datasets/router/all.jsonl": {
+      "bytes": 23757,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__datasets__router__all.jsonl",
+      "sha256": "36c08ac75bdc51f6974f8e31774f2c84192ab469506194e373baaf20b011f5d1"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/official_verification_traces.jsonl": {
+      "bytes": 72584,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__official_verification_traces.jsonl",
+      "sha256": "16b21d3073772b3febd1b712c3ec8f8ed24e447782cd99aece052ff8ec0be7b4"
+    },
+    "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25/summary.json": {
+      "bytes": 4220,
+      "frozen_copy": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/freeze/pilot__strict_pilot_trace_25__summary.json",
+      "sha256": "66afa49813e14a50913e087e44885cab61fa91cb02e8d8d2b779665ee4dc8437"
+    }
+  },
+  "next_steps": [
+    "Expand real citation spans to 300-500 paragraph-level pairs.",
+    "Run 20-50 real Kiwi tool-trace episodes.",
+    "Audit synthetic rows with Claude/human sample review before model training."
+  ],
+  "pack_id": "golden_v0.1",
+  "source_run": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629",
+  "strict_pilot": "kiwi/training-corpus/runs/x-bookmarks-recent-111-20260629/pilot/strict_pilot_trace_25"
+}
