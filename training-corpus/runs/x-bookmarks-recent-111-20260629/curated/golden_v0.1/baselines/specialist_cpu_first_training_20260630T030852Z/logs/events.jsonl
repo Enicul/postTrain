@@ -1,0 +1,32 @@
+{"event": "run_start", "run_id": "specialist_cpu_first_training_20260630T030852Z", "selected": ["router_classifier", "risk_reviewer", "citation_verifier"], "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "dataset_start", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier/train.jsonl", "rows": 249, "split": "train", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier/dev.jsonl", "rows": 47, "split": "dev", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier/test.jsonl", "rows": 48, "split": "test", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "train_start", "labels": ["clarification_needed", "deep_research", "evidence_check", "fast_answer", "financial_calculation", "news_retrieval", "price_lookup", "risk_review"], "train_rows": 249, "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 0.9116, "macro_f1": 0.9452, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.1167, "weighted_f1": 0.9123}, "split": "train", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 0.9574, "macro_f1": 0.9505, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.0, "weighted_f1": 0.9517}, "split": "dev", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "eval_complete", "metrics": {"accuracy": 0.9167, "macro_f1": 0.9368, "over_trigger_rate": 0.0, "safety_recall": 1.0, "under_trigger_rate": 0.0, "weighted_f1": 0.9113}, "split": "test", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "router_classifier", "event": "dataset_complete", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "dataset_start", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/train.jsonl", "rows": 121, "split": "train", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/dev.jsonl", "rows": 23, "split": "dev", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/test.jsonl", "rows": 37, "split": "test", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "train_start", "labels": ["high", "low", "medium"], "train_rows": 121, "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.5372, "macro_f1": 0.3413, "weighted_f1": 0.4384}, "split": "train", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.3478, "macro_f1": 0.2143, "weighted_f1": 0.2733}, "split": "dev", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.5946, "macro_f1": 0.3986, "weighted_f1": 0.5358}, "split": "test", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "risk_reviewer", "event": "dataset_complete", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "dataset_start", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier/train.jsonl", "rows": 108, "split": "train", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier/dev.jsonl", "rows": 27, "split": "dev", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier/test.jsonl", "rows": 31, "split": "test", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "train_start", "labels": ["contradicts", "insufficient", "not_supported", "partial_support", "supports"], "train_rows": 108, "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-06-30T03:08:53Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.8241, "macro_f1": 0.8289, "weighted_f1": 0.8244}, "split": "train", "ts": "2026-06-30T03:08:54Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.1852, "macro_f1": 0.1484, "weighted_f1": 0.1671}, "split": "dev", "ts": "2026-06-30T03:08:54Z"}
+{"dataset": "citation_verifier", "event": "eval_complete", "metrics": {"accuracy": 0.2581, "macro_f1": 0.1441, "weighted_f1": 0.2626}, "split": "test", "ts": "2026-06-30T03:08:54Z"}
+{"dataset": "citation_verifier", "event": "dataset_complete", "ts": "2026-06-30T03:08:54Z"}
+{"completed": ["router_classifier", "risk_reviewer", "citation_verifier"], "event": "run_complete", "run_id": "specialist_cpu_first_training_20260630T030852Z", "ts": "2026-06-30T03:08:54Z"}

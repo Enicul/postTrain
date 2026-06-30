@@ -1,0 +1,1261 @@
+{
+  "boundary": "CPU baseline only; not a production post-training model.",
+  "completed_at": "2026-06-30T03:08:54Z",
+  "created_at": "2026-06-30T03:08:53Z",
+  "datasets": {
+    "citation_verifier": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/model.joblib",
+        "predictions": {
+          "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_dev.jsonl",
+          "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_test.jsonl",
+          "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_train.jsonl"
+        }
+      },
+      "dataset": "citation_verifier",
+      "labels": [
+        "contradicts",
+        "insufficient",
+        "not_supported",
+        "partial_support",
+        "supports"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.4839,
+        "macro_f1": 0.163,
+        "predicted_label": "not_supported"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.18518518518518517,
+            "contradicts": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 0.0
+            },
+            "insufficient": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 3.0
+            },
+            "macro avg": {
+              "f1-score": 0.14837606837606837,
+              "precision": 0.12115384615384617,
+              "recall": 0.2661538461538462,
+              "support": 27.0
+            },
+            "not_supported": {
+              "f1-score": 0.23076923076923078,
+              "precision": 0.23076923076923078,
+              "recall": 0.23076923076923078,
+              "support": 13.0
+            },
+            "partial_support": {
+              "f1-score": 0.4,
+              "precision": 0.25,
+              "recall": 1.0,
+              "support": 1.0
+            },
+            "supports": {
+              "f1-score": 0.1111111111111111,
+              "precision": 0.125,
+              "recall": 0.1,
+              "support": 10.0
+            },
+            "weighted avg": {
+              "f1-score": 0.16707818930041152,
+              "precision": 0.16666666666666666,
+              "recall": 0.18518518518518517,
+              "support": 27.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                1,
+                3,
+                2,
+                6
+              ],
+              [
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                9,
+                0,
+                1
+              ]
+            ]
+          },
+          "label_distribution": {
+            "insufficient": 3,
+            "not_supported": 13,
+            "partial_support": 1,
+            "supports": 10
+          },
+          "metrics": {
+            "accuracy": 0.1852,
+            "macro_f1": 0.1484,
+            "weighted_f1": 0.1671
+          },
+          "prediction_distribution": {
+            "contradicts": 1,
+            "insufficient": 1,
+            "not_supported": 13,
+            "partial_support": 4,
+            "supports": 8
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.25806451612903225,
+            "contradicts": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 0.0
+            },
+            "insufficient": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 3.0
+            },
+            "macro avg": {
+              "f1-score": 0.14408602150537636,
+              "precision": 0.155,
+              "recall": 0.13714285714285715,
+              "support": 31.0
+            },
+            "not_supported": {
+              "f1-score": 0.3870967741935484,
+              "precision": 0.375,
+              "recall": 0.4,
+              "support": 15.0
+            },
+            "partial_support": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 6.0
+            },
+            "supports": {
+              "f1-score": 0.3333333333333333,
+              "precision": 0.4,
+              "recall": 0.2857142857142857,
+              "support": 7.0
+            },
+            "weighted avg": {
+              "f1-score": 0.26257370794311485,
+              "precision": 0.2717741935483871,
+              "recall": 0.25806451612903225,
+              "support": 31.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                6,
+                5,
+                3
+              ],
+              [
+                2,
+                0,
+                4,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                5,
+                0,
+                2
+              ]
+            ]
+          },
+          "label_distribution": {
+            "insufficient": 3,
+            "not_supported": 15,
+            "partial_support": 6,
+            "supports": 7
+          },
+          "metrics": {
+            "accuracy": 0.2581,
+            "macro_f1": 0.1441,
+            "weighted_f1": 0.2626
+          },
+          "prediction_distribution": {
+            "contradicts": 3,
+            "not_supported": 16,
+            "partial_support": 7,
+            "supports": 5
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.8240740740740741,
+            "contradicts": {
+              "f1-score": 0.8,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "support": 4.0
+            },
+            "insufficient": {
+              "f1-score": 0.9285714285714286,
+              "precision": 0.9285714285714286,
+              "recall": 0.9285714285714286,
+              "support": 14.0
+            },
+            "macro avg": {
+              "f1-score": 0.8288890705413129,
+              "precision": 0.8080745341614908,
+              "recall": 0.863938152504295,
+              "support": 108.0
+            },
+            "not_supported": {
+              "f1-score": 0.8172043010752689,
+              "precision": 0.8260869565217391,
+              "recall": 0.8085106382978723,
+              "support": 47.0
+            },
+            "partial_support": {
+              "f1-score": 0.7804878048780488,
+              "precision": 0.7619047619047619,
+              "recall": 0.8,
+              "support": 20.0
+            },
+            "supports": {
+              "f1-score": 0.8181818181818182,
+              "precision": 0.8571428571428571,
+              "recall": 0.782608695652174,
+              "support": 23.0
+            },
+            "weighted avg": {
+              "f1-score": 0.824412408021115,
+              "precision": 0.828195690514531,
+              "recall": 0.8240740740740741,
+              "support": 108.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "contradicts",
+              "insufficient",
+              "not_supported",
+              "partial_support",
+              "supports"
+            ],
+            "rows": [
+              [
+                4,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                13,
+                0,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                38,
+                4,
+                2
+              ],
+              [
+                0,
+                0,
+                4,
+                16,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                1,
+                18
+              ]
+            ]
+          },
+          "label_distribution": {
+            "contradicts": 4,
+            "insufficient": 14,
+            "not_supported": 47,
+            "partial_support": 20,
+            "supports": 23
+          },
+          "metrics": {
+            "accuracy": 0.8241,
+            "macro_f1": 0.8289,
+            "weighted_f1": 0.8244
+          },
+          "prediction_distribution": {
+            "contradicts": 6,
+            "insufficient": 14,
+            "not_supported": 46,
+            "partial_support": 21,
+            "supports": 21
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features."
+      ],
+      "rows": {
+        "dev": 27,
+        "test": 31,
+        "train": 108
+      },
+      "target": "support_type",
+      "train_distribution": {
+        "contradicts": 4,
+        "insufficient": 14,
+        "not_supported": 47,
+        "partial_support": 20,
+        "supports": 23
+      },
+      "why": "Claim-evidence support classifier baseline before small verifier fine-tuning."
+    },
+    "risk_reviewer": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/risk_reviewer/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/risk_reviewer/model.joblib",
+        "predictions": {
+          "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/risk_reviewer/predictions_dev.jsonl",
+          "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/risk_reviewer/predictions_test.jsonl",
+          "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/risk_reviewer/predictions_train.jsonl"
+        }
+      },
+      "dataset": "risk_reviewer",
+      "labels": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.4595,
+        "macro_f1": 0.2099,
+        "predicted_label": "high"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.34782608695652173,
+            "high": {
+              "f1-score": 0.5,
+              "precision": 0.3888888888888889,
+              "recall": 0.7,
+              "support": 10.0
+            },
+            "low": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 4.0
+            },
+            "macro avg": {
+              "f1-score": 0.21428571428571427,
+              "precision": 0.1962962962962963,
+              "recall": 0.27037037037037037,
+              "support": 23.0
+            },
+            "medium": {
+              "f1-score": 0.14285714285714285,
+              "precision": 0.2,
+              "recall": 0.1111111111111111,
+              "support": 9.0
+            },
+            "weighted avg": {
+              "f1-score": 0.2732919254658385,
+              "precision": 0.24734299516908215,
+              "recall": 0.34782608695652173,
+              "support": 23.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "high",
+              "low",
+              "medium"
+            ],
+            "rows": [
+              [
+                7,
+                0,
+                3
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                8,
+                0,
+                1
+              ]
+            ]
+          },
+          "label_distribution": {
+            "high": 10,
+            "low": 4,
+            "medium": 9
+          },
+          "metrics": {
+            "accuracy": 0.3478,
+            "macro_f1": 0.2143,
+            "weighted_f1": 0.2733
+          },
+          "prediction_distribution": {
+            "high": 18,
+            "medium": 5
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.5945945945945946,
+            "high": {
+              "f1-score": 0.6956521739130435,
+              "precision": 0.5517241379310345,
+              "recall": 0.9411764705882353,
+              "support": 17.0
+            },
+            "low": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 4.0
+            },
+            "macro avg": {
+              "f1-score": 0.39855072463768115,
+              "precision": 0.4339080459770115,
+              "recall": 0.4387254901960784,
+              "support": 37.0
+            },
+            "medium": {
+              "f1-score": 0.5,
+              "precision": 0.75,
+              "recall": 0.375,
+              "support": 16.0
+            },
+            "weighted avg": {
+              "f1-score": 0.535840188014101,
+              "precision": 0.5778191985088537,
+              "recall": 0.5945945945945946,
+              "support": 37.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "high",
+              "low",
+              "medium"
+            ],
+            "rows": [
+              [
+                16,
+                0,
+                1
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                10,
+                0,
+                6
+              ]
+            ]
+          },
+          "label_distribution": {
+            "high": 17,
+            "low": 4,
+            "medium": 16
+          },
+          "metrics": {
+            "accuracy": 0.5946,
+            "macro_f1": 0.3986,
+            "weighted_f1": 0.5358
+          },
+          "prediction_distribution": {
+            "high": 29,
+            "medium": 8
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.5371900826446281,
+            "high": {
+              "f1-score": 0.6666666666666666,
+              "precision": 0.5045871559633027,
+              "recall": 0.9821428571428571,
+              "support": 56.0
+            },
+            "low": {
+              "f1-score": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "support": 21.0
+            },
+            "macro avg": {
+              "f1-score": 0.3412698412698412,
+              "precision": 0.445973496432212,
+              "recall": 0.4031385281385281,
+              "support": 121.0
+            },
+            "medium": {
+              "f1-score": 0.35714285714285715,
+              "precision": 0.8333333333333334,
+              "recall": 0.22727272727272727,
+              "support": 44.0
+            },
+            "weighted avg": {
+              "f1-score": 0.43841007477371113,
+              "precision": 0.5365582429802613,
+              "recall": 0.5371900826446281,
+              "support": 121.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "high",
+              "low",
+              "medium"
+            ],
+            "rows": [
+              [
+                55,
+                0,
+                1
+              ],
+              [
+                20,
+                0,
+                1
+              ],
+              [
+                34,
+                0,
+                10
+              ]
+            ]
+          },
+          "label_distribution": {
+            "high": 56,
+            "low": 21,
+            "medium": 44
+          },
+          "metrics": {
+            "accuracy": 0.5372,
+            "macro_f1": 0.3413,
+            "weighted_f1": 0.4384
+          },
+          "prediction_distribution": {
+            "high": 109,
+            "medium": 12
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features."
+      ],
+      "rows": {
+        "dev": 23,
+        "test": 37,
+        "train": 121
+      },
+      "target": "risk_level",
+      "train_distribution": {
+        "high": 56,
+        "low": 21,
+        "medium": 44
+      },
+      "why": "Safety/risk classifier baseline for overconfidence, missing-risk, and gate policy."
+    },
+    "router_classifier": {
+      "artifacts": {
+        "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/router_classifier/metrics.json",
+        "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/router_classifier/model.joblib",
+        "predictions": {
+          "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/router_classifier/predictions_dev.jsonl",
+          "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/router_classifier/predictions_test.jsonl",
+          "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/router_classifier/predictions_train.jsonl"
+        }
+      },
+      "dataset": "router_classifier",
+      "labels": [
+        "clarification_needed",
+        "deep_research",
+        "evidence_check",
+        "fast_answer",
+        "financial_calculation",
+        "news_retrieval",
+        "price_lookup",
+        "risk_review"
+      ],
+      "majority_baseline": {
+        "accuracy": 0.3542,
+        "macro_f1": 0.0654,
+        "predicted_label": "fast_answer"
+      },
+      "metrics": {
+        "dev": {
+          "classification_report": {
+            "accuracy": 0.9574468085106383,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 3.0
+            },
+            "deep_research": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8.0
+            },
+            "evidence_check": {
+              "f1-score": 0.6666666666666666,
+              "precision": 1.0,
+              "recall": 0.5,
+              "support": 4.0
+            },
+            "fast_answer": {
+              "f1-score": 0.9375,
+              "precision": 0.8823529411764706,
+              "recall": 1.0,
+              "support": 15.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 4.0
+            },
+            "macro avg": {
+              "f1-score": 0.9505208333333333,
+              "precision": 0.9852941176470589,
+              "recall": 0.9375,
+              "support": 47.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 1.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 6.0
+            },
+            "risk_review": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 6.0
+            },
+            "weighted avg": {
+              "f1-score": 0.9516843971631207,
+              "precision": 0.9624530663329162,
+              "recall": 0.9574468085106383,
+              "support": 47.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                8,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                2,
+                2,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                15,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 3,
+            "deep_research": 8,
+            "evidence_check": 4,
+            "fast_answer": 15,
+            "financial_calculation": 4,
+            "news_retrieval": 1,
+            "price_lookup": 6,
+            "risk_review": 6
+          },
+          "metrics": {
+            "accuracy": 0.9574,
+            "macro_f1": 0.9505,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 1.0,
+            "under_trigger_rate": 0.0,
+            "weighted_f1": 0.9517
+          },
+          "prediction_distribution": {
+            "clarification_needed": 3,
+            "deep_research": 8,
+            "evidence_check": 2,
+            "fast_answer": 17,
+            "financial_calculation": 4,
+            "news_retrieval": 1,
+            "price_lookup": 6,
+            "risk_review": 6
+          }
+        },
+        "test": {
+          "classification_report": {
+            "accuracy": 0.9166666666666666,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 5.0
+            },
+            "deep_research": {
+              "f1-score": 0.9090909090909091,
+              "precision": 1.0,
+              "recall": 0.8333333333333334,
+              "support": 6.0
+            },
+            "evidence_check": {
+              "f1-score": 0.6666666666666666,
+              "precision": 0.8,
+              "recall": 0.5714285714285714,
+              "support": 7.0
+            },
+            "fast_answer": {
+              "f1-score": 0.918918918918919,
+              "precision": 0.85,
+              "recall": 1.0,
+              "support": 17.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 1.0
+            },
+            "macro avg": {
+              "f1-score": 0.9368345618345618,
+              "precision": 0.95625,
+              "recall": 0.9255952380952381,
+              "support": 48.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 4.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 5.0
+            },
+            "risk_review": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 3.0
+            },
+            "weighted avg": {
+              "f1-score": 0.9113090363090363,
+              "precision": 0.9177083333333332,
+              "recall": 0.9166666666666666,
+              "support": 48.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                5,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                17,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                4,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 5,
+            "deep_research": 6,
+            "evidence_check": 7,
+            "fast_answer": 17,
+            "financial_calculation": 1,
+            "news_retrieval": 4,
+            "price_lookup": 5,
+            "risk_review": 3
+          },
+          "metrics": {
+            "accuracy": 0.9167,
+            "macro_f1": 0.9368,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 1.0,
+            "under_trigger_rate": 0.0,
+            "weighted_f1": 0.9113
+          },
+          "prediction_distribution": {
+            "clarification_needed": 5,
+            "deep_research": 5,
+            "evidence_check": 5,
+            "fast_answer": 20,
+            "financial_calculation": 1,
+            "news_retrieval": 4,
+            "price_lookup": 5,
+            "risk_review": 3
+          }
+        },
+        "train": {
+          "classification_report": {
+            "accuracy": 0.9116465863453815,
+            "clarification_needed": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 18.0
+            },
+            "deep_research": {
+              "f1-score": 0.8732394366197183,
+              "precision": 0.96875,
+              "recall": 0.7948717948717948,
+              "support": 39.0
+            },
+            "evidence_check": {
+              "f1-score": 0.86,
+              "precision": 0.9772727272727273,
+              "recall": 0.7678571428571429,
+              "support": 56.0
+            },
+            "fast_answer": {
+              "f1-score": 0.8529411764705882,
+              "precision": 0.7435897435897436,
+              "recall": 1.0,
+              "support": 58.0
+            },
+            "financial_calculation": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 21.0
+            },
+            "macro avg": {
+              "f1-score": 0.9452237961484834,
+              "precision": 0.9612015588578089,
+              "recall": 0.9393887362637363,
+              "support": 249.0
+            },
+            "news_retrieval": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 21.0
+            },
+            "price_lookup": {
+              "f1-score": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 15.0
+            },
+            "risk_review": {
+              "f1-score": 0.975609756097561,
+              "precision": 1.0,
+              "recall": 0.9523809523809523,
+              "support": 21.0
+            },
+            "weighted avg": {
+              "f1-score": 0.9123483178373973,
+              "precision": 0.9302679833553328,
+              "recall": 0.9116465863453815,
+              "support": 249.0
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "clarification_needed",
+              "deep_research",
+              "evidence_check",
+              "fast_answer",
+              "financial_calculation",
+              "news_retrieval",
+              "price_lookup",
+              "risk_review"
+            ],
+            "rows": [
+              [
+                18,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                31,
+                1,
+                7,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                43,
+                13,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                58,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                21,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                21,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                15,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                20
+              ]
+            ]
+          },
+          "label_distribution": {
+            "clarification_needed": 18,
+            "deep_research": 39,
+            "evidence_check": 56,
+            "fast_answer": 58,
+            "financial_calculation": 21,
+            "news_retrieval": 21,
+            "price_lookup": 15,
+            "risk_review": 21
+          },
+          "metrics": {
+            "accuracy": 0.9116,
+            "macro_f1": 0.9452,
+            "over_trigger_rate": 0.0,
+            "safety_recall": 1.0,
+            "under_trigger_rate": 0.1167,
+            "weighted_f1": 0.9123
+          },
+          "prediction_distribution": {
+            "clarification_needed": 18,
+            "deep_research": 32,
+            "evidence_check": 44,
+            "fast_answer": 78,
+            "financial_calculation": 21,
+            "news_retrieval": 21,
+            "price_lookup": 15,
+            "risk_review": 20
+          }
+        }
+      },
+      "model": "tfidf_char_ngrams_logistic_regression",
+      "notes": [
+        "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+        "Feature text is built from input fields only; label fields are not included as model features."
+      ],
+      "rows": {
+        "dev": 47,
+        "test": 48,
+        "train": 249
+      },
+      "target": "route_label",
+      "train_distribution": {
+        "clarification_needed": 18,
+        "deep_research": 39,
+        "evidence_check": 56,
+        "fast_answer": 58,
+        "financial_calculation": 21,
+        "news_retrieval": 21,
+        "price_lookup": 15,
+        "risk_review": 21
+      },
+      "why": "Coordinator routing baseline before learned router or prompt-harness replacement."
+    }
+  },
+  "model_family": "sklearn_tfidf_logistic_regression",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z",
+  "run_id": "specialist_cpu_first_training_20260630T030852Z",
+  "source_data_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets"
+}

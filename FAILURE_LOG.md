@@ -52,6 +52,35 @@ Status:
 
 Fixed.
 
+## F-2026-06-30-006 - One-off metric summary assumed wrong schema
+
+Symptom:
+
+```text
+KeyError: 'splits'
+```
+
+Cause:
+
+The training run completed, but the first ad hoc inspection script assumed
+`metrics.json` had a top-level per-dataset `splits` key. The baseline artifact
+stores split-level row information in prediction files and detailed metrics,
+not in that key.
+
+Change:
+
+The inspection was rerun using row counts from
+`predictions_train.jsonl`, `predictions_dev.jsonl`, and
+`predictions_test.jsonl`.
+
+Effect:
+
+The run summary was recovered without changing training code or artifacts.
+
+Status:
+
+Fixed.
+
 ## F-2026-06-30-003 - Citation verifier baseline failed on held-out data
 
 Symptom:

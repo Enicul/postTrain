@@ -1,0 +1,378 @@
+{
+  "artifacts": {
+    "metrics": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/metrics.json",
+    "model": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/model.joblib",
+    "predictions": {
+      "dev": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_dev.jsonl",
+      "test": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_test.jsonl",
+      "train": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z/citation_verifier/predictions_train.jsonl"
+    }
+  },
+  "dataset": "citation_verifier",
+  "labels": [
+    "contradicts",
+    "insufficient",
+    "not_supported",
+    "partial_support",
+    "supports"
+  ],
+  "majority_baseline": {
+    "accuracy": 0.4839,
+    "macro_f1": 0.163,
+    "predicted_label": "not_supported"
+  },
+  "metrics": {
+    "dev": {
+      "classification_report": {
+        "accuracy": 0.18518518518518517,
+        "contradicts": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "insufficient": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 3.0
+        },
+        "macro avg": {
+          "f1-score": 0.14837606837606837,
+          "precision": 0.12115384615384617,
+          "recall": 0.2661538461538462,
+          "support": 27.0
+        },
+        "not_supported": {
+          "f1-score": 0.23076923076923078,
+          "precision": 0.23076923076923078,
+          "recall": 0.23076923076923078,
+          "support": 13.0
+        },
+        "partial_support": {
+          "f1-score": 0.4,
+          "precision": 0.25,
+          "recall": 1.0,
+          "support": 1.0
+        },
+        "supports": {
+          "f1-score": 0.1111111111111111,
+          "precision": 0.125,
+          "recall": 0.1,
+          "support": 10.0
+        },
+        "weighted avg": {
+          "f1-score": 0.16707818930041152,
+          "precision": 0.16666666666666666,
+          "recall": 0.18518518518518517,
+          "support": 27.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            3,
+            2,
+            6
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            9,
+            0,
+            1
+          ]
+        ]
+      },
+      "label_distribution": {
+        "insufficient": 3,
+        "not_supported": 13,
+        "partial_support": 1,
+        "supports": 10
+      },
+      "metrics": {
+        "accuracy": 0.1852,
+        "macro_f1": 0.1484,
+        "weighted_f1": 0.1671
+      },
+      "prediction_distribution": {
+        "contradicts": 1,
+        "insufficient": 1,
+        "not_supported": 13,
+        "partial_support": 4,
+        "supports": 8
+      }
+    },
+    "test": {
+      "classification_report": {
+        "accuracy": 0.25806451612903225,
+        "contradicts": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "insufficient": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 3.0
+        },
+        "macro avg": {
+          "f1-score": 0.14408602150537636,
+          "precision": 0.155,
+          "recall": 0.13714285714285715,
+          "support": 31.0
+        },
+        "not_supported": {
+          "f1-score": 0.3870967741935484,
+          "precision": 0.375,
+          "recall": 0.4,
+          "support": 15.0
+        },
+        "partial_support": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 6.0
+        },
+        "supports": {
+          "f1-score": 0.3333333333333333,
+          "precision": 0.4,
+          "recall": 0.2857142857142857,
+          "support": 7.0
+        },
+        "weighted avg": {
+          "f1-score": 0.26257370794311485,
+          "precision": 0.2717741935483871,
+          "recall": 0.25806451612903225,
+          "support": 31.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            6,
+            5,
+            3
+          ],
+          [
+            2,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            5,
+            0,
+            2
+          ]
+        ]
+      },
+      "label_distribution": {
+        "insufficient": 3,
+        "not_supported": 15,
+        "partial_support": 6,
+        "supports": 7
+      },
+      "metrics": {
+        "accuracy": 0.2581,
+        "macro_f1": 0.1441,
+        "weighted_f1": 0.2626
+      },
+      "prediction_distribution": {
+        "contradicts": 3,
+        "not_supported": 16,
+        "partial_support": 7,
+        "supports": 5
+      }
+    },
+    "train": {
+      "classification_report": {
+        "accuracy": 0.8240740740740741,
+        "contradicts": {
+          "f1-score": 0.8,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "support": 4.0
+        },
+        "insufficient": {
+          "f1-score": 0.9285714285714286,
+          "precision": 0.9285714285714286,
+          "recall": 0.9285714285714286,
+          "support": 14.0
+        },
+        "macro avg": {
+          "f1-score": 0.8288890705413129,
+          "precision": 0.8080745341614908,
+          "recall": 0.863938152504295,
+          "support": 108.0
+        },
+        "not_supported": {
+          "f1-score": 0.8172043010752689,
+          "precision": 0.8260869565217391,
+          "recall": 0.8085106382978723,
+          "support": 47.0
+        },
+        "partial_support": {
+          "f1-score": 0.7804878048780488,
+          "precision": 0.7619047619047619,
+          "recall": 0.8,
+          "support": 20.0
+        },
+        "supports": {
+          "f1-score": 0.8181818181818182,
+          "precision": 0.8571428571428571,
+          "recall": 0.782608695652174,
+          "support": 23.0
+        },
+        "weighted avg": {
+          "f1-score": 0.824412408021115,
+          "precision": 0.828195690514531,
+          "recall": 0.8240740740740741,
+          "support": 108.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports"
+        ],
+        "rows": [
+          [
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            13,
+            0,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            38,
+            4,
+            2
+          ],
+          [
+            0,
+            0,
+            4,
+            16,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            1,
+            18
+          ]
+        ]
+      },
+      "label_distribution": {
+        "contradicts": 4,
+        "insufficient": 14,
+        "not_supported": 47,
+        "partial_support": 20,
+        "supports": 23
+      },
+      "metrics": {
+        "accuracy": 0.8241,
+        "macro_f1": 0.8289,
+        "weighted_f1": 0.8244
+      },
+      "prediction_distribution": {
+        "contradicts": 6,
+        "insufficient": 14,
+        "not_supported": 46,
+        "partial_support": 21,
+        "supports": 21
+      }
+    }
+  },
+  "model": "tfidf_char_ngrams_logistic_regression",
+  "notes": [
+    "CPU baseline; use this as a floor before GPU LoRA/SFT/DPO/GRPO.",
+    "Feature text is built from input fields only; label fields are not included as model features."
+  ],
+  "rows": {
+    "dev": 27,
+    "test": 31,
+    "train": 108
+  },
+  "target": "support_type",
+  "train_distribution": {
+    "contradicts": 4,
+    "insufficient": 14,
+    "not_supported": 47,
+    "partial_support": 20,
+    "supports": 23
+  },
+  "why": "Claim-evidence support classifier baseline before small verifier fine-tuning."
+}

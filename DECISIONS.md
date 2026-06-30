@@ -83,3 +83,22 @@ Consequence:
 
 Any future architecture or training-plan change inspired by an external source
 should update `LEARNING_SOURCES.md` before it is treated as a project decision.
+
+## D-2026-06-30-006 - Keep small baseline artifacts in Git for now
+
+Decision:
+
+Keep the current sklearn baseline artifacts, including `model.joblib`, in Git.
+
+Why:
+
+The first tracked training batch is small, about 2.3 MB, and the repo's purpose
+is interview-facing reproducibility. Keeping the model files, metrics,
+predictions, manifest, events, and checkpoint together makes the artifact easier
+to inspect and resume.
+
+Consequence:
+
+If future GPU checkpoints or model files become large, move those to releases,
+external object storage, or Git LFS. For now, small CPU baseline artifacts stay
+versioned in the repo.

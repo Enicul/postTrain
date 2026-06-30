@@ -5,7 +5,7 @@
 - [x] Commit and push initial repo scaffold to `Enicul/postTrain`.
 - [ ] Confirm GitHub renders `README.md`, `AGENTS.md`, `CODEX.md`,
   `PROGRESS.md`, and `TODO.md`.
-- [ ] Decide whether `model.joblib` artifacts stay in Git or move to release/LFS
+- [x] Decide whether `model.joblib` artifacts stay in Git or move to release/LFS
   later. Current baseline artifacts are small enough for Git.
 
 ## P0 - Learning Source Registry

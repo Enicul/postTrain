@@ -1,0 +1,10 @@
+{
+  "completed": [
+    "router_classifier",
+    "risk_reviewer",
+    "citation_verifier"
+  ],
+  "run_id": "specialist_cpu_first_training_20260630T030852Z",
+  "status": "complete",
+  "ts": "2026-06-30T03:08:54Z"
+}

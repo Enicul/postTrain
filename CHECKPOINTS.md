@@ -134,3 +134,55 @@ Resume:
 Add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer entries using the same
 structure before turning those notes into architecture or training changes.
 ```
+
+## CP-2026-06-30-005 - First tracked CPU training batch
+
+Status:
+
+```text
+complete
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --run-id specialist_cpu_first_training_20260630T030852Z
+```
+
+Output:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z
+```
+
+Metrics:
+
+| Specialist | Test accuracy | Test macro F1 | Interpretation |
+| --- | ---: | ---: | --- |
+| router_classifier | 0.9167 | 0.9368 | reproducible strong baseline |
+| risk_reviewer | 0.5946 | 0.3986 | weak but above majority accuracy |
+| citation_verifier | 0.2581 | 0.1441 | failed; repair data before GPU work |
+
+Artifacts:
+
+```text
+config.json
+manifest.json
+logs/checkpoint.json
+logs/events.jsonl
+metrics.json
+<dataset>/model.joblib
+<dataset>/metrics.json
+<dataset>/predictions_train.jsonl
+<dataset>/predictions_dev.jsonl
+<dataset>/predictions_test.jsonl
+```
+
+Resume:
+
+```text
+Start citation-verifier repair from the new run's
+citation_verifier/predictions_test.jsonl. Group errors by source mismatch,
+partial support, ambiguous label, insufficient evidence, and synthetic artifact.
+```

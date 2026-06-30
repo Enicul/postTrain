@@ -34,6 +34,7 @@ Important subpaths:
 ```text
 datasets/
 baselines/specialist_cpu_baselines_v0.1/
+baselines/specialist_cpu_first_training_20260630T030852Z/
 ```
 
 ## Baseline Results
@@ -43,6 +44,12 @@ baselines/specialist_cpu_baselines_v0.1/
 | router_classifier | route_label | 0.9167 | 0.9368 | usable first baseline |
 | risk_reviewer | risk_level | 0.5946 | 0.3986 | weak baseline |
 | citation_verifier | support_type | 0.2581 | 0.1441 | data repair needed |
+
+Latest tracked training run:
+
+```text
+training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/baselines/specialist_cpu_first_training_20260630T030852Z
+```
 
 ## Interpretation
 
@@ -68,6 +75,7 @@ Current source entries:
 python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
 python3 training-corpus/scripts/train_specialist_baselines.py --help
 python3 training-corpus/scripts/train_specialist_baselines.py --run-id smoke_router_only2 --datasets router_classifier --out-root /tmp/posttrain-baseline-smoke2
+python3 training-corpus/scripts/train_specialist_baselines.py --run-id specialist_cpu_first_training_20260630T030852Z
 git push -u origin main
 ```
 
