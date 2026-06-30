@@ -20,7 +20,7 @@ Initial GitHub push is complete.
 remote: git@github.com:Enicul/postTrain.git
 branch: main
 initial commit: 7d64753 docs: initialize post-training artifact repo
-latest pushed commit: bfb27f8 docs: record push checkpoint and ssh remote
+learning source registry commit: d048963 docs: add learning source registry
 ```
 
 ## Current Checkpoint
