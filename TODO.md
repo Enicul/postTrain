@@ -64,14 +64,29 @@
   `specialist_cpu_ai_expanded_v0.1_20260630T080225Z`.
 - [x] Record the non-canonical placeholder timestamp run as a failure instead
   of silently deleting it.
-- [ ] Build realistic holdout evaluator for real tool traces, long-research
+- [x] Build realistic holdout evaluator for real tool traces, long-research
   episodes, and evidence-chain negatives.
-- [ ] Run expanded router/risk/citation baselines on that holdout.
-- [ ] Diagnose why router/risk reach 1.0 on the expanded split: template
+- [x] Run expanded router/risk/citation baselines on that holdout.
+- [x] Diagnose why router/risk reach 1.0 on the expanded split: template
   leakage, label shortcuts, split similarity, or genuinely easy task.
 - [ ] Add boundary cases before GPU fine-tuning: over-routing,
   under-routing, high-risk safety recall, partial support, stale evidence, and
   contradiction handling.
+
+## P1 - Data Contract Repair v0.1
+
+- [ ] Build `router_contract_repair_v0.1` from real tool trace rows and old
+  golden router rows.
+- [ ] Add router labels missing from expanded data:
+  `risk_review` and `clarification_needed`.
+- [ ] Add router boundary rows for `evidence_check` vs `deep_research` and
+  `financial_calculation` vs research tasks.
+- [ ] Build `risk_contract_repair_v0.1` with `medium` and human-gate semantics.
+- [ ] Build `citation_contract_repair_v0.1` that separates:
+  `candidate_evidence`, `verified_support`, `partial_support`, `insufficient`,
+  and `contradicts`.
+- [ ] Rerun CPU baselines after contract repair and compare against
+  `realistic_holdout_eval_v0.1_20260630T083000Z`.
 
 ## P2 - WebExplorer-Style Seed-to-Task Generator
 

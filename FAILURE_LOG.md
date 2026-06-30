@@ -27,6 +27,82 @@ Status:
 
 Fixed.
 
+## F-2026-06-30-012 - Holdout evaluator event payload collided with logger argument
+
+Symptom:
+
+```text
+TypeError: append_event() got multiple values for argument 'path'
+```
+
+Cause:
+
+`evaluate_baseline_holdouts.py` reused `path` as an event payload key, while
+`append_event()` already takes the log file path as its first positional
+argument.
+
+Change:
+
+Renamed the event payload field from `path` to `source_path`.
+
+Effect:
+
+The same run id `realistic_holdout_eval_v0.1_20260630T083000Z` was rerun
+successfully. The failed event remains in `events.jsonl`, preserving the
+debugging trail.
+
+Status:
+
+Fixed.
+
+## F-2026-06-30-013 - Expanded baselines collapsed on realistic holdouts
+
+Symptom:
+
+Expanded split metrics were high:
+
+```text
+router_classifier test accuracy: 1.0000
+risk_reviewer test accuracy: 1.0000
+citation_verifier test accuracy: 0.9000
+```
+
+But realistic holdout eval showed:
+
+```text
+golden_v0.1_router_all accuracy_all_rows: 0.3023
+golden_v0.1_risk_all accuracy_all_rows: 0.2762
+golden_v0.1_citation_all accuracy_all_rows: 0.4819
+long_research_repair_25_router_all accuracy_all_rows: 0.4800
+real_tool_trace_pilot_10_router accuracy_all_rows: 0.0000
+```
+
+Likely cause:
+
+The expanded split is learnable but too easy/template-heavy. It also uses a
+narrower label contract than the older realistic data:
+
+- router lacks `risk_review` and `clarification_needed`;
+- risk lacks `medium`;
+- citation lacks `partial_support`, `insufficient`, `contradicts`,
+  `candidate_evidence`, and `search_snippet_candidate_evidence`;
+- real tool trace router prompts were often predicted as
+  `financial_calculation`, suggesting a shortcut rather than robust routing.
+
+Change:
+
+Added `evaluate_baseline_holdouts.py` to expose all-row accuracy,
+seen-label-only accuracy, schema gaps, and row-level error files.
+
+Effect:
+
+This blocked immediate GPU fine-tuning and created a concrete repair plan:
+build router/risk/citation contract repair data before SFT/DPO/GRPO.
+
+Status:
+
+Open.
+
 ## F-2026-06-30-010 - Expanded baseline first run used placeholder timestamp
 
 Symptom:

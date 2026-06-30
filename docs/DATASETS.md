@@ -62,6 +62,42 @@ Data quality judgment:
   spans, partial-support boundaries, and contradictions before claiming
   real grounding quality.
 
+## Realistic Holdout Eval v0.1
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Purpose:
+
+Evaluate expanded baselines on external data that was not part of the expanded
+train/dev/test curation loop.
+
+Results:
+
+| Holdout | Dataset | Rows | Accuracy all rows | Accuracy seen-labels only | Schema gap |
+| --- | --- | ---: | ---: | ---: | --- |
+| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | 0.3611 | yes |
+| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | 0.4464 | yes |
+| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | 0.6957 | yes |
+| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | 0.4800 | no |
+| long_research_repair_25_risk_all | risk_reviewer | 25 | 0.0000 | n/a | yes |
+| long_research_repair_25_citation_all | citation_verifier | 417 | 0.0000 | n/a | yes |
+| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | 0.0000 | yes |
+
+Data-contract gaps exposed:
+
+- Router expanded data does not include `risk_review` or
+  `clarification_needed`, both of which exist in older realistic rows.
+- Risk expanded data does not include `medium`, which is common in research
+  memo workflows.
+- Citation expanded data uses a narrower verifier contract than the older
+  citation and long-research rows.
+- The real tool trace router holdout exposes a strong
+  `financial_calculation` overprediction shortcut.
+
 ## Golden Specialist Datasets
 
 | Dataset | Rows | Train | Dev | Test | Purpose |
@@ -186,3 +222,6 @@ synthetic flooding.
 - AI expanded v0.1 is large enough to test training plumbing, but its easy
   router/risk metrics mean the next quality step is realistic holdout
   evaluation, not immediate overclaiming.
+- Realistic holdout eval v0.1 shows that the next data task is contract repair:
+  align expanded labels with old golden, long-research, and real-tool-trace
+  labels before GPU fine-tuning.

@@ -414,3 +414,60 @@ Build a realistic holdout evaluator for real tool traces, long-research
 episodes, and harder evidence-chain negatives. Run this checkpoint against that
 holdout before starting LoRA/SFT/DPO/GRPO.
 ```
+
+## CP-2026-06-30-010 - Realistic holdout eval v0.1
+
+Status:
+
+```text
+complete
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
+  --run-id realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Output:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Evaluated holdouts:
+
+| Holdout | Dataset | Rows | Accuracy all rows | Accuracy seen-labels only | Schema gap |
+| --- | --- | ---: | ---: | ---: | --- |
+| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | 0.3611 | yes |
+| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | 0.4464 | yes |
+| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | 0.6957 | yes |
+| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | 0.4800 | no |
+| long_research_repair_25_risk_all | risk_reviewer | 25 | 0.0000 | n/a | yes |
+| long_research_repair_25_citation_all | citation_verifier | 417 | 0.0000 | n/a | yes |
+| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | 0.0000 | yes |
+
+Failure preserved:
+
+The first run failed because the event logger received `path` both as the log
+file argument and as an event payload key. The script was patched to emit
+`source_path` instead, then rerun successfully with the same run id.
+
+Decision:
+
+This holdout confirms that the expanded train/dev/test split is too easy for
+router/risk quality claims. The next work is data-contract repair:
+`risk_review` and `clarification_needed` must be represented in router labels;
+`medium` must be represented in risk labels; citation labels need an explicit
+mapping between `candidate_evidence`, `partial_support`, `insufficient`,
+`contradicts`, and the expanded verifier labels.
+
+Resume:
+
+```text
+Start with real_tool_trace_pilot_10_router/errors.jsonl and
+golden_v0.1_router_all/errors.jsonl. Build a router boundary repair dataset
+that includes real tool traces, risk_review, clarification_needed, and
+evidence_check vs deep_research distinctions.
+```

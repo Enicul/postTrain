@@ -1,0 +1,86 @@
+{
+  "classification_report": {
+    "accuracy": 0.0,
+    "high": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "low": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "macro avg": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 25.0
+    },
+    "medium": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 25.0
+    },
+    "weighted avg": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 25.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "high",
+      "low",
+      "medium"
+    ],
+    "rows": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        25,
+        0
+      ]
+    ]
+  },
+  "dataset": "risk_reviewer",
+  "holdout": "long_research_repair_25_risk_all",
+  "metrics": {
+    "accuracy_all_rows": 0.0,
+    "accuracy_seen_labels_only": null,
+    "comparable_rows": 0,
+    "macro_f1_all_labels": 0.0,
+    "macro_f1_seen_labels_only": null,
+    "rows": 25,
+    "schema_gap": true,
+    "unseen_true_labels": [
+      "medium"
+    ],
+    "weighted_f1_all_labels": 0.0
+  },
+  "model_labels": [
+    "high",
+    "low"
+  ],
+  "prediction_distribution": {
+    "low": 25
+  },
+  "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/risk_reviewer/all.jsonl",
+  "true_label_distribution": {
+    "medium": 25
+  },
+  "why": "Long research memo risk labels with medium-risk and human-gate fields."
+}

@@ -51,6 +51,12 @@ Canonical expanded CPU baseline:
 training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
 ```
 
+Latest realistic holdout eval:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
 ## Baseline Results
 
 | Specialist | Target | Test accuracy | Test macro F1 | Status |
@@ -187,6 +193,56 @@ near-perfect router/risk scores indicate an easy/template-heavy distribution.
 Before GPU fine-tuning, run external holdouts from real/long-research traces and
 add harder boundary examples.
 
+## Realistic Holdout Eval v0.1
+
+Script:
+
+```text
+training-corpus/scripts/evaluate_baseline_holdouts.py
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
+  --run-id realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Output:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Results:
+
+| Holdout | Dataset | Rows | Accuracy all rows | Accuracy seen-labels only | Schema gap |
+| --- | --- | ---: | ---: | ---: | --- |
+| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | 0.3611 | yes |
+| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | 0.4464 | yes |
+| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | 0.6957 | yes |
+| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | 0.4800 | no |
+| long_research_repair_25_risk_all | risk_reviewer | 25 | 0.0000 | n/a | yes |
+| long_research_repair_25_citation_all | citation_verifier | 417 | 0.0000 | n/a | yes |
+| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | 0.0000 | yes |
+
+Interpretation:
+
+The expanded split was learnable but not robust. External holdouts exposed
+schema gaps and distribution shift:
+
+- router expanded data lacks `risk_review` and `clarification_needed`;
+- risk expanded data lacks `medium`;
+- citation expanded labels do not cover `partial_support`, `insufficient`,
+  `contradicts`, `candidate_evidence`, or `search_snippet_candidate_evidence`;
+- real tool traces are routed mostly as `financial_calculation`, showing a
+  shortcut learned from the expanded synthetic split.
+
+Decision:
+
+Do not start GPU fine-tuning yet. Build a router/risk/citation contract repair
+set from real tool traces and long-research rows first.
+
 ## Learning Source Registry
 
 `LEARNING_SOURCES.md` has been added as the canonical place to record external
@@ -214,6 +270,9 @@ python3 training-corpus/scripts/train_specialist_baselines.py --data-dir trainin
 rsync -a --delete /Users/lucine/Documents/Job/projects/Agent/kiwi/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/
 python3 -m py_compile training-corpus/scripts/train_specialist_baselines.py
 python3 training-corpus/scripts/train_specialist_baselines.py --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+python3 -m py_compile training-corpus/scripts/evaluate_baseline_holdouts.py
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --help
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py --run-id realistic_holdout_eval_v0.1_20260630T083000Z
 git push -u origin main
 ```
 
@@ -225,14 +284,12 @@ The imported baseline checkpoint reports:
 
 ## Next Best Step
 
-Run realistic holdout evaluation for the expanded baseline, then continue
-citation verifier data repair and learning-source registry:
+Repair the data contracts exposed by realistic holdout eval v0.1:
 
-1. evaluate expanded router/risk/citation baselines on real tool traces and
-   long-research holdout rows,
-2. add real official positive spans and audited paragraph spans,
-3. add partial-support boundary cases and rare insufficient / contradict rows,
-4. rerun the repair baseline as `citation_verifier_repair_v0.3`,
-5. only then decide whether a small LLM verifier is worth GPU time,
+1. build a router boundary repair set from real tool traces and old golden rows;
+2. add `risk_review` and `clarification_needed` to expanded router training;
+3. add `medium` and human-gate semantics to expanded risk training;
+4. define citation label mapping for candidate evidence vs verified support;
+5. rerun expanded baseline as a repair probe before any GPU fine-tuning;
 6. add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer source entries using the
    same extracted / not-adopted structure.

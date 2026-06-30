@@ -1,0 +1,89 @@
+{
+  "classification_report": {
+    "accuracy": 0.27624309392265195,
+    "high": {
+      "f1-score": 0.40384615384615385,
+      "precision": 1.0,
+      "recall": 0.25301204819277107,
+      "support": 83.0
+    },
+    "low": {
+      "f1-score": 0.30687830687830686,
+      "precision": 0.18125,
+      "recall": 1.0,
+      "support": 29.0
+    },
+    "macro avg": {
+      "f1-score": 0.23690815357482023,
+      "precision": 0.39375,
+      "recall": 0.4176706827309237,
+      "support": 181.0
+    },
+    "medium": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 69.0
+    },
+    "weighted avg": {
+      "f1-score": 0.23435746778288213,
+      "precision": 0.48760359116022095,
+      "recall": 0.27624309392265195,
+      "support": 181.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "high",
+      "low",
+      "medium"
+    ],
+    "rows": [
+      [
+        21,
+        62,
+        0
+      ],
+      [
+        0,
+        29,
+        0
+      ],
+      [
+        0,
+        69,
+        0
+      ]
+    ]
+  },
+  "dataset": "risk_reviewer",
+  "holdout": "golden_v0.1_risk_all",
+  "metrics": {
+    "accuracy_all_rows": 0.2762,
+    "accuracy_seen_labels_only": 0.4464,
+    "comparable_rows": 112,
+    "macro_f1_all_labels": 0.2369,
+    "macro_f1_seen_labels_only": 0.4436,
+    "rows": 181,
+    "schema_gap": true,
+    "unseen_true_labels": [
+      "medium"
+    ],
+    "weighted_f1_all_labels": 0.2344
+  },
+  "model_labels": [
+    "high",
+    "low"
+  ],
+  "prediction_distribution": {
+    "high": 21,
+    "low": 160
+  },
+  "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/all.jsonl",
+  "true_label_distribution": {
+    "high": 83,
+    "low": 29,
+    "medium": 69
+  },
+  "why": "Older risk reviewer rows with partial-support research-risk phrasing."
+}

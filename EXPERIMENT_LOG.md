@@ -443,3 +443,93 @@ Next:
 
 Evaluate the expanded router/risk/citation baselines on real tool traces,
 long-research episodes, and harder evidence-chain negatives.
+
+## EXP-2026-06-30-007 - Realistic holdout eval v0.1
+
+Goal:
+
+Test whether the expanded CPU baselines generalize beyond their own
+train/dev/test split before starting GPU fine-tuning.
+
+Why:
+
+The expanded router and risk baselines reached 1.0 on their own test split.
+That is a warning sign: the split may be template-heavy or too similar across
+train/dev/test. A post-training artifact should prove that we can detect this,
+not just report flattering metrics.
+
+Script:
+
+```text
+training-corpus/scripts/evaluate_baseline_holdouts.py
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
+  --run-id realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+Baseline under test:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z
+```
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+What the evaluator does:
+
+- loads existing `model.joblib` artifacts;
+- does not train new models;
+- evaluates old golden rows, long-research rows, and real tool trace router
+  rows;
+- reports both all-row accuracy and seen-label-only accuracy;
+- marks schema gaps when holdout labels were never present in the model's
+  training labels.
+
+Results:
+
+| Holdout | Dataset | Rows | Accuracy all rows | Accuracy seen-labels only | Schema gap |
+| --- | --- | ---: | ---: | ---: | --- |
+| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | 0.3611 | yes |
+| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | 0.4464 | yes |
+| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | 0.6957 | yes |
+| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | 0.4800 | no |
+| long_research_repair_25_risk_all | risk_reviewer | 25 | 0.0000 | n/a | yes |
+| long_research_repair_25_citation_all | citation_verifier | 417 | 0.0000 | n/a | yes |
+| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | 0.0000 | yes |
+
+Failures:
+
+- The first script run failed because `append_event()` received `path` twice.
+  The event payload field was renamed to `source_path` and the run was retried.
+- The router baseline over-predicted `financial_calculation` on social and real
+  tool trace prompts.
+- The expanded router label set lacks `risk_review` and
+  `clarification_needed`.
+- The expanded risk label set lacks `medium`.
+- The expanded citation label set does not cover old/long-research labels:
+  `partial_support`, `insufficient`, `contradicts`, `candidate_evidence`, and
+  `search_snippet_candidate_evidence`.
+
+Decision:
+
+The realistic holdout result invalidates the idea of going straight to GPU
+fine-tuning. The next step is data-contract repair and boundary-case generation.
+
+Next:
+
+Create a repair pack that:
+
+```text
+router: add real_tool_trace rows, risk_review, clarification_needed,
+        evidence_check vs deep_research boundaries
+risk: add medium and human-gate semantics
+citation: separate candidate evidence from verified support labels
+```

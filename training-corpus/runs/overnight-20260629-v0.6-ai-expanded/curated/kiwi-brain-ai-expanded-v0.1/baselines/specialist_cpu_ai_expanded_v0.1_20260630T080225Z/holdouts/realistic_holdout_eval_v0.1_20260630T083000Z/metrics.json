@@ -1,0 +1,985 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "completed_at": "2026-06-30T08:31:39Z",
+  "created_at": "2026-06-30T08:31:38Z",
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "holdouts": {
+    "golden_v0.1_citation_all": {
+      "classification_report": {
+        "accuracy": 0.4819277108433735,
+        "contradicts": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 4.0
+        },
+        "insufficient": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 20.0
+        },
+        "macro avg": {
+          "f1-score": 0.16915511316506696,
+          "precision": 0.14422790392752846,
+          "recall": 0.20694444444444446,
+          "support": 166.0
+        },
+        "not_supported": {
+          "f1-score": 0.6701030927835051,
+          "precision": 0.5462184873949579,
+          "recall": 0.8666666666666667,
+          "support": 75.0
+        },
+        "partial_support": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 27.0
+        },
+        "supports": {
+          "f1-score": 0.3448275862068966,
+          "precision": 0.3191489361702128,
+          "recall": 0.375,
+          "support": 40.0
+        },
+        "unverifiable": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "weighted avg": {
+          "f1-score": 0.38584840606649845,
+          "precision": 0.323688819285725,
+          "recall": 0.4819277108433735,
+          "support": 166.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "contradicts",
+          "insufficient",
+          "not_supported",
+          "partial_support",
+          "supports",
+          "unverifiable"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            7,
+            0,
+            13,
+            0
+          ],
+          [
+            0,
+            0,
+            65,
+            0,
+            10,
+            0
+          ],
+          [
+            0,
+            0,
+            18,
+            0,
+            9,
+            0
+          ],
+          [
+            0,
+            0,
+            25,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "dataset": "citation_verifier",
+      "holdout": "golden_v0.1_citation_all",
+      "metrics": {
+        "accuracy_all_rows": 0.4819,
+        "accuracy_seen_labels_only": 0.6957,
+        "comparable_rows": 115,
+        "macro_f1_all_labels": 0.1692,
+        "macro_f1_seen_labels_only": 0.4165,
+        "rows": 166,
+        "schema_gap": true,
+        "unseen_true_labels": [
+          "contradicts",
+          "insufficient",
+          "partial_support"
+        ],
+        "weighted_f1_all_labels": 0.3858
+      },
+      "model_labels": [
+        "not_supported",
+        "supports",
+        "unverifiable"
+      ],
+      "prediction_distribution": {
+        "not_supported": 119,
+        "supports": 47
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier/all.jsonl",
+      "true_label_distribution": {
+        "contradicts": 4,
+        "insufficient": 20,
+        "not_supported": 75,
+        "partial_support": 27,
+        "supports": 40
+      },
+      "why": "Strict citation rows containing partial support, insufficient, and contradiction labels."
+    },
+    "golden_v0.1_risk_all": {
+      "classification_report": {
+        "accuracy": 0.27624309392265195,
+        "high": {
+          "f1-score": 0.40384615384615385,
+          "precision": 1.0,
+          "recall": 0.25301204819277107,
+          "support": 83.0
+        },
+        "low": {
+          "f1-score": 0.30687830687830686,
+          "precision": 0.18125,
+          "recall": 1.0,
+          "support": 29.0
+        },
+        "macro avg": {
+          "f1-score": 0.23690815357482023,
+          "precision": 0.39375,
+          "recall": 0.4176706827309237,
+          "support": 181.0
+        },
+        "medium": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 69.0
+        },
+        "weighted avg": {
+          "f1-score": 0.23435746778288213,
+          "precision": 0.48760359116022095,
+          "recall": 0.27624309392265195,
+          "support": 181.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            21,
+            62,
+            0
+          ],
+          [
+            0,
+            29,
+            0
+          ],
+          [
+            0,
+            69,
+            0
+          ]
+        ]
+      },
+      "dataset": "risk_reviewer",
+      "holdout": "golden_v0.1_risk_all",
+      "metrics": {
+        "accuracy_all_rows": 0.2762,
+        "accuracy_seen_labels_only": 0.4464,
+        "comparable_rows": 112,
+        "macro_f1_all_labels": 0.2369,
+        "macro_f1_seen_labels_only": 0.4436,
+        "rows": 181,
+        "schema_gap": true,
+        "unseen_true_labels": [
+          "medium"
+        ],
+        "weighted_f1_all_labels": 0.2344
+      },
+      "model_labels": [
+        "high",
+        "low"
+      ],
+      "prediction_distribution": {
+        "high": 21,
+        "low": 160
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/risk_reviewer/all.jsonl",
+      "true_label_distribution": {
+        "high": 83,
+        "low": 29,
+        "medium": 69
+      },
+      "why": "Older risk reviewer rows with partial-support research-risk phrasing."
+    },
+    "golden_v0.1_router_all": {
+      "classification_report": {
+        "accuracy": 0.3023255813953488,
+        "clarification_needed": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 26.0
+        },
+        "deep_research": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 53.0
+        },
+        "evidence_check": {
+          "f1-score": 0.08450704225352113,
+          "precision": 0.75,
+          "recall": 0.04477611940298507,
+          "support": 67.0
+        },
+        "fast_answer": {
+          "f1-score": 0.35384615384615387,
+          "precision": 0.575,
+          "recall": 0.25555555555555554,
+          "support": 90.0
+        },
+        "financial_calculation": {
+          "f1-score": 0.2708333333333333,
+          "precision": 0.1566265060240964,
+          "recall": 1.0,
+          "support": 26.0
+        },
+        "macro avg": {
+          "f1-score": 0.26318535321616304,
+          "precision": 0.33584920990954703,
+          "recall": 0.41254145936981756,
+          "support": 344.0
+        },
+        "news_retrieval": {
+          "f1-score": 0.43333333333333335,
+          "precision": 0.2765957446808511,
+          "recall": 1.0,
+          "support": 26.0
+        },
+        "price_lookup": {
+          "f1-score": 0.9629629629629629,
+          "precision": 0.9285714285714286,
+          "recall": 1.0,
+          "support": 26.0
+        },
+        "risk_review": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "f1-score": 0.23503923269625038,
+          "precision": 0.3994378943639121,
+          "recall": 0.3023255813953488,
+          "support": 344.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "clarification_needed",
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            16,
+            0,
+            10,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            28,
+            23,
+            1,
+            0
+          ],
+          [
+            0,
+            2,
+            3,
+            0,
+            40,
+            22,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            23,
+            66,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            26,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            26,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            26,
+            0
+          ],
+          [
+            0,
+            10,
+            0,
+            1,
+            6,
+            12,
+            1,
+            0
+          ]
+        ]
+      },
+      "dataset": "router_classifier",
+      "holdout": "golden_v0.1_router_all",
+      "metrics": {
+        "accuracy_all_rows": 0.3023,
+        "accuracy_seen_labels_only": 0.3611,
+        "comparable_rows": 288,
+        "macro_f1_all_labels": 0.2632,
+        "macro_f1_seen_labels_only": 0.3805,
+        "over_trigger_rate": 0.0,
+        "rows": 344,
+        "safety_recall": 0.3438,
+        "schema_gap": true,
+        "under_trigger_rate": 0.0361,
+        "unseen_true_labels": [
+          "clarification_needed",
+          "risk_review"
+        ],
+        "weighted_f1_all_labels": 0.235
+      },
+      "model_labels": [
+        "deep_research",
+        "evidence_check",
+        "fast_answer",
+        "financial_calculation",
+        "news_retrieval",
+        "price_lookup"
+      ],
+      "prediction_distribution": {
+        "deep_research": 12,
+        "evidence_check": 4,
+        "fast_answer": 40,
+        "financial_calculation": 166,
+        "news_retrieval": 94,
+        "price_lookup": 28
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/router_classifier/all.jsonl",
+      "true_label_distribution": {
+        "clarification_needed": 26,
+        "deep_research": 53,
+        "evidence_check": 67,
+        "fast_answer": 90,
+        "financial_calculation": 26,
+        "news_retrieval": 26,
+        "price_lookup": 26,
+        "risk_review": 30
+      },
+      "why": "Older strict social/bookmark router rows with labels absent from the expanded split."
+    },
+    "long_research_repair_25_citation_all": {
+      "classification_report": {
+        "accuracy": 0.0,
+        "candidate_evidence": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 342.0
+        },
+        "macro avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 417.0
+        },
+        "not_supported": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "search_snippet_candidate_evidence": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 75.0
+        },
+        "supports": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "unverifiable": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "weighted avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 417.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "candidate_evidence",
+          "not_supported",
+          "search_snippet_candidate_evidence",
+          "supports",
+          "unverifiable"
+        ],
+        "rows": [
+          [
+            0,
+            202,
+            0,
+            140,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            53,
+            0,
+            21,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "dataset": "citation_verifier",
+      "holdout": "long_research_repair_25_citation_all",
+      "metrics": {
+        "accuracy_all_rows": 0.0,
+        "accuracy_seen_labels_only": null,
+        "comparable_rows": 0,
+        "macro_f1_all_labels": 0.0,
+        "macro_f1_seen_labels_only": null,
+        "rows": 417,
+        "schema_gap": true,
+        "unseen_true_labels": [
+          "candidate_evidence",
+          "search_snippet_candidate_evidence"
+        ],
+        "weighted_f1_all_labels": 0.0
+      },
+      "model_labels": [
+        "not_supported",
+        "supports",
+        "unverifiable"
+      ],
+      "prediction_distribution": {
+        "not_supported": 255,
+        "supports": 161,
+        "unverifiable": 1
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/citation_verifier/all.jsonl",
+      "true_label_distribution": {
+        "candidate_evidence": 342,
+        "search_snippet_candidate_evidence": 75
+      },
+      "why": "Candidate evidence spans from real long-research trajectories; exposes citation schema mismatch."
+    },
+    "long_research_repair_25_risk_all": {
+      "classification_report": {
+        "accuracy": 0.0,
+        "high": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "low": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "macro avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        },
+        "medium": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        },
+        "weighted avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 25.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            25,
+            0
+          ]
+        ]
+      },
+      "dataset": "risk_reviewer",
+      "holdout": "long_research_repair_25_risk_all",
+      "metrics": {
+        "accuracy_all_rows": 0.0,
+        "accuracy_seen_labels_only": null,
+        "comparable_rows": 0,
+        "macro_f1_all_labels": 0.0,
+        "macro_f1_seen_labels_only": null,
+        "rows": 25,
+        "schema_gap": true,
+        "unseen_true_labels": [
+          "medium"
+        ],
+        "weighted_f1_all_labels": 0.0
+      },
+      "model_labels": [
+        "high",
+        "low"
+      ],
+      "prediction_distribution": {
+        "low": 25
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/risk_reviewer/all.jsonl",
+      "true_label_distribution": {
+        "medium": 25
+      },
+      "why": "Long research memo risk labels with medium-risk and human-gate fields."
+    },
+    "long_research_repair_25_router_all": {
+      "classification_report": {
+        "accuracy": 0.48,
+        "deep_research": {
+          "f1-score": 0.6486486486486487,
+          "precision": 1.0,
+          "recall": 0.48,
+          "support": 25.0
+        },
+        "evidence_check": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "fast_answer": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "financial_calculation": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "macro avg": {
+          "f1-score": 0.10810810810810811,
+          "precision": 0.16666666666666666,
+          "recall": 0.08,
+          "support": 25.0
+        },
+        "news_retrieval": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "price_lookup": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "weighted avg": {
+          "f1-score": 0.6486486486486487,
+          "precision": 1.0,
+          "recall": 0.48,
+          "support": 25.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup"
+        ],
+        "rows": [
+          [
+            12,
+            1,
+            0,
+            9,
+            3,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "dataset": "router_classifier",
+      "holdout": "long_research_repair_25_router_all",
+      "metrics": {
+        "accuracy_all_rows": 0.48,
+        "accuracy_seen_labels_only": 0.48,
+        "comparable_rows": 25,
+        "macro_f1_all_labels": 0.1081,
+        "macro_f1_seen_labels_only": 0.1081,
+        "over_trigger_rate": null,
+        "rows": 25,
+        "safety_recall": null,
+        "schema_gap": false,
+        "under_trigger_rate": 0.0,
+        "unseen_true_labels": [],
+        "weighted_f1_all_labels": 0.6486
+      },
+      "model_labels": [
+        "deep_research",
+        "evidence_check",
+        "fast_answer",
+        "financial_calculation",
+        "news_retrieval",
+        "price_lookup"
+      ],
+      "prediction_distribution": {
+        "deep_research": 12,
+        "evidence_check": 1,
+        "financial_calculation": 9,
+        "news_retrieval": 3
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/router_classifier/all.jsonl",
+      "true_label_distribution": {
+        "deep_research": 25
+      },
+      "why": "Long research router rows that should generally route to deep research."
+    },
+    "real_tool_trace_pilot_10_router": {
+      "classification_report": {
+        "accuracy": 0.0,
+        "deep_research": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 5.0
+        },
+        "evidence_check": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 4.0
+        },
+        "fast_answer": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "financial_calculation": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "macro avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 10.0
+        },
+        "news_retrieval": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "price_lookup": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 0.0
+        },
+        "risk_review": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1.0
+        },
+        "weighted avg": {
+          "f1-score": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 10.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "deep_research",
+          "evidence_check",
+          "fast_answer",
+          "financial_calculation",
+          "news_retrieval",
+          "price_lookup",
+          "risk_review"
+        ],
+        "rows": [
+          [
+            0,
+            0,
+            0,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "dataset": "router_classifier",
+      "holdout": "real_tool_trace_pilot_10_router",
+      "metrics": {
+        "accuracy_all_rows": 0.0,
+        "accuracy_seen_labels_only": 0.0,
+        "comparable_rows": 9,
+        "macro_f1_all_labels": 0.0,
+        "macro_f1_seen_labels_only": 0.0,
+        "over_trigger_rate": null,
+        "rows": 10,
+        "safety_recall": 0.0,
+        "schema_gap": true,
+        "under_trigger_rate": 0.0,
+        "unseen_true_labels": [
+          "risk_review"
+        ],
+        "weighted_f1_all_labels": 0.0
+      },
+      "model_labels": [
+        "deep_research",
+        "evidence_check",
+        "fast_answer",
+        "financial_calculation",
+        "news_retrieval",
+        "price_lookup"
+      ],
+      "prediction_distribution": {
+        "financial_calculation": 9,
+        "news_retrieval": 1
+      },
+      "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/real_tool_trace_pilot_10/real_tool_traces.jsonl",
+      "true_label_distribution": {
+        "deep_research": 5,
+        "evidence_check": 4,
+        "risk_review": 1
+      },
+      "why": "Read-only real tool execution traces converted into router holdout rows."
+    }
+  },
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z",
+  "run_id": "realistic_holdout_eval_v0.1_20260630T083000Z"
+}

@@ -1,0 +1,18 @@
+{
+  "baseline_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z",
+  "boundary": "External holdout evaluation only; no training.",
+  "command": "training-corpus/scripts/evaluate_baseline_holdouts.py --run-id realistic_holdout_eval_v0.1_20260630T083000Z",
+  "created_at": "2026-06-30T08:31:38Z",
+  "cwd": "/Users/lucine/Documents/Job/projects/postTrain",
+  "git": {
+    "branch": "main",
+    "commit": "fb1473eede1804f7f093f4ca58b5d93c2a011df4",
+    "diff_stat": "",
+    "status_short": "?? training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/\n?? training-corpus/scripts/evaluate_baseline_holdouts.py"
+  },
+  "golden_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1",
+  "out_dir": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines/specialist_cpu_ai_expanded_v0.1_20260630T080225Z/holdouts/realistic_holdout_eval_v0.1_20260630T083000Z",
+  "platform": "macOS-26.4-arm64-arm-64bit",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "run_id": "realistic_holdout_eval_v0.1_20260630T083000Z"
+}

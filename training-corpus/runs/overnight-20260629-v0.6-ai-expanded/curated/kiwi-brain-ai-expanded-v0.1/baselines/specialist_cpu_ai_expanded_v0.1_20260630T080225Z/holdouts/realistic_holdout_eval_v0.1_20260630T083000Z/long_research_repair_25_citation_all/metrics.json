@@ -1,0 +1,125 @@
+{
+  "classification_report": {
+    "accuracy": 0.0,
+    "candidate_evidence": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 342.0
+    },
+    "macro avg": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 417.0
+    },
+    "not_supported": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "search_snippet_candidate_evidence": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 75.0
+    },
+    "supports": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "unverifiable": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "weighted avg": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 417.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "candidate_evidence",
+      "not_supported",
+      "search_snippet_candidate_evidence",
+      "supports",
+      "unverifiable"
+    ],
+    "rows": [
+      [
+        0,
+        202,
+        0,
+        140,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        53,
+        0,
+        21,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "dataset": "citation_verifier",
+  "holdout": "long_research_repair_25_citation_all",
+  "metrics": {
+    "accuracy_all_rows": 0.0,
+    "accuracy_seen_labels_only": null,
+    "comparable_rows": 0,
+    "macro_f1_all_labels": 0.0,
+    "macro_f1_seen_labels_only": null,
+    "rows": 417,
+    "schema_gap": true,
+    "unseen_true_labels": [
+      "candidate_evidence",
+      "search_snippet_candidate_evidence"
+    ],
+    "weighted_f1_all_labels": 0.0
+  },
+  "model_labels": [
+    "not_supported",
+    "supports",
+    "unverifiable"
+  ],
+  "prediction_distribution": {
+    "not_supported": 255,
+    "supports": 161,
+    "unverifiable": 1
+  },
+  "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/long_research_trace_source_quality_repair_25/datasets/citation_verifier/all.jsonl",
+  "true_label_distribution": {
+    "candidate_evidence": 342,
+    "search_snippet_candidate_evidence": 75
+  },
+  "why": "Candidate evidence spans from real long-research trajectories; exposes citation schema mismatch."
+}

@@ -92,6 +92,26 @@ repeatable baselines. It does not yet prove real-world generalization. The next
 step is to evaluate these checkpoints on real tool traces, long-research
 episodes, and harder evidence-chain negatives before GPU fine-tuning.
 
+Realistic holdout result:
+
+```bash
+python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
+  --run-id realistic_holdout_eval_v0.1_20260630T083000Z
+```
+
+| Holdout | Dataset | Rows | Accuracy all rows | Schema gap |
+| --- | --- | ---: | ---: | --- |
+| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | yes |
+| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | yes |
+| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | yes |
+| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | no |
+| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | yes |
+
+This blocked immediate GPU fine-tuning. The next step is data-contract repair:
+add missing router labels (`risk_review`, `clarification_needed`), add `medium`
+risk semantics, and align citation labels across candidate evidence and
+verified support.
+
 ## Repo Map
 
 ```text
@@ -110,6 +130,7 @@ docs/
   SERVER_RUNBOOK.md
 training-corpus/
   requirements-baseline.txt
+  scripts/evaluate_baseline_holdouts.py
   scripts/train_specialist_baselines.py
   runs/.../golden_v0.1/
   runs/.../kiwi-brain-ai-expanded-v0.1/

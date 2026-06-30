@@ -1,0 +1,14 @@
+{
+  "completed": [
+    "golden_v0.1_router_all",
+    "golden_v0.1_risk_all",
+    "golden_v0.1_citation_all",
+    "long_research_repair_25_router_all",
+    "long_research_repair_25_risk_all",
+    "long_research_repair_25_citation_all",
+    "real_tool_trace_pilot_10_router"
+  ],
+  "run_id": "realistic_holdout_eval_v0.1_20260630T083000Z",
+  "status": "complete",
+  "ts": "2026-06-30T08:31:39Z"
+}

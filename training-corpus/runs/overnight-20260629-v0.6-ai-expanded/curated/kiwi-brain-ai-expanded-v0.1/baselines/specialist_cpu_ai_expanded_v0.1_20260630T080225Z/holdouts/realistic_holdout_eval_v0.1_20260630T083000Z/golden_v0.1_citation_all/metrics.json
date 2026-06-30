@@ -1,0 +1,148 @@
+{
+  "classification_report": {
+    "accuracy": 0.4819277108433735,
+    "contradicts": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 4.0
+    },
+    "insufficient": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 20.0
+    },
+    "macro avg": {
+      "f1-score": 0.16915511316506696,
+      "precision": 0.14422790392752846,
+      "recall": 0.20694444444444446,
+      "support": 166.0
+    },
+    "not_supported": {
+      "f1-score": 0.6701030927835051,
+      "precision": 0.5462184873949579,
+      "recall": 0.8666666666666667,
+      "support": 75.0
+    },
+    "partial_support": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 27.0
+    },
+    "supports": {
+      "f1-score": 0.3448275862068966,
+      "precision": 0.3191489361702128,
+      "recall": 0.375,
+      "support": 40.0
+    },
+    "unverifiable": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0.0
+    },
+    "weighted avg": {
+      "f1-score": 0.38584840606649845,
+      "precision": 0.323688819285725,
+      "recall": 0.4819277108433735,
+      "support": 166.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "contradicts",
+      "insufficient",
+      "not_supported",
+      "partial_support",
+      "supports",
+      "unverifiable"
+    ],
+    "rows": [
+      [
+        0,
+        0,
+        4,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        7,
+        0,
+        13,
+        0
+      ],
+      [
+        0,
+        0,
+        65,
+        0,
+        10,
+        0
+      ],
+      [
+        0,
+        0,
+        18,
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        0,
+        25,
+        0,
+        15,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "dataset": "citation_verifier",
+  "holdout": "golden_v0.1_citation_all",
+  "metrics": {
+    "accuracy_all_rows": 0.4819,
+    "accuracy_seen_labels_only": 0.6957,
+    "comparable_rows": 115,
+    "macro_f1_all_labels": 0.1692,
+    "macro_f1_seen_labels_only": 0.4165,
+    "rows": 166,
+    "schema_gap": true,
+    "unseen_true_labels": [
+      "contradicts",
+      "insufficient",
+      "partial_support"
+    ],
+    "weighted_f1_all_labels": 0.3858
+  },
+  "model_labels": [
+    "not_supported",
+    "supports",
+    "unverifiable"
+  ],
+  "prediction_distribution": {
+    "not_supported": 119,
+    "supports": 47
+  },
+  "source_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/datasets/citation_verifier/all.jsonl",
+  "true_label_distribution": {
+    "contradicts": 4,
+    "insufficient": 20,
+    "not_supported": 75,
+    "partial_support": 27,
+    "supports": 40
+  },
+  "why": "Strict citation rows containing partial support, insufficient, and contradiction labels."
+}
