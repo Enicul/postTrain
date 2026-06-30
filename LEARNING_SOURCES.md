@@ -134,6 +134,28 @@ reward signals.
    search, reading, tool observation, synthesis, or memory writing. General RL
    then protects assistant behavior and product usability.
 
+6. Reasoning RL verifiers and Agentic RL verifiers are different in kind.
+
+   Reasoning RL often uses outcome verifiers: final math answer, multiple-choice
+   option, executable code result, or unit test pass/fail. Agentic RL needs
+   additional process and tool-level verifiers because the task is an
+   observation-action-feedback loop. The final result can be sparse or noisy,
+   while the important failure may be an earlier action.
+
+   Useful Agentic RL verifier questions:
+
+   ```text
+   Was the right tool selected?
+   Were tool parameters valid?
+   Was the right source/file/page read?
+   Did the agent react to observation or error feedback?
+   Did it avoid repeated low-value actions?
+   Did the final environment state satisfy the task?
+   ```
+
+   The hard parts are delayed reward, credit assignment across many actions,
+   noisy external environments, and task-specific verifier design.
+
 ### Why We Extracted It
 
 KIWI is not just a report generator. It needs to:
@@ -148,6 +170,24 @@ KIWI is not just a report generator. It needs to:
 
 The GLM ARC framing helps us explain why our artifact focuses on structured
 trajectories, verifiers, and loop engineering before large-scale model training.
+
+It also gives us a precise answer for why KIWI should not use realized market
+return as the only reward. Market outcomes are noisy. A good financial research
+agent should first be judged on process verifiers:
+
+```text
+point-in-time data discipline
+look-ahead bias avoidance
+source quality
+citation support
+fact vs opinion separation
+risk and invalidation coverage
+user-risk alignment
+memory write safety
+```
+
+Outcome review still matters, but it should be a delayed evaluation layer, not
+the only reward used to train or gate the first specialist models.
 
 ### What We Did Not Adopt
 
@@ -184,6 +224,7 @@ trajectories, verifiers, and loop engineering before large-scale model training.
 | Agentic loop | route -> search/read -> extract -> compare -> memo -> reviewer -> rewrite -> memory gate |
 | Unified ARC model | current coordinator + structured specialists; possible future small unified router/tool model |
 | High-confidence verifier | exact/source-backed subtasks before noisy market-return tasks |
+| Agentic verifier | step-level checks for tool choice, source reading, contradiction handling, reviewer rewrite, and memory gate |
 
 ### Concrete Actions
 
@@ -193,6 +234,9 @@ trajectories, verifiers, and loop engineering before large-scale model training.
 - Add/keep trajectory fields that expose agentic credit assignment:
   route, tool/action, observation, evidence span, contradiction, reviewer issue,
   rewrite, memory proposal, and final quality.
+- Add process-level verifier fields before using delayed market outcome:
+  point-in-time validity, source quality, citation support, risk coverage,
+  invalidation trigger quality, and memory write safety.
 - Treat coding-agent verifier discipline as a template for financial verifiers.
 - Use ARC as interview framing for why the project is about loop engineering and
   post-training infrastructure, not only fine-tuning a small model.
@@ -217,3 +261,9 @@ we translate this into KIWI's harness: a coordinator, narrow specialists,
 structured tool traces, deterministic verifiers, and memory gates. In short, we
 adopt the ARC loop as system architecture, not as a claim that we have trained a
 frontier-scale unified model.
+
+For RL specifically, Reasoning RL can often use a high-confidence final-answer
+verifier, while Agentic RL needs to verify the action process. In KIWI, final
+market return is a noisy outcome, so we prioritize process-level verifiers:
+point-in-time evidence, citation correctness, source quality, risk coverage,
+fact/opinion separation, and safe memory writes.

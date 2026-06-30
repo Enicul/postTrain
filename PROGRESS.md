@@ -60,7 +60,7 @@ Current source entries:
 
 | Source | Status | Extracted use |
 | --- | --- | --- |
-| GLM ARC: Agentic + Reasoning + Coding | adopted as architecture framing | use ARC to explain why KIWI needs reasoning, verifier-rich tasks, and agentic loops, while not claiming a GLM-scale unified model |
+| GLM ARC: Agentic + Reasoning + Coding | adopted as architecture framing | use ARC to explain why KIWI needs reasoning, verifier-rich tasks, agentic loops, and process-level verifiers, while not claiming a GLM-scale unified model |
 
 ## Last Verified Commands
 

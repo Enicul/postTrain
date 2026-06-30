@@ -125,6 +125,8 @@ What exists:
 - first GLM ARC entry,
 - explicit extracted / not-adopted / why-not structure,
 - mapping from GLM ARC to KIWI/postTrain architecture.
+- GLM verifier distinction: Reasoning RL outcome verifier vs Agentic RL
+  process/tool-level verifier, mapped to KIWI process rewards.
 
 Resume:
 
