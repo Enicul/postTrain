@@ -165,6 +165,30 @@ rows with more SEC filings, earnings transcript spans, official IR releases,
 and reputable news paragraphs. Run a CPU baseline/holdout probe before any GPU
 LoRA/SFT/DPO work.
 
+## D-2026-07-01-002 - Use filings and public reports, not paywalled report text
+
+Decision:
+
+Expand citation/research data with company filings, earnings releases,
+financial tables, transcripts, public industry reports, and reputable news.
+Do not store or train on full paywalled sell-side research report text.
+
+Why:
+
+Financial research agents need deeper evidence than headlines. SEC filings,
+company IR, transcripts, and public reports provide auditable evidence for
+facts, risk factors, management guidance, and industry context. Paid sell-side
+reports may be useful as user-provided context or metadata, but storing their
+full text in a training repo creates copyright and provenance risk.
+
+Consequence:
+
+Create `report_and_filing_spans_v0.1` under
+`citation_contract_repair_v0.1`. Store source URL, section, short evidence
+span, source hash, paragraph hash, `published_at`, `as_of`, support label, and
+license note. Keep social sources as market radar/task seeds unless backed by
+auditable evidence.
+
 ## D-2026-06-30-009 - Use summary-first local recording
 
 Decision:

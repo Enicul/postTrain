@@ -153,6 +153,36 @@ This completes the first real official-source citation seed. It is not enough
 for `citation_verifier_repair_v0.3` training by itself; expand to more spans and
 audit labels first.
 
+Report/filing source expansion checkpoint:
+
+```text
+docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md
+```
+
+Decision:
+
+The next source expansion should add company filings, financial reports,
+earnings transcripts, financial tables, public research reports, and reputable
+news. Paywalled sell-side research should not be stored as full text or used
+directly for training. Social/X/Weibo/XHS content remains market radar and task
+seed material unless supported by auditable sources.
+
+Next target:
+
+```text
+report_and_filing_spans_v0.1
+```
+
+Minimum target before `citation_verifier_repair_v0.3`:
+
+- 100+ audited rows;
+- 30+ SEC filing rows;
+- 20+ transcript/prepared-remarks rows;
+- 20+ public research or high-quality news rows;
+- balanced `verified_support`, `partial_support`, `insufficient`, and
+  `contradicts` labels;
+- no raw HTML/PDF dumps in Git.
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,

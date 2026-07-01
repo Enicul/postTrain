@@ -188,6 +188,43 @@ Next:
 
 Expand this seed to at least 100 audited rows before training
 `citation_verifier_repair_v0.3`.
+
+## CP-2026-07-01-002 - Report and filing source expansion plan
+
+Status:
+
+```text
+planned
+```
+
+Path:
+
+```text
+docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md
+```
+
+What was decided:
+
+- Continue from `real_citation_spans_v0.1`.
+- Add richer sources: SEC filings, company financial reports, earnings releases,
+  financial tables, transcripts, public research, and reputable news.
+- Do not store full raw reports in Git.
+- Do not ingest paywalled sell-side research report text.
+- Treat social sources as radar/task seeds, not final truth.
+
+Next target artifact:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/report_and_filing_spans_v0.1
+```
+
+Resume:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+sed -n '1,220p' docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md
+sed -n '1,180p' training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1/REPORT.md
+```
 ```
 
 ## CP-2026-06-30-005 - First tracked CPU training batch

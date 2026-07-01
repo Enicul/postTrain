@@ -47,6 +47,13 @@
   filing paragraphs, earnings transcript spans, and reputable news paragraphs.
 - [ ] Run Claude/human audit on the 29-row `real_citation_spans_v0.1` seed and
   correct any label boundary issues before training.
+- [x] Add report/filing/public-research source plan:
+  `docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md`.
+- [ ] Build `report_and_filing_spans_v0.1` under
+  `citation_contract_repair_v0.1`.
+- [ ] Add at least 30 SEC filing rows and 20 transcript/prepared-remarks rows.
+- [ ] Add public research rows only from public/authorized sources; do not store
+  paywalled sell-side report full text.
 - [ ] Build `citation_verifier_repair_v0.3` from audited real spans instead of
   relying on synthetic train augmentation.
 
@@ -109,6 +116,10 @@
   `citation_contract_repair_v0.1`: `real_citation_spans_v0.1`.
 - [ ] Add transcript spans and more reputable news spans under
   `citation_contract_repair_v0.1`.
+- [ ] Add financial report / SEC filing spans under
+  `citation_contract_repair_v0.1`.
+- [ ] Add public research metadata and short spans with license notes; do not
+  ingest paywalled report text.
 - [x] Rerun router CPU baseline after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.
   Use default summary recording unless a full error-analysis run is explicitly
