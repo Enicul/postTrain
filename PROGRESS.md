@@ -183,6 +183,29 @@ Minimum target before `citation_verifier_repair_v0.3`:
   `contradicts` labels;
 - no raw HTML/PDF dumps in Git.
 
+Portfolio packaging checkpoint:
+
+```text
+docs/PORTFOLIO_REPORT_20260701.md
+```
+
+What it contains:
+
+- one-sentence interview claim;
+- system-shape diagram;
+- current data assets;
+- router/risk/citation key metrics;
+- failure taxonomy;
+- why the work is post-training relevant;
+- explicit "what we do not claim";
+- next work sequence.
+
+Decision:
+
+The 2026-06-30 six-hour plan is now complete. The portfolio report should be
+treated as the compact interview narrative until the next data pack or training
+run changes the evidence.
+
 Imported from the Agent/KIWI workspace:
 
 - golden training corpus `golden_v0.1`,

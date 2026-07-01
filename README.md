@@ -43,6 +43,16 @@ Every agent should read these files first:
 7. `EXPERIMENT_LOG.md` and `FAILURE_LOG.md` - what happened and what broke.
 8. `docs/RECORDING_PROTOCOL.md` - summary-first recording rules for local runs.
 
+## Portfolio Entry Points
+
+- `docs/PORTFOLIO_REPORT_20260701.md` - compact interview narrative with system
+  shape, data assets, metrics, failure taxonomy, and explicit non-claims.
+- `docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md` - next source expansion plan
+  for SEC filings, earnings transcripts, public reports, and paywalled research
+  boundaries.
+- `docs/NEXT_6H_PLAN_20260630.md` - completed six-hour execution checklist and
+  remaining fork between risk repair and citation source expansion.
+
 ## Current Baseline
 
 First CPU specialist baseline on the smaller `golden_v0.1` pack:

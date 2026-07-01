@@ -144,7 +144,9 @@
 
 ## P3 - Interview Packaging
 
-- [ ] Write a short portfolio report.
-- [ ] Add architecture diagram.
-- [ ] Add failure taxonomy and representative traces.
-- [ ] Add a "what we do not claim" section.
+- [x] Write a short portfolio report:
+  `docs/PORTFOLIO_REPORT_20260701.md`.
+- [x] Add architecture diagram.
+- [x] Add failure taxonomy and representative traces.
+- [x] Add a "what we do not claim" section.
+- [x] Add a concise README link from the repo root to the portfolio report.

@@ -225,6 +225,38 @@ cd /Users/lucine/Documents/Job/projects/postTrain
 sed -n '1,220p' docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md
 sed -n '1,180p' training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1/REPORT.md
 ```
+
+## CP-2026-07-01-003 - Portfolio report checkpoint
+
+Status:
+
+```text
+complete
+```
+
+Path:
+
+```text
+docs/PORTFOLIO_REPORT_20260701.md
+```
+
+What exists:
+
+- compact interview claim;
+- system-shape Mermaid diagram;
+- current data asset table;
+- router/risk/citation metric summaries;
+- failure taxonomy;
+- post-training relevance explanation;
+- explicit "what we do not claim" section;
+- next-work sequence.
+
+Resume:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+sed -n '1,260p' docs/PORTFOLIO_REPORT_20260701.md
+```
 ```
 
 ## CP-2026-06-30-005 - First tracked CPU training batch
