@@ -145,6 +145,26 @@ spans: official positive paragraphs, partial-support boundaries, and rare
 contradict / insufficient rows. GPU work should wait until the repair baseline
 is strong enough to make model capacity the likely bottleneck.
 
+## D-2026-07-01-001 - Real citation spans are a seed, not GPU readiness
+
+Decision:
+
+Use `real_citation_spans_v0.1` as the first real-source seed for citation
+verification, but do not start citation-verifier GPU fine-tuning from it alone.
+
+Why:
+
+The collection now has real source URLs, paragraph hashes, support labels, and
+clean provenance, but it only contains 29 rows. It proves the data contract and
+collection flow, not model readiness.
+
+Consequence:
+
+Before `citation_verifier_repair_v0.3`, expand the pack to at least 100 audited
+rows with more SEC filings, earnings transcript spans, official IR releases,
+and reputable news paragraphs. Run a CPU baseline/holdout probe before any GPU
+LoRA/SFT/DPO work.
+
 ## D-2026-06-30-009 - Use summary-first local recording
 
 Decision:

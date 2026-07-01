@@ -133,6 +133,61 @@ Resume:
 ```text
 Add Qwen, DeepSeek, Kimi, and MiniMax/WebExplorer entries using the same
 structure before turning those notes into architecture or training changes.
+
+## CP-2026-07-01-001 - Real citation spans v0.1
+
+Status:
+
+```text
+seed collected
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/collect_real_citation_spans_v01.py \
+  --timeout-seconds 30
+```
+
+What exists:
+
+- 29 real paragraph/list/table-cell citation rows;
+- 5 source pages;
+- 0 final fetch/anchor failures;
+- baseline-compatible `citation_verifier` train/dev/test/all files;
+- source hashes and paragraph hashes, but no raw HTML dumps.
+
+Label distribution:
+
+```text
+verified_support: 15
+partial_support: 6
+insufficient: 4
+contradicts: 4
+```
+
+Resume:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+python3 - <<'PY'
+import json, pathlib, collections
+base = pathlib.Path("training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1")
+rows = [json.loads(line) for line in (base / "spans/all.jsonl").read_text().splitlines() if line.strip()]
+print(len(rows), collections.Counter(row["label"]["support_type"] for row in rows))
+PY
+```
+
+Next:
+
+Expand this seed to at least 100 audited rows before training
+`citation_verifier_repair_v0.3`.
 ```
 
 ## CP-2026-06-30-005 - First tracked CPU training batch

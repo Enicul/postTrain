@@ -91,6 +91,68 @@ Status:
 
 Fixed.
 
+## F-2026-07-01-001 - Citation span collection split labels were passed positionally
+
+Symptom:
+
+The first `real_citation_spans_v0.1` run created valid rows but the split
+distribution ignored the intended per-case `train/dev/test` assignments.
+
+Cause:
+
+`SpanCase` defines `point_in_time_allowed` before `split`. The first case list
+passed `"train"`, `"dev"`, and `"test"` as positional arguments, so those string
+values were assigned to `point_in_time_allowed` instead of `split`.
+
+Change:
+
+Updated every case to use explicit `split="train"`, `split="dev"`, or
+`split="test"`.
+
+Effect:
+
+The final collection now has the intended split distribution:
+
+```text
+train: 16
+dev: 7
+test: 6
+```
+
+Status:
+
+Fixed.
+
+## F-2026-07-01-002 - Real source collection exposed fetch and DOM extractor gaps
+
+Symptom:
+
+The first real citation span collection produced 21 rows and 9 failures. Micron
+IR timed out under scripted fetch, and the AMD 8-K anchor was not found.
+
+Cause:
+
+- The Micron IR page was unstable for scripted collection.
+- The initial HTML extractor only read paragraph/list/table cells; the AMD 8-K
+  section text was inside `div/span` nodes.
+
+Change:
+
+- Added fetch retries.
+- Added `div` and `span` to the block extractor.
+- Switched the Micron source to the issuer press-release mirror on GlobeNewswire
+  and recorded that fallback in source provenance.
+
+Effect:
+
+The final run collected 29 rows from 5 sources with 0 final fetch/anchor
+failures.
+
+Status:
+
+Fixed, with remaining source-quality caveat: Micron rows are from a
+press-release wire mirror rather than the unstable IR page.
+
 ## F-2026-06-30-017 - Social bookmark long claims still sometimes downgrade to fast_answer
 
 Symptom:

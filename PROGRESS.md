@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: 2026-06-30
+Last updated: 2026-07-01
 
 ## Current State
 
@@ -114,6 +114,44 @@ Use five citation labels before training: `candidate_evidence`,
 `verified_support`, `partial_support`, `insufficient`, and `contradicts`.
 Do not train `citation_verifier_repair_v0.3` until real paragraph spans are
 collected under this contract.
+
+Real citation span seed:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1
+```
+
+What exists:
+
+- 29 real paragraph/list/table-cell span rows.
+- 5 source pages: AMD press release, AMD 8-K, Microsoft press release, Micron
+  issuer press-release mirror, and NVIDIA News Center.
+- 0 final fetch/anchor failures.
+- No raw HTML stored; each row keeps source URL, paragraph hash, raw-page hash,
+  published date, `as_of`, and support label.
+
+Label distribution:
+
+| Label | Rows |
+| --- | ---: |
+| `verified_support` | 15 |
+| `partial_support` | 6 |
+| `insufficient` | 4 |
+| `contradicts` | 4 |
+
+Split distribution:
+
+| Split | Rows |
+| --- | ---: |
+| train | 16 |
+| dev | 7 |
+| test | 6 |
+
+Decision:
+
+This completes the first real official-source citation seed. It is not enough
+for `citation_verifier_repair_v0.3` training by itself; expand to more spans and
+audit labels first.
 
 Imported from the Agent/KIWI workspace:
 

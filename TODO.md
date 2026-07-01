@@ -36,12 +36,17 @@
 - [x] Log before/after metrics in `EXPERIMENT_LOG.md`.
 - [x] Build `citation_verifier_repair_v0.2` with hard negatives that share
   topical overlap but do not support the exact claim.
-- [ ] Add cleaner positive official-source spans for composite claims from real
-  official/IR/SEC/press-release paragraphs.
-- [ ] Add partial-support boundary cases where one evidence span supports only
-  part of the claim.
-- [ ] Add more `insufficient` and `contradicts` rows before trusting five-way
-  support typing.
+- [x] Add first cleaner positive official-source spans from real
+  official/IR/SEC/press-release/news paragraphs:
+  `real_citation_spans_v0.1`.
+- [x] Add first partial-support boundary cases where one evidence span supports
+  only part of the claim.
+- [x] Add first `insufficient` and `contradicts` rows under the five-way
+  support contract.
+- [ ] Expand `real_citation_spans_v0.1` to at least 100 rows with more SEC
+  filing paragraphs, earnings transcript spans, and reputable news paragraphs.
+- [ ] Run Claude/human audit on the 29-row `real_citation_spans_v0.1` seed and
+  correct any label boundary issues before training.
 - [ ] Build `citation_verifier_repair_v0.3` from audited real spans instead of
   relying on synthetic train augmentation.
 
@@ -100,7 +105,9 @@
 - [x] Build `citation_contract_repair_v0.1` that separates:
   `candidate_evidence`, `verified_support`, `partial_support`, `insufficient`,
   and `contradicts`.
-- [ ] Collect real official/IR/SEC/press-release/transcript/news spans under
+- [x] Collect first real official/IR/SEC/press-release/news spans under
+  `citation_contract_repair_v0.1`: `real_citation_spans_v0.1`.
+- [ ] Add transcript spans and more reputable news spans under
   `citation_contract_repair_v0.1`.
 - [x] Rerun router CPU baseline after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.

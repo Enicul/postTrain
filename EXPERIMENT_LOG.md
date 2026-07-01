@@ -788,3 +788,92 @@ Decision:
 
 No training run yet. First collect real paragraph spans from official/IR/SEC,
 press release, transcript, and reputable news sources under this contract.
+
+## EXP-2026-07-01-001 - Real citation paragraph spans v0.1
+
+Goal:
+
+Collect the first real paragraph/list/table-cell citation spans under
+`citation_contract_repair_v0.1`, using auditable source URLs instead of
+synthetic evidence strings or headline-only spans.
+
+Command:
+
+```bash
+python3 -m py_compile training-corpus/scripts/collect_real_citation_spans_v01.py
+
+python3 training-corpus/scripts/collect_real_citation_spans_v01.py \
+  --timeout-seconds 30
+```
+
+Artifacts:
+
+```text
+training-corpus/scripts/collect_real_citation_spans_v01.py
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/real_citation_spans_v0.1
+```
+
+Output files:
+
+```text
+spans/all.jsonl
+repaired_datasets/citation_verifier/train.jsonl
+repaired_datasets/citation_verifier/dev.jsonl
+repaired_datasets/citation_verifier/test.jsonl
+repaired_datasets/citation_verifier/all.jsonl
+sources.json
+failures.json
+manifest.json
+REPORT.md
+```
+
+Source mix:
+
+| Source | Class | Rows |
+| --- | --- | ---: |
+| AMD Q1 2026 press release | press_release | 7 |
+| AMD May 2026 8-K | sec_filing | 2 |
+| Microsoft FY26 Q3 press release | press_release | 7 |
+| Micron FY26 Q3 press-release mirror | press_release_wire | 6 |
+| NVIDIA FY2027 Q1 News Center release | official_news | 7 |
+
+Label distribution:
+
+| Label | Rows |
+| --- | ---: |
+| `verified_support` | 15 |
+| `partial_support` | 6 |
+| `insufficient` | 4 |
+| `contradicts` | 4 |
+
+Split distribution:
+
+| Split | Rows |
+| --- | ---: |
+| train | 16 |
+| dev | 7 |
+| test | 6 |
+
+Validation:
+
+```text
+schema_sanity_ok rows= 29
+```
+
+Intermediate errors:
+
+- First run produced only 21 rows because Micron IR timed out and AMD 8-K text
+  was inside `div/span` nodes not covered by the first extractor.
+- First script version passed `"train"`, `"dev"`, and `"test"` positionally to
+  `SpanCase`; because `split` comes after `point_in_time_allowed`, split labels
+  were not applied as intended. This was fixed by using explicit `split=...`.
+- Micron IR remained unstable under scripted fetch, so the collection uses the
+  issuer press-release mirror on GlobeNewswire and records the fallback note in
+  provenance.
+
+Decision:
+
+This is the first real-source seed for `citation_verifier_repair_v0.3`, not a
+training-ready dataset. Do not start citation GPU fine-tuning from 29 rows.
+Next expand to at least 100 audited real spans with more SEC, transcript, and
+reputable news paragraphs.
