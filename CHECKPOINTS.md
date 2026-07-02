@@ -778,3 +778,46 @@ Run the label audit over all 131 real span rows (29 seed + 102 new), then a
 citation CPU probe on the combined audited pack under summary recording.
 Only then define citation_verifier_repair_v0.3. GPU work stays blocked.
 ```
+
+## CP-2026-07-02-002 - Audited frozen citation eval v1
+
+Status:
+
+```text
+frozen
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/citation_real_eval_v1
+```
+
+What exists:
+
+- 131 audited rows (labels V62/P21/I16/C32; splits 62/38/31);
+- per-row `audit` block with both blind votes and adjudication notes;
+- 3 corrections (2.3%), original labels preserved, zero test-split changes;
+- conventions C1/C2/C3 pinned in `AUDIT_REPORT.md` + `audit/adjudications.json`;
+- source-pack SHA256 hashes in `manifest.json`.
+
+Verify:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+python3 - <<'PY'
+import json, pathlib, collections
+base = pathlib.Path("training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/citation_real_eval_v1")
+rows = [json.loads(l) for l in (base/"rows/all.jsonl").read_text().splitlines()]
+print(len(rows), collections.Counter(r["label"]["support_type"] for r in rows))
+print(collections.Counter(r["audit"]["status"] for r in rows))
+PY
+```
+
+Resume:
+
+```text
+Block A2: build risk_contract_repair_v0.1b from real long-research
+medium-risk rows and freeze the repaired risk holdout. Then Block B
+(rules/naive/engineered prompt arms on frozen holdouts).
+```

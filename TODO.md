@@ -4,9 +4,12 @@
 
 Block A - fix the rulers (blocks every LLM arm):
 
-- [ ] A1: Audit all 131 real citation span rows (29 seed + 102
+- [x] A1: Audit all 131 real citation span rows (29 seed + 102
   `report_and_filing_spans_v0.1`); correct label boundary issues; freeze the
-  eval split as `citation_real_eval_v1`.
+  eval split as `citation_real_eval_v1`. Done 2026-07-02 via blind double
+  annotation + adjudication: 126 double-confirmed, 3 corrected (2.3%),
+  conventions C1-C3 pinned. Optional cheap insurance: human spot-check of
+  the 5 adjudicated rows.
 - [ ] A2: Build `risk_contract_repair_v0.1b` from real long-research
   medium-risk rows; freeze the repaired risk holdout.
 

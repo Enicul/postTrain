@@ -1,0 +1,58 @@
+{
+  "audit_date": "2026-07-02",
+  "contract_id": "citation_contract_repair_v0.1",
+  "correction_rate": 0.0229,
+  "corrections": [
+    {
+      "from": "partial_support",
+      "sample_id": "real_citation_spans_v0.1_0006_amd_guidance_partial",
+      "split": "dev",
+      "to": "contradicts"
+    },
+    {
+      "from": "verified_support",
+      "sample_id": "report_and_filing_spans_v0.1_0016_msft10q_rev_verified",
+      "split": "train",
+      "to": "partial_support"
+    },
+    {
+      "from": "insufficient",
+      "sample_id": "report_and_filing_spans_v0.1_0083_siaq1_trillion_insufficient",
+      "split": "dev",
+      "to": "contradicts"
+    }
+  ],
+  "created_at": "2026-07-02T02:49:02Z",
+  "environment": {
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "eval_id": "citation_real_eval_v1",
+  "frozen": {
+    "eval_splits": [
+      "dev",
+      "test"
+    ],
+    "rule": "test is untouchable; prompts and experience libraries iterate on train/dev only; any change to dev/test requires a new eval_id"
+  },
+  "git": {
+    "branch": "main",
+    "commit": "457787953fff35f6102aba14458de0574250aee9"
+  },
+  "label_counts": {
+    "contradicts": 32,
+    "insufficient": 16,
+    "partial_support": 21,
+    "verified_support": 62
+  },
+  "row_count": 131,
+  "source_packs": {
+    "real_citation_spans_v0.1": "e781504f84f920643caea2aabfbc8b4b2d5ab4418c24734535e329eaca08d0d1",
+    "report_and_filing_spans_v0.1": "a6614260133e00995dcda0d5be62de29584ecb6fc2027a2e96586357a28a21ee"
+  },
+  "split_counts": {
+    "dev": 38,
+    "test": 31,
+    "train": 62
+  }
+}

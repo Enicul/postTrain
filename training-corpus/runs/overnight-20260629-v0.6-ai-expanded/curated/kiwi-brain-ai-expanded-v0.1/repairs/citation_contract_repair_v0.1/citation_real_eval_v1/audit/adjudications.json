@@ -1,0 +1,51 @@
+{
+  "adjudicated_by": "claude_fable_5_main_session",
+  "protocol": "blind double annotation (2 independent auditors per row, labels hidden) + tie-break adjudication against the five-way contract",
+  "conventions_pinned": {
+    "C1_contradiction_precedence": "If any subclaim of a composite claim is contradicted by the span, the label is contradicts, even if other subclaims are supported. partial_support is reserved for supported-plus-ABSENT, never supported-plus-conflicted.",
+    "C2_period_binding": "When a claim binds figures to a reporting period the span does not state: if the source document reports a single period (earnings release headline figures), source identity satisfies the binding and verified_support is allowed at reduced confidence; if the document contains multiple periods (e.g., 10-Q quarterly and nine-month sections), the binding is unverifiable from the span and the row is capped at partial_support (other elements supported) or insufficient (binding is the substantive assertion).",
+    "C3_materially_weakens": "A span implying a lower point/milestone estimate than the claim's figure materially weakens the claim under span-only judgment and is labeled contradicts, with staleness recorded in the note when the conflict stems from forecast vintage."
+  },
+  "decisions": [
+    {
+      "sample_id": "real_citation_spans_v0.1_0006_amd_guidance_partial",
+      "original_label": "partial_support",
+      "audited_label": "contradicts",
+      "votes": ["contradicts", "contradicts"],
+      "rationale": "Span states non-GAAP gross margin expected at approximately 56%; the claim asserts 58%. Under C1 a conflicted subclaim forces contradicts. Original seed label treated a conflicting figure as a missing one.",
+      "support_score": -1.0
+    },
+    {
+      "sample_id": "real_citation_spans_v0.1_0014_msft_operating_income_verified",
+      "original_label": "verified_support",
+      "audited_label": "verified_support",
+      "votes": ["partial_support", "verified_support"],
+      "rationale": "Figures match exactly; the FY26 Q3 binding is satisfied by single-period source identity under C2 (press release headline figures).",
+      "support_score": 1.0
+    },
+    {
+      "sample_id": "report_and_filing_spans_v0.1_0016_msft10q_rev_verified",
+      "original_label": "verified_support",
+      "audited_label": "partial_support",
+      "votes": ["verified_support", "partial_support"],
+      "rationale": "The 10-Q contains near-identical quarterly ($12.8B) and nine-month ($36.5B) paragraphs and the span does not state the period; under C2 the quarterly binding is unverifiable from the span, so the row is capped at partial_support. Must use the same ruler as its trap counterpart 0020 (insufficient).",
+      "support_score": 0.55
+    },
+    {
+      "sample_id": "report_and_filing_spans_v0.1_0031_meta10k_segments_verified",
+      "original_label": "verified_support",
+      "audited_label": "verified_support",
+      "votes": ["verified_support"],
+      "rationale": "One auditor omitted this row from output (31/32 lines); the other confirmed. Span plainly states both claim elements.",
+      "support_score": 1.0
+    },
+    {
+      "sample_id": "report_and_filing_spans_v0.1_0083_siaq1_trillion_insufficient",
+      "original_label": "insufficient",
+      "audited_label": "contradicts",
+      "votes": ["contradicts", "contradicts"],
+      "rationale": "Span quotes SIA's CEO framing $1 trillion as the 2026 trajectory as of May 4; under C3 this materially weakens the $1.5 trillion claim in span-only judgment, consistent with the Deloitte $975B row. The forecast-vintage (staleness) lesson is preserved in this note.",
+      "support_score": -1.0
+    }
+  ]
+}

@@ -14,8 +14,16 @@ Three tasks (risk reviewer, citation verifier, cost-aware escalation router)
 climb one shared ladder from hand rules through prompted LLM and
 experience-library (training-free RL) rungs to SFT/GRPO, on frozen holdouts,
 with pre-registered kill criteria deciding where each task stops. Weights are
-budgeted for exactly one task. Next block: A1 audit the 131 real citation
-rows, A2 build `risk_contract_repair_v0.1b`. See D-2026-07-02-002.
+budgeted for exactly one task. See D-2026-07-02-002.
+
+Block A progress:
+
+- A1 done (2026-07-02): `citation_real_eval_v1` is frozen - 131 rows audited
+  by blind double annotation + adjudication, 3 labels corrected (2.3%), zero
+  test-split changes, conventions C1-C3 pinned. See CP-2026-07-02-002 and
+  D-2026-07-02-003.
+- A2 next: build `risk_contract_repair_v0.1b` from real long-research
+  medium-risk rows and freeze the repaired risk holdout.
 
 ## Current State
 

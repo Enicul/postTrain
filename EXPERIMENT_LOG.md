@@ -972,3 +972,77 @@ Next:
 2. Run a citation CPU probe on the combined audited pack.
 3. If probe quality holds, define `citation_verifier_repair_v0.3`; GPU work
    stays blocked until then.
+
+## EXP-2026-07-02-002 - Blind double-annotation audit of 131 citation rows
+
+Goal:
+
+Block A1 of the three-task ladder: audit every real citation span row (29
+seed + 102 report/filing) and freeze `citation_real_eval_v1` before any LLM
+arm is measured on it.
+
+Data:
+
+```text
+real_citation_spans_v0.1 (29 rows) + report_and_filing_spans_v0.1 (102 rows)
+```
+
+Method:
+
+Blind double annotation + adjudication, all AI: 4 shuffled batches x 2
+independent auditor agents per batch, labels hidden; 5 disputed rows
+adjudicated in the main session against the five-way contract.
+
+Command:
+
+```bash
+python3 training-corpus/scripts/build_citation_real_eval_v1.py \
+  --audit-dir <scratchpad audit dir with votes_passA/B.jsonl, adjudications.json>
+```
+
+Artifacts:
+
+```text
+.../citation_contract_repair_v0.1/citation_real_eval_v1/
+  rows/{train,dev,test,all}.jsonl
+  audit/{votes_passA.jsonl,votes_passB.jsonl,adjudications.json}
+  AUDIT_REPORT.md
+  manifest.json
+```
+
+Metrics:
+
+| Metric | Value |
+| --- | ---: |
+| Rows audited | 131 |
+| Double-confirmed directly | 126 |
+| Adjudicated | 5 |
+| Labels corrected | 3 (2.3%) |
+| Test-split corrections | 0 |
+| Final labels V/P/I/C | 62 / 21 / 16 / 32 |
+| Splits train/dev/test | 62 / 38 / 31 |
+
+Corrections: seed `amd_guidance_partial` partial->contradicts (conflicted
+margin subclaim); new `msft10q_rev_verified` verified->partial (period
+binding unverifiable in multi-period 10-Q); new `siaq1_trillion_insufficient`
+insufficient->contradicts (materially-weakens). Two of the three overrode
+labels authored in this same session - the blind protocol worked as intended.
+
+Failures:
+
+- One auditor omitted one row from its output (31/32); resolved by the other
+  auditor plus adjudication. See F-2026-07-02-003 for the label-convention
+  gaps the audit exposed.
+
+Decision:
+
+`citation_real_eval_v1` is frozen: dev+test are the Act 2 evaluation splits;
+test is untouchable; prompts/experience libraries iterate on train/dev only.
+Conventions C1 (contradiction precedence), C2 (period binding), C3
+(materially weakens) are now part of the citation contract and bind future
+collection passes.
+
+Next:
+
+Block A2: `risk_contract_repair_v0.1b` from real long-research medium rows.
+Then Block B prompted-LLM eval arms.

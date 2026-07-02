@@ -722,3 +722,38 @@ Remaining risk:
 Other collections that anchor into long filings should adopt the same
 label-critical-fact check; substring anchors alone are not sufficient
 provenance for boundary labels.
+
+## F-2026-07-02-003 - Audit exposed three label errors and two unpinned conventions
+
+Symptom:
+
+Blind double annotation of all 131 real citation rows found 3 mislabels
+(2.3%): a seed-pack row treating a conflicted figure as a missing one, a new
+row claiming a period binding its span cannot establish, and a new row
+labeled insufficient where the span materially weakens the claim.
+
+Cause:
+
+The five-way contract left two boundary conventions unpinned, so authors
+resolved them ad hoc: (1) whether a contradicted subclaim yields contradicts
+or partial_support; (2) whether a period binding may rest on source identity
+when the span omits the period. A third gap: "materially weakens" was not
+being applied to stale lower-estimate spans.
+
+Change:
+
+Pinned C1/C2/C3 in `citation_real_eval_v1/AUDIT_REPORT.md` and
+`audit/adjudications.json`; corrected the 3 rows with original labels
+preserved in `label.original_support_type`; froze dev+test.
+
+Effect:
+
+131/131 rows now carry a two-vote audit trail; correction rate 2.3%; zero
+test-split corrections.
+
+Remaining risk:
+
+This was an AI audit, recorded as such - a human spot-check of the 5
+adjudicated rows is cheap insurance before Act 2 conclusions go into the
+portfolio report. C2 exists because block extraction drops section headers;
+the next collector version should carry them.

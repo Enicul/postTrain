@@ -320,3 +320,29 @@ Consequence:
   promotion logged here.
 - Act 3 hard budget cap: 24 A100-hours / ~USD 100 / 5 evenings for rungs 5-6;
   exceeding the cap without a win is itself the recorded result.
+
+## D-2026-07-02-003 - Freeze citation_real_eval_v1 and bind conventions C1-C3
+
+Decision:
+
+Freeze the audited 131-row pack as `citation_real_eval_v1`: dev (38) + test
+(31) are the Act 2 evaluation splits; test is untouchable; prompts and
+experience libraries iterate on train/dev only; any dev/test change requires
+a new eval id. Conventions pinned by the audit become part of the citation
+contract: C1 conflicted-subclaim precedence, C2 period binding, C3
+materially-weakens. Downstream consumers use this pack, not the raw
+collection packs, which remain as historical evidence.
+
+Why:
+
+Blind double annotation confirmed 126/131 labels and corrected 3; two of the
+three corrections overrode labels authored in the same session, which is
+exactly the failure mode a blind protocol exists to catch. An unaudited or
+convention-ambiguous eval would make every ladder column on Act 2
+unjudgeable.
+
+Consequence:
+
+Act 2 measurement can start once Block B runs; the audit trail (two vote
+files + adjudications) ships inside the pack; future span collections must
+follow C1-C3 or propose a contract revision here first.
