@@ -1,0 +1,269 @@
+{
+ "prompted_sonnet": {
+  "dev": [
+   {
+    "sid": "risk_syn_9908f8b836e387dd",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_167baab15b3e3f26",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_36bab67a5ce83bb6",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_6322ad5d22434779",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_30e20bf0b78574dc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_18a7d7ecfc16dadc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_9c84cef96a249efb",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_user_sim_5729dace55ae2c24",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_69208693db61b6c1",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   }
+  ],
+  "n_test_errors": 8
+ },
+ "prompted_haiku": {
+  "dev": [
+   {
+    "sid": "risk_syn_9908f8b836e387dd",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_167baab15b3e3f26",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_36bab67a5ce83bb6",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_6322ad5d22434779",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_30e20bf0b78574dc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_18a7d7ecfc16dadc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_9c84cef96a249efb",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_user_sim_5729dace55ae2c24",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_69208693db61b6c1",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_6977a37a63e6e953",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "medium/True"
+   }
+  ],
+  "n_test_errors": 9
+ },
+ "naive_sonnet": {
+  "dev": [
+   {
+    "sid": "risk_strict_risk_strict_trace_002_european_photonics_basket",
+    "split": "dev",
+    "family": "evidence_review",
+    "gold": "medium/False",
+    "pred": "medium/True"
+   },
+   {
+    "sid": "risk_strict_risk_micro_trace_002_mu_q3_memory_ai",
+    "split": "dev",
+    "family": "evidence_review",
+    "gold": "medium/False",
+    "pred": "medium/True"
+   },
+   {
+    "sid": "risk_syn_9908f8b836e387dd",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_167baab15b3e3f26",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_577971d03e4f2237",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_syn_36bab67a5ce83bb6",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_6322ad5d22434779",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_0fbabd764fb09044",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_syn_30e20bf0b78574dc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_97d11042f53faa1f",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_syn_18a7d7ecfc16dadc",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_syn_9c84cef96a249efb",
+    "split": "dev",
+    "family": "query_review",
+    "gold": "medium/False",
+    "pred": "high/True"
+   },
+   {
+    "sid": "risk_user_sim_4df463ee0e7f5dfe",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_5729dace55ae2c24",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_671f418722e0bcb3",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "medium/True"
+   },
+   {
+    "sid": "risk_user_sim_69208693db61b6c1",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "low/False"
+   },
+   {
+    "sid": "risk_user_sim_6977a37a63e6e953",
+    "split": "dev",
+    "family": "interaction_review",
+    "gold": "medium/False",
+    "pred": "medium/True"
+   }
+  ],
+  "n_test_errors": 18
+ }
+}

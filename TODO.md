@@ -37,13 +37,18 @@ Block C - learning pools:
 
 Block D - training-free RL:
 
-- [ ] Contrastive lesson extraction -> experience library v1 per act,
-  regression-tested, injectable and versioned (rung 4).
-- [ ] Kill-criteria checkpoint for acts 1-2; record stop/continue in
-  DECISIONS.md with numbers.
+- [x] Contrastive lesson extraction -> experience library v1 for risk
+  (opus, dev-only errors); citation needed none (killed at rung 3).
+  Artifact: `ladder/rung4_risk_hybrid_v0.1/risk_explib_v1.json`.
+- [x] Kill-criteria checkpoint for acts 1-2: BOTH KILLED. Act 1 at rung 4
+  (hybrid sonnet 0.978/1.000, owner policy decision A on the R3 rows,
+  gate floor moved into code: `risk_gate_rules_v11.py`); Act 2 at rung 3.
+  See D-2026-07-02-005/006, EXP-2026-07-02-004/005.
 
-Block E - weights (single surviving act, hard budget cap):
+Block E - weights (Act 3 escalation router is the sole survivor; hard budget cap):
 
+- [ ] Build the Act 3 environment first: cost table from real traces,
+  cheap-path outcome table (Block C rollouts), reward + lambda values.
 - [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep ->
   ratio + Pareto deliverable.
 

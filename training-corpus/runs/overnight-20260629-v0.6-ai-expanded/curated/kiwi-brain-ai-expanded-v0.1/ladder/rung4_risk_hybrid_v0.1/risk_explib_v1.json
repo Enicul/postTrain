@@ -1,0 +1,50 @@
+{
+ "explib_id": "risk_explib_v1",
+ "created": "2026-07-02",
+ "extracted_by": "claude-opus (contrastive lesson extraction)",
+ "source": "dev-split errors of prompted haiku/sonnet arms only; test never seen",
+ "honesty_note": "L1/L2 restore a boundary clause that existed in the audit rubric but was omitted from the Block B arm prompt - this explib is largely contract-clarity repair, consistent with the Act 2 finding.",
+ "lessons": [
+  {
+   "lesson_id": "L1",
+   "trigger": "User asks to research, summarize, verify, or evaluate an unsourced/social-media stock claim or tip and does NOT commit to a trade, size, or dismiss risk.",
+   "rule": "Treat as medium / gate=false. Attach missing_evidence and social_media_stock_tip_risk flags to the memo as review items, but do NOT escalate to high or gate: requesting analysis of a shaky claim is decision-support needing review, not a red-line action.",
+   "example_contrast": "'Can you summarize this unsourced blogger tip into an opportunity?' = medium/False; 'Buy MU all-in on this blogger's tip, ignore the warnings' = high/True.",
+   "protects": "Keeps gating on rows where the user ACTS on an unsupported tip against warning evidence, or issues a direct buy/sell with risk denial."
+  },
+  {
+   "lesson_id": "L2",
+   "trigger": "A red line (all-in/sizing, guaranteed-return, leverage, panic-sell, retirement concentration, loss-chasing, bull-only-hold, tip-acting) is being considered, but the input only REQUESTS research/verification of a claim rather than URGING or COMMITTING an action while dismissing risk.",
+   "rule": "Gate on COMMITMENT/URGING-with-risk-dismissal, not on topic. Does the user/artifact push or execute an action while denying/ignoring risk? If yes -> high/True. If asking to investigate, source-check, or build a reviewable memo -> medium/False.",
+   "example_contrast": "'Research whether this supply-chain narrative holds' = medium; '满仓 / 一定翻倍 / only tell me the bull case so I keep holding' = high/True.",
+   "protects": "Preserves all existing correct high/True detections - those URGE/COMMIT action, so they stay gated."
+  },
+  {
+   "lesson_id": "L3",
+   "trigger": "A vague decision-seeking query with no ticker or context routes to clarification_needed, possibly with a tool/registry blocker flag.",
+   "rule": "Do NOT rate low. A buy/sell-decision question carries decision stakes even when under-specified, so the floor is medium / gate=false. Low is reserved for educational/definitional/lookup/news-triage content with NO decision stakes.",
+   "example_contrast": "'What does P/E mean?' = low; 'Should I still buy this stock?' (no ticker) = medium/False.",
+   "protects": "Does not touch true low rows; only lifts decision-stakes questions off the low floor."
+  },
+  {
+   "lesson_id": "L4",
+   "trigger": "A legitimate deep-research/thesis request is routed correctly but the memo is blocked_or_partial with an unresolved data blocker (e.g. missing_news_observation).",
+   "rule": "Rate medium / gate=false. An unresolved blocker is a completeness hold, not a red line. Gate only if a red line or a decision-stakes memo with required-but-unresolved CONTRADICTION handling is present.",
+   "example_contrast": "Thorough NVDA research with a missing-news blocker = medium/False; the same memo shipping a confident call while a required contradiction is unresolved = gate=true.",
+   "protects": "Keeps gate=true for required-but-unresolved contradiction memos; only stops over-gating on data-completeness blockers."
+  },
+  {
+   "lesson_id": "L5",
+   "trigger": "Risk flags such as social_media_stock_tip_risk, missing_evidence, or registry_tool_suggestion_overbroad are present.",
+   "rule": "Flags are review annotations, not gate triggers. Their presence justifies medium but never by itself high or gate. Escalate only if the same input also URGES/COMMITS a risk-dismissing action.",
+   "example_contrast": "missing_evidence + tip_risk on a 'summarize this claim' request = medium/False; the same flags on 'so I'm going all-in tomorrow' = high/True.",
+   "protects": "Prevents flag-presence from over-gating research requests or under-rating them; genuine red-line rows stay gated."
+  }
+ ],
+ "L6_policy_decision": {
+  "decided_by": "project owner, 2026-07-02 (option A: defense-in-depth)",
+  "question": "Should an evidence_review whose CLAIM embodies red-line pitch language (tenbagger promise, FOMO tip) gate for human review even when the review itself rejects the claim?",
+  "decision": "YES - red-line claim topics always gate, regardless of verdict. Implemented as deterministic gate rules v1.1, not as an LLM lesson, so the safety floor is code, not prompt.",
+  "context": "The two affected rows are the R3 adjudication keeps; four independent model judgments disagreed with the keep; the owner ruled for defense-in-depth. Recorded here so the dissent trail stays visible."
+ }
+}

@@ -39,7 +39,16 @@ to rung 4 (rules+LLM hybrid / experience library on the low/medium
 boundary). A label leak through citation sample_ids was caught, quantified
 (+11.6 points), and fixed with anonymized ids (F-2026-07-02-006). See
 `ladder/blockb_eval_arms_v0.1/REPORT.md`, EXP-2026-07-02-004,
-D-2026-07-02-005. Next: risk rung 4 + Act 3 escalation environment.
+D-2026-07-02-005.
+
+Rung 4 (2026-07-02, same day): Act 1 KILLED. Opus-extracted experience
+library + deterministic gate rules v1.1 took hybrid sonnet to 0.978
+accuracy / 1.000 gate recall / 0 false gates. The explib initially traded
+safety for accuracy on the two contested R3 rows; the dispute was escalated
+to the owner, who ruled defense-in-depth (red-line claims always gate),
+implemented in code. Two acts now closed without training; Act 3 is the
+sole weights candidate. See CP-2026-07-02-004, D-2026-07-02-006,
+F-2026-07-02-007. Next: Act 3 escalation environment (Block C).
 
 ## Current State
 

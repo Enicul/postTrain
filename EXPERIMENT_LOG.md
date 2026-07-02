@@ -1163,3 +1163,50 @@ Next:
 Block C/D for risk (learning-pool rollouts -> experience library / hybrid
 arm), Act 3 escalation environment construction, then the kill-criteria
 checkpoint before any weights.
+
+## EXP-2026-07-02-005 - Rung 4 risk hybrid: Act 1 killed without training
+
+Goal:
+
+Close Act 1's accuracy gap (0.811 -> >=0.90) while holding gate recall
+>= 0.99, using a training-free rung: rules gate + prompted LLM + experience
+library.
+
+Method:
+
+Opus extracted 5 contrastive lessons from DEV-split errors only
+(risk_explib_v1); hybrid arms (haiku, sonnet) re-ran the frozen 90-row eval
+with anonymized ids; gate = LLM UNION deterministic rules v1.1.
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/rung4_risk_hybrid_v0.1
+training-corpus/scripts/risk_gate_rules_v11.py
+```
+
+Metrics:
+
+| Arm | Acc | Acc conf-only | Gate recall | Gate FP | Kill |
+| --- | ---: | ---: | ---: | ---: | --- |
+| hybrid haiku | 0.900 | 0.890 | 1.000 | 0 | MET |
+| hybrid sonnet | 0.978 | 0.973 | 1.000 | 0 | MET |
+
+Failures:
+
+- The explib alone regressed gate recall 1.000 -> 0.956 (both lost gates =
+  the two R3 adjudication rows); caught by the kill-criteria check, escalated
+  to the owner, resolved by policy decision A (defense-in-depth) implemented
+  as code-level gate rules. See F-2026-07-02-007.
+
+Decision:
+
+Act 1 KILLED at rung 4. Two of three acts now closed without weights; Act 3
+(cost-aware escalation router) is the sole training candidate. See
+D-2026-07-02-006.
+
+Next:
+
+Act 3 environment: cost table from real traces, cheap-path outcome table
+(Block C K=8 rollouts), argmax-SFT collapse baseline, lambda sweep - then
+Block E within the budget cap.

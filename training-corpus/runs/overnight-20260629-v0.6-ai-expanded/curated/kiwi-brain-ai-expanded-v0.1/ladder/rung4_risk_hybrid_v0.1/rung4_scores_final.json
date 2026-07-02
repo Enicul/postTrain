@@ -1,0 +1,54 @@
+{
+ "risk_hybrid_sonnet": {
+  "scopes": {
+   "dev": {
+    "n": 38,
+    "acc": 0.9737,
+    "acc_conf": 0.9677,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   },
+   "test": {
+    "n": 52,
+    "acc": 0.9808,
+    "acc_conf": 0.9762,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   },
+   "all": {
+    "n": 90,
+    "acc": 0.9778,
+    "acc_conf": 0.9726,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   }
+  },
+  "kill_met": true
+ },
+ "risk_hybrid_haiku": {
+  "scopes": {
+   "dev": {
+    "n": 38,
+    "acc": 0.8947,
+    "acc_conf": 0.9032,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   },
+   "test": {
+    "n": 52,
+    "acc": 0.9038,
+    "acc_conf": 0.881,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   },
+   "all": {
+    "n": 90,
+    "acc": 0.9,
+    "acc_conf": 0.8904,
+    "gate_recall": 1.0,
+    "gate_fp": 0
+   }
+  },
+  "kill_met": true
+ }
+}

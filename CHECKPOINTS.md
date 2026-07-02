@@ -879,3 +879,43 @@ Next: Block B - hand-rules arm and naive/engineered prompt arms on the
 frozen rulers, temperature 0, cost logged per episode under the
 rollout_store_v0.1 schema.
 ```
+
+## CP-2026-07-02-004 - Act 1 killed at rung 4 (risk hybrid arm)
+
+Status:
+
+```text
+complete; Act 1 closed without training
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/rung4_risk_hybrid_v0.1
+training-corpus/scripts/risk_gate_rules_v11.py
+```
+
+What exists:
+
+- risk_explib_v1 (5 opus-extracted dev-only lessons + L6 owner policy record);
+- hybrid predictions (haiku, sonnet; anonymized ids), final scores;
+- gate rules v1.1 as versioned code (contract- and dev-derived only);
+- REPORT.md with the safety-regression story and the dissent trail.
+
+Result:
+
+hybrid sonnet 0.978 acc / 1.000 gate recall / 0 gate FP -> kill criteria MET
+(haiku 0.900/1.000 also passes).
+
+Ladder state:
+
+Act 1 KILLED (rung 4), Act 2 KILLED (rung 3), Act 3 sole weights candidate.
+
+Resume:
+
+```text
+Act 3 escalation environment: cost table from real KIWI traces, cheap-path
+outcome table via Block C K=8 rollouts on train/dev seeds, argmax-label SFT
+collapse baseline, lambda sweep (2-3 values). Then Block E under the hard
+budget cap (24 A100h / ~USD 100 / 5 evenings).
+```

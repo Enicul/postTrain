@@ -410,3 +410,33 @@ The portfolio narrative gains its first completed act with an honest
 negative ("we did not train a citation model, and we can show why"), and the
 ladder's remaining budget concentrates on risk rung 4 and the Act 3
 escalation environment.
+
+## D-2026-07-02-006 - Owner policy: red-line claims always gate; Act 1 killed at rung 4
+
+Decision:
+
+(1) Product policy, decided by the owner on the escalated R3 dispute: an
+evidence review whose CLAIM embodies red-line pitch language (tenbagger
+promises, FOMO tips) requires the human gate even when the review's verdict
+rejects the claim - defense-in-depth for a financial product. The two
+contested eval rows keep their gold labels; the policy is enforced by
+deterministic gate rules v1.1 in code. (2) With that floor in place, Act 1
+is KILLED at rung 4: hybrid sonnet 0.978 accuracy / 1.000 gate recall / 0
+false gates meets the pre-registered kill criterion. Risk review gets no
+weight training.
+
+Why:
+
+Four independent model judgments disagreed with the adjudicator's keep on
+those two rows; rather than silently re-labeling (tuning the ruler to the
+arm) or silently overruling the models (baking one person's judgment into a
+lesson), the call was escalated to the human owner as the audit record had
+recommended. The owner chose conservatism; the implementation puts the
+safety floor in versioned code where prompt iterations cannot erode it.
+
+Consequence:
+
+Two acts closed without training, each with a full dissent/decision trail.
+Act 3 (cost-aware escalation router) holds the sole weights budget. The
+ladder's operating notes gain a rule: contested label conventions are
+escalated to a human before lesson-extraction rounds, not after.

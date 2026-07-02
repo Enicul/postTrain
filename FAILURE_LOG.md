@@ -861,3 +861,41 @@ authored labels; all label corrections were made against the leaked hint
 (which strengthens them), but confirmation counts are softer than they look.
 A leak-free spot re-audit of a random confirmed subset is cheap insurance
 and is now in TODO.
+
+## F-2026-07-02-007 - Experience library silently traded safety for accuracy
+
+Symptom:
+
+The rung-4 explib lifted hybrid sonnet accuracy 0.811 -> 0.978 but dropped
+gate recall 1.000 -> 0.956. The two lost gates were exactly the two R3
+adjudication rows (red-line-claim evidence reviews) - the only rows where
+the adjudicator had kept gold against 2/2 blind auditor votes; the explib's
+"requests-for-research are not red lines" lesson pulled the models back to
+the auditors' reading.
+
+Cause:
+
+Lessons optimized against dev accuracy can re-litigate contested label
+conventions; nothing in the lesson loop protects a convention that exists
+only in the adjudicator's head.
+
+Change:
+
+Escalated to the project owner as a product-policy question. Ruling: option
+A, defense-in-depth - red-line CLAIM topics always gate even when the
+review's verdict rejects the claim. Implemented as deterministic gate rules
+v1.1 (code, not prompt), derivation restricted to the pre-registered
+contract red-line list plus dev rows. Dissent trail preserved in the explib
+artifact.
+
+Effect:
+
+Both hybrid arms meet the kill criteria (0.978/1.000 and 0.900/1.000, zero
+gate false positives).
+
+Remaining risk:
+
+Contested conventions should be flagged to a human BEFORE a lesson round,
+not after; added to the ladder plan's operating notes. The safety floor now
+lives in versioned code, so future explib iterations cannot silently erode
+it.
