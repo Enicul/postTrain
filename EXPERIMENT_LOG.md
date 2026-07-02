@@ -877,3 +877,98 @@ This is the first real-source seed for `citation_verifier_repair_v0.3`, not a
 training-ready dataset. Do not start citation GPU fine-tuning from 29 rows.
 Next expand to at least 100 audited real spans with more SEC, transcript, and
 reputable news paragraphs.
+
+## EXP-2026-07-02-001 - Report and filing spans v0.1
+
+Goal:
+
+Expand real citation spans past the 29-row seed by collecting an auditable
+100+ row pack from SEC filings, earnings call transcript pages, public
+industry research, and reputable news under `citation_contract_repair_v0.1`,
+per `docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md`.
+
+Data:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/report_and_filing_spans_v0.1
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/collect_report_and_filing_spans_v01.py \
+  --timeout-seconds 45
+```
+
+Artifacts:
+
+```text
+spans/all.jsonl
+repaired_datasets/citation_verifier/{train,dev,test,all}.jsonl
+sources.json
+failures.json
+sanity_check.json
+manifest.json
+REPORT.md
+```
+
+Metrics:
+
+| Metric | Value |
+| --- | ---: |
+| Rows | 102 |
+| Sources fetched | 22 / 22 |
+| Anchor failures (final run) | 0 |
+| SEC filing rows (10-K/10-Q/6-K) | 51 |
+| Earnings transcript rows | 25 |
+| Public research rows | 18 |
+| Reputable news rows | 8 |
+| `verified_support` | 48 |
+| `contradicts` | 26 |
+| `partial_support` | 15 |
+| `insufficient` | 13 |
+| Splits train/dev/test | 46 / 31 / 25 |
+| Schema sanity checks | passed |
+
+Sources: NVDA 10-K FY2026 + 10-Q Q1 FY2027, AMD 10-K 2025, MSFT 10-Q FY26Q3,
+MU 10-Q FQ3 2026, META 10-K 2025, GOOGL/AMZN 10-Q Q1 2026, AVGO 10-Q FQ2 2026,
+TSM 6-K May 2026 revenue, six large-cap transcript pages (NVDA, AMD, MSFT,
+GOOGL, AMZN, AVGO), three SIA releases, the Deloitte 2026 semiconductor
+outlook, and two AP news articles.
+
+Boundary-trap coverage: sequential-vs-year-over-year misattribution (MU 74%
+vs 346%), segment-vs-total figure swaps (NVDA $75B vs $82B; GOOGL 16% vs 63%),
+attribution flips (NVDA customer concentration segment), stale-forecast
+conflicts across `published_at` dates (Deloitte $975B Feb 2026 vs WSTS $1.5T
+June 2026; SIA $1T May vs $1.5T June), and explicit-absence traps (AWS backlog
+excluding the Anthropic deal; fab completion timing not specified).
+
+Failures:
+
+- Gartner newsroom returned 403 and an IDC press-release URL guess returned
+  404 during scouting; both were excluded instead of scraped around.
+- fool.com transcript archive pagination returned the same first page, and
+  DuckDuckGo HTML search returned bot-challenge pages; large-cap transcripts
+  were located via fool.com monthly sitemaps instead.
+- No Micron FQ3 2026 transcript existed in the June/July sitemaps at
+  collection time; Micron transcript rows were deferred and Micron is covered
+  through its 10-Q.
+- First collection run matched the NVDA H20 partial-support case to the risk
+  factor duplicate of the H20 paragraph, which lacks the August 2025 license
+  and $60 million revenue sentences the label depended on. The anchor was
+  re-pointed at the MD&A sentence and the run repeated. See F-2026-07-02-002.
+
+Decision:
+
+Combined with `real_citation_spans_v0.1` (29 rows) this gives 131 real spans
+under the five-way contract and meets every minimum in the source plan. It is
+the candidate input for `citation_verifier_repair_v0.3`, but every row is
+marked `requires_human_audit`; run the label audit pass and a CPU probe under
+summary recording before any training run.
+
+Next:
+
+1. Audit labels for all 131 rows (29 seed + 102 new).
+2. Run a citation CPU probe on the combined audited pack.
+3. If probe quality holds, define `citation_verifier_repair_v0.3`; GPU work
+   stays blocked until then.

@@ -253,3 +253,32 @@ The current portfolio story should present v0.1c as the canonical router repair
 and social v0.1 as a candidate/tradeoff run. The next main work is risk contract
 repair; router social work can resume after adding real-tool-style deep-research
 anchors.
+
+## D-2026-07-02-001 - Report/filing span pack is the v0.3 candidate input, gated on audit
+
+Decision:
+
+Treat `report_and_filing_spans_v0.1` (102 rows across SEC filings, earnings
+transcript pages, public research, and reputable news) plus
+`real_citation_spans_v0.1` (29 rows) as the candidate training input for
+`citation_verifier_repair_v0.3`. Do not train until a label audit pass over
+all 131 rows and a CPU probe under summary recording are complete.
+
+Why:
+
+The pack meets every minimum in the source plan (100+ rows, 30+ SEC, 20+
+transcript, 20+ research/news, all four boundary labels present) and adds the
+boundary traps the earlier synthetic packs lacked: sequential-vs-YoY
+misattribution, segment-vs-total figure swaps, stale-forecast conflicts across
+`published_at` dates, and explicit-absence traps. But all labels are manual
+contract labels from one collection pass and are marked
+`requires_human_audit`; the first collection run already produced one silent
+label error from a duplicated filing paragraph (F-2026-07-02-002), which is
+exactly the class of error an audit pass must catch.
+
+Consequence:
+
+Next citation steps are audit, then CPU probe, then v0.3 definition. Two
+honesty boundaries are recorded in the rows themselves: transcript-tier metric
+bullets are the publisher's call summaries (not verbatim speaker text), and
+paywalled sell-side research remains excluded.

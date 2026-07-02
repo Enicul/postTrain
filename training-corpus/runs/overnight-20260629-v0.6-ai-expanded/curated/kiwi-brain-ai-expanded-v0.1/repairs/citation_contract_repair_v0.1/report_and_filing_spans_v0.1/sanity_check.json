@@ -1,0 +1,29 @@
+{
+  "label_counts": {
+    "contradicts": 26,
+    "insufficient": 13,
+    "partial_support": 15,
+    "verified_support": 48
+  },
+  "passed": true,
+  "problems": [],
+  "row_count": 102,
+  "split_counts": {
+    "dev": 31,
+    "test": 25,
+    "train": 46
+  },
+  "targets": {
+    "all_four_boundary_labels_present": true,
+    "research_news_rows_gte_20": true,
+    "sec_filing_rows_gte_30": true,
+    "total_rows_gte_100": true,
+    "transcript_rows_gte_20": true
+  },
+  "tier_counts": {
+    "company_filing": 51,
+    "earnings_transcript": 25,
+    "public_research": 18,
+    "reputable_news": 8
+  }
+}

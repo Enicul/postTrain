@@ -652,3 +652,73 @@ The honest repair result is weaker but more reliable:
 Status:
 
 Fixed.
+
+## F-2026-07-02-001 - Several planned report/transcript sources were not scriptably reachable
+
+Symptom:
+
+During source scouting for `report_and_filing_spans_v0.1`: Gartner newsroom
+returned 403, an IDC press-release URL returned 404, fool.com transcript
+archive pagination returned the same first page for every page number, and
+DuckDuckGo HTML search returned bot-challenge pages instead of results. No
+Micron FQ3 2026 transcript was present in fool.com monthly sitemaps.
+
+Cause:
+
+Bot protection and dynamic pagination on commercial research/news properties;
+the Micron transcript simply had not been published to the sitemap yet.
+
+Change:
+
+- Dropped Gartner and IDC rather than trying to evade bot protection.
+- Enumerated fool.com monthly sitemaps (2026/04-2026/07) to locate the six
+  large-cap transcripts.
+- Covered Micron through its freshly filed 10-Q instead of a transcript.
+- Recorded all scouting failures in the pack's `failures.json` so the artifact
+  itself carries the fallback evidence.
+
+Effect:
+
+Final run fetched 22/22 sources with 0 fetch or anchor failures.
+
+Remaining risk:
+
+Transcript-tier coverage depends on one publisher (fool.com). Metric bullets
+there are the publisher's structured call summaries, not verbatim speaker
+text; rows record this in `license_note`/`section`, and a future pass should
+add issuer prepared-remarks PDFs as a second transcript source.
+
+## F-2026-07-02-002 - Anchor matched a duplicated filing paragraph missing the labeled fact
+
+Symptom:
+
+In the first `report_and_filing_spans_v0.1` run, the NVDA H20 partial-support
+case anchored on the $4.5 billion charge sentence. That sentence appears twice
+in the 10-K (risk factors and MD&A). First-match anchoring picked the risk
+factor version, which lacks the August 2025 license and $60 million H20
+revenue sentences that the `partial_support` label depended on, silently
+turning the intended label wrong.
+
+Cause:
+
+Filings repeat near-identical paragraphs across sections; first-substring-match
+anchoring does not guarantee the matched block contains every fact the label
+rationale relies on.
+
+Change:
+
+Re-pointed the anchor to the unique MD&A sentence ("We generated approximately
+$60 million in H20 revenue under those licenses") and added a span-content
+audit step that greps each label-critical fact inside the matched span before
+accepting the pack.
+
+Effect:
+
+Rerun matched `nvda_10k_fy2026:block:142` containing both label-relevant
+sentences; the 30-case span-content audit passes.
+
+Remaining risk:
+
+Other collections that anchor into long filings should adopt the same
+label-critical-fact check; substring anchors alone are not sufficient
+provenance for boundary labels.

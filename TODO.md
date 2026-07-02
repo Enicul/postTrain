@@ -43,17 +43,27 @@
   only part of the claim.
 - [x] Add first `insufficient` and `contradicts` rows under the five-way
   support contract.
-- [ ] Expand `real_citation_spans_v0.1` to at least 100 rows with more SEC
+- [x] Expand `real_citation_spans_v0.1` to at least 100 rows with more SEC
   filing paragraphs, earnings transcript spans, and reputable news paragraphs.
-- [ ] Run Claude/human audit on the 29-row `real_citation_spans_v0.1` seed and
-  correct any label boundary issues before training.
+  Done via `report_and_filing_spans_v0.1` (102 rows; 131 combined).
+- [ ] Run Claude/human audit on all 131 real span rows (29-row seed plus
+  `report_and_filing_spans_v0.1`) and correct any label boundary issues before
+  training. Mandatory: F-2026-07-02-002 shows one silent label error already
+  slipped through collection.
 - [x] Add report/filing/public-research source plan:
   `docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md`.
-- [ ] Build `report_and_filing_spans_v0.1` under
+- [x] Build `report_and_filing_spans_v0.1` under
   `citation_contract_repair_v0.1`.
-- [ ] Add at least 30 SEC filing rows and 20 transcript/prepared-remarks rows.
-- [ ] Add public research rows only from public/authorized sources; do not store
-  paywalled sell-side report full text.
+- [x] Add at least 30 SEC filing rows and 20 transcript/prepared-remarks rows.
+  Collected 51 SEC filing rows and 25 transcript rows.
+- [x] Add public research rows only from public/authorized sources; do not store
+  paywalled sell-side report full text. SIA/Deloitte/AP only; Gartner and IDC
+  dropped when they blocked scripted fetch.
+- [ ] Add issuer prepared-remarks (e.g., Micron, NVIDIA CFO commentary) as a
+  second transcript-tier source; current transcript rows come from a single
+  publisher's call-summary pages.
+- [ ] Run a citation CPU probe on the combined audited 131-row pack under
+  summary recording.
 - [ ] Build `citation_verifier_repair_v0.3` from audited real spans instead of
   relying on synthetic train augmentation.
 
@@ -114,12 +124,13 @@
   and `contradicts`.
 - [x] Collect first real official/IR/SEC/press-release/news spans under
   `citation_contract_repair_v0.1`: `real_citation_spans_v0.1`.
-- [ ] Add transcript spans and more reputable news spans under
-  `citation_contract_repair_v0.1`.
-- [ ] Add financial report / SEC filing spans under
-  `citation_contract_repair_v0.1`.
-- [ ] Add public research metadata and short spans with license notes; do not
-  ingest paywalled report text.
+- [x] Add transcript spans and more reputable news spans under
+  `citation_contract_repair_v0.1`. 25 transcript rows and 8 AP news rows in
+  `report_and_filing_spans_v0.1`.
+- [x] Add financial report / SEC filing spans under
+  `citation_contract_repair_v0.1`. 51 rows across 10-K/10-Q/6-K filings.
+- [x] Add public research metadata and short spans with license notes; do not
+  ingest paywalled report text. SIA and Deloitte rows carry `license_note`.
 - [x] Rerun router CPU baseline after contract repair and compare against
   `realistic_holdout_eval_v0.1_20260630T083000Z`.
   Use default summary recording unless a full error-analysis run is explicitly

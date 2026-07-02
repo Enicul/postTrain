@@ -721,3 +721,60 @@ Resume:
 Next main task is risk_contract_repair_v0.1. Router social repair can resume
 later by adding real-tool-style capex/source-support deep-research anchors.
 ```
+
+## CP-2026-07-02-001 - Report and filing spans v0.1
+
+Status:
+
+```text
+collected, sanity-checked, awaiting label audit
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/report_and_filing_spans_v0.1
+```
+
+Command:
+
+```bash
+python3 training-corpus/scripts/collect_report_and_filing_spans_v01.py \
+  --timeout-seconds 45
+```
+
+What exists:
+
+- 102 real spans from 22 sources: 51 SEC filing rows (10-K/10-Q/6-K for NVDA,
+  AMD, MSFT, MU, META, GOOGL, AMZN, AVGO, TSM), 25 earnings-transcript rows
+  (NVDA, AMD, MSFT, GOOGL, AMZN, AVGO), 18 public research rows (SIA x3,
+  Deloitte 2026 outlook), 8 reputable news rows (AP x2);
+- labels: verified_support 48, contradicts 26, partial_support 15,
+  insufficient 13; splits: train 46 / dev 31 / test 25;
+- every row keeps source_url, source_type, source_tier, section,
+  evidence_span, source hash, paragraph hash, published_at, as_of, and
+  license_note; no raw HTML/PDF dumps;
+- `sanity_check.json` shows all plan targets pass;
+- `failures.json` preserves scouting fallbacks (Gartner 403, IDC 404,
+  fool.com pagination, DDG bot wall, missing MU transcript).
+
+Verify:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+python3 - <<'PY'
+import json, pathlib, collections
+base = pathlib.Path("training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/report_and_filing_spans_v0.1")
+rows = [json.loads(line) for line in (base / "spans/all.jsonl").read_text().splitlines() if line.strip()]
+print(len(rows), collections.Counter(r["label"]["support_type"] for r in rows))
+print(json.loads((base / "sanity_check.json").read_text())["targets"])
+PY
+```
+
+Resume:
+
+```text
+Run the label audit over all 131 real span rows (29 seed + 102 new), then a
+citation CPU probe on the combined audited pack under summary recording.
+Only then define citation_verifier_repair_v0.3. GPU work stays blocked.
+```

@@ -1,6 +1,6 @@
 # Progress
 
-Last updated: 2026-07-01
+Last updated: 2026-07-02
 
 ## Current State
 
@@ -167,21 +167,39 @@ news. Paywalled sell-side research should not be stored as full text or used
 directly for training. Social/X/Weibo/XHS content remains market radar and task
 seed material unless supported by auditable sources.
 
-Next target:
+Report/filing span pack checkpoint (2026-07-02):
 
 ```text
-report_and_filing_spans_v0.1
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/citation_contract_repair_v0.1/report_and_filing_spans_v0.1
 ```
 
-Minimum target before `citation_verifier_repair_v0.3`:
+`report_and_filing_spans_v0.1` is now collected and sanity-checked. All plan
+minimums pass:
 
-- 100+ audited rows;
-- 30+ SEC filing rows;
-- 20+ transcript/prepared-remarks rows;
-- 20+ public research or high-quality news rows;
-- balanced `verified_support`, `partial_support`, `insufficient`, and
-  `contradicts` labels;
-- no raw HTML/PDF dumps in Git.
+| Target | Plan minimum | Collected |
+| --- | ---: | ---: |
+| Total rows | 100 | 102 |
+| SEC filing rows (10-K/10-Q/6-K) | 30 | 51 |
+| Earnings transcript rows | 20 | 25 |
+| Public research + reputable news rows | 20 | 26 |
+
+Label distribution: `verified_support` 48, `contradicts` 26,
+`partial_support` 15, `insufficient` 13. Splits: train 46 / dev 31 / test 25.
+Sources: nine tickers of SEC filings (NVDA, AMD, MSFT, MU, META, GOOGL, AMZN,
+AVGO, TSM), six large-cap transcript pages, three SIA releases, the Deloitte
+2026 semiconductor outlook, and two AP articles. Every row keeps source URL,
+source type/tier, section, span, hashes, `published_at`, `as_of`, and a
+license note; no raw HTML/PDF is stored. Scouting fallbacks (Gartner 403,
+IDC 404, fool.com pagination, DDG bot wall, missing MU transcript) are
+preserved in `failures.json` and `FAILURE_LOG.md`.
+
+Decision:
+
+Combined with the 29-row seed there are now 131 real spans under the five-way
+contract. All rows are `requires_human_audit`; the first run produced one
+silent label error from a duplicated filing paragraph (F-2026-07-02-002), so
+the audit pass is mandatory before `citation_verifier_repair_v0.3`. GPU work
+stays blocked.
 
 Portfolio packaging checkpoint:
 
