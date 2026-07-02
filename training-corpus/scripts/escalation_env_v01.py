@@ -49,8 +49,14 @@ LAMBDA_SWEEP = [0.1, 0.3, 0.6]
 class EscalationEnv:
     def __init__(self, env_dir: Path):
         env_dir = Path(env_dir)
-        self.seeds = {s["seed_id"]: s for s in json.loads((env_dir / "env_seeds_v0.1.json").read_text())}
-        self.p = json.loads((env_dir / "outcome_table_v0.1.json").read_text())["p_cheap_success"]
+        # load the latest audited version (v0.3 gate-corrected > v0.1) if present
+        seeds_f = next((env_dir / f"env_seeds_{v}.json" for v in ("v0.3", "v0.1")
+                        if (env_dir / f"env_seeds_{v}.json").exists()))
+        p_f = next((env_dir / f"outcome_table_{v}.json" for v in ("v0.3", "v0.1")
+                    if (env_dir / f"outcome_table_{v}.json").exists()))
+        self.seeds_version = seeds_f.name
+        self.seeds = {s["seed_id"]: s for s in json.loads(seeds_f.read_text())}
+        self.p = json.loads(p_f.read_text())["p_cheap_success"]
         cost = json.loads((env_dir / "cost_table_v0.1.json").read_text())["cost_units"]
         self.c_cheap, self.c_deep, self.c_gate = cost["cheap"], cost["deep"], cost["gate_review"]
 
