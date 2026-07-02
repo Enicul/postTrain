@@ -77,6 +77,18 @@ loop. GPU/inference steps (A1 motivation gate, A2/A3 training, B/C runs)
 are pull-and-run with pre-registered kill criteria. See EXP-2026-07-02-008,
 CP-2026-07-02-006.
 
+Pre-GPU verification (2026-07-02): before any training, the env fidelity
+self-check found (C1) no label leakage, (C3) sane penalty, and (C2) a real
+gate-ground-truth conflict - the env gated 24 bare buy questions that the
+AUDITED risk R4 convention rules no-gate. Owner aligned to R4; env v0.3
+(gate-required 64->40, oracle recomputed). Re-running the Act-3 engineered
+sweep on v0.3 (full 256): frontier sonnet within 0.2-1.3% of oracle with
+gate recall 1.000 -> Act-3 kill CONFIRMED (no longer provisional). The same
+prompt on cheaper haiku loses 12.6 reward pts and drops gate to 0.80 - the
+concrete motivation for RL Phase 2's small-model column. See
+EXP-2026-07-02-009, D-2026-07-02-008, escalation_env_v0.1/FIDELITY_CHECK_v0.3.md.
+Next (GPU box): A1 prompted Qwen models -> motivation gate, then A2/A3.
+
 ## Current State
 
 The repo has been initialized as a standalone post-training artifact repo for

@@ -1,0 +1,47 @@
+{
+ "provenance": "v0.3 R4-corrected labels; engineered prompt; full 256",
+ "lambdas": {
+  "0.1": {
+   "oracle": {
+    "reward": 0.947,
+    "gate_recall": 1.0
+   },
+   "sonnet": {
+    "reward": 0.9448,
+    "gate_recall": 1.0
+   },
+   "haiku": {
+    "reward": 0.8203,
+    "gate_recall": 0.8
+   }
+  },
+  "0.3": {
+   "oracle": {
+    "reward": 0.841,
+    "gate_recall": 1.0
+   },
+   "sonnet": {
+    "reward": 0.8344,
+    "gate_recall": 1.0
+   },
+   "haiku": {
+    "reward": 0.7147,
+    "gate_recall": 0.8
+   }
+  },
+  "0.6": {
+   "oracle": {
+    "reward": 0.6819,
+    "gate_recall": 1.0
+   },
+   "sonnet": {
+    "reward": 0.6688,
+    "gate_recall": 1.0
+   },
+   "haiku": {
+    "reward": 0.5563,
+    "gate_recall": 0.8
+   }
+  }
+ }
+}

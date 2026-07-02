@@ -1344,3 +1344,48 @@ Next:
 
 User pulls training-corpus/scripts/rl to an A100 and runs the README chain
 (A1 -> A2 -> A3). B/C run when their inference backends are available.
+
+## EXP-2026-07-02-009 - Act 3 engineered sweep on v0.3 (full 256, corrected labels)
+
+Goal:
+
+Re-run the frontier engineered sweep on the R4-gate-corrected env (v0.3),
+full 256 coverage, to firm the Act-3 kill and quantify cheaper-model
+degradation as RL Phase 2 motivation.
+
+Metrics (full 256):
+
+| lambda | oracle | sonnet | gap | haiku | gap | haiku gate |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.1 | 0.9470 | 0.9448 (gate 1.0) | +0.002 | 0.8203 | +0.127 | 0.80 |
+| 0.3 | 0.8410 | 0.8344 (gate 1.0) | +0.007 | 0.7147 | +0.126 | 0.80 |
+| 0.6 | 0.6819 | 0.6688 (gate 1.0) | +0.013 | 0.5563 | +0.126 | 0.80 |
+
+Findings:
+
+- Act 3 frontier kill CONFIRMED (was provisional): sonnet within 0.2-1.3% of
+  oracle with gate recall 1.000 on full 256 corrected seeds; GRPO cannot beat
+  a ceiling-matching, perfectly-gating prompt at frontier scale.
+- Cheaper-model signal (RL Phase 2 motivation): identical prompt on haiku
+  loses 12.6 reward points and drops gate recall to 0.80 (misses 20% of
+  required gates). Capability down -> prompted policy worse AND unsafe.
+
+Artifacts:
+
+```text
+.../ladder/act3_env_arms_v0.3/  (preds + scores + REPORT.md)
+```
+
+Decision:
+
+Act 3 closes at rung 3 for the frontier scale (confirmed). The small-model
+column (A1/A2/A3) is now motivated by concrete evidence - a cheaper model
+prompted alone is unsafe on the gate. A1 with real Qwen models runs next on
+the GPU box; SFT/GRPO proceed only if A1 confirms small models fail the
+motivation gate. Gate floor stays in code as the safety backstop.
+
+Next:
+
+GPU box: A1 prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 -> motivation gate;
+then A2/A3 per RL_PHASE2 plan. All three acts now resolved at frontier scale
+without training; RL Phase 2 targets the cost-constrained small-model regime.

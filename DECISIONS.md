@@ -473,3 +473,33 @@ oracle, collapse baseline - and honest measurement said prompting suffices
 three times; here is the proof and the one deliberate code exception."
 Remaining GPU budget is unspent by design. The deferred full engineered
 sweep either confirms the close or re-opens weights with a concrete target.
+
+## D-2026-07-02-008 - Act 3 kill confirmed at frontier; small-model column motivated by evidence
+
+Decision:
+
+On the R4-corrected env (v0.3, full 256), the engineered prompt takes the
+frontier model to within 0.2-1.3% of the analytic reward ceiling with gate
+recall 1.000. The Act-3 frontier kill is CONFIRMED (was provisional). The same
+prompt on a cheaper model (haiku) loses 12.6 reward points and drops gate
+recall to 0.80. RL Phase 2 (small-model SFT/GRPO) is therefore motivated by
+concrete evidence, not assumption: a cost-constrained model prompted alone is
+both worse and unsafe on the safety gate. Training proceeds only if A1
+confirms the actual small models (Qwen) also fail the motivation gate; the
+deterministic gate floor remains the safety backstop regardless.
+
+Why:
+
+The pre-GPU fidelity self-check caught a gate-ground-truth conflict (env gated
+24 bare buy questions that the audited risk R4 convention rules no-gate).
+Correcting to R4 both fixed the ruler and made the cheaper-model gate-failure
+signal correctly measured. This is the ladder doing its job one more time:
+measurement, on an audited ruler, decides where training is and is not
+justified.
+
+Consequence:
+
+All three acts are resolved at frontier scale without weights. RL Phase 2
+targets exactly the regime the ladder left open - the cost-constrained local
+model - with a pre-registered kill (A1) that can still end it honestly if
+small models turn out to be prompt-sufficient and safe.

@@ -58,8 +58,10 @@ Block E - weights (Act 3 escalation router is the sole survivor; hard budget cap
   0.760 (gate .625), naive_sonnet 0.666 (gate .672) on full 256; engineered
   sonnet = ORACLE exactly on batch-1 (64/256, spend-limited). See
   `ladder/act3_env_arms_v0.1`, EXP/D/F -2026-07-02-007/007/008.
-- [ ] DEFERRED (next spend cycle): complete engineered sweep over the
-  remaining 192 seeds to firm the provisional Act-3 kill.
+- [x] Completed engineered sweep on full 256 (env v0.3, R4-corrected labels):
+  Act-3 frontier kill CONFIRMED (sonnet within 0.2-1.3% of oracle, gate 1.0);
+  cheaper haiku 12.6 pts below oracle + gate 0.80 = RL Phase 2 motivation.
+  EXP-2026-07-02-009, D-2026-07-02-008.
 - [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep.
   CONDITIONAL: only if the full engineered sweep breaks the ceiling match on
   the unseen 192 seeds. On current evidence the engineered prompt = oracle,
@@ -81,8 +83,9 @@ Block F - live demo:
   hallucinated-citation hard negative). `scripts/rl/citation_agentic_env.py`.
 - [x] Plan C training-free GRPO loop (rollout -> semantic advantage ->
   no-regression lesson gate). `scripts/rl/training_free_grpo.py`.
-- [ ] A1 (GPU/inference): prompted Qwen-0.5B/1.5B on the env -> motivation
-  gate (kill if within 3 pts of oracle at gate>=0.99).
+- [ ] A1 (GPU/inference): prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 ->
+  motivation gate (kill if within 3 pts of oracle at gate>=0.99). Frontier
+  Claude already mapped: sonnet~=oracle/gate1.0, haiku -12.6pts/gate0.80.
 - [ ] A2/A3 (A100): argmax-SFT then GRPO; kill check GRPO vs SFT.
 - [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
 - [ ] Plan C: run with an inference backend as the control column.
