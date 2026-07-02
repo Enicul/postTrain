@@ -440,3 +440,36 @@ Two acts closed without training, each with a full dissent/decision trail.
 Act 3 (cost-aware escalation router) holds the sole weights budget. The
 ladder's operating notes gain a rule: contested label conventions are
 escalated to a human before lesson-extraction rounds, not after.
+
+## D-2026-07-02-007 - Act 3 provisionally resolved at rung 3; ladder closes without training (pending full sweep)
+
+Decision:
+
+On escalation_env_v0.1 the engineered prompt matches the analytic oracle
+exactly on the 64 observed seeds (all three lambdas, gate recall 1.0). Since
+the oracle is the reward ceiling, GRPO cannot beat a ceiling-matching prompt
+under the pre-registered Act-3 kill criterion. Provisionally, Act 3 is also
+resolved at rung 3 and the three-task ladder closes with zero GPU training.
+This is flagged PROVISIONAL: engineered coverage is 64/256 (spend-limited,
+F-2026-07-02-008); the full engineered sweep is the one deferred step.
+
+Why:
+
+The ladder's job was to let measurement decide where each task stops. The
+Act-3 environment's analytic structure (oracle lambda-invariant below
+lambda=1; cheap-vs-deep boundary at p=0.128) plus the engineered prompt
+reaching the ceiling on the observed seeds means the learnable content
+(inferring p/gate from text) is already captured by a well-specified prompt.
+Building GRPO to chase a ceiling a prompt already hits would be RL-for-RL's-
+sake - the exact failure mode this project set out to avoid.
+
+Consequence:
+
+All three acts resolve without weights, each with a full evidence + dissent
+trail: Act 2 (citation) rung 3, Act 1 (risk) rung 4 with an owner-set code
+safety floor, Act 3 (router) rung 3 provisional. The portfolio narrative is
+"we built the full apparatus to train - environment, cost model, reward,
+oracle, collapse baseline - and honest measurement said prompting suffices
+three times; here is the proof and the one deliberate code exception."
+Remaining GPU budget is unspent by design. The deferred full engineered
+sweep either confirms the close or re-opens weights with a concrete target.

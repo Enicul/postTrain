@@ -54,9 +54,17 @@ Block E - weights (Act 3 escalation router is the sole survivor; hard budget cap
 - [x] Build the Act 3 environment first: done, escalation_env_v0.1
   (EXP-2026-07-02-006). Analytic note: oracle mix is lambda-invariant below
   lambda=1; the learnable quantity is inferring p/gate from text.
-- [ ] Rules arm + prompted arms ON THE ENV (rungs 0/2/3 for Act 3).
-- [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep ->
-  ratio + Pareto deliverable.
+- [x] Rules arm + prompted arms ON THE ENV (rungs 0/2/3 for Act 3). Rules
+  0.760 (gate .625), naive_sonnet 0.666 (gate .672) on full 256; engineered
+  sonnet = ORACLE exactly on batch-1 (64/256, spend-limited). See
+  `ladder/act3_env_arms_v0.1`, EXP/D/F -2026-07-02-007/007/008.
+- [ ] DEFERRED (next spend cycle): complete engineered sweep over the
+  remaining 192 seeds to firm the provisional Act-3 kill.
+- [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep.
+  CONDITIONAL: only if the full engineered sweep breaks the ceiling match on
+  the unseen 192 seeds. On current evidence the engineered prompt = oracle,
+  so GRPO has no room to win and this stays unbuilt (RL-for-RL's-sake
+  avoided). See D-2026-07-02-007.
 
 Block F - live demo:
 

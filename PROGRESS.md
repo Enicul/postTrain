@@ -55,8 +55,17 @@ stratified real seeds, cost table from real trace latencies, stochastic
 p_cheap_success from a 3-framing blind ensemble (74 seeds in the stochastic
 middle), simulator + analytic oracle. Pre-training math shows the oracle mix
 is lambda-invariant below lambda=1, so the learnable quantity is inferring
-p/gate from query text. See EXP-2026-07-02-006. Next: env arms (rules/
-prompted), argmax-SFT oracle baseline, then GRPO under the budget cap.
+p/gate from query text. See EXP-2026-07-02-006.
+
+Act 3 env arms (2026-07-02): the engineered prompt MATCHES THE ANALYTIC
+ORACLE exactly on the 64 observed seeds (all lambdas, gate 1.0). Since the
+oracle is the reward ceiling, GRPO has no room to win -> Act 3 is
+PROVISIONALLY resolved at rung 3 and the ladder closes with ZERO GPU
+training. Provisional because a spend limit truncated engineered coverage to
+64/256 (F-2026-07-02-008); the one deferred step is the full engineered
+sweep. All three acts now resolve without weights, each with a full evidence
++ dissent trail. Remaining GPU budget unspent by design. See
+EXP-2026-07-02-007, D-2026-07-02-007, CP-2026-07-02-005.
 
 ## Current State
 

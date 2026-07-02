@@ -919,3 +919,45 @@ outcome table via Block C K=8 rollouts on train/dev seeds, argmax-label SFT
 collapse baseline, lambda sweep (2-3 values). Then Block E under the hard
 budget cap (24 A100h / ~USD 100 / 5 evenings).
 ```
+
+## CP-2026-07-02-005 - Act 3 env arms; ladder provisionally closed without training
+
+Status:
+
+```text
+complete (provisional kill; full engineered sweep deferred, spend-limited)
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/act3_env_arms_v0.1
+```
+
+What exists:
+
+- rules / naive_sonnet policies scored on full 256; engineered_sonnet on 64
+  (batch 1, spend-limited);
+- env_arm_scores.json (all lambdas), REPORT.md with the ceiling-match finding
+  and honesty limits.
+
+Result:
+
+Full 256: ORACLE 0.955/0.865/0.730 (gate 1.0); rules 0.760 (gate .625);
+naive 0.666 (gate .672). Batch-1 (64): engineered_sonnet = ORACLE exactly at
+all three lambdas, gate 1.0.
+
+Ladder state:
+
+Act 1 KILLED (rung 4, code gate floor), Act 2 KILLED (rung 3), Act 3
+PROVISIONALLY killed (rung 3, 64/256). Zero GPU training used.
+
+Resume:
+
+```text
+Next spend cycle: complete engineered sweep (haiku + sonnet, batches 2-4)
+over the remaining 192 seeds. If the ceiling match holds, close the ladder
+and write the final portfolio narrative. If it breaks, build argmax-SFT +
+GRPO on escalation_env_v0.1 under the budget cap (24 A100h / ~USD 100) with
+the concrete target the break reveals.
+```

@@ -1253,3 +1253,47 @@ Decision:
 Environment frozen as v0.1 with fidelity limits documented (model-derived p,
 always-adequate deep path, small cost sample). Next: rules/prompt arms on
 the env, argmax-SFT oracle-label baseline, then GRPO under the budget cap.
+
+## EXP-2026-07-02-007 - Act 3 env arms: engineered prompt matches the oracle (provisional)
+
+Goal:
+
+Run rungs 0/2/3 (rules / naive / engineered prompt) on escalation_env_v0.1
+before argmax-SFT and GRPO, to see whether prompting already reaches the
+analytic reward ceiling.
+
+Method:
+
+Contingent policies (first + on_fail) scored by exact expected reward; oracle
+= argmax pure strategy on the true p. Subagent arms (haiku/sonnet).
+
+Metrics:
+
+Full 256: rules reward 0.760/0.654/0.494 (gate 0.625), naive_sonnet
+0.666/0.577/0.443 (gate 0.672), ORACLE 0.955/0.865/0.730 (gate 1.0) at
+lambda 0.1/0.3/0.6.
+Batch-1 subset (64, engineered available): engineered_sonnet
+0.954/0.862/0.725 gate 1.0 = ORACLE exactly, at all three lambdas.
+
+Failures / limits:
+
+- SPEND LIMIT hit mid fan-out: engineered coverage is 64/256; haiku arms and
+  engineered batches 2-4 did not return. Full engineered sweep deferred.
+  Recorded as F-2026-07-02-008.
+- "engineered = oracle" is under the v0.1 simulator (model-derived p, shared
+  model family) - a fidelity caveat, not a reality claim.
+
+Decision (provisional):
+
+The engineered prompt reaches the analytic reward ceiling on the observed
+seeds, so GRPO has no room to beat it under the pre-registered kill criterion.
+On available evidence Act 3 is also resolved at rung 3 -> the ladder closes
+with ZERO GPU training. Flagged PROVISIONAL pending the full 256-seed
+engineered sweep. The argmax-SFT collapse baseline and GRPO remain buildable
+if the ceiling match breaks on the unseen 192 seeds.
+
+Next:
+
+Next spend cycle: complete the engineered sweep (haiku + sonnet, batches
+2-4). Either it confirms the three-act "prompting suffices" close, or it
+re-opens the weights question with a concrete target.

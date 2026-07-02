@@ -899,3 +899,36 @@ Contested conventions should be flagged to a human BEFORE a lesson round,
 not after; added to the ladder plan's operating notes. The safety floor now
 lives in versioned code, so future explib iterations cannot silently erode
 it.
+
+## F-2026-07-02-008 - Account spend limit truncated the Act 3 engineered sweep
+
+Symptom:
+
+Six of the sixteen Act-3 env-arm subagents returned "You've hit your monthly
+spend limit" instead of predictions: engineered haiku b2/b3/b4 and engineered
+sonnet b2/b3/b4. Engineered coverage fell to 64/256 (batch 1 only).
+
+Cause:
+
+The day's multi-block fan-out (Block B, rung 4, Act 3 outcome ensemble, Act 3
+arms) consumed the monthly subagent spend budget.
+
+Change:
+
+Scored only certainty-attributed inline arms; filename collisions among
+agent-written disk files made the file-only arms unsafe to attribute, so they
+were excluded rather than guessed. The engineered result is reported on its
+64-seed subset with an explicit provisional flag; the full sweep is deferred
+to the next spend cycle.
+
+Effect:
+
+The full-256 rules/naive/oracle comparison is complete and solid; the
+headline "engineered = oracle" claim is honest but on 25% of the eval.
+
+Remaining risk:
+
+The provisional Act-3 kill could break on the unseen 192 seeds. That is
+tracked as the explicit deferred step; either outcome (confirm the close, or
+re-open weights with a concrete target) is a publishable result. Operational
+lesson: budget the spend envelope before a multi-block subagent day.

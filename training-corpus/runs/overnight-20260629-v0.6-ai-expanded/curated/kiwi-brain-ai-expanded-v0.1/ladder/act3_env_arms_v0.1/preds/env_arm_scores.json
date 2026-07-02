@@ -1,0 +1,144 @@
+{
+ "full_256": {
+  "0.1": {
+   "rules": {
+    "reward": 0.7595,
+    "cost": 0.5301,
+    "success": 1.0,
+    "gate_recall": 0.625
+   },
+   "naive_sonnet": {
+    "reward": 0.6663,
+    "cost": 0.4459,
+    "success": 0.875,
+    "gate_recall": 0.6719
+   },
+   "ORACLE": {
+    "reward": 0.955,
+    "cost": 0.4505,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  },
+  "0.3": {
+   "rules": {
+    "reward": 0.6535,
+    "cost": 0.5301,
+    "success": 1.0,
+    "gate_recall": 0.625
+   },
+   "naive_sonnet": {
+    "reward": 0.5772,
+    "cost": 0.4459,
+    "success": 0.875,
+    "gate_recall": 0.6719
+   },
+   "ORACLE": {
+    "reward": 0.8649,
+    "cost": 0.4505,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  },
+  "0.6": {
+   "rules": {
+    "reward": 0.4944,
+    "cost": 0.5301,
+    "success": 1.0,
+    "gate_recall": 0.625
+   },
+   "naive_sonnet": {
+    "reward": 0.4434,
+    "cost": 0.4459,
+    "success": 0.875,
+    "gate_recall": 0.6719
+   },
+   "ORACLE": {
+    "reward": 0.7297,
+    "cost": 0.4505,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  }
+ },
+ "batch1_64_spendlimited": {
+  "0.1": {
+   "rules": {
+    "reward": 0.8238,
+    "cost": 0.512,
+    "success": 1.0,
+    "gate_recall": 0.6667
+   },
+   "naive_sonnet": {
+    "reward": 0.7734,
+    "cost": 0.3908,
+    "success": 0.875,
+    "gate_recall": 0.8333
+   },
+   "engineered_sonnet": {
+    "reward": 0.9541,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   },
+   "ORACLE": {
+    "reward": 0.9541,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  },
+  "0.3": {
+   "rules": {
+    "reward": 0.7214,
+    "cost": 0.512,
+    "success": 1.0,
+    "gate_recall": 0.6667
+   },
+   "naive_sonnet": {
+    "reward": 0.6953,
+    "cost": 0.3908,
+    "success": 0.875,
+    "gate_recall": 0.8333
+   },
+   "engineered_sonnet": {
+    "reward": 0.8623,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   },
+   "ORACLE": {
+    "reward": 0.8623,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  },
+  "0.6": {
+   "rules": {
+    "reward": 0.5678,
+    "cost": 0.512,
+    "success": 1.0,
+    "gate_recall": 0.6667
+   },
+   "naive_sonnet": {
+    "reward": 0.578,
+    "cost": 0.3908,
+    "success": 0.875,
+    "gate_recall": 0.8333
+   },
+   "engineered_sonnet": {
+    "reward": 0.7247,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   },
+   "ORACLE": {
+    "reward": 0.7247,
+    "cost": 0.4589,
+    "success": 1.0,
+    "gate_recall": 1.0
+   }
+  }
+ }
+}
