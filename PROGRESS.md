@@ -48,7 +48,15 @@ safety for accuracy on the two contested R3 rows; the dispute was escalated
 to the owner, who ruled defense-in-depth (red-line claims always gate),
 implemented in code. Two acts now closed without training; Act 3 is the
 sole weights candidate. See CP-2026-07-02-004, D-2026-07-02-006,
-F-2026-07-02-007. Next: Act 3 escalation environment (Block C).
+F-2026-07-02-007.
+
+Act 3 environment (2026-07-02): escalation_env_v0.1 built and frozen - 256
+stratified real seeds, cost table from real trace latencies, stochastic
+p_cheap_success from a 3-framing blind ensemble (74 seeds in the stochastic
+middle), simulator + analytic oracle. Pre-training math shows the oracle mix
+is lambda-invariant below lambda=1, so the learnable quantity is inferring
+p/gate from query text. See EXP-2026-07-02-006. Next: env arms (rules/
+prompted), argmax-SFT oracle baseline, then GRPO under the budget cap.
 
 ## Current State
 

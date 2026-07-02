@@ -1210,3 +1210,46 @@ Next:
 Act 3 environment: cost table from real traces, cheap-path outcome table
 (Block C K=8 rollouts), argmax-SFT collapse baseline, lambda sweep - then
 Block E within the budget cap.
+
+## EXP-2026-07-02-006 - Escalation environment v0.1 built (Act 3 / Block C)
+
+Goal:
+
+Construct the offline environment for the sole surviving training candidate:
+cost table from real traces, stochastic cheap-path outcome table, simulator
+with reward + analytic oracle.
+
+Artifacts:
+
+```text
+.../kiwi-brain-ai-expanded-v0.1/ladder/escalation_env_v0.1/
+training-corpus/scripts/escalation_env_v01.py
+```
+
+Method / metrics:
+
+- 256 seeds (160/48/48) stratified over 8 routes from router v0.1c; 64
+  gate-required.
+- Cost units from real_tool_trace_pilot_10: cheap 0.128 / deep 1.0 / gate
+  0.15 (median tool-call latency 0.36s, 3 calls/trace).
+- p_cheap_success: 12 blind haiku judgments (3 framings x 4 batches,
+  anonymized ids), 256/256 complete; 74 seeds in the stochastic middle;
+  route-level sanity holds (fast/price 1.0 ... deep/evcheck 0.0).
+- Analytic oracle (pre-training math): for lambda < 1 the strategy mix is
+  lambda-invariant; deep beats cheap-first iff p < 0.128. Oracle mix
+  70/58/64/64, mean expected reward 0.955/0.865/0.730 at lambda 0.1/0.3/0.6.
+
+Failures:
+
+- 6 of 12 outcome agents wrote files instead of returning JSONL; recovered
+  from their output files (format drift, no data loss).
+- Lambda sweep insight doubles as a design correction: the planned
+  "Pareto front over lambda" collapses analytically below lambda=1; the
+  deliverable reframes to "policy quality at inferring p/gate from text",
+  which is the honest learnable quantity.
+
+Decision:
+
+Environment frozen as v0.1 with fidelity limits documented (model-derived p,
+always-adequate deep path, small cost sample). Next: rules/prompt arms on
+the env, argmax-SFT oracle-label baseline, then GRPO under the budget cap.

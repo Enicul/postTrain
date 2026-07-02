@@ -32,8 +32,12 @@ Block B - eval pools (no GPU):
 
 Block C - learning pools:
 
-- [ ] K=8 rollouts on train/dev seeds for all three acts.
-- [ ] Act-3 cheap-path outcome table (byproduct of the cheap arm runs).
+- [x] Act-3 cheap-path outcome table: 3-framing blind haiku ensemble over
+  256 anonymized seeds (K=8 execution rollouts superseded - acts 1-2 were
+  killed before needing learning pools; act 3 uses the ensemble-derived
+  p_cheap_success). `ladder/escalation_env_v0.1/outcome_table_v0.1.json`.
+- [x] Escalation environment v0.1: seeds + real-trace cost table + simulator
+  + analytic oracle (`escalation_env_v01.py`). EXP-2026-07-02-006.
 
 Block D - training-free RL:
 
@@ -47,8 +51,10 @@ Block D - training-free RL:
 
 Block E - weights (Act 3 escalation router is the sole survivor; hard budget cap):
 
-- [ ] Build the Act 3 environment first: cost table from real traces,
-  cheap-path outcome table (Block C rollouts), reward + lambda values.
+- [x] Build the Act 3 environment first: done, escalation_env_v0.1
+  (EXP-2026-07-02-006). Analytic note: oracle mix is lambda-invariant below
+  lambda=1; the learnable quantity is inferring p/gate from text.
+- [ ] Rules arm + prompted arms ON THE ENV (rungs 0/2/3 for Act 3).
 - [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep ->
   ratio + Pareto deliverable.
 

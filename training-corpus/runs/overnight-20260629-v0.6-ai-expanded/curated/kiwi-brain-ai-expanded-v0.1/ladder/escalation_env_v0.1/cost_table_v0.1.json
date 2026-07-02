@@ -1,0 +1,20 @@
+{
+ "provenance": "real_tool_trace_pilot_10: 30 tool calls / 10 traces; latency from started_at/completed_at; tokens ~ chars/4 on observation spans. SMALL SAMPLE - env v0.1 fidelity note.",
+ "tool_call_latency_s_median": 0.361,
+ "obs_span_tokens_mean": 16.9,
+ "cheap_path": {
+  "tool_calls": 1,
+  "latency_s": 0.361,
+  "tokens_est": 167.0
+ },
+ "deep_path": {
+  "tool_calls": 3.0,
+  "latency_s": 3.082,
+  "tokens_est": 1301.0
+ },
+ "cost_units": {
+  "cheap": 0.128,
+  "deep": 1.0,
+  "gate_review": 0.15
+ }
+}
