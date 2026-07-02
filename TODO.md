@@ -10,8 +10,13 @@ Block A - fix the rulers (blocks every LLM arm):
   annotation + adjudication: 126 double-confirmed, 3 corrected (2.3%),
   conventions C1-C3 pinned. Optional cheap insurance: human spot-check of
   the 5 adjudicated rows.
-- [ ] A2: Build `risk_contract_repair_v0.1b` from real long-research
-  medium-risk rows; freeze the repaired risk holdout.
+- [x] A2: Build `risk_contract_repair_v0.1b` from real long-research
+  medium-risk rows; freeze the repaired risk holdout. Done 2026-07-02:
+  256 real rows normalized (three families), 90-row eval blind-audited
+  (17 corrected, 18.9%; conventions R1-R5 pinned), train rule-synced;
+  probe medium recall 0.0 -> 1.00, high/gate recall 0.64-0.73 is the
+  measured headroom for the prompt arms. Optional: human spot-check of
+  the 2 R3 keep-decisions.
 
 Block B - eval pools (no GPU):
 
@@ -119,9 +124,10 @@ Block F - live demo:
 - [x] Build `risk_contract_repair_v0.1` with `medium`, human-gate,
   overconfidence, position sizing, panic selling, and missing-risk cases.
 - [x] Run risk-only CPU baseline and realistic holdout under summary recording.
-- [ ] Build `risk_contract_repair_v0.1b` with real long-research medium-risk
+- [x] Build `risk_contract_repair_v0.1b` with real long-research medium-risk
   examples. v0.1 added the `medium` schema but collapsed on realistic medium
-  holdouts.
+  holdouts. Repaired 2026-07-02: medium recall 1.00 on the audited real
+  eval; see CP-2026-07-02-003.
 
 ## P1 - Router Boundary Repair
 

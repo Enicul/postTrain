@@ -22,8 +22,16 @@ Block A progress:
   by blind double annotation + adjudication, 3 labels corrected (2.3%), zero
   test-split changes, conventions C1-C3 pinned. See CP-2026-07-02-002 and
   D-2026-07-02-003.
-- A2 next: build `risk_contract_repair_v0.1b` from real long-research
-  medium-risk rows and freeze the repaired risk holdout.
+- A2 done (2026-07-02): `risk_contract_repair_v0.1b` built and
+  `risk_real_eval_v1` frozen - 256 real rows normalized from three
+  families, 90-row eval blind-audited (17 corrected, 18.9%, conventions
+  R1-R5), train rule-synced. Probe: medium recall 0.0 -> 1.00; high/gate
+  recall 0.64-0.73 remains as the measured gap for prompt arms. See
+  CP-2026-07-02-003 and D-2026-07-02-004.
+
+Block A is complete. Next: Block B - hand-rules and naive/engineered prompt
+arms on the two frozen rulers plus router holdouts, temperature 0, per-episode
+cost logging under the rollout_store_v0.1 schema.
 
 ## Current State
 

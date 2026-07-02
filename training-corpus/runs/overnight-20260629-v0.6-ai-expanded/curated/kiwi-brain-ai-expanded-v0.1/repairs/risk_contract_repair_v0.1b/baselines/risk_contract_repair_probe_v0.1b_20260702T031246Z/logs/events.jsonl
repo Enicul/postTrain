@@ -1,0 +1,12 @@
+{"event": "run_start", "run_id": "risk_contract_repair_probe_v0.1b_20260702T031246Z", "selected": ["risk_reviewer"], "ts": "2026-07-02T03:12:47Z"}
+{"dataset": "risk_reviewer", "event": "dataset_start", "ts": "2026-07-02T03:12:47Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1b/repaired_datasets/risk_reviewer/train.jsonl", "rows": 8395, "split": "train", "ts": "2026-07-02T03:12:47Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1b/repaired_datasets/risk_reviewer/dev.jsonl", "rows": 38, "split": "dev", "ts": "2026-07-02T03:12:47Z"}
+{"dataset": "risk_reviewer", "event": "loaded_split", "file_path": "/Users/lucine/Documents/Job/projects/postTrain/training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1b/repaired_datasets/risk_reviewer/test.jsonl", "rows": 52, "split": "test", "ts": "2026-07-02T03:12:47Z"}
+{"dataset": "risk_reviewer", "event": "train_start", "labels": ["high", "low", "medium"], "train_rows": 8395, "ts": "2026-07-02T03:12:48Z"}
+{"dataset": "risk_reviewer", "event": "train_complete", "model_class": "LogisticRegression", "ts": "2026-07-02T03:12:51Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.9974, "macro_f1": 0.978, "weighted_f1": 0.9975}, "split": "train", "ts": "2026-07-02T03:12:53Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.8421, "macro_f1": 0.7764, "weighted_f1": 0.8307}, "split": "dev", "ts": "2026-07-02T03:12:53Z"}
+{"dataset": "risk_reviewer", "event": "eval_complete", "metrics": {"accuracy": 0.8269, "macro_f1": 0.7537, "weighted_f1": 0.8187}, "split": "test", "ts": "2026-07-02T03:12:53Z"}
+{"dataset": "risk_reviewer", "event": "dataset_complete", "ts": "2026-07-02T03:12:53Z"}
+{"completed": ["risk_reviewer"], "event": "run_complete", "run_id": "risk_contract_repair_probe_v0.1b_20260702T031246Z", "ts": "2026-07-02T03:12:53Z"}

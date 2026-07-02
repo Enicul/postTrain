@@ -757,3 +757,73 @@ This was an AI audit, recorded as such - a human spot-check of the 5
 adjudicated rows is cheap insurance before Act 2 conclusions go into the
 portfolio report. C2 exists because block extraction drops section headers;
 the next collector version should carry them.
+
+## F-2026-07-02-004 - Risk normalizer silently rendered 47 audit rows empty
+
+Symptom:
+
+In the first risk audit round, both blind auditors labeled 47 golden
+`risk_syn_*` eval rows low-confidence "empty row with no claim, evidence, or
+verdict".
+
+Cause:
+
+golden risk rows have two input schemas: 25 `risk_strict_*` rows use
+claim/evidence_summary/verdict, and 156 `risk_syn_*` rows use
+user_query/draft_memo/symbol. The normalizer dispatched all golden rows to
+the claim schema, so syn rows rendered with every displayed field null.
+
+Change:
+
+Added schema dispatch on `input.claim` presence; regenerated batches;
+re-audited the 47 syn rows with two fresh blind passes (which then produced
+substantive, internally consistent votes).
+
+Effect:
+
+All 90 eval rows audited on real content. Bonus: the blind-audit protocol
+doubles as a harness smoke test - auditors reporting "empty input" is a
+render-bug detector.
+
+Remaining risk:
+
+Any future family added to the risk eval needs a normalizer case plus an
+auditor-visible render; the audit protocol should keep treating "auditors
+call rows empty" as a build-breaking signal.
+
+## F-2026-07-02-005 - Risk gold labels were internally inconsistent across generators
+
+Symptom:
+
+Blind double annotation of the 90-row risk eval produced a 18.9% correction
+rate (vs 2.3% for citation), concentrated in three generator-specific
+clusters: (1) v0.1-style `missing_bear_case` rows labeled medium/no-gate
+although v0.1's own contract lists "ignoring bearish evidence" as high; (2)
+`normal_research` rows labeled low while user-simulation rows with the same
+request shape were labeled medium; (3) user-simulation definitional/lookup
+rows labeled medium to encode process blockers rather than decision risk.
+
+Cause:
+
+Three generators encoded three different implicit risk semantics
+(evidence-quality risk, process-blocker presence, decision risk), and no
+written convention forced them to agree.
+
+Change:
+
+Conventions R1-R5 pinned (decision-risk semantic, gate definition,
+evidence-review rates-the-claim, research-requests-are-medium, mechanical
+train sync). 17 eval rows corrected with full vote provenance; 51 train rows
+synced by the same rules; 2 rows kept against 2/2 auditor votes under R3
+with logged rationale.
+
+Effect:
+
+One coherent contract across 256 real rows; the eval distribution moved to
+high 33 / medium 48 / low 9 with 45 gated rows.
+
+Remaining risk:
+
+R3 (rate the claim, not the review) and R4 (research requests are medium)
+are judgment calls a human reviewer may want to sanity-check; both are
+isolated in the adjudication record for cheap review.

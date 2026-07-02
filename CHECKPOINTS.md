@@ -821,3 +821,61 @@ Block A2: build risk_contract_repair_v0.1b from real long-research
 medium-risk rows and freeze the repaired risk holdout. Then Block B
 (rules/naive/engineered prompt arms on frozen holdouts).
 ```
+
+## CP-2026-07-02-003 - Risk contract repair v0.1b + frozen risk eval
+
+Status:
+
+```text
+complete; risk_real_eval_v1 frozen
+```
+
+Path:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1b
+```
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/build_risk_contract_repair_v01b.py --audit-dir <audit dir>
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir .../risk_contract_repair_v0.1b/repaired_datasets \
+  --out-root .../risk_contract_repair_v0.1b/baselines \
+  --run-id risk_contract_repair_probe_v0.1b_20260702T031246Z \
+  --datasets risk_reviewer
+```
+
+What exists:
+
+- `risk_real_eval_v1/rows/{dev,test,all}.jsonl`: 90 audited real rows with
+  per-row blind votes and adjudication notes; conventions R1-R5 in
+  `risk_real_eval_v1/audit/risk_adjudications.json`;
+- `repaired_datasets/risk_reviewer/`: train 8,395 (8,229 v0.1 synthetic +
+  166 normalized real, 51 rule-synced), dev/test = the audited real rows;
+- probe run `risk_contract_repair_probe_v0.1b_20260702T031246Z`: dev/test
+  accuracy 0.84/0.83, medium recall 1.00/1.00 (v0.1: 0.0), high/gate recall
+  0.64/0.73, majority 0.42.
+
+Verify:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain
+python3 - <<'PY'
+import json, pathlib, collections
+base = pathlib.Path("training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/repairs/risk_contract_repair_v0.1b")
+rows = [json.loads(l) for l in (base/"risk_real_eval_v1/rows/all.jsonl").read_text().splitlines()]
+print(len(rows), collections.Counter(r["label"]["risk_level"] for r in rows))
+print(collections.Counter(r["audit"]["status"] for r in rows))
+PY
+```
+
+Resume:
+
+```text
+Block A is complete (citation_real_eval_v1 + risk_real_eval_v1 frozen).
+Next: Block B - hand-rules arm and naive/engineered prompt arms on the
+frozen rulers, temperature 0, cost logged per episode under the
+rollout_store_v0.1 schema.
+```

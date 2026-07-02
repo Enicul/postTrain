@@ -346,3 +346,37 @@ Consequence:
 Act 2 measurement can start once Block B runs; the audit trail (two vote
 files + adjudications) ships inside the pack; future span collections must
 follow C1-C3 or propose a contract revision here first.
+
+## D-2026-07-02-004 - Freeze risk_real_eval_v1 under conventions R1-R5
+
+Decision:
+
+Freeze the audited 90-row real risk eval (`risk_contract_repair_v0.1b/
+risk_real_eval_v1`; dev 38 / test 52; high 33 / medium 48 / low 9; 45 gated)
+as the Act 1 ruler, under pinned conventions R1-R5: decision-risk semantic
+with an explicit red-line list, gate definition, evidence-review rows rate
+the acted-on claim (R3), single-name research requests are medium (R4), and
+provenance-mechanical train sync (R5). Test is untouchable; prompts and
+experience libraries iterate on train/dev only.
+
+Why:
+
+The old risk rulers were unusable for ladder judging: the 25-row
+long-research holdout was degenerate (all medium, all gated - an
+always-medium arm scores 1.0), and blind double annotation showed the three
+real generators encoded three different risk semantics (18.9% eval
+correction rate), including v0.1 synthetic labels that violated v0.1's own
+documented boundary. A ruler that disagrees with itself cannot produce the
+honest per-arm comparison the ladder exists for.
+
+Consequence:
+
+- `risk_contract_repair_v0.1b` replaces v0.1 as the canonical risk repair;
+  v0.1 remains historical evidence.
+- Probe evidence: medium transfer repaired (0.0 -> 1.00 recall on audited
+  real rows), while high/gate recall 0.64-0.73 shows the sklearn rung is not
+  a safe gate - the measured headroom for the rules/prompt/LLM arms.
+- Two adjudications kept gold against 2/2 auditor votes under R3; both are
+  flagged for cheap human spot-check alongside the citation audit's five.
+- Any new risk data family must pass through the normalizer plus a blind
+  audit round before touching the eval.

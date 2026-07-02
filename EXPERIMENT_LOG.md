@@ -1046,3 +1046,71 @@ Next:
 
 Block A2: `risk_contract_repair_v0.1b` from real long-research medium rows.
 Then Block B prompted-LLM eval arms.
+
+## EXP-2026-07-02-003 - Risk contract repair v0.1b with audited real eval
+
+Goal:
+
+Block A2: repair the risk ruler (fractured semantics, degenerate 25-row
+all-medium holdout) and the v0.1 medium-transfer failure in one pass.
+
+Data:
+
+256 real rows normalized from three families: golden_v0.1 risk (181),
+long_research_repair_25 (25), user_simulation_trace_pilot_50 (50).
+Train adds 166 real rows to v0.1's 8,229 synthetic rows.
+
+Method:
+
+Blind double annotation of all 90 eval rows (labels hidden; golden syn rows
+re-audited after a normalizer bug first rendered them empty), adjudication,
+conventions R1-R5 pinned, train synced via provenance-mechanical rules.
+
+Commands:
+
+```bash
+python3 training-corpus/scripts/build_risk_contract_repair_v01b.py --audit-dir <audit dir>
+python3 training-corpus/scripts/train_specialist_baselines.py \
+  --data-dir .../repairs/risk_contract_repair_v0.1b/repaired_datasets \
+  --out-root .../repairs/risk_contract_repair_v0.1b/baselines \
+  --run-id risk_contract_repair_probe_v0.1b_20260702T031246Z \
+  --datasets risk_reviewer
+```
+
+Metrics:
+
+| Item | Value |
+| --- | ---: |
+| Eval rows audited | 90 |
+| Double-confirmed | 73 |
+| Corrected | 17 (18.9%) |
+| Gold kept against 2/2 auditors (R3) | 2 |
+| Train rows rule-synced | 51 |
+| Probe dev acc / macro F1 | 0.8421 / 0.7764 |
+| Probe test acc / macro F1 | 0.8269 / 0.7537 |
+| Medium recall dev / test | 1.00 / 1.00 (v0.1: 0.0) |
+| High (gated) recall dev / test | 0.64 / 0.73 |
+| Majority accuracy | 0.42 |
+
+Failures:
+
+- Normalizer family-dispatch bug rendered 47 golden syn eval rows empty in
+  the first audit round; caught by auditors' "empty row" notes (F-2026-07-02-004).
+- v0.1's synthetic labels violated v0.1's own documented boundary on
+  missing_bear_case rows (F-2026-07-02-005).
+- v0.1's 0.0 on long-research medium was partly a featurization gap
+  (memo.* fields never featurized), not pure distribution shift.
+
+Decision:
+
+Medium transfer is repaired (0.0 -> 1.00 recall on audited real rows). The
+sklearn rung is NOT a safe gate: high/gate recall 0.64-0.73, missing Chinese
+red-line templates and R3 evidence red lines - that measured gap is exactly
+what the ladder's rules/prompt arms must close (Act 1 kill criterion: gate
+recall >= 0.99). `risk_real_eval_v1` (90 rows, high 33 / medium 48 / low 9)
+is the frozen Act 1 ruler.
+
+Next:
+
+Block B: rules arm + naive/engineered prompt arms on the two frozen rulers
+(risk_real_eval_v1, citation_real_eval_v1) plus the router holdouts.

@@ -1,0 +1,259 @@
+{
+  "audit": {
+    "correction_rate": 0.1889,
+    "eval_confirmed": 73,
+    "eval_corrected": 17,
+    "eval_rows": 90,
+    "gold_kept_against_auditors": [
+      "risk_strict_risk_strict_trace_017_spacex_supply_chain_social_claim",
+      "risk_strict_risk_strict_trace_006_ai_supply_chain_tenbagger_basket"
+    ],
+    "rule_counts_all_splits": {
+      "bespoke_adjudication": 1,
+      "rule_missing_bear_case_high": 26,
+      "rule_normal_research_medium": 26,
+      "rule_us_fast_answer_low": 8,
+      "rule_us_news_retrieval_low": 7
+    }
+  },
+  "audit_date": "2026-07-02",
+  "conventions": "R1-R5 pinned in risk_real_eval_v1/audit/risk_adjudications.json",
+  "created_at": "2026-07-02T03:12:32Z",
+  "environment": {
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "eval_corrections": [
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "high"
+      },
+      "rule": "bespoke_adjudication",
+      "sample_id": "risk_strict_risk_strict_trace_002_european_photonics_basket",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_577971d03e4f2237",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_0fbabd764fb09044",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_97d11042f53faa1f",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_missing_bear_case_high",
+      "sample_id": "risk_syn_8a464dec372ffa6b",
+      "to": {
+        "requires_human_gate": true,
+        "risk_level": "high"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_cca18208240f1813",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_missing_bear_case_high",
+      "sample_id": "risk_syn_c97f3bd5e8f8e95f",
+      "to": {
+        "requires_human_gate": true,
+        "risk_level": "high"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_missing_bear_case_high",
+      "sample_id": "risk_syn_2da50e59650ca960",
+      "to": {
+        "requires_human_gate": true,
+        "risk_level": "high"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_missing_bear_case_high",
+      "sample_id": "risk_syn_c40ee3f2e593fe10",
+      "to": {
+        "requires_human_gate": true,
+        "risk_level": "high"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_dc34a6a35f21b847",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_missing_bear_case_high",
+      "sample_id": "risk_syn_bf6d0d41ff155fc2",
+      "to": {
+        "requires_human_gate": true,
+        "risk_level": "high"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      },
+      "rule": "rule_normal_research_medium",
+      "sample_id": "risk_syn_584e242e71380738",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_us_news_retrieval_low",
+      "sample_id": "risk_user_sim_21a7ba4636a07d78",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_us_fast_answer_low",
+      "sample_id": "risk_user_sim_2dd0f21c51b34988",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_us_fast_answer_low",
+      "sample_id": "risk_user_sim_3eb5de8dfa203f6b",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_us_fast_answer_low",
+      "sample_id": "risk_user_sim_49d4197fad97a21a",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      }
+    },
+    {
+      "from": {
+        "requires_human_gate": false,
+        "risk_level": "medium"
+      },
+      "rule": "rule_us_fast_answer_low",
+      "sample_id": "risk_user_sim_603336c547bd31a6",
+      "to": {
+        "requires_human_gate": false,
+        "risk_level": "low"
+      }
+    }
+  ],
+  "eval_gate_true": 45,
+  "eval_id": "risk_real_eval_v1",
+  "eval_label_dist": {
+    "high": 33,
+    "low": 9,
+    "medium": 48
+  },
+  "frozen": {
+    "eval_splits": [
+      "dev",
+      "test"
+    ],
+    "rule": "test untouchable; prompts/experience libraries iterate on train/dev only; changes require a new eval id"
+  },
+  "git": {
+    "branch": "main",
+    "commit": "c7a26245fe8c2a3a002cfa4ab8a93f47a3c048cf"
+  },
+  "real_rows": 256,
+  "repair_id": "risk_contract_repair_v0.1b",
+  "train_real_label_dist": {
+    "high": 82,
+    "low": 16,
+    "medium": 68
+  },
+  "train_rows_real_added": 166,
+  "train_rows_total": 8395
+}
