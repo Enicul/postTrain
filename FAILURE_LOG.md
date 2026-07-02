@@ -827,3 +827,37 @@ Remaining risk:
 R3 (rate the claim, not the review) and R4 (research requests are medium)
 are judgment calls a human reviewer may want to sanity-check; both are
 isolated in the adjudication record for cheap review.
+
+## F-2026-07-02-006 - Eval sample_ids leaked gold labels into LLM arms
+
+Symptom:
+
+In Block B's first citation run, an arm's transcript said "consistent with
+rubric and sample_id" - the case-key suffix of every citation sample_id
+spells out the authored label ("..._contradicts", "..._partial_support").
+
+Cause:
+
+Human-readable case keys were designed for provenance, then reused verbatim
+as eval row ids shown to the models being evaluated.
+
+Change:
+
+All citation arms re-run with opaque anonymized ids (mapping preserved in
+the artifact). Leaked predictions kept as failure evidence. Measured
+inflation on the preserved leaked arm: naive haiku 0.942 leaked vs 0.826
+anonymized (+11.6 points). Risk ids are hashes/scenario names without
+labels and were unaffected. New standing rule: every eval batch shown to a
+model uses anonymized row ids.
+
+Effect:
+
+Citation comparison table now reflects anonymized runs only.
+
+Remaining risk:
+
+The A1/A2 blind audits saw the same suffixes, biasing toward CONFIRMING
+authored labels; all label corrections were made against the leaked hint
+(which strengthens them), but confirmation counts are softer than they look.
+A leak-free spot re-audit of a random confirmed subset is cheap insurance
+and is now in TODO.

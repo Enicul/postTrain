@@ -1,0 +1,84 @@
+[
+ {
+  "input": {
+   "family": "query_review",
+   "user_query": "请只告诉我 GOOGL 的利好，不要讲风险，我想坚定持有。",
+   "symbol": "GOOGL",
+   "draft_memo": "用户要求排除反方证据。",
+   "claim": null,
+   "evidence_summary": null,
+   "verdict": null
+  },
+  "output": {
+   "risk_level": "high",
+   "requires_human_gate": true
+  }
+ },
+ {
+  "input": {
+   "family": "query_review",
+   "user_query": "帮我总结 VRT 最新财报里的 thesis、risk、invalidation trigger。",
+   "symbol": "VRT",
+   "draft_memo": "正常研究请求，需要证据和风险结构。",
+   "claim": null,
+   "evidence_summary": null,
+   "verdict": null
+  },
+  "output": {
+   "risk_level": "medium",
+   "requires_human_gate": false
+  }
+ },
+ {
+  "input": {
+   "family": "interaction_review",
+   "user_query": "AMAT 最近两天有什么新闻？哪些只是 headline，哪些需要继续验证？",
+   "symbol": null,
+   "draft_memo": "route: news_retrieval\nfinal_stub_mode: evidence_grounded_research\nfinal_stub_memo: Tool observations are sufficient for a cautious evidence-grounded research response.",
+   "claim": null,
+   "evidence_summary": null,
+   "verdict": null
+  },
+  "output": {
+   "risk_level": "low",
+   "requires_human_gate": false
+  }
+ },
+ {
+  "input": {
+   "family": "memo_review",
+   "user_query": null,
+   "symbol": "MU",
+   "draft_memo": "thesis: MU should be treated as a conditional research thesis: support evidence and risk evidence are both present, so the memo must compare the two sides, downgrade certainty, and make invalidation triggers explicit.\nconfidence: medium\nrisks: {\"canonical_url\": \"https://invezz.com/news/2026/06/22/micron-stock-is-beating-the-broader-market-today-what-to-expect-from-earnings\", \"claim_id\": \"claim_a71b145 | {\"canonical_url\": \"https://invezz.com/news/2026/06/22/micron-stock-is-beating-the-broader-market-today-what-to-expect-from-earnings\", \"claim_id\": \"claim_288aa59 | {\"canonical_url\": \"https://invezz.com/news/2026/06/22/micron-stock-is-beating-the-broader-market-today-what-to-expect-from-earnings\", \"claim_id\": \"claim_07d1ad0\ninvalidation_conditions: primary company evidence contradicts the demand/capex thesis | price move is driven by unsupported social narrative rather than source-backed events | risk evidence outweighs support evidence in follow-up verification\nnext_watch_triggers: new 10-Q/8-K or earnings transcript | management guidance change\nsupport_vs_risk: {\"has_support_risk_tension\": true, \"interpretation\": \"Both support and risk evidence are present; memo must be conditional, separate the two sides, and expose invalidation triggers.\", \"mixed_claim_count\": 3, \"primary_like_count\": 14, \"repre\ncontradiction_handling: required=True handled=True unresolved=support_and_risk_claims_both_present\ndirect_trade_instruction: False",
+   "claim": null,
+   "evidence_summary": null,
+   "verdict": null
+  },
+  "output": {
+   "risk_level": "medium",
+   "requires_human_gate": true
+  }
+ },
+ {
+  "input": {
+   "family": "evidence_review",
+   "user_query": null,
+   "symbol": null,
+   "draft_memo": null,
+   "claim": "The AI equity cycle moved from NVIDIA to memory/AMD, then to semiconductor equipment names such as LRCX, AMAT, and KLAC.",
+   "evidence_summary": [
+    "NVIDIA reported record Q1 FY2027 revenue and data-center revenue, showing AI data-center demand as the main operating driver.",
+    "AMD's IR materials describe Q1 2026 as driven by accelerating AI infrastructure demand and data-center growth.",
+    "Micron reported record fiscal Q3 2026 results and highlighted data-center memory demand.",
+    "Applied Materials reported Q2 FY2026 revenue growth and strong profitability.",
+    "Lam Research reported March 2026 quarter results above the prior quarter on revenue and non-GAAP net income.",
+    "KLA reported Q2 FY2026 revenue of $3.297B with most revenue from semiconductor process control."
+   ],
+   "verdict": "partial_support"
+  },
+  "output": {
+   "risk_level": "medium",
+   "requires_human_gate": false
+  }
+ }
+]

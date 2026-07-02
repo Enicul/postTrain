@@ -20,10 +20,15 @@ Block A - fix the rulers (blocks every LLM arm):
 
 Block B - eval pools (no GPU):
 
-- [ ] Hand-rules arm (rung 0) for risk and escalation-router acts.
-- [ ] LLM naive-prompt and engineered-prompt arms (rungs 2-3) for all three
-  acts on frozen holdouts, temperature 0, cost logged per episode under the
-  `rollout_store_v0.1` schema.
+- [x] Hand-rules arm (rung 0) for risk and citation; escalation-router rules
+  arm waits for the Act 3 environment.
+- [x] LLM naive-prompt and engineered-prompt arms (rungs 2-3) for risk and
+  citation on the frozen rulers via Claude subagents (haiku/sonnet), token
+  cost proxies logged. Act 2 killed at rung 3 (prompted haiku 0.957); Act 1
+  gate recall 1.000 but accuracy 0.811 < 0.90 -> continues to rung 4. See
+  `ladder/blockb_eval_arms_v0.1` and D-2026-07-02-005.
+- [ ] Leak-free spot re-audit of a random confirmed subset of both rulers
+  (anonymized ids), cheap insurance after F-2026-07-02-006.
 
 Block C - learning pools:
 

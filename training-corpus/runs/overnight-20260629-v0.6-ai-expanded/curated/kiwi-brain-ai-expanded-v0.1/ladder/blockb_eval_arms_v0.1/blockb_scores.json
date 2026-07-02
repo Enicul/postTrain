@@ -1,0 +1,78 @@
+{
+ "risk": {
+  "rules": {
+   "acc": 0.8111,
+   "acc_confirmed_only": 0.7671,
+   "gate_recall": 0.7333,
+   "n": 90
+  },
+  "naive_haiku": {
+   "acc": 0.6667,
+   "acc_confirmed_only": 0.6712,
+   "gate_recall": 0.8667,
+   "n": 90
+  },
+  "naive_sonnet": {
+   "acc": 0.7333,
+   "acc_confirmed_only": 0.7534,
+   "gate_recall": 1.0,
+   "n": 90
+  },
+  "prompted_haiku": {
+   "acc": 0.8,
+   "acc_confirmed_only": 0.7534,
+   "gate_recall": 1.0,
+   "n": 90
+  },
+  "prompted_sonnet": {
+   "acc": 0.8111,
+   "acc_confirmed_only": 0.7671,
+   "gate_recall": 1.0,
+   "n": 90
+  }
+ },
+ "citation": {
+  "rules_lexical": {
+   "acc": 0.4493,
+   "acc_confirmed_only": 0.4478,
+   "macro_recall": 0.5413,
+   "missing": 0,
+   "n": 69
+  },
+  "naive_haiku": {
+   "acc": 0.8261,
+   "acc_confirmed_only": 0.8358,
+   "macro_recall": 0.8667,
+   "missing": 0,
+   "n": 69
+  },
+  "naive_sonnet": {
+   "acc": 0.8696,
+   "acc_confirmed_only": 0.8657,
+   "macro_recall": 0.8544,
+   "missing": 2,
+   "n": 69
+  },
+  "prompted_haiku": {
+   "acc": 0.9565,
+   "acc_confirmed_only": 0.9552,
+   "macro_recall": 0.925,
+   "missing": 0,
+   "n": 69
+  },
+  "prompted_sonnet": {
+   "acc": 0.8986,
+   "acc_confirmed_only": 0.8955,
+   "macro_recall": 0.8839,
+   "missing": 0,
+   "n": 69
+  },
+  "LEAKED_naive_haiku": {
+   "acc": 0.942,
+   "acc_confirmed_only": 0.9552,
+   "macro_recall": 0.9169,
+   "missing": 0,
+   "n": 69
+  }
+ }
+}

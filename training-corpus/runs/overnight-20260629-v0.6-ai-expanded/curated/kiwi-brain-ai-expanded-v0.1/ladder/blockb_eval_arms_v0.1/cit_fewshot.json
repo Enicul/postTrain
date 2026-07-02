@@ -1,0 +1,57 @@
+[
+ {
+  "input": {
+   "claim": "AMD reported first-quarter 2026 revenue of $10.3 billion.",
+   "evidence_span": "SANTA CLARA, Calif., May 05, 2026 (GLOBE NEWSWIRE) -- AMD (NASDAQ:AMD) today announced financial results for the first quarter of 2026. First quarter revenue was $10.3 billion, gross margin was 53%, operating income was $1.5 billion, net income was $1.4 billion and diluted earnings per share was $0.84. On a non-GAAP (*) basis, gross margin was 55%, operating income was $2.5 billion, net income was $2.3 billion and diluted earnings per share was $1.37.",
+   "source_type": "press_release"
+  },
+  "output": {
+   "support_type": "verified_support"
+  },
+  "why": "The paragraph directly states the first-quarter 2026 revenue figure."
+ },
+ {
+  "input": {
+   "claim": "Microsoft's quarterly revenue increased $12.8 billion, or 18%, driven by growth in Microsoft Cloud.",
+   "evidence_span": "Revenue increased $12.8 billion or 18% driven by growth in Microsoft Cloud. Intelligent Cloud revenue increased driven by Azure. Productivity and Business Processes revenue increased driven by Microsoft 365 Commercial cloud. More Personal Computing revenue decreased with lower hardware sales across Devices and Gaming, offset in part by growth in Search advertising.",
+   "source_type": "10-Q"
+  },
+  "output": {
+   "support_type": "partial_support"
+  },
+  "why": "The 10-Q contains near-identical quarterly ($12.8B) and nine-month ($36.5B) paragraphs and the span does not state the period; under C2 the quarterly binding is unverifiable from the span, so the row is capped at partial_support. Must use the same ruler as its trap counterpart 0020 (insufficient)."
+ },
+ {
+  "input": {
+   "claim": "AMD guided second-quarter 2026 revenue to approximately $11.2 billion.",
+   "evidence_span": "Data Center segment revenue was $5.8 billion, up 57% year-over-year, driven by strong demand for AMD EPYC™ processors and the continued ramp of AMD Instinct™ GPU shipments.",
+   "source_type": "press_release"
+  },
+  "output": {
+   "support_type": "insufficient"
+  },
+  "why": "The span is about Data Center segment results, not second-quarter guidance."
+ },
+ {
+  "input": {
+   "claim": "Japan posted the strongest year-to-year semiconductor sales growth in March 2026.",
+   "evidence_span": "Regionally, year-to-year sales in March were up in the Asia Pacific/All Other (108.5%), the Americas (83.1%), China (74.8%), Europe (46.5%), and Japan (7.4%). Month-to-month sales in March increased in the Americas (13.3%), China (12.7%), Asia Pacific/All Other (9.8%), Europe (8.4%), and Japan (7.1%).",
+   "source_type": "public_research"
+  },
+  "output": {
+   "support_type": "contradicts"
+  },
+  "why": "The span shows Japan grew 7.4% year to year, the slowest of the listed regions, not the strongest."
+ },
+ {
+  "input": {
+   "claim": "Micron's total revenue for the third quarter of fiscal 2026 increased 74% compared to the second quarter of fiscal 2026.",
+   "evidence_span": "Total revenue for the third quarter of 2026 increased 74% as compared to the second quarter of 2026, primarily due to increases in sales of both DRAM and NAND products.",
+   "source_type": "10-Q"
+  },
+  "output": {
+   "support_type": "verified_support"
+  },
+  "why": "Comparison basis (sequential) matches exactly; a year-over-year claim against this span would be contradicts."
+ }
+]

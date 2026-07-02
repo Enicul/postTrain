@@ -1114,3 +1114,52 @@ Next:
 
 Block B: rules arm + naive/engineered prompt arms on the two frozen rulers
 (risk_real_eval_v1, citation_real_eval_v1) plus the router holdouts.
+
+## EXP-2026-07-02-004 - Block B: rules and prompt arms on the frozen rulers
+
+Goal:
+
+Fill the ladder's rungs 0/2/3 on both frozen audited rulers using Claude
+subagents (claude-haiku-4-5, claude-sonnet-5) as the LLM arms, plus
+deterministic rules arms, with per-arm token cost proxies.
+
+Artifacts:
+
+```text
+training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/blockb_eval_arms_v0.1
+```
+
+Metrics (see REPORT.md for full tables):
+
+Risk (90 rows, 45 gated): rules 0.811 acc / 0.733 gate recall; naive haiku
+0.667/0.867; naive sonnet 0.733/1.000; prompted haiku 0.800/1.000; prompted
+sonnet 0.811/1.000. Citation (69 rows, anonymized ids): rules 0.449; naive
+haiku 0.826; naive sonnet 0.870; prompted haiku 0.957; prompted sonnet 0.899.
+
+Failures:
+
+- Citation sample_ids leaked authored labels via case-key suffixes; caught
+  when one arm's transcript admitted using them; all citation arms re-run
+  with anonymized ids; measured inflation +11.6 points on the preserved
+  leaked arm (F-2026-07-02-006).
+- naive sonnet dropped 2 citation rows (counted as errors).
+
+Decision:
+
+- Act 2 (citation) is KILLED at rung 3: an engineered contract prompt takes
+  the SMALL model to 0.957 (>= the 0.85 rung-4 bar). No experience library,
+  no weights, at frontier-family scale. Small local verifier deferred as a
+  separate decision.
+- Act 1 (risk) is NOT killed: gate recall 1.000 on every engineered arm (the
+  safety half passes) but best accuracy 0.811 < 0.90. The ~zero-cost regex
+  rules arm ties prompted sonnet on accuracy; rung 4 candidate is a
+  rules-for-gate + LLM-for-level hybrid / experience library aimed at the
+  low/medium boundary.
+- The acts reassigned themselves by measurement - the ladder is doing its
+  job. Act 3 (escalation router) remains the weights candidate.
+
+Next:
+
+Block C/D for risk (learning-pool rollouts -> experience library / hybrid
+arm), Act 3 escalation environment construction, then the kill-criteria
+checkpoint before any weights.

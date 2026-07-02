@@ -29,9 +29,17 @@ Block A progress:
   recall 0.64-0.73 remains as the measured gap for prompt arms. See
   CP-2026-07-02-003 and D-2026-07-02-004.
 
-Block A is complete. Next: Block B - hand-rules and naive/engineered prompt
-arms on the two frozen rulers plus router holdouts, temperature 0, per-episode
-cost logging under the rollout_store_v0.1 schema.
+Block A is complete. Block B (2026-07-02): rules + naive/engineered prompt
+arms measured on both frozen rulers via Claude subagents. Headlines: Act 2
+(citation) KILLED at rung 3 - engineered prompt takes claude-haiku-4-5 to
+0.957, above the rung-4 kill bar, so no citation training is justified at
+frontier-family scale; Act 1 (risk) passes the safety half (gate recall
+1.000 on every engineered arm) but not accuracy (0.811 < 0.90) and proceeds
+to rung 4 (rules+LLM hybrid / experience library on the low/medium
+boundary). A label leak through citation sample_ids was caught, quantified
+(+11.6 points), and fixed with anonymized ids (F-2026-07-02-006). See
+`ladder/blockb_eval_arms_v0.1/REPORT.md`, EXP-2026-07-02-004,
+D-2026-07-02-005. Next: risk rung 4 + Act 3 escalation environment.
 
 ## Current State
 

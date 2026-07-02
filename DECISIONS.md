@@ -380,3 +380,33 @@ Consequence:
   flagged for cheap human spot-check alongside the citation audit's five.
 - Any new risk data family must pass through the normalizer plus a blind
   audit round before touching the eval.
+
+## D-2026-07-02-005 - Act 2 killed at rung 3; Act 1 continues; anonymized eval ids mandatory
+
+Decision:
+
+(1) Citation verification is resolved at the engineered-prompt rung for
+frontier-family models: prompted claude-haiku-4-5 scores 0.957 on the frozen
+69-row eval, above the pre-registered rung-4 kill bar (0.85), so Act 2 stops
+- no experience library, no SFT/GRPO for citation at this scale. A small
+LOCAL verifier for cost/privacy is explicitly a separate future decision.
+(2) Risk continues to rung 4: every engineered arm hits gate recall 1.000
+(safety half of the kill criterion passes) but best accuracy is 0.811 < 0.90;
+the rung-4 candidate is a rules-for-gate + LLM-for-level hybrid or experience
+library aimed at the low/medium boundary. (3) All future eval batches shown
+to any model must use anonymized row ids (F-2026-07-02-006).
+
+Why:
+
+Pre-registered kill criteria plus measurements, not preferences: the
+citation contract turned out to be promptable once written precisely (the
+audit that pinned C1-C3 is what made the prompt work); risk's residual
+low/medium boundary is real headroom; the id leak measurably inflated
+results (+11.6 points) and must be structurally prevented.
+
+Consequence:
+
+The portfolio narrative gains its first completed act with an honest
+negative ("we did not train a citation model, and we can show why"), and the
+ladder's remaining budget concentrates on risk rung 4 and the Act 3
+escalation environment.
