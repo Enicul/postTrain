@@ -503,3 +503,45 @@ All three acts are resolved at frontier scale without weights. RL Phase 2
 targets exactly the regime the ladder left open - the cost-constrained local
 model - with a pre-registered kill (A1) that can still end it honestly if
 small models turn out to be prompt-sufficient and safe.
+
+## D-2026-07-02-009 - Recording principle + conflict-samples-first adopted; module built standalone-first
+
+Decision:
+
+The `docs/DECISION_NODE_RECORDING_SPEC.md` recording principle is adopted as
+the authoritative spec for what KIWI must record: record every point where the
+system or user makes a choice that cannot be reconstructed from state; freeze
+it at decision time; append-only; point-in-time clean (every evidence item
+`published_at <= decision timestamp`). The snapshot carries nine frozen
+categories - thesis, boundary, review_trigger, point-in-time evidence set (with
+support labels), confidence, system recommendation, gate verdict, user_stage,
+and the decision itself - for ALL choices including skip. Three conflict-sample
+kinds get first-class flags and are treated as the highest-value data:
+(a) policy vs critic disagreement, (b) user overrides system recommendation,
+(c) user disputes a retrospective verdict. Separately, the retrospective core
+module was built STANDALONE-FIRST (its own sync sqlite3, 25/25 tests) with
+adapter wiring into KIWI deliberately deferred.
+
+Why:
+
+The audit showed the live pipeline already logs most nodes but loses exactly
+the choices that cannot be recovered later - the user decision snapshot, skip
+reasoning, gate verdicts, and the intent-router call. Naming those as the
+recording contract, rather than "log more", keeps the point-in-time discipline
+load-bearing and reuses the existing `build_snapshot(as_of)` engine,
+`TrajectoryRecord`, and `outcome_review` instead of rebuilding them.
+Conflict samples are prioritized because policy/critic splits and user
+overrides are precisely where the harness and guardrails are miscalibrated -
+averaging them away discards the training signal. Standalone-first was forced
+by reality: the KIWI repo has ~118 uncommitted local changes, so wiring edits
+to existing files would collide with unlanded work; a self-contained module
+with its own store and tests can be verified now and wired cleanly later.
+
+Consequence:
+
+The spec is the contract of record; KIWI implementation (4 P0 recording fixes,
+adapter wiring) is tracked in TODO.md and blocked on landing the ~118
+uncommitted KIWI files. Enum alignment (RiskLevel/GateAction vs Bias/
+SupportLabel), tz-aware/UTC timestamps, and the sync/async adapter boundary are
+the named wiring risks. The module's 25 tests run independently in the
+meantime; nothing in KIWI's live path changes until the owner lands the tree.

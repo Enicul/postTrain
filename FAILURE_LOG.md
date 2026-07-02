@@ -932,3 +932,55 @@ The provisional Act-3 kill could break on the unseen 192 seeds. That is
 tracked as the explicit deferred step; either outcome (confirm the close, or
 re-open weights with a concrete target) is a publishable result. Operational
 lesson: budget the spend envelope before a multi-block subagent day.
+
+## F-2026-07-02-009 - Three guardrail contradictions in KIWI found by the QA audit
+
+Symptom:
+
+The Opus QA audit of the KIWI copilot (218/218 tests pass) found three places
+where shipped behavior contradicts the stated safety design:
+
+1. Disclaimer suppressed by default - `SHOW_DISCLAIMER` defaults to `"0"`, so
+   `config.footer()` returns `""` (`config.py:151,162-164`); the "the decision
+   is always yours" disclaimer never renders in the default config.
+2. Never-"buy-now" is prompt-only - `COMPLIANCE_RULES` (`prompts.py:8-16`)
+   instructs the model but there is no output-side scrubber to detect/block an
+   imperative if the model emits one anyway.
+3. `stock_decision` path bypasses the dual gate - it hardcodes
+   `requires_user_approval:True` (`stock_decision.py:226,478`) instead of
+   routing through `policy.py`/`critic.py`; only `/memory/govern` and
+   `/memory/proposals/generate` exercise the dual gate.
+
+Cause:
+
+Each is a case of the safety intent living only at a soft layer (a default env
+value, a prompt instruction, or a per-endpoint hardcode) rather than as a
+code-level floor. Passing tests did not catch them because the tests exercise
+the configured/prompted happy path, not the default-config render, the
+model-emits-imperative case, or the un-gated `stock_decision` route.
+
+Change (fix plan):
+
+1. Default `SHOW_DISCLAIMER` on.
+2. Add a post-generation regex scrubber as a code-level floor - same philosophy
+   as postTrain's `risk_gate_rules_v11`: the safety floor lives in versioned
+   code, never in prompts.
+3. Route all proposals through `critic.evaluate` instead of the per-endpoint
+   `requires_user_approval:True` hardcode.
+
+These are recorded in `docs/DECISION_NODE_RECORDING_SPEC.md` (guardrail-
+contradictions section) and TODO.md; implementation is on the KIWI side.
+
+Effect:
+
+Documented as product-side failures found by audit, with a concrete fix plan.
+The fixes move each guardrail from a soft/promptable layer to a versioned
+code floor, consistent with the project's stance that safety must not be
+promptable.
+
+Remaining risk:
+
+The fixes touch existing KIWI files and are therefore blocked on landing/
+stashing the ~118 uncommitted KIWI changes (same block as the recording
+fixes). Until then the contradictions remain live in the default config;
+tracked in TODO.md "P1 - Retrospective Recording".

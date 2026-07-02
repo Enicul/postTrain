@@ -89,6 +89,22 @@ concrete motivation for RL Phase 2's small-model column. See
 EXP-2026-07-02-009, D-2026-07-02-008, escalation_env_v0.1/FIDELITY_CHECK_v0.3.md.
 Next (GPU box): A1 prompted Qwen models -> motivation gate, then A2/A3.
 
+Orchestration round (2026-07-02): a two-agent build/audit round on the KIWI
+side, documented here. An Opus QA audit of the copilot (218/218 tests pass)
+mapped the 21 decision nodes in the live pipeline and found 4 P0 recording
+gaps (no DecisionSnapshot at user-decision time, skip never captures
+thesis/boundary, gate verdicts not persisted, intent router not
+trajectory-logged) plus 3 guardrail contradictions (disclaimer default-off,
+prompt-only buy-now enforcement, stock_decision dual-gate bypass). In
+parallel, a build agent shipped the retrospective core module in the KIWI
+working tree - `src/retrospective/` (snapshot/maturation/quadrant/aggregate/
+exporter), 8 files, 25/25 tests, append-only SQLite, temporal-leakage
+validation, four-quadrant luck-vs-judgment classifier, process-based reward
+exporter. The module is left UNCOMMITTED by rule: adapter wiring is deferred
+until the ~118 uncommitted KIWI files land or are stashed. The authoritative
+recording contract was written to `docs/DECISION_NODE_RECORDING_SPEC.md`. See
+CP-2026-07-02-007, D-2026-07-02-009, F-2026-07-02-009.
+
 ## Current State
 
 The repo has been initialized as a standalone post-training artifact repo for

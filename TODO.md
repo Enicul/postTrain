@@ -252,3 +252,31 @@ Block F - live demo:
 - [x] Add failure taxonomy and representative traces.
 - [x] Add a "what we do not claim" section.
 - [x] Add a concise README link from the repo root to the portfolio report.
+
+## P1 - Retrospective Recording (docs/DECISION_NODE_RECORDING_SPEC.md)
+
+From the 2026-07-02 QA audit + retrospective-module round. All KIWI-side
+implementation happens in the Agent/KIWI repo, not here; tracked here because
+this is the spec of record.
+
+- [ ] Implement the 4 P0 recording fixes in KIWI (BLOCKED on landing/stashing
+  the ~118 uncommitted KIWI files first):
+  - [ ] DecisionSnapshot at user-decision time - freeze thesis + confidence +
+    boundary + point-in-time evidence set + system recommendation + gate
+    verdict + user_stage, for ALL choices including SKIP (`api/memory.py:96`).
+  - [ ] Fix skip asymmetry - snapshot thesis/boundary on skip too
+    (`api/memory.py:139`).
+  - [ ] Persist every gate evaluation (policy verdict, critic verdict, fused
+    result, triggering terms) as a durable row (`policy.py`, `critic.py`).
+  - [ ] Trajectory-log the intent router (`pipeline.py:186-206`).
+- [ ] Wire the standalone retrospective module into KIWI via an adapter layer
+  (sync sqlite3 module <-> async SQLAlchemy DB; explicit enum alignment for
+  RiskLevel/GateAction vs Bias/SupportLabel; tz-aware/UTC timestamps for the
+  strict leakage check). Deferred until the KIWI tree lands.
+- [ ] Fix the 3 guardrail contradictions in KIWI: default `SHOW_DISCLAIMER` on
+  (`config.py`); add a post-generation buy-now regex scrubber as a code-level
+  floor (`prompts.py`); route all proposals through `critic.evaluate` instead
+  of hardcoding `requires_user_approval:True` (`stock_decision.py:226,478`).
+- [ ] Design the capability-stage model (flywheel goal (a)) - currently ENTIRELY
+  UNIMPLEMENTED: confirmed 0 hits for capability / stage / novice in KIWI `src`.
+  Needs a stage tracker feeding `user_stage` into the DecisionSnapshot.

@@ -999,3 +999,44 @@ next spend cycle. Plan B: grow the citation corpus to 300-500 rows, then
 GRPO on citation_agentic_env. Plan C: run training_free_grpo with an
 inference backend as the no-weights control column.
 ```
+
+## CP-2026-07-02-007 - Decision-node recording spec + retrospective module round
+
+Status:
+
+```text
+QA audit complete (218/218); retrospective core module shipped in KIWI working
+tree (uncommitted by rule); recording spec written and committed here.
+```
+
+Paths (postTrain, this repo):
+
+```text
+docs/DECISION_NODE_RECORDING_SPEC.md   (authoritative recording contract)
+docs/DECISION_REVIEW_AND_TRAINING_FLYWHEEL.md   (the why)
+```
+
+KIWI side (Agent repo - NOT touched from here):
+
+```text
+src/retrospective/   (snapshot/maturation/quadrant/aggregate/exporter)
+                     8 files, 25/25 tests, append-only SQLite, uncommitted
+```
+
+Audit findings:
+
+```text
+21 decision nodes mapped; 4 P0 recording gaps; 3 guardrail contradictions.
+See DECISION_NODE_RECORDING_SPEC.md for the full inventory + fix plan.
+```
+
+Resume:
+
+```text
+Blocked step: land or stash the ~118 uncommitted KIWI files, THEN implement
+the 4 P0 recording fixes and wire the retrospective module via the adapter
+layer. Independent of that block: fix the 3 guardrail contradictions
+(disclaimer default-on, buy-now output scrubber, dual-gate routing) and design
+the capability-stage model (flywheel goal (a), currently 0 implementation).
+See TODO.md "P1 - Retrospective Recording", D-2026-07-02-009, F-2026-07-02-009.
+```
