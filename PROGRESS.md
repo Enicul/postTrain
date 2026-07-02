@@ -2,6 +2,21 @@
 
 Last updated: 2026-07-02
 
+## Current Direction
+
+The portfolio spine is now the three-task ladder plan:
+
+```text
+docs/THREE_TASK_LADDER_PLAN_20260702.md
+```
+
+Three tasks (risk reviewer, citation verifier, cost-aware escalation router)
+climb one shared ladder from hand rules through prompted LLM and
+experience-library (training-free RL) rungs to SFT/GRPO, on frozen holdouts,
+with pre-registered kill criteria deciding where each task stops. Weights are
+budgeted for exactly one task. Next block: A1 audit the 131 real citation
+rows, A2 build `risk_contract_repair_v0.1b`. See D-2026-07-02-002.
+
 ## Current State
 
 The repo has been initialized as a standalone post-training artifact repo for

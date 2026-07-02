@@ -1,5 +1,44 @@
 # TODO
 
+## P0 - Three-Task Ladder (docs/THREE_TASK_LADDER_PLAN_20260702.md)
+
+Block A - fix the rulers (blocks every LLM arm):
+
+- [ ] A1: Audit all 131 real citation span rows (29 seed + 102
+  `report_and_filing_spans_v0.1`); correct label boundary issues; freeze the
+  eval split as `citation_real_eval_v1`.
+- [ ] A2: Build `risk_contract_repair_v0.1b` from real long-research
+  medium-risk rows; freeze the repaired risk holdout.
+
+Block B - eval pools (no GPU):
+
+- [ ] Hand-rules arm (rung 0) for risk and escalation-router acts.
+- [ ] LLM naive-prompt and engineered-prompt arms (rungs 2-3) for all three
+  acts on frozen holdouts, temperature 0, cost logged per episode under the
+  `rollout_store_v0.1` schema.
+
+Block C - learning pools:
+
+- [ ] K=8 rollouts on train/dev seeds for all three acts.
+- [ ] Act-3 cheap-path outcome table (byproduct of the cheap arm runs).
+
+Block D - training-free RL:
+
+- [ ] Contrastive lesson extraction -> experience library v1 per act,
+  regression-tested, injectable and versioned (rung 4).
+- [ ] Kill-criteria checkpoint for acts 1-2; record stop/continue in
+  DECISIONS.md with numbers.
+
+Block E - weights (single surviving act, hard budget cap):
+
+- [ ] argmax-label SFT collapse check, SFT LoRA, GRPO with lambda sweep ->
+  ratio + Pareto deliverable.
+
+Block F - live demo:
+
+- [ ] Thin replay runner over the rollout store; 15-20 trap-row demo subset;
+  explib on/off toggle.
+
 ## P0 - Repo Hygiene
 
 - [x] Commit and push initial repo scaffold to `Enicul/postTrain`.

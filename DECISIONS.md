@@ -282,3 +282,41 @@ Next citation steps are audit, then CPU probe, then v0.3 definition. Two
 honesty boundaries are recorded in the rows themselves: transcript-tier metric
 bullets are the publisher's call summaries (not verbatim speaker text), and
 paywalled sell-side research remains excluded.
+
+## D-2026-07-02-002 - Adopt the three-task ladder plan as the portfolio spine
+
+Decision:
+
+Adopt `docs/THREE_TASK_LADDER_PLAN_20260702.md`: three tasks (risk reviewer,
+citation verifier, cost-aware escalation router) climb one shared ladder
+(rules -> sklearn -> naive prompt -> engineered prompt -> prompt + experience
+library -> SFT -> GRPO) on frozen holdouts, with pre-registered kill criteria
+deciding where each task stops. Rungs 5-6 (weights) are budgeted for exactly
+one task. Act 3 is a two-to-three step escalation policy, not single-step
+route classification, and GRPO must beat both the best prompt arm and
+argmax-label SFT to claim justification.
+
+Why:
+
+The repo so far has verifiers, frozen holdouts, and failure discipline, but
+zero LLM columns - while the interview story requires "RL model vs plain LLM
+vs prompt-only", all verifiable. Single-step discrete routing with an
+enumerable reward would let argmax-label SFT match GRPO, silently collapsing
+the RL act; the escalation reformulation is what gives weight RL structural
+room. Pre-registered kill criteria are what make negative results (prompting
+was enough / training-free was enough / GRPO not worth it) first-class
+deliverables instead of failures to hide.
+
+Consequence:
+
+- Block A first: audit the 131 real citation rows (freeze
+  `citation_real_eval_v1`) and build `risk_contract_repair_v0.1b`; no LLM arm
+  is measured on a broken ruler.
+- The rollout store (`rollout_store_v0.1` schema in the plan) is declared a
+  bounded row-level DATA ASSET - an explicit, intentional exception to
+  summary-first recording.
+- Experience libraries stay injectable and versioned; only
+  regression-stable lessons get promoted into permanent harness patches, each
+  promotion logged here.
+- Act 3 hard budget cap: 24 A100-hours / ~USD 100 / 5 evenings for rungs 5-6;
+  exceeding the cap without a win is itself the recorded result.
