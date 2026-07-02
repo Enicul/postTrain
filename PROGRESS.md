@@ -67,6 +67,16 @@ sweep. All three acts now resolve without weights, each with a full evidence
 + dissent trail. Remaining GPU budget unspent by design. See
 EXP-2026-07-02-007, D-2026-07-02-007, CP-2026-07-02-005.
 
+RL Phase 2 (2026-07-02): the ladder's three kills opened one honest door -
+a small LOCAL model for the router/gate under production cost constraints.
+A/B/C plan written (docs/RL_PHASE2_SMALL_MODEL_PLAN.md); all non-GPU
+scaffolding built and CPU-verified: Plan A pull-and-run SFT/GRPO scripts +
+seed expansion to 1,120, Plan B citation agentic env (cite-validity +
+verdict reward, hallucination hard negative), Plan C training-free GRPO
+loop. GPU/inference steps (A1 motivation gate, A2/A3 training, B/C runs)
+are pull-and-run with pre-registered kill criteria. See EXP-2026-07-02-008,
+CP-2026-07-02-006.
+
 ## Current State
 
 The repo has been initialized as a standalone post-training artifact repo for

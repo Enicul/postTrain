@@ -961,3 +961,41 @@ and write the final portfolio narrative. If it breaks, build argmax-SFT +
 GRPO on escalation_env_v0.1 under the budget cap (24 A100h / ~USD 100) with
 the concrete target the break reveals.
 ```
+
+## CP-2026-07-02-006 - RL Phase 2 scaffolding ready (A/B/C)
+
+Status:
+
+```text
+non-GPU scaffolding complete and CPU-smoke-verified; GPU + inference steps pending
+```
+
+Paths:
+
+```text
+docs/RL_PHASE2_SMALL_MODEL_PLAN.md
+training-corpus/scripts/rl/            (Plan A trainers/eval, B env, C loop)
+training-corpus/scripts/expand_env_seeds.py
+.../ladder/escalation_env_v0.1/env_seeds_v0.2.json   (1,120 seeds)
+```
+
+Verify:
+
+```bash
+cd /Users/lucine/Documents/Job/projects/postTrain/training-corpus/scripts/rl
+ENV=../../runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/escalation_env_v0.1
+python3 reward_escalation.py $ENV
+python3 citation_agentic_env.py
+python3 training_free_grpo.py
+```
+
+Resume:
+
+```text
+On the A100: follow training-corpus/scripts/rl/README.md - A1 motivation
+gate (prompted small model), then A2 argmax-SFT, then A3 GRPO with the
+pre-registered kill check. Also complete the Act-3 192-seed engineered sweep
+next spend cycle. Plan B: grow the citation corpus to 300-500 rows, then
+GRPO on citation_agentic_env. Plan C: run training_free_grpo with an
+inference backend as the no-weights control column.
+```

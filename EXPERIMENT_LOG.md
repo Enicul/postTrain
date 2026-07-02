@@ -1297,3 +1297,50 @@ Next:
 Next spend cycle: complete the engineered sweep (haiku + sonnet, batches
 2-4). Either it confirms the three-act "prompting suffices" close, or it
 re-opens the weights question with a concrete target.
+
+## EXP-2026-07-02-008 - RL Phase 2 scaffolding (A/B/C), non-GPU parts
+
+Goal:
+
+Lay every non-GPU piece of the A/B/C small-model RL plan so the GPU segments
+are pull-and-run and the negative/positive results are pre-wired.
+
+Artifacts:
+
+```text
+docs/RL_PHASE2_SMALL_MODEL_PLAN.md
+training-corpus/scripts/rl/{reward_escalation,build_sft_labels,sft_escalation,
+  grpo_escalation,eval_escalation_policy,citation_agentic_env,training_free_grpo}.py
+training-corpus/scripts/rl/{requirements-rl.txt,README.md}
+training-corpus/scripts/expand_env_seeds.py
+.../ladder/escalation_env_v0.1/{env_seeds_v0.2.json,outcome_table_v0.2.json}
+```
+
+What works (CPU-verified):
+
+- Plan A reward wrapper reuses the frozen env; oracle-as-predfile reproduces
+  the env reward exactly (test: 0.956/0.868/0.737, gate 1.0) - the eval
+  harness is trustworthy.
+- Oracle SFT labels generate cleanly (160 train rows, 4-way action mix
+  44/36/40/40); GRPO/SFT trainers compile and are documented pull-and-run.
+- A0 seed expansion: 256 -> 1,120 (1,024 train) from the router pool; new
+  train seeds use a route-mean p proxy with MAE 0.064 vs the ensemble p on
+  the 256 (eval-256 keeps ensemble p; fidelity gap logged).
+- Plan B citation agentic env: 131 claims / 86-span pool; perfect play +1.5,
+  fabricated citation -1.0 (hallucination hard negative fires).
+- Plan C training-free GRPO loop: iterative rollout -> semantic advantage ->
+  no-regression lesson gate -> dry-round stop; self-test learns round 1,
+  stops round 2.
+
+Decision:
+
+Non-GPU scaffolding for all three plans is done and smoke-verified. Remaining
+work is exactly: (1) Act-3 full sweep + Plan A A1 motivation measurement +
+A2/A3 training on the user's A100; (2) Plan B corpus growth to 300-500 rows
+then its GRPO; (3) Plan C run with an inference backend. Every GPU step has a
+pre-registered kill criterion.
+
+Next:
+
+User pulls training-corpus/scripts/rl to an A100 and runs the README chain
+(A1 -> A2 -> A3). B/C run when their inference backends are available.

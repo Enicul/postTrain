@@ -71,6 +71,22 @@ Block F - live demo:
 - [ ] Thin replay runner over the rollout store; 15-20 trap-row demo subset;
   explib on/off toggle.
 
+## P0 - RL Phase 2 (docs/RL_PHASE2_SMALL_MODEL_PLAN.md)
+
+- [x] Master plan A/B/C with per-step kill criteria + budget.
+- [x] Plan A GPU scripts (reward wrapper, oracle SFT labels, LoRA SFT, GRPO,
+  eval harness with kill check); CPU-smoke verified. `scripts/rl/`.
+- [x] A0 seed expansion 256 -> 1,120 (route-mean p proxy, MAE 0.064).
+- [x] Plan B citation agentic env scaffold (reward: cite validity + verdict;
+  hallucinated-citation hard negative). `scripts/rl/citation_agentic_env.py`.
+- [x] Plan C training-free GRPO loop (rollout -> semantic advantage ->
+  no-regression lesson gate). `scripts/rl/training_free_grpo.py`.
+- [ ] A1 (GPU/inference): prompted Qwen-0.5B/1.5B on the env -> motivation
+  gate (kill if within 3 pts of oracle at gate>=0.99).
+- [ ] A2/A3 (A100): argmax-SFT then GRPO; kill check GRPO vs SFT.
+- [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
+- [ ] Plan C: run with an inference backend as the control column.
+
 ## P0 - Repo Hygiene
 
 - [x] Commit and push initial repo scaffold to `Enicul/postTrain`.
