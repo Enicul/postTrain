@@ -1,0 +1,93 @@
+{
+  "dataset": "citation_real_eval_v1",
+  "label_space": [
+    "verified_support",
+    "partial_support",
+    "insufficient",
+    "contradicts"
+  ],
+  "n_pass_a": 131,
+  "n_pass_b": 130,
+  "n_both_annotated": 130,
+  "n_missing_one_pass": 1,
+  "missing_rows": [
+    {
+      "sample_id": "report_and_filing_spans_v0.1_0031_meta10k_segments_verified",
+      "pass_a": "verified_support",
+      "pass_b": null
+    }
+  ],
+  "agree": 128,
+  "disagree": 2,
+  "agreement_rate": 0.9846,
+  "agreement_conditional_on_pass_a_label": {
+    "verified_support": {
+      "n": 61,
+      "agree": 60,
+      "agreement_rate": 0.9836
+    },
+    "partial_support": {
+      "n": 21,
+      "agree": 20,
+      "agreement_rate": 0.9524
+    },
+    "contradicts": {
+      "n": 32,
+      "agree": 32,
+      "agreement_rate": 1.0
+    },
+    "insufficient": {
+      "n": 16,
+      "agree": 16,
+      "agreement_rate": 1.0
+    }
+  },
+  "two_pass_confusion": [
+    {
+      "pass_a": "verified_support",
+      "pass_b": "verified_support",
+      "count": 60
+    },
+    {
+      "pass_a": "contradicts",
+      "pass_b": "contradicts",
+      "count": 32
+    },
+    {
+      "pass_a": "partial_support",
+      "pass_b": "partial_support",
+      "count": 20
+    },
+    {
+      "pass_a": "insufficient",
+      "pass_b": "insufficient",
+      "count": 16
+    },
+    {
+      "pass_a": "partial_support",
+      "pass_b": "verified_support",
+      "count": 1
+    },
+    {
+      "pass_a": "verified_support",
+      "pass_b": "partial_support",
+      "count": 1
+    }
+  ],
+  "disagreement_rows": [
+    {
+      "sample_id": "real_citation_spans_v0.1_0014_msft_operating_income_verified",
+      "pass_a": "partial_support",
+      "pass_b": "verified_support",
+      "pass_a_note": "Amount and 20% growth match, but the span does not identify the FY26 Q3 reporting period the claim asserts.",
+      "pass_b_note": "Figures match exactly; the FY26 Q3 period is not named in the span but is consistent with the source context."
+    },
+    {
+      "sample_id": "report_and_filing_spans_v0.1_0016_msft10q_rev_verified",
+      "pass_a": "verified_support",
+      "pass_b": "partial_support",
+      "pass_a_note": "Span states revenue increased $12.8 billion or 18% driven by Microsoft Cloud, matching all elements.",
+      "pass_b_note": "The $12.8 billion / 18% increase and Microsoft Cloud driver match, but the span never identifies the quarterly period the claim asserts."
+    }
+  ]
+}

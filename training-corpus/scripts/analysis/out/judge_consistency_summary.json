@@ -1,0 +1,29 @@
+{
+  "generated_by": "training-corpus/scripts/analysis/judge_consistency.py",
+  "inputs_are_frozen_readonly": true,
+  "citation": {
+    "n_both_annotated": 130,
+    "agreement_rate": 0.9846,
+    "disagree": 2,
+    "n_missing_one_pass": 1,
+    "agreement_conditional_on_pass_a_label": {
+      "verified_support": 0.9836,
+      "partial_support": 0.9524,
+      "contradicts": 1.0,
+      "insufficient": 1.0
+    }
+  },
+  "risk": {
+    "primary_clean": {
+      "n_both_annotated": 43,
+      "agreement_rate": 1.0,
+      "disagree": 0
+    },
+    "syn_reaudit_after_render_fix": {
+      "n_both_annotated": 47,
+      "agreement_rate": 1.0,
+      "disagree": 0
+    },
+    "render_bug_rows_flagged_by_both_passes": 47
+  }
+}
