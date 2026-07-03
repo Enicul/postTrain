@@ -89,13 +89,29 @@ Block F - live demo:
   `GPU_RUNBOOK.md` with failure protocol, pinned `requirements-rl.txt`,
   gitignore for run weights. CPU-smoke verified. CP-2026-07-03-001,
   D-2026-07-03-001.
-- [ ] NEXT: pull the repo to the A100 and run A1 (prompted-eval motivation
-  gate) per `scripts/rl/GPU_RUNBOOK.md`. Then A2 SFT, A3 GRPO in order,
-  each into `out-dir/<run_id>/`; run `monitor_run.py` in a second terminal.
-- [ ] A1 (GPU/inference): prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 ->
-  motivation gate (kill if within 3 pts of oracle at gate>=0.99). Frontier
-  Claude already mapped: sonnet~=oracle/gate1.0, haiku -12.6pts/gate0.80.
-- [ ] A2/A3 (A100): argmax-SFT then GRPO; kill check GRPO vs SFT.
+- [x] Pull the repo to the A100 and run A1 (prompted-eval motivation gate) per
+  `scripts/rl/GPU_RUNBOOK.md` (2026-07-03). A2 SFT and A3 GRPO also run, each
+  into `out-dir/<run_id>/`. See EXP-2026-07-03-001..003, CP-2026-07-03-002.
+- [x] A1 (GPU): prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 -> motivation gate.
+  NO model passed kill (0.5B 0.3063 / 1.5B 0.6444 / 3B 0.4232 / 7B 0.7447);
+  bottleneck is gate discipline, not success -> training motivated.
+- [x] A2/A3 (A100): argmax-SFT then GRPO. SFT 1.5B (0.7495) beats prompted 7B;
+  GRPO verdict recorded honestly (not promoted: 1.5B +4.9 but gate 0.875, 0.5B
+  collapse). EXP-2026-07-03-002/003, D-2026-07-03-003.
+- [ ] GRPO next-iteration (PRE-REGISTERED, not committed to run;
+  D-2026-07-03-003): (a) gate-seed oversampling in GRPO batches, (b) larger K,
+  (c) exploration bonus on the gate action, (d) accept the rules+model hybrid as
+  the product answer. Pick one; keep the same kill (>=3 pts over SFT AND gate
+  recall >=0.99 @lambda0.3).
+- [ ] DPO round on the existing `preference_pairs` (portfolio gap, quick win).
+- [ ] Failure-trajectory taxonomy from
+  `runs/grpo_qwen05/20260703T1507Z-e571324/generations.jsonl` (categorize the
+  0.5B collapse rollouts; feeds F-2026-07-03-003).
+- [ ] Identify the specific 1-missed-gate seed at 1.5B (same residual in SFT and
+  GRPO) - which seed, why the model misses it.
+- [ ] Judge-consistency report.
+- [ ] Capability matrix doc (per-model x metric across A1/A2/A3).
+- [ ] Consolidated project-plan doc (single index across the acts + RL Phase 2).
 - [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
 - [ ] Plan C: run with an inference backend as the control column.
 - [ ] env v0.4 memory-form experiment - designed, queued behind A3 writeup.

@@ -1,14 +1,22 @@
 # Plan A/B GPU training deps.
 #
-# No local venv could report installed versions when these were pinned, so
-# these are KNOWN-GOOD versions for the GRPOConfig/SFTConfig args the scripts
-# use (num_generations, max_completion_length, save_steps, save_total_limit,
-# gradient_accumulation_steps, seed) - the trl 0.11.x era. Each run's
-# run_manifest.json records the ACTUAL pip freeze; that is authoritative.
+# These pins are VALIDATED on the A100 GPU env used for the A1->A3 chain
+# (2026-07-03): SFTTrainer accepts `processing_class`, and GRPOTrainer /
+# GRPOConfig (num_generations, max_completion_length, save_steps,
+# save_total_limit, gradient_accumulation_steps, seed) all exist and import.
+# GRPOTrainer only landed in trl 0.14, so the earlier 0.11.4 pin could not run
+# GRPO at all (see F-2026-07-03-002). `rich` is a transitive dep of trl that is
+# not always pulled in - install it explicitly or SFTTrainer import crashes
+# (see F-2026-07-03-001).
+#
+# AUTHORITATIVE ENV RECORD: each run's run_manifest.json records the ACTUAL
+# `pip freeze` at launch. These pins are a convenient known-good starting
+# point, not the source of truth - trust the per-run manifest.
 torch==2.4.0
-transformers==4.44.2
-trl==0.11.4
-peft==0.12.0
+transformers==4.49.0
+trl==0.15.2
+peft==0.14.0
 datasets==2.21.0
 accelerate==0.33.0
+rich
 # CPU-only smoke of reward/label/env logic needs none of the above.

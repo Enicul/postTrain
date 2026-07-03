@@ -68,6 +68,10 @@ def main() -> None:
                     help="argmax-SFT reward at lambda 0.3 for the kill check")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--dump-preds", type=Path, default=None,
+                    help="model mode only: write per-seed jsonl {seed_id, first, "
+                         "on_fail, gate_needed, oracle_action, completion} so the "
+                         "exact missed gate seeds are identifiable.")
     args = ap.parse_args()
 
     reward = EscalationReward(args.env_dir, lam=0.3)
@@ -99,15 +103,29 @@ def main() -> None:
             from peft import PeftModel
             model = PeftModel.from_pretrained(model, str(args.adapter))
         model.eval()
+        dump_fh = None
+        if args.dump_preds:
+            args.dump_preds.parent.mkdir(parents=True, exist_ok=True)
+            dump_fh = args.dump_preds.open("w", encoding="utf-8")
         for sid in ids:
-            msgs = [{"role": "user", "content": render_prompt(reward.env.seeds[sid])}]
+            seed = reward.env.seeds[sid]
+            msgs = [{"role": "user", "content": render_prompt(seed)}]
             text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
             enc = tok(text, return_tensors="pt").to(model.device)
             with torch.no_grad():
                 gen = model.generate(**enc, max_new_tokens=48, do_sample=False,
                                      pad_token_id=tok.pad_token_id or tok.eos_token_id)
             comp = tok.decode(gen[0][enc.input_ids.shape[1]:], skip_special_tokens=True)
-            plan_of[sid] = parse_plan(comp)
+            first, on_fail = parse_plan(comp)
+            plan_of[sid] = (first, on_fail)
+            if dump_fh is not None:
+                dump_fh.write(json.dumps({
+                    "seed_id": sid, "first": first, "on_fail": on_fail,
+                    "gate_needed": bool(seed["requires_human_gate"]),
+                    "oracle_action": reward.env.oracle_action(sid, 0.3),
+                    "completion": comp}, ensure_ascii=False) + "\n")
+        if dump_fh is not None:
+            dump_fh.close()
     else:
         raise SystemExit("provide --pred-file or --model")
 

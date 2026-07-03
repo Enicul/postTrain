@@ -1,0 +1,9 @@
+{
+ "run_id": "20260703T1507Z-e571324",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "lambda": 0.3,
+ "K": 8,
+ "steps": 400,
+ "init_adapter": "runs/sft_qwen05/20260703T1505Z-e571324/adapter",
+ "final_loss": 0.1445622518658638
+}

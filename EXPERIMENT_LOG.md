@@ -1389,3 +1389,199 @@ Next:
 GPU box: A1 prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 -> motivation gate;
 then A2/A3 per RL_PHASE2 plan. All three acts now resolved at frontier scale
 without training; RL Phase 2 targets the cost-constrained small-model regime.
+
+## EXP-2026-07-03-001 - A1 prompted small-model motivation gate (Qwen2.5 0.5B/1.5B/3B/7B, env v0.3)
+
+Goal:
+
+First real-GPU step of RL Phase 2. Measure prompted (no-training) Qwen2.5 base
+models on escalation env v0.3 test split to decide whether small-model training
+is motivated at all. Pre-registered KILL: if any prompted model lands within 3
+reward points of the oracle AND holds gate recall >= 0.99 at lambda=0.3, small
+models already solve the task prompted and training is unnecessary.
+
+Data:
+
+env v0.3 test split, n=48 (8 gate-required seeds). Greedy, temp-0, seed 0.
+Oracle test reward at lambda=0.3 = 0.8473. Base commit e571324. Single A100
+80GB, GPU 0.
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_a1.sh  (eval_escalation_policy.py per model, prompted)
+```
+
+Metrics (test @lambda=0.3):
+
+| model | reward | vs oracle | success | gate_recall |
+| --- | ---: | ---: | ---: | ---: |
+| Qwen2.5-0.5B | 0.3063 | -0.541 | 0.517 | 0.50 |
+| Qwen2.5-1.5B | 0.6444 | -0.203 | 1.000 | 0.50 |
+| Qwen2.5-3B  | 0.4232 | -0.424 | 0.958 | 0.00 |
+| Qwen2.5-7B  | 0.7447 | -0.103 | 1.000 | 0.75 |
+
+Findings:
+
+- KILL CHECK: NO model passes (none within 3 pts of oracle with gate >= 0.99).
+  Training is MOTIVATED.
+- Key insight: success rates are already fine (1.5B and 7B = 1.000). What small
+  models lack is GATE DISCIPLINE - even the 7B only recalls 0.75 of required
+  gates, and the 3B recalls 0.00. The bottleneck is the safety action, not
+  task competence.
+- Non-monotone in size (3B gate 0.00 < 1.5B gate 0.50) - prompted gate behavior
+  is not a smooth function of capacity, reinforcing that it is a discipline
+  problem a prompt does not reliably induce.
+
+Artifacts:
+
+```text
+runs/a1_prompted/{qwen05,qwen15,qwen3,qwen7}_test_eval.json
+runs/a1_prompted/a1_manifest.json  (git_sha, gpu, split, seed)
+runs/a1_prompted/a1_batch.log
+runs/gpu_session_20260703/run_a1.sh
+```
+
+Decision:
+
+A1 confirms the motivation gate: small prompted models are cheaper but unsafe on
+the gate, exactly the regime RL Phase 2 targets. Proceed to A2 (argmax-SFT) on
+0.5B and 1.5B - the two arms where a compact trained policy is the interesting
+question (0.5B = hardest capacity, 1.5B = the "beat prompted 7B" target).
+
+Next:
+
+A2 argmax-SFT from oracle labels, then A3 GRPO from the SFT adapters.
+
+## EXP-2026-07-03-002 - A2 argmax-SFT (LoRA) on 0.5B and 1.5B (env v0.3)
+
+Goal:
+
+Supervised behavior-clone the oracle's argmax action onto small models and test
+whether SFT alone closes the A1 gap - both reward and gate discipline.
+
+Data:
+
+160 env v0.3 train labels (oracle argmax action). LoRA, 3 epochs. Init from
+Qwen2.5-0.5B-Instruct and -1.5B-Instruct. Test split n=48, greedy temp-0, seed 0,
+lambda=0.3. Base commit e571324.
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_a2.sh
+runs/gpu_session_20260703/sft_train.jsonl  (the 160 labels)
+sft_escalation.py --model <qwen> --out-dir runs/sft_qwen{05,15} (processing_class API)
+```
+
+Metrics (test @lambda=0.3):
+
+| model | SFT reward | vs A1 prompted | gate_recall | success | final_loss |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0.5B | 0.6061 | +0.300 | 0.50 (unchanged) | 0.951 | 1.183 |
+| 1.5B | 0.7495 | +0.105 | 0.875 (up from 0.50) | 0.927 | 1.236 |
+
+Findings:
+
+- HEADLINE: the trained 1.5B (0.7495) beats the PROMPTED 7B (0.7447) - a 4.7x
+  smaller model, post-trained, edges out a frontier-of-family prompt. This is
+  the core "small + trained > large + prompted" result.
+- 0.5B gains +30 reward points but its gate recall does NOT move (still 0.50) -
+  SFT buys the 0.5B cost/success behavior but not gate discipline at that
+  capacity. 1.5B gate recall lifts 0.50 -> 0.875 (7/8), the biggest safety win
+  of the day.
+- Both within striking distance of oracle 0.8473: 1.5B is -0.098, and it does
+  it while cutting cost (0.4531 vs prompted-7B 0.5731).
+
+Artifacts:
+
+```text
+runs/sft_qwen05/20260703T1505Z-e571324/{sft_test_eval.json,metrics.json,
+  trainer_log.jsonl,run_manifest.json}
+runs/sft_qwen15/20260703T1506Z-e571324/{same}
+(failed first-launch dirs preserved: sft_qwen05/20260703T1504Z-e571324/,
+ sft_qwen15/20260703T1504Z-e571324/ - manifest-only, see F-2026-07-03-001/002)
+```
+
+Decision:
+
+SFT is the clear win of the session and is promotable on the 1.5B arm as the
+cost-efficient policy. Adapters carry into A3 as the GRPO init. Open question
+A3 must answer: can RL push past SFT and, crucially, close the residual gate
+gap (1.5B still misses 1/8; 0.5B still at 0.50)?
+
+Next:
+
+A3 GRPO (K=8, lambda=0.3) initialized from these SFT adapters.
+
+## EXP-2026-07-03-003 - A3 GRPO from SFT adapters, 0.5B and 1.5B (env v0.3)
+
+Goal:
+
+Reinforcement-optimize the SFT policies with GRPO under the cost-shaped reward
+(lambda=0.3) and test the pre-registered PROMOTION bar: beat SFT by >= 3 reward
+points AND hold gate recall >= 0.99 at lambda=0.3.
+
+Data:
+
+TRL 0.15.2 GRPOTrainer, K=8 (num_generations), 400 steps, lambda=0.3, save-steps
+50, init from the A2 SFT adapters. Test split n=48, greedy temp-0, seed 0. Base
+commit e571324.
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_a3.sh
+grpo_escalation.py --model <qwen> --init-adapter <sft_adapter> --lambda 0.3 \
+  --num-generations 8 --max-steps 400 --save-steps 50 --out-dir runs/grpo_qwen{05,15}
+```
+
+Metrics (test @lambda=0.3):
+
+| model | GRPO reward | delta vs SFT | gate_recall | cost | kill-check |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 0.5B | 0.383  | -0.223 | 0.00 | 0.9455 | FAIL (collapse) |
+| 1.5B | 0.7981 | +0.049 | 0.875 | 0.534  | FALSE (gate < 0.99) |
+
+Findings:
+
+- 0.5B: POLICY COLLAPSE. Degenerated to near-always-deep (cost ~= deep 1.0,
+  success 1.0, gate action extinct). Reward fell 22.3 pts below SFT and gate
+  recall dropped to 0.00. Training KL drifted to ~2.0 throughout; reward_trace
+  action_mix shows gate -> 0 in late batches (batch 371: gate_violation_rate
+  1.0, mean_reward -1.51). Full failure diagnosis + mechanism hypothesis in
+  F-2026-07-03-003 (the interview-grade one - early warning was visible in
+  reward_trace before eval confirmed).
+- 1.5B: HEALTHY training. Reward +4.86 pts over SFT (0.7981, within 4.9 pts of
+  oracle 0.8473), KL stayed ~0.3, gate action alive in action_mix. BUT gate
+  recall is 0.875 - the SAME single missed gate (7/8) as SFT; GRPO improved cost
+  optimization without fixing that residual seed. So kill-check is FALSE
+  (reward bar met, gate bar not).
+- The reward gains from GRPO at 1.5B are REAL. The hard safety constraint is
+  NOT met by pure RL at either scale.
+
+Artifacts:
+
+```text
+runs/grpo_qwen05/20260703T1507Z-e571324/{grpo_test_eval.json,generations.jsonl
+  (5936+ rollouts),reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/grpo_qwen15/20260703T1520Z-e571324/{same}
+```
+
+Decision (pre-registered verdict, recorded honestly):
+
+"GRPO does not meet the promotion bar at these scales." The reward gain at 1.5B
+is real (+4.9, within 4.9 of oracle) but pure RL leaves the hard gate constraint
+unmet (0.875 < 0.99) and collapses the gate entirely at 0.5B. Product/architecture
+takeaway: the safety floor stays in versioned code (risk_gate_rules_v11; the
+Act-1 hybrid already demonstrated rules+model gate recall 1.000). RL optimizes
+cost ABOVE the floor; it never carries the floor alone. Recorded as
+D-2026-07-03-003.
+
+Next:
+
+Pre-registered (not yet committed to run): gate-seed oversampling in GRPO
+batches, larger K, exploration bonus on the gate action, or accept the hybrid as
+the product answer. See D-2026-07-03-003. Also queued: failure-trajectory
+taxonomy from grpo_qwen05 generations.jsonl, and identify the 1-missed-gate seed
+at 1.5B.

@@ -984,3 +984,144 @@ The fixes touch existing KIWI files and are therefore blocked on landing/
 stashing the ~118 uncommitted KIWI changes (same block as the recording
 fixes). Until then the contradictions remain live in the default config;
 tracked in TODO.md "P1 - Retrospective Recording".
+
+## F-2026-07-03-001 - trl 0.11.4 missing transitive `rich` crashes SFTTrainer import
+
+Symptom:
+
+First A2 launch crashed on import: `SFTTrainer` (trl) pulled in a module that
+imports `rich`, which was not installed - ImportError before any training step.
+Failed launch produced a manifest-only run dir with no adapter.
+
+Evidence files:
+
+```text
+runs/sft_qwen05/20260703T1504Z-e571324/run_manifest.json
+runs/sft_qwen15/20260703T1504Z-e571324/run_manifest.json
+(manifest + trainer_log stub only; no adapter/, no metrics.json)
+```
+
+Diagnosis:
+
+`rich` is a transitive dependency of trl's console/logging path that pip did not
+resolve into the env, and requirements-rl.txt did not list it explicitly. The
+pin set was assembled without a local GPU env to install-and-validate against,
+so the missing transitive dep was invisible until first real launch.
+
+Fix:
+
+`pip install rich`, and add `rich` to requirements-rl.txt so a clean install
+cannot reproduce it. Re-ran into fresh run dirs (20260703T1505Z / T1506Z).
+
+New run:
+
+run_id 20260703T1505Z-e571324 (0.5B), 20260703T1506Z-e571324 (1.5B).
+
+Effect / lesson:
+
+Recoverable in minutes once seen; the manifest-only failed dirs are preserved as
+the linkage record. Lesson reinforced with F-2026-07-03-002: version pins chosen
+without a GPU env to validate against are guesses - the per-run manifest pip
+freeze is the authoritative environment record.
+
+## F-2026-07-03-002 - TRL API mismatch: scripts use `processing_class` + GRPOTrainer, but pins were trl 0.11.4
+
+Symptom:
+
+The A2/A3 scripts are written for the modern trl API (`processing_class=` on
+SFTTrainer, and `GRPOTrainer`/`GRPOConfig` for A3), but requirements-rl.txt
+pinned `trl==0.11.4`, which uses the old `tokenizer=` argument AND does not
+contain GRPOTrainer at all (it only landed in trl 0.14). So A2 would take the
+wrong kwarg and A3 could not import its trainer.
+
+Evidence files:
+
+```text
+runs/sft_qwen05/20260703T1504Z-e571324/run_manifest.json   (failed-era manifest)
+runs/gpu_session_20260703/{run_a2.sh,run_a3.sh,a2_batch.log,a3_batch.log}
+runs/*/*/run_manifest.json  pip_freeze now records trl==0.15.2 (authoritative)
+```
+
+Diagnosis:
+
+The pins were chosen from memory of a "known-good" trl era without a local GPU
+environment to install-and-run against, so the script/pin API drift (0.11.x vs
+the 0.14+ processing_class + GRPOTrainer world) went undetected until launch.
+
+Fix:
+
+Upgrade the env to `trl==0.15.2`, `transformers==4.49.0`, `peft==0.14.0`;
+verified SFTTrainer accepts `processing_class` and GRPOConfig exposes all six
+args the scripts use (num_generations, max_completion_length, save_steps,
+save_total_limit, gradient_accumulation_steps, seed). Updated requirements-rl.txt
+to the validated pins.
+
+New run:
+
+Same re-run dirs as F-2026-07-03-001 (T1505Z/T1506Z for A2; A3 T1507Z/T1520Z).
+
+Effect / lesson:
+
+Both A2 and A3 ran cleanly on the upgraded env. Standing lesson: version pins
+are a convenient starting point only; the per-run `run_manifest.json` pip freeze
+is the authoritative record of what actually ran.
+
+## F-2026-07-03-003 - GRPO 0.5B policy collapse: gate action extinct under group-relative advantage
+
+Symptom:
+
+A3 GRPO on Qwen2.5-0.5B (init from the SFT adapter) collapsed. Test @lambda=0.3
+reward fell to 0.383 (-22.3 pts vs SFT 0.6061), gate_recall dropped to 0.00, and
+cost climbed to 0.9455 (~ always-deep). The policy degenerated to near-always
+choosing the deep/expensive action: cost ~= deep 1.0, success 1.0, gate action
+extinct. Kill check FAIL.
+
+Evidence files:
+
+```text
+runs/grpo_qwen05/20260703T1507Z-e571324/reward_trace.jsonl   (action_mix gate -> 0)
+runs/grpo_qwen05/20260703T1507Z-e571324/generations.jsonl    (5936+ rollouts)
+runs/grpo_qwen05/20260703T1507Z-e571324/trainer_log.jsonl    (KL ~2.0 throughout)
+runs/grpo_qwen05/20260703T1507Z-e571324/grpo_test_eval.json  (kill_check delta -0.2231)
+runs/grpo_qwen05/20260703T1507Z-e571324/run_manifest.json
+```
+
+Early warning (interview-grade):
+
+The collapse was visible in reward_trace BEFORE the eval confirmed it. The
+per-batch action_mix shows the gate count decaying to 0 in late batches; batch
+371 recorded gate_violation_rate 1.0 with mean_reward -1.51. The reward_trace
+is the early-warning instrument: gate count -> 0 is the leading indicator of the
+collapse that the held-out eval then measured.
+
+Diagnosis (mechanism hypothesis):
+
+Gate-required seeds are only 24/160 = 15% of the training distribution. GRPO
+uses group-relative advantage: it normalizes reward WITHIN the K=8 completions
+for a given seed. When all 8 completions on a gate seed violate the gate
+identically (easy at 0.5B capacity), their rewards are all ~equal, so the
+within-group advantage is ~0 - the -2.0 safety penalty produces NO gradient
+signal because there is no relative winner to reinforce. Meanwhile the abundant
+non-gate seeds provide a clean cost gradient. Combined with high KL drift (~2.0)
+at 0.5B capacity, cost-optimization squeezed the low-frequency, gradient-starved
+gate action out of the policy entirely. In short: a rare hard-constraint action,
+under group-relative advantage, can receive zero learning signal exactly when it
+is failing uniformly - and then gets optimized away.
+
+Fix (not yet run - pre-registered options, see D-2026-07-03-003):
+
+No single-line fix; this is a method/regime result. Candidate interventions
+pre-registered but not committed: (a) gate-seed oversampling so gate seeds are
+not 15% of batches, (b) larger K to raise the chance of an intra-group winner on
+gate seeds, (c) an explicit exploration bonus on the gate action, or (d) accept
+the rules+model hybrid as the product answer (the safety floor lives in code,
+not in the RL policy). The 1.5B run did NOT collapse (KL ~0.3, gate alive), so
+this is partly a capacity-plus-KL-control failure specific to 0.5B.
+
+Effect / lesson:
+
+This is the day's interview-grade evidence: a concrete, instrumented RL failure
+with a mechanistic explanation and a leading indicator that fired before the
+eval. It is also the direct evidence for the standing architecture decision
+(D-2026-07-03-003): pure RL cannot be trusted to carry a hard, low-frequency
+safety constraint - the floor stays in versioned code.

@@ -2,6 +2,31 @@
 
 Last updated: 2026-07-03
 
+## RL Phase 2 GPU Session A1->A2->A3 (2026-07-03)
+
+First real-GPU session of RL Phase 2 on a single A100 80GB: pulled the hardened
+`scripts/rl/` chain to the box, set up access, and ran A1->A2->A3 on escalation
+env v0.3 (test n=48, 8 gate-required seeds, greedy temp-0, seed 0, lambda=0.3,
+oracle test reward 0.8473). **A1** prompted the base Qwen2.5 0.5B/1.5B/3B/7B with
+no training: no model passed the kill check, and the diagnosis was that success
+rates are already fine (1.5B/7B = 1.0) - what small models lack is gate
+discipline (7B gate recall only 0.75, 3B 0.00), so training is motivated.
+**A2** argmax-SFT (LoRA, 160 oracle labels, 3 epochs) delivered the headline:
+the trained 1.5B (0.7495) beats the PROMPTED 7B (0.7447) - a 4.7x smaller model,
+and its gate recall lifted 0.50 -> 0.875. **A3** GRPO (K=8, 400 steps, from the
+SFT adapters) split: the 1.5B improved +4.9 reward pts to 0.7981 (within 4.9 of
+oracle) with healthy training (KL ~0.3), but gate recall stayed at 0.875 (< 0.99
+bar); the 0.5B collapsed - the gate action went extinct under group-relative
+advantage (interview-grade failure, F-2026-07-03-003). Pre-registered verdict
+recorded honestly: GRPO does not meet the promotion bar at these scales; SFT 1.5B
+is the promotable cost-efficient policy and the safety floor stays in versioned
+code (D-2026-07-03-003). Three failures logged (missing `rich`, trl API/pin
+mismatch, the 0.5B collapse); requirements-rl.txt re-pinned to the validated
+trl 0.15.2 / transformers 4.49.0 / peft 0.14.0 + rich env. Evidence rsynced to
+`scripts/rl/runs/` (manifests, generations.jsonl, reward_trace.jsonl, evals;
+weights git-excluded). See EXP-2026-07-03-001..003, F-2026-07-03-001..003,
+D-2026-07-03-003, CP-2026-07-03-002.
+
 ## GPU-Launch Hardening (2026-07-03)
 
 The A1->A2->A3 escalation RL scripts (`training-corpus/scripts/rl/`) were

@@ -1084,3 +1084,53 @@ out-dir/<run_id>/. Run monitor_run.py in a second terminal. On any failure:
 keep the dir, write a FAILURE_LOG.md entry, re-run with --parent-run <run_id>.
 See D-2026-07-03-001, TODO.md "P0 - RL Phase 2".
 ```
+
+## CP-2026-07-03-002 - RL Phase 2 GPU session A1->A2->A3 run and written up
+
+Status:
+
+```text
+A1->A2->A3 chain RAN on one A100 80GB (env v0.3, test n=48, lambda=0.3, seed 0).
+SFT is the win; GRPO verdict recorded honestly (does not meet promotion bar).
+All evidence rsynced to scripts/rl/runs/ and committed (weights git-excluded).
+```
+
+Headline results (test @lambda=0.3, oracle 0.8473):
+
+```text
+A1 prompted:  0.5B 0.3063 / 1.5B 0.6444 / 3B 0.4232 / 7B 0.7447
+              -> no kill-pass; small models lack GATE discipline (not success)
+A2 SFT:       0.5B 0.6061 (gate 0.50) / 1.5B 0.7495 (gate 0.875)
+              -> trained 1.5B BEATS prompted 7B (0.7495 > 0.7447), 4.7x smaller
+A3 GRPO:      0.5B 0.383 gate 0.00 COLLAPSE / 1.5B 0.7981 (+4.9) gate 0.875
+              -> pre-registered verdict: GRPO not promoted at these scales
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/a1_prompted/{qwen05,qwen15,qwen3,qwen7}_test_eval.json, a1_manifest.json
+runs/sft_qwen05/20260703T1505Z-e571324/   (final 0.5B SFT)
+runs/sft_qwen15/20260703T1506Z-e571324/   (final 1.5B SFT)
+runs/grpo_qwen05/20260703T1507Z-e571324/  (0.5B collapse - generations/reward_trace)
+runs/grpo_qwen15/20260703T1520Z-e571324/  (1.5B healthy)
+runs/sft_qwen{05,15}/20260703T1504Z-e571324/  (preserved failed launches)
+runs/gpu_session_20260703/{run_a1,run_a2,run_a3}.sh, sft_train.jsonl, *batch.log
+```
+
+Note: the 6 run_manifest.json files had their tensorboard `logging_dir` hostname
+suffix REDACTED before commit (redaction_note field kept); no other infra
+identifiers were present. Per-run pip_freeze records the authoritative env
+(trl==0.15.2).
+
+Resume:
+
+```text
+SFT 1.5B is the promotable policy; GRPO is not promoted. Next-iteration GRPO
+options are pre-registered (not committed) in D-2026-07-03-003: gate-seed
+oversampling, larger K, gate exploration bonus, or accept the hybrid. Near-term
+TODO wins: DPO round on existing preference_pairs, failure-trajectory taxonomy
+from grpo_qwen05 generations.jsonl, identify the 1-missed-gate seed at 1.5B,
+judge-consistency report, capability matrix, consolidated project-plan doc.
+See EXP-2026-07-03-001..003, F-2026-07-03-001..003, D-2026-07-03-003, TODO.md.
+```

@@ -1,0 +1,9 @@
+{
+ "run_id": "20260703T1506Z-e571324",
+ "model": "Qwen/Qwen2.5-1.5B-Instruct",
+ "train_file": "sft_train.jsonl",
+ "train_rows": 160,
+ "epochs": 3.0,
+ "lr": 0.0002,
+ "final_loss": 1.236024312178294
+}

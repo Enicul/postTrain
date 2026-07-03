@@ -42,6 +42,15 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=400)
     ap.add_argument("--lr", type=float, default=1e-5)
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--gate-oversample", type=int, default=1,
+                    help="repeat every gate-required seed N times in the train "
+                         "prompt list. Motivation: on all-violate groups the "
+                         "group-relative advantage is identically zero (all K "
+                         "samples miss the gate -> same reward -> no signal). "
+                         "Duplicating gate seeds seeds mixed groups so some "
+                         "member can gate correctly and advantage stops zeroing.")
+    ap.add_argument("--kl-beta", type=float, default=None,
+                    help="GRPOConfig beta (KL coeff). Default None -> TRL default.")
     ap.add_argument("--grad-accum", type=int, default=1, help="gradient_accumulation_steps")
     ap.add_argument("--save-steps", type=int, default=50)
     ap.add_argument("--seed", type=int, default=0)
@@ -50,6 +59,15 @@ def main() -> None:
     ap.add_argument("--parent-run", default=None,
                     help="run_id of a failed run this re-run fixes (R4 linkage)")
     args = ap.parse_args()
+
+    # num_generations must divide the per-device batch (TRL groups K samples of
+    # one prompt inside a batch); fail loud and early rather than deep in TRL.
+    if args.batch_size % args.num_generations != 0:
+        ap.error(f"--num-generations ({args.num_generations}) must divide "
+                 f"--batch-size ({args.batch_size}); "
+                 f"got remainder {args.batch_size % args.num_generations}.")
+    if args.gate_oversample < 1:
+        ap.error(f"--gate-oversample must be >= 1, got {args.gate_oversample}")
 
     import torch
     import transformers
@@ -64,8 +82,16 @@ def main() -> None:
     run_dir, run_id = new_run_dir(args.out_dir)
     seeds = [(sid, s) for sid, s in reward.env.seeds.items()
              if args.split == "all" or s["split"] == args.split]
-    prompts = Dataset.from_list([{"prompt": render_prompt(s), "seed_id": sid}
-                                 for sid, s in seeds])
+    # gate-oversample: repeat each gate-required seed N times so mixed groups
+    # exist and group-relative advantage stops zeroing on all-violate groups.
+    rows, n_gate_rows = [], 0
+    for sid, s in seeds:
+        reps = args.gate_oversample if s["requires_human_gate"] else 1
+        for _ in range(reps):
+            rows.append({"prompt": render_prompt(s), "seed_id": sid})
+        if s["requires_human_gate"]:
+            n_gate_rows += reps
+    prompts = Dataset.from_list(rows)
 
     tok = AutoTokenizer.from_pretrained(args.model)
     if tok.pad_token is None:
@@ -122,7 +148,7 @@ def main() -> None:
         trace_fh.flush()
         return rewards
 
-    cfg = GRPOConfig(
+    cfg_kw = dict(
         output_dir=str(run_dir), learning_rate=args.lr,
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum,
@@ -131,8 +157,16 @@ def main() -> None:
         save_steps=args.save_steps, save_total_limit=None, seed=args.seed,
         bf16=True, report_to=[],
     )
+    if args.kl_beta is not None:  # else leave TRL's default beta
+        cfg_kw["beta"] = args.kl_beta
+    cfg = GRPOConfig(**cfg_kw)
+    manifest_cfg = vars(cfg) if hasattr(cfg, "__dict__") else {}
+    # record the oversample provenance (not a GRPOConfig field) in the manifest
+    manifest_cfg["gate_oversample"] = args.gate_oversample
+    manifest_cfg["gate_prompt_rows"] = n_gate_rows
+    manifest_cfg["total_prompt_rows"] = len(prompts)
     write_manifest(run_dir, run_id, seed=args.seed, argv=sys.argv,
-                   config=vars(cfg) if hasattr(cfg, "__dict__") else {},
+                   config=manifest_cfg,
                    env_seeds_version=reward.env.seeds_version,
                    base_model=args.model, parent_run_id=args.parent_run)
     trainer = GRPOTrainer(
@@ -146,7 +180,9 @@ def main() -> None:
     trainer.save_model(str(run_dir / "adapter"))
     (run_dir / "metrics.json").write_text(json.dumps({
         "run_id": run_id, "model": args.model, "lambda": args.lam,
-        "K": args.num_generations, "steps": args.steps,
+        "K": args.num_generations, "batch_size": args.batch_size,
+        "gate_oversample": args.gate_oversample, "kl_beta": args.kl_beta,
+        "steps": args.steps,
         "init_adapter": str(args.init_adapter) if args.init_adapter else None,
         "final_loss": getattr(result, "training_loss", None),
     }, indent=1))

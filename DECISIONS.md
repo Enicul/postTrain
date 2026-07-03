@@ -630,3 +630,51 @@ alongside the standing env-fidelity limits. No v0.4 seed is built and no arm is
 measured until the v0.3 small-model chain (A1-A3) has a written verdict; the
 deterministic gate floor (`risk_gate_rules_v11.py`) remains the safety backstop
 on every arm.
+
+## D-2026-07-03-003 - GRPO verdict (pre-registered): safety floor stays in code; RL optimizes above it
+
+Decision:
+
+Record the pre-registered A3 verdict honestly: **GRPO does not meet the
+promotion bar at these scales.** On escalation env v0.3, test @lambda=0.3, from
+SFT adapters (evidence EXP-2026-07-03-003, runs/grpo_qwen{05,15}/): the 0.5B run
+collapsed (reward -22.3 vs SFT, gate recall -> 0.00, gate action extinct - see
+F-2026-07-03-003), and the 1.5B run trained healthily and gained +4.86 reward
+pts over SFT (0.7981, within 4.9 of oracle 0.8473) but held gate recall at only
+0.875 (the same single missed seed as SFT), below the 0.99 bar. Reward gains from
+RL are real at 1.5B; the hard safety constraint is not met by pure RL at either
+scale. Accompanying architecture decision: **the safety floor lives in versioned
+code, and RL optimizes cost above that floor - RL never carries the floor alone.**
+The deterministic gate (`risk_gate_rules_v11`) plus the Act-1 hybrid (rules+model
+gate recall 1.000) is the product answer for the safety constraint; the trained
+small model (SFT 1.5B, promotable) is the cost-efficient policy that runs on top
+of it.
+
+Why:
+
+The A3 evidence is a clean demonstration of a general property, not a tuning
+miss: a rare, hard safety action (gate seeds 15% of the train mix) is exactly the
+kind of low-frequency hard constraint that group-relative advantage can strand -
+when all K completions on a gate seed fail identically, within-group advantage is
+~0 and the -2.0 penalty yields no gradient (mechanism in F-2026-07-03-003). At
+0.5B this, plus KL drift ~2.0, optimized the gate out entirely. Trusting a pure
+RL policy to hold a hard safety floor is therefore unsound at these scales, and
+the honest pre-registered verdict is more valuable as portfolio evidence than a
+massaged "RL won" headline. Keeping the floor in code is the same stance already
+taken for KIWI's guardrails (F-2026-07-02-009): safety must not be promptable or
+purely-learned - it must be a versioned code-level floor.
+
+Consequence:
+
+- SFT 1.5B is the promotable cost-efficient policy; GRPO is NOT promoted.
+- The gate floor stays in `risk_gate_rules_v11.py` / the Act-1 hybrid on every
+  arm; the RL policy is only ever trusted to optimize cost above it.
+- Next-iteration options are PRE-REGISTERED but NOT committed to run: (a)
+  gate-seed oversampling in GRPO batches (break the 15% starvation), (b) larger
+  K (raise the chance of an intra-group winner on gate seeds), (c) an explicit
+  exploration bonus on the gate action, (d) accept the rules+model hybrid as the
+  product answer and stop trying to make pure RL carry the floor. Choosing among
+  these is deferred; whichever runs must keep the same pre-registered kill
+  criterion (>= 3 reward pts over SFT AND gate recall >= 0.99 at lambda=0.3).
+- Also queued (TODO): identify the specific 1-missed-gate seed at 1.5B, and a
+  failure-trajectory taxonomy from grpo_qwen05 generations.jsonl.

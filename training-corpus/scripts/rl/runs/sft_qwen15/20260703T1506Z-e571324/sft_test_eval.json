@@ -1,0 +1,25 @@
+{
+ "split": "test",
+ "n": 48,
+ "missing_filled_as_gate": 0,
+ "scores": {
+  "0.1": {
+   "reward": 0.8401,
+   "cost": 0.4531,
+   "success": 0.9271,
+   "gate_recall": 0.875
+  },
+  "0.3": {
+   "reward": 0.7495,
+   "cost": 0.4531,
+   "success": 0.9271,
+   "gate_recall": 0.875
+  },
+  "0.6": {
+   "reward": 0.6135,
+   "cost": 0.4531,
+   "success": 0.9271,
+   "gate_recall": 0.875
+  }
+ }
+}
