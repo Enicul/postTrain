@@ -67,6 +67,11 @@ def main() -> None:
     ap.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     ap.add_argument("--eval-dir", type=Path, required=True,
                     help="citation_real_eval_v1 dir (has rows/all.jsonl)")
+    ap.add_argument("--action-space", default="raw_id", choices=["raw_id", "letters"],
+                    help="raw_id (v1: cite the long evidence_id verbatim) or "
+                         "letters (v2, D-2026-07-04-002: cite a menu letter A-F "
+                         "that the harness maps back to the id; fabrication = "
+                         "off-menu letter). Default raw_id keeps v1 intact.")
     ap.add_argument("--out-dir", type=Path, default=None,
                     help="parent dir for train runs; out-dir/<run_id>/")
     ap.add_argument("--init-adapter", type=Path, default=None)
@@ -95,17 +100,24 @@ def main() -> None:
                          "(no model load), to smoke the reward/parse wiring.")
     args = ap.parse_args()
 
-    env = CitationAgenticEnv(args.eval_dir)
+    env = CitationAgenticEnv(args.eval_dir, action_space=args.action_space)
 
     # ---- CPU dry parse test: no torch, verify reward wiring on a fake completion
     if args.dry_parse:
         cid = next(c for c, m in env.claims.items() if m["split"] in ("test", "all", "train"))
         gold = env.claims[cid]["gold_evidence_id"]
         gold_label = env.claims[cid]["gold_label"]
-        good = json.dumps({"cite": gold, "verdict": gold_label})
-        fab = '{"cite": "NOPE:block:999", "verdict": "insufficient"}'
+        if args.action_space == "letters":
+            lmap = env.letter_map(cid, K_CANDIDATES)
+            gold_cite = next((l for l, e in lmap.items() if e == gold), "A")
+            fab_cite = "Z"  # off-menu letter -> the v2 fabricated hard negative
+        else:
+            gold_cite, fab_cite = gold, "NOPE:block:999"
+        good = json.dumps({"cite": gold_cite, "verdict": gold_label})
+        fab = json.dumps({"cite": fab_cite, "verdict": "insufficient"})
         rep = eval_report(env, [env.reward(cid, good), env.reward(cid, fab)])
-        print(json.dumps({"status": "dry_parse_ok", "claim": cid,
+        print(json.dumps({"status": "dry_parse_ok", "action_space": args.action_space,
+                          "claim": cid, "gold_cite": gold_cite, "fab_cite": fab_cite,
                           "perfect_play": env.reward(cid, good),
                           "fabricated": env.reward(cid, fab),
                           "report_over_the_two": rep}, ensure_ascii=False, indent=1))
@@ -154,6 +166,7 @@ def main() -> None:
             results.append(env.reward(cid, comp))
         rep = eval_report(env, results)
         rep.update({"split": args.split, "model": args.model,
+                    "action_space": args.action_space,
                     "adapter": str(args.adapter) if args.adapter else None,
                     "mode": "adapter" if args.adapter else "prompted_baseline"})
         print(json.dumps(rep, ensure_ascii=False, indent=1))
@@ -229,8 +242,10 @@ def main() -> None:
     manifest_cfg = vars(cfg) if hasattr(cfg, "__dict__") else {}
     manifest_cfg["k_candidates"] = K_CANDIDATES
     manifest_cfg["n_train_claims"] = len(prompts)
+    manifest_cfg["action_space"] = args.action_space
     write_manifest(run_dir, run_id, seed=args.seed, argv=sys.argv,
-                   config=manifest_cfg, env_seeds_version="citation_real_eval_v1",
+                   config=manifest_cfg,
+                   env_seeds_version=f"citation_real_eval_v1/action_space={args.action_space}",
                    base_model=args.model, parent_run_id=args.parent_run)
     trainer = GRPOTrainer(
         model=model, args=cfg, train_dataset=prompts,
@@ -244,6 +259,7 @@ def main() -> None:
     (run_dir / "metrics.json").write_text(json.dumps({
         "run_id": run_id, "model": args.model, "K": args.num_generations,
         "batch_size": args.batch_size, "kl_beta": args.kl_beta, "steps": args.steps,
+        "action_space": args.action_space,
         "init_adapter": str(args.init_adapter) if args.init_adapter else None,
         "final_loss": getattr(result, "training_loss", None),
     }, indent=1))

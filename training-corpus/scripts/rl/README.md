@@ -73,6 +73,16 @@ RECORDING_PROTOCOL / D-2026-06-30-006). Resume an interrupted run with
 `{seed_id, first, on_fail, gate_needed, oracle_action, completion}` so the exact
 missed-gate seeds are identifiable (filter `gate_needed==true && first!="gate"`).
 
+`eval_escalation_policy.py --temperature T --n-samples N` (model mode,
+F-2026-07-04-002 follow-up): default `0 / 1` = greedy, unchanged. With `N>1` it
+samples N plans/seed at temperature T and reports BOTH `scores_per_sample_avg`
+(every sampled plan scored, averaged) AND `scores_majority_vote` (the per-seed
+majority plan scored), plus `gate_action_presence` = fraction of gate-needed
+seeds where `>=1` of the N samples chose gate. In sampled mode `--dump-preds`
+writes `{seed_id, majority_first, majority_on_fail, gate_needed, oracle_action,
+samples:[...]}`. Purpose: quantify whether 0.5B-v2's surviving sampled gate
+behaviour is recoverable by decoding strategy (see the pre-registered bar below).
+
 ## 4. DPO arm (`dpo_escalation.py`)
 Same task, prompt renderer, and reward ruler as SFT/GRPO; the signal is one
 preference pair per train seed:
@@ -84,11 +94,18 @@ preference pair per train seed:
   cheap_then_escalate, or a gate replaced by the least-bad wrong action) rather
   than off a random wrong plan.
 
+`--pairs-version {v1,v2}` (default v1, frozen): v2 (D-2026-07-04-004) keeps every
+v1 pair and ADDS a `failed_to_escalate` hard negative (chosen=cheap_then_escalate,
+rejected=cheap_finish) on each seed whose oracle is `cheap_then_escalate_on_fail`,
+so escalation is the WINNER on the seeds where it should fire (v1 taught "never
+escalate" by putting escalate on the rejected side of cheap seeds).
+
 CPU-buildable pair inspection (no GPU/torch):
-    python dpo_escalation.py --env-dir $ENV --lambda 0.3 --pairs-only \
-        --pairs-out /tmp/dpo_pairs.jsonl
-Prints n_pairs, chosen/rejected label mix, and two invariants that must both be
-0: `pairs_with_chosen_eq_rejected` and `pairs_where_rejected_beats_chosen_er`.
+    python dpo_escalation.py --env-dir $ENV --lambda 0.3 --pairs-version v2 \
+        --pairs-only --pairs-out /tmp/dpo_pairs.jsonl
+Prints n_pairs, `pair_type_mix`, chosen/rejected label mix, and two invariants
+that must both be 0: `pairs_with_chosen_eq_rejected` and
+`pairs_where_rejected_beats_chosen_er`.
 The trainer path refuses to train if any chosen==rejected. GPU run:
     python dpo_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct --env-dir $ENV \
         --init-adapter runs/sft_qwen05b/<RUN_ID>/adapter \
@@ -108,13 +125,22 @@ gold-span bonus, verdict match). Same K/batch flags and provenance as
 (cite not in pool), `gold_cite_rate`, `verdict_acc`; `generations.jsonl` logs
 every completion + parsed cite/verdict + reward parts.
 
+`--action-space {raw_id,letters}` (default raw_id, v1 kept intact): `letters`
+(v2, D-2026-07-04-002) re-renders the candidate pool as a lettered menu ("A:
+<span>", ...); the policy answers `{"cite": "B", "verdict": ...}` and the harness
+maps the letter back to the evidence_id before scoring. Fabrication is then an
+off-menu letter (still the -1.0 hard negative), structurally not a hallucinated
+id. Add `--action-space letters` to BOTH the baseline eval and the train/eval
+runs so v1-vs-v2 is a clean action-space comparison on the same ruler.
+
 First-run protocol:
     # CPU wiring smoke (no model): fake completion through env.reward
-    python grpo_citation.py --eval-dir $CENV --dry-parse
+    python grpo_citation.py --eval-dir $CENV --dry-parse                     # v1
+    python grpo_citation.py --eval-dir $CENV --dry-parse --action-space letters  # v2
     # prompted baseline (no adapter) on the test split -> the bar to beat
     python grpo_citation.py --model Qwen/Qwen2.5-0.5B-Instruct --eval-dir $CENV \
         --eval-only --split test --out runs/citation_baseline.json
-    # GRPO on train, then eval the adapter on test
+    # GRPO on train, then eval the adapter on test  (add --action-space letters for v2)
     python grpo_citation.py --model Qwen/Qwen2.5-0.5B-Instruct --eval-dir $CENV \
         --out-dir runs/grpo_citation_qwen05b
     python grpo_citation.py --model Qwen/Qwen2.5-0.5B-Instruct --eval-dir $CENV \
@@ -130,8 +156,52 @@ number.)
   split: `gate_recall >= 0.99` AND `reward >= SFT_baseline + 3pts`.
 - **DPO** is compared on the *same ruler* (same frozen eval-256, same
   reward/gate metric) and held to the same bar as escalation GRPO-v2.
-- **Citation GRPO** promotes iff `verdict_acc` beats the prompted baseline by
-  `>= 5pts` AND `fabricated_rate == 0`.
+- **Citation GRPO** (v1 raw-id) promotes iff `verdict_acc` beats the prompted
+  baseline by `>= 5pts` AND `fabricated_rate == 0`.
+
+### Three pre-registered bars for this iteration (D-2026-07-04-002/-004, F-2026-07-04-002)
+
+**1. Citation env v2 (letter action space, `--action-space letters`, D-2026-07-04-002).**
+Run 1.5B GRPO in `--action-space letters` against the SAME frozen
+`citation_real_eval_v1` ruler (test n=31) that the v1 raw-id run used.
+- **PASS bar:** `fabricated_rate == 0` (a letter is in-menu or off-menu, never a
+  hallucinated id, so 0 is the structural expectation) AND `verdict_acc` beats a
+  **prompted-letter baseline** (`--action-space letters --eval-only`, no adapter)
+  by `>= 5pts`.
+- **ALSO track (squeeze hypothesis):** report v2 `verdict_acc` next to the v1
+  numbers (prompted 0.2581, GRPO 0.1935 from EXP-2026-07-04-003). If v2
+  `verdict_acc` recovers relative to v1 while the citation component is met, that
+  is evidence the v1 drop was a component-reward SQUEEZE (the verbatim-copy
+  citation objective competing away verdict accuracy under a fixed budget), not a
+  verdict-capability loss. A null v2 result is then a clean statement about a
+  1.5B's citation SELECTION ability, separated from its id-COPYING inability.
+
+**2. DPO pairs v2 (`--pairs-version v2`, D-2026-07-04-004).**
+Rebuild the pair set with the failed-to-escalate hard negatives (v1 pairs kept;
+196 = 160 + 36 pairs where oracle is `cheap_then_escalate_on_fail`, adding
+`chosen=cheap_then_escalate` vs `rejected=cheap_finish`). Re-run 1.5B DPO from
+the same SFT init and evaluate on the SAME frozen eval-256.
+- **PASS bar:** on the frozen test split, DPO v2 must hold `gate_recall >= 0.99`
+  (v1 already achieved 1.000) AND recover `success` and `reward` above the v1
+  collapse (v1: success 0.58, reward 0.5382). Concretely: `reward >=
+  SFT_baseline` (no net regression vs SFT) AND `success` materially above 0.58,
+  i.e. the "never escalate" collapse is undone without losing the gate.
+- Inspect the mix first: `--pairs-only` must print `pair_type_mix`
+  (`oracle_vs_tempting` + `failed_to_escalate`) and keep both invariants at 0
+  (`pairs_with_chosen_eq_rejected`, `pairs_where_rejected_beats_chosen_er`).
+
+**3. Sampled-mode eval (`--temperature T --n-samples N`, F-2026-07-04-002 follow-up).**
+On the 0.5B GRPO-v2 adapter (greedy `gate_recall == 0`), run
+`eval_escalation_policy.py --n-samples 8 --temperature 1.0`. It reports BOTH
+`scores_per_sample_avg` and `scores_majority_vote`, plus `gate_action_presence`
+(fraction of gate-needed seeds where `>= 1` of the N samples chose gate).
+- **PRE-REGISTERED READING:** if `gate_action_presence_rate >= 0.9` at T=1.0 N=8
+  WHILE greedy `gate_recall == 0`, the collapse is a **DECODING-mode phenomenon**
+  (the gate action survives in the sampled policy but not as the greedy mode),
+  NOT a knowledge loss. If presence is also `~0`, the gate action is genuinely
+  gone from the policy. Either outcome is a distinct, publishable finding.
+- Defaults (`--n-samples 1 --temperature 0`) are greedy/argmax and leave the
+  existing eval numbers unchanged.
 
 ## 7B arm (A100 OOM knobs)
 Scaling from Qwen2.5-0.5B to a 7B model on the single A100 80GB:

@@ -62,11 +62,19 @@ def plan_json(first: str, on_fail: str) -> str:
     return json.dumps({"first": first, "on_fail": on_fail}, ensure_ascii=False)
 
 
-def build_pairs(reward: EscalationReward, split: str) -> list[dict]:
-    """One preference pair per seed in `split`: oracle vs most-tempting-wrong.
+def build_pairs(reward: EscalationReward, split: str, version: str = "v1") -> list[dict]:
+    """Preference pairs for `split`. Each pair carries a `pair_type`.
 
-    chosen  = oracle strategy (argmax expected reward).
-    rejected= the highest-expected-reward strategy that is NOT the oracle plan.
+    v1 (frozen): ONE pair per seed, oracle vs most-tempting-wrong.
+      chosen  = oracle strategy (argmax expected reward).
+      rejected= the highest-expected-reward strategy that is NOT the oracle plan.
+
+    v2 (D-2026-07-04-004): all v1 pairs PLUS, for every seed whose oracle is
+      `cheap_then_escalate_on_fail`, a second "failed_to_escalate" hard-negative
+      pair (chosen = cheap_then_escalate, rejected = cheap_finish). v1 taught
+      "never escalate" because on cheap seeds the escalate branch was frequently
+      the REJECTED side; the added pairs make escalation the WINNER on the seeds
+      where it should fire, covering the under-escalation error direction too.
     """
     env = reward.env
     pairs = []
@@ -85,11 +93,29 @@ def build_pairs(reward: EscalationReward, split: str) -> list[dict]:
             "chosen": " " + plan_json(*oracle_plan),
             "rejected": " " + plan_json(*wrong_plan),
             # provenance for inspection (not consumed by DPOTrainer)
+            "pair_type": "oracle_vs_tempting",
             "oracle_key": oracle_key, "wrong_key": wrong_key,
             "gate_needed": bool(seed["requires_human_gate"]),
             "chosen_er": round(er[oracle_key], 4),
             "rejected_er": round(er[wrong_key], 4),
         })
+        # v2: add the "failed-to-escalate" hard negative on escalate-oracle seeds.
+        if version == "v2" and oracle_key == "cheap_then_escalate_on_fail":
+            esc_plan = STRAT_TO_PLAN["cheap_then_escalate_on_fail"]
+            finish_plan = STRAT_TO_PLAN["cheap_finish"]
+            if esc_plan == finish_plan:  # can't happen, but guard degeneracy
+                continue
+            pairs.append({
+                "seed_id": sid,
+                "prompt": render_prompt(seed),
+                "chosen": " " + plan_json(*esc_plan),      # cheap_then_escalate
+                "rejected": " " + plan_json(*finish_plan),  # cheap_finish (should have escalated)
+                "pair_type": "failed_to_escalate",
+                "oracle_key": "cheap_then_escalate_on_fail", "wrong_key": "cheap_finish",
+                "gate_needed": bool(seed["requires_human_gate"]),
+                "chosen_er": round(er["cheap_then_escalate_on_fail"], 4),
+                "rejected_er": round(er["cheap_finish"], 4),
+            })
     return pairs
 
 
@@ -97,11 +123,13 @@ def summarize(pairs: list[dict]) -> dict:
     """Label-mix + sanity summary for the pair set."""
     chosen_mix = Counter(p["oracle_key"] for p in pairs)
     rejected_mix = Counter(p["wrong_key"] for p in pairs)
+    type_mix = Counter(p.get("pair_type", "oracle_vs_tempting") for p in pairs)
     n_equal = sum(1 for p in pairs if p["chosen"].strip() == p["rejected"].strip())
     n_wrong_ge = sum(1 for p in pairs if p["rejected_er"] > p["chosen_er"] + 1e-9)
     return {
         "n_pairs": len(pairs),
         "gate_pairs": sum(1 for p in pairs if p["gate_needed"]),
+        "pair_type_mix": dict(type_mix),
         "chosen_mix": dict(chosen_mix),
         "rejected_mix": dict(rejected_mix),
         "pairs_with_chosen_eq_rejected": n_equal,
@@ -115,6 +143,12 @@ def main() -> None:
     ap.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     ap.add_argument("--env-dir", type=Path, required=True)
     ap.add_argument("--lambda", dest="lam", type=float, default=0.3)
+    ap.add_argument("--pairs-version", default="v1", choices=["v1", "v2"],
+                    help="v1 (frozen): one oracle-vs-tempting pair per seed. "
+                         "v2 (D-2026-07-04-004): v1 pairs PLUS a "
+                         "failed-to-escalate hard negative "
+                         "(chosen=cheap_then_escalate, rejected=cheap_finish) on "
+                         "every seed whose oracle is cheap_then_escalate_on_fail.")
     ap.add_argument("--split", default="train", choices=["train", "dev", "all"])
     ap.add_argument("--init-adapter", type=Path, default=None,
                     help="SFT adapter to init from (recommended: DPO refines SFT)")
@@ -142,7 +176,7 @@ def main() -> None:
     args = ap.parse_args()
 
     reward = EscalationReward(args.env_dir, lam=args.lam)
-    pairs = build_pairs(reward, args.split)
+    pairs = build_pairs(reward, args.split, version=args.pairs_version)
     summary = summarize(pairs)
 
     if args.pairs_out:
@@ -152,8 +186,8 @@ def main() -> None:
                 f.write(json.dumps(p, ensure_ascii=False) + "\n")
 
     if args.pairs_only:
-        print(json.dumps({"status": "pairs_built", "split": args.split,
-                          "lambda": args.lam, **summary,
+        print(json.dumps({"status": "pairs_built", "pairs_version": args.pairs_version,
+                          "split": args.split, "lambda": args.lam, **summary,
                           "pairs_out": str(args.pairs_out) if args.pairs_out else None},
                          ensure_ascii=False, indent=1))
         return
@@ -202,6 +236,7 @@ def main() -> None:
         seed=args.seed, bf16=True, report_to=[],
     )
     manifest_cfg = vars(cfg) if hasattr(cfg, "__dict__") else {}
+    manifest_cfg["pairs_version"] = args.pairs_version
     manifest_cfg["pair_summary"] = summary
     write_manifest(run_dir, run_id, seed=args.seed, argv=sys.argv,
                    config=manifest_cfg, env_seeds_version=reward.env.seeds_version,
@@ -215,6 +250,7 @@ def main() -> None:
     trainer.save_model(str(run_dir / "adapter"))
     (run_dir / "metrics.json").write_text(json.dumps({
         "run_id": run_id, "model": args.model, "lambda": args.lam,
+        "pairs_version": args.pairs_version,
         "beta": args.beta, "epochs": args.epochs, "n_pairs": summary["n_pairs"],
         "init_adapter": str(args.init_adapter) if args.init_adapter else None,
         "final_loss": getattr(result, "training_loss", None),
