@@ -114,6 +114,16 @@ def main() -> None:
     ids = [cid for cid, m in env.claims.items()
            if args.split == "all" or m["split"] == args.split]
 
+    # train-mode preconditions checked BEFORE heavy imports so they fail loud
+    # GPU-free (mirrors grpo_escalation's early validation).
+    if not args.eval_only:
+        if args.out_dir is None:
+            ap.error("--out-dir is required for training (omit --eval-only)")
+        if args.batch_size % args.num_generations != 0:
+            ap.error(f"--num-generations ({args.num_generations}) must divide "
+                     f"--batch-size ({args.batch_size}); "
+                     f"got remainder {args.batch_size % args.num_generations}.")
+
     # heavy imports inside main so --help / --dry-parse work GPU-free
     import torch
     import transformers
@@ -153,12 +163,6 @@ def main() -> None:
         return
 
     # ---- train mode ----------------------------------------------------------
-    if args.out_dir is None:
-        ap.error("--out-dir is required for training (omit --eval-only)")
-    if args.batch_size % args.num_generations != 0:
-        ap.error(f"--num-generations ({args.num_generations}) must divide "
-                 f"--batch-size ({args.batch_size}).")
-
     from datasets import Dataset
     from peft import LoraConfig, PeftModel
     from trl import GRPOConfig, GRPOTrainer
