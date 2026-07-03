@@ -1134,3 +1134,62 @@ from grpo_qwen05 generations.jsonl, identify the 1-missed-gate seed at 1.5B,
 judge-consistency report, capability matrix, consolidated project-plan doc.
 See EXP-2026-07-03-001..003, F-2026-07-03-001..003, D-2026-07-03-003, TODO.md.
 ```
+
+## CP-2026-07-04-001 - Overnight scale sweep + DPO + collapse ablation + citation first-run
+
+Status:
+
+```text
+Overnight A100 session (2026-07-03 evening -> 07-04, GPU 0, env v0.3 test n=48,
+oracle 0.8473, greedy seed 0; base SFT adapters from 07-03). Three nights of runs
+written up and evidenced. HEADLINE: 3B is the sweet spot - 3B SFT alone hits gate
+1.000 and 3B GRPO-v2 lands EXACTLY on the oracle (0.8473). Scale curve is
+non-monotonic both ways. DPO and GRPO bracket the tradeoff (gate-perfect vs
+reward-optimal). 0.5B collapse REPEATS despite mitigations (capacity floor,
+sampling-vs-greedy split). Citation first-run is an honest negative (wrong action
+space). All evidence in scripts/rl/runs/, weights git-excluded, manifests re-redacted.
+```
+
+Headline results (test @lambda=0.3, oracle 0.8473):
+
+```text
+SCALE CURVE (SFT reward / gate -> GRPO-v2 reward / gate):
+  0.5B  0.6061/0.50  -> 0.383/0.00  COLLAPSE (greedy; samples keep gate alive)
+  1.5B  0.7495/0.875 -> 0.7997/0.875  (+0.05, gate unchanged; oversample = null at 1.5B)
+  3B    0.8428/1.000 -> 0.8473/1.000  = ORACLE; "SFT suffices at 3B" (kill +0.0045)
+  7B    0.7147/0.75  -> 0.7997/0.875  (7B SFT non-monotonic DOWN; GRPO recovers)
+DPO 1.5B (beta 0.1): 0.5382 / gate 1.000 / success 0.58 - gate-perfect, reward-collapsed
+Citation 1.5B (n=31): prompted verdict_acc 0.2581 fab 0.871 -> GRPO verdict_acc 0.1935
+  fab 0.742, cite_gold 0.0645 -> 0.1935 (3x); pre-registered bar failed (honest negative)
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/grpo_v2_qwen15/20260703T1551Z-e571324/   (R1 oversample null; test_preds -> AMD_00 miss)
+runs/dpo_qwen15/20260703T1607Z-e571324/  + runs/dpo_qwen15_pairs.jsonl  (R2 DPO)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/   (R4 collapse repeat; parent 20260703T1507Z)
+runs/sft_qwen3/20260703T1623Z-e571324/  runs/grpo_v2_qwen3/20260703T1624Z-e571324/  (3B, oracle)
+runs/sft_qwen7/20260703T1646Z-e571324/  runs/grpo_v2_qwen7/20260703T1648Z-e571324/  (7B)
+runs/citation_prompted15_test_eval.json  runs/grpo_citation15/20260703T1725Z-e571324/  (citation)
+runs/gpu_session_20260703/{run_night,run_night2,run_night3}.sh, night*_batch.log
+docs/PORTFOLIO_INDEX.md  (new interviewer front-door index)
+```
+
+Note: all 8 new run_manifest.json files had their tensorboard `logging_dir`
+hostname suffix REDACTED to `_REDACTED` before commit, with the
+`redaction_note` field added (same convention as 07-03). The 6 tracked 07-03
+manifests were re-restored from HEAD after the overnight rsync reverted their
+redaction. Per-run pip_freeze records the authoritative env (trl==0.15.2).
+
+Resume:
+
+```text
+Morning human-review queue: rule on router_contract_realtool_risk_review_AMD_00
+(gate up-front vs cheap-then-escalate acceptable) BEFORE any label change
+(D-2026-07-04-003). Then: implement citation env v2 (letter-indexed A-F action
+space, D-2026-07-04-002) and re-run 1.5B; DPO pair v2 with failed-to-escalate
+negatives (D-2026-07-04-004); Gemma 4 cross-family arm (needs HF license + fresh
+venv w/ Gemma4 transformers support); optional 0.5B temperature-sweep probe to
+quantify the sampling-vs-greedy gap. See EXP/F/D-2026-07-04-*, TODO.
+```

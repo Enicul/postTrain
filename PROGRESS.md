@@ -1,6 +1,43 @@
 # Progress
 
-Last updated: 2026-07-03
+Last updated: 2026-07-04
+
+## Overnight Scale Sweep + DPO + Collapse Ablation + Citation (2026-07-03 -> 07-04)
+
+Second A100 session (GPU 0, env v0.3, test n=48, oracle 0.8473, greedy seed 0),
+three nights of runs from yesterday's SFT adapters, all written up with evidence.
+
+**Night 1** ran three follow-ups to the A3 verdict. The gate-seed oversampling
+fix (R1, 1.5B) is a NULL RESULT - reward 0.7997 and gate 0.875 are digit-identical
+to plain GRPO, because the collapse taxonomy already showed the 1.5B had ZERO
+all-violate groups, so the fix targeted a 0.5B disease the 1.5B never had; the sole
+missed seed is named (`router_contract_realtool_risk_review_AMD_00`,
+cheap-then-escalate vs oracle gate). The DPO arm (R2, beta 0.1) is the MIRROR-IMAGE
+of GRPO: gate recall 1.000 but success 0.58 / reward 0.5382 - it nailed safety and
+collapsed exploration (pair artifact: rejected == the escalate action). The 0.5B
+collapse-prevention ablation (R4, oversample x4 + kl-beta 0.2) REPEATED the collapse
+in greedy eval (0.383 / gate 0.00, digit-identical to v1) even though training
+SAMPLES kept the gate alive - a sampling-vs-greedy split and a capacity floor.
+
+**Night 2** ran the scale sweep (SFT then GRPO-v2 at each size). The curve is
+non-monotonic both ways: 0.5B 0.606/0.50 -> 1.5B 0.800/0.875 -> **3B 0.8473/1.000
+(the oracle, the only perfect size)** -> 7B 0.800/0.875. 3B SFT alone hits gate
+1.000, and "SFT suffices at 3B" is recorded via the pre-registered bar (GRPO adds
++0.0045). 7B SFT is non-monotonic DOWN (0.7147/gate 0.75, worse than 3B and 1.5B) -
+a 160-row LoRA is too thin to move 7B priors.
+
+**Night 3** was the first citation-env training (1.5B, frozen `citation_real_eval_v1`,
+n=31). Honest negative: fabricated_rate only fell 0.871 -> 0.742 (bar was == 0) and
+verdict_acc dropped 0.2581 -> 0.1935, though cite_gold_rate tripled (0.0645 -> 0.1935).
+Diagnosis: verbatim long-id copying is the wrong action space for a 1.5B; citation
+env v2 (letter-indexed A-F, harness-mapped) is pre-registered.
+
+Four failures logged (citation launcher vs unfrozen interface, 0.5B collapse-repeat,
+citation fabrication / action space, DPO exploration collapse). AMD_00 is escalated
+to human review BEFORE any label change. New interviewer front-door index at
+`docs/PORTFOLIO_INDEX.md`. All evidence in `scripts/rl/runs/`, weights git-excluded,
+8 new manifests re-redacted (logging_dir hostname suffix -> `_REDACTED`). See EXP-2026-07-04-001..003,
+F-2026-07-04-001..004, D-2026-07-04-001..004, CP-2026-07-04-001.
 
 ## RL Phase 2 GPU Session A1->A2->A3 (2026-07-03)
 

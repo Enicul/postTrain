@@ -678,3 +678,140 @@ Consequence:
   criterion (>= 3 reward pts over SFT AND gate recall >= 0.99 at lambda=0.3).
 - Also queued (TODO): identify the specific 1-missed-gate seed at 1.5B, and a
   failure-trajectory taxonomy from grpo_qwen05 generations.jsonl.
+
+## D-2026-07-04-001 - 3B is the sweet-spot size; "SFT suffices at 3B" recorded via the pre-registered bar
+
+Decision:
+
+On escalation env v0.3 (test n=48, greedy, seed 0, lambda=0.3, oracle 0.8473),
+the scale sweep (EXP-2026-07-04-002) makes 3B the promotable size. 3B SFT alone
+reaches 0.8428 / gate_recall 1.000 (from a prompted 3B of 0.423 / gate 0.00), and
+3B GRPO-v2 reaches 0.8473 = the analytic oracle to 4 decimals. The GRPO kill-check
+is FALSE by design (delta +0.0045 < +3), so the pre-registered promotion bar fires
+as **"SFT suffices at 3B"**: RL adds nothing measurable because SFT already sits on
+the oracle. 3B is the ONLY size in the sweep to hit both perfect reward and perfect
+gate; the curve is non-monotonic on both sides (0.5B 0.606/0.50, 1.5B 0.800/0.875,
+3B 0.8473/1.000, 7B 0.800/0.875). The 7B dip (SFT 0.7147/gate 0.75, WORSE than 3B
+and 1.5B) is attributed to a 160-row LoRA being too thin to move 7B priors / an lr
+mismatch - flagged as an open item, NOT evidence that 7B is worse in principle.
+
+Why:
+
+The pre-registered bar (>= +3 reward over SFT AND gate recall >= 0.99) was written
+to prevent RL-for-RL's-sake, and it earns its keep here: it converts a 0.004-point
+GRPO "improvement" into an honest "SFT is enough at this capacity" verdict rather
+than a massaged RL headline. And it locates the real lever: gate discipline is a
+CAPACITY phenomenon (it emerges 1.5B -> 3B under identical SFT) far more than an
+ALGORITHM one (GRPO never moved the 1.5B gate off 0.875). Picking the smallest size
+that clears the oracle with SFT alone is the cost-efficient product choice.
+
+Consequence:
+
+- 3B SFT is the promotable escalation policy on env v0.3; GRPO is not needed at 3B.
+- The gate floor still lives in versioned code on every arm (D-2026-07-03-003); the
+  3B result shows a trained model CAN also hold it, but code remains the backstop.
+- OPEN (not promoted): the 7B tiny-data dip needs either more SFT rows or an
+  lr/rank retune before 7B can be judged; and a cross-family arm (Gemma 4) is
+  pre-registered to test whether the 3B sweet-spot and 7B dip are Qwen-specific or
+  general (needs HF license acceptance; see TODO).
+
+## D-2026-07-04-002 - Citation env v2: letter-indexed (A-F) action space, PRE-REGISTERED (not yet run)
+
+Decision:
+
+After the honest-negative citation first-run (EXP-2026-07-04-003: fabricated_rate
+0.871 -> 0.742, bar was fabricated == 0; verdict_acc fell 0.2581 -> 0.1935),
+pre-register citation env v2 with a LETTER-INDEXED action space: re-render the
+candidate evidence spans as a small labelled set (A-F) and have the harness map the
+chosen letter back to the underlying evidence id. The model's action becomes "pick
+the supporting candidate," not "reproduce a long id verbatim." Re-run the 1.5B GRPO
+against the SAME frozen `citation_real_eval_v1` ruler (test n=31) and re-test the
+same bar (fabricated == 0 AND verdict reward +5). Status: DESIGNED, NOT YET RUN.
+
+Why:
+
+The first-run negative diagnosed a WRONG-ACTION-SPACE problem, not a tuning miss
+(F-2026-07-04-003): a 1.5B cannot reliably copy long evidence ids, so it fabricates,
+and the citation objective competed away verdict accuracy. Reshaping the action
+space to a harness-mappable choice makes fabrication STRUCTURALLY impossible (a
+letter is in-set or a parse fallback, never a hallucinated id) - "don't make the
+model do the harness's job." Pre-registering the change (same ruler, same bar) keeps
+the v1-vs-v2 comparison a clean measurement of the action-space hypothesis rather
+than a post-hoc rescue.
+
+Consequence:
+
+- Citation env v2 needs a candidate-rendering + letter->id mapping layer in the
+  harness, and a parse-fallback bucket for off-menu letters, kept point-in-time
+  clean against the same eval split. No hparam iteration on the v1 verbatim-copy
+  space (avoid tuning a wrong action space).
+- A null v2 result would then be a result about a 1.5B's citation SELECTION ability,
+  cleanly separated from its id-COPYING inability - the interview-worthy decomposition.
+
+## D-2026-07-04-003 - risk_review_AMD_00 escalated to human review BEFORE any label change
+
+Decision:
+
+The single gate seed missed by SFT, GRPO v1, and GRPO-v2 at 1.5B is
+`router_contract_realtool_risk_review_AMD_00`. Across all three policies the model
+emits `{"first":"cheap","on_fail":"escalate"}` (cheap-then-escalate) while the
+oracle labels it `gate` (escalate immediately). Because this is a contested
+SEMANTIC BOUNDARY (is a "cheap then escalate on failure" plan acceptable here, or
+must this row gate up front?), it is escalated to a HUMAN for a ruling BEFORE any
+label change or lesson extraction. No adapter, oracle label, or reward shaping is
+touched on account of this seed until the human ruling lands.
+
+Why:
+
+This follows the standing convention pinned in D-2026-07-02-006: contested label
+conventions are escalated to a human BEFORE lesson-extraction rounds, not after,
+and contested eval rows keep their gold labels until then. AMD_00 is exactly that
+case - three independent trained policies "disagree" with the gold in the same
+direction, which is precisely the signal the convention says to route to a human
+rather than auto-resolve by flipping the label to match the model (which would be
+teaching-to-the-model, the failure the convention exists to prevent). The residual
+1/8 gate gap at 1.5B is therefore a KNOWN, NAMED, ADJUDICATION-PENDING seed, not an
+unexplained error.
+
+Consequence:
+
+- Morning human-review queue item: rule on AMD_00 (gate up-front vs
+  cheap-then-escalate acceptable). See TODO / CHECKPOINTS.
+- Until ruled, the 1.5B gate recall of 0.875 is reported with this seed named as
+  the sole miss; the gold label stands; no training change is made for it.
+- If the human rules cheap-then-escalate acceptable, the ruler is corrected (and the
+  1.5B may already be at effective gate 1.000); if the human upholds gate, the seed
+  becomes a targeted training/architecture item. Either way the ruling precedes the
+  lesson.
+
+## D-2026-07-04-004 - DPO pair v2 must include "failed-to-escalate" negatives
+
+Decision:
+
+The DPO arm collapsed exploration (gate 1.000 but success 0.58, reward 0.5382; see
+EXP-2026-07-04-001, F-2026-07-04-004) because the preference pairs, on cheap seeds,
+put the ESCALATE action on the rejected side (chosen `cheap/finish` vs rejected
+`cheap/escalate`), teaching a blanket "never escalate." Decision: DPO pair v2 must
+INCLUDE failed-to-escalate negatives - pairs where, on a gate/hard seed, the chosen
+action escalates and the rejected action is the cheap/finish plan that SHOULD have
+escalated. The pair distribution must make escalation the WINNER on hard seeds, not
+uniformly the loser.
+
+Why:
+
+A preference dataset encodes a policy. If every pair mentioning escalation marks it
+as the loser, DPO learns to never escalate, and gate recall hitting 1.000 is an
+artifact of over-escalating the few gate seeds while under-exploring the rest - not
+learned discipline. Covering BOTH error directions (over- and under-escalation) is
+what lets DPO learn WHEN to escalate. This mirrors the GRPO 1.5B result from the
+opposite side (GRPO: reward-optimal, gate-imperfect; DPO: gate-perfect,
+reward-collapsed), so the fix is symmetric: balance the training signal, don't
+one-side it.
+
+Consequence:
+
+- DPO pair v2 construction (TODO): add gate-seed pairs with escalate = chosen and
+  cheap/finish = rejected; rebalance so escalation is not uniformly the rejected
+  action; keep the same 1.5B init and eval ruler for a clean v1-vs-v2 read.
+- Recorded as a general lesson for all future preference-pair construction on env
+  v0.3+: audit the pair set for one-sided action labeling before training.

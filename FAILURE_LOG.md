@@ -1125,3 +1125,201 @@ with a mechanistic explanation and a leading indicator that fired before the
 eval. It is also the direct evidence for the standing architecture decision
 (D-2026-07-03-003): pure RL cannot be trusted to carry a hard, low-frequency
 safety constraint - the floor stays in versioned code.
+
+## F-2026-07-04-001 - citation launcher authored against an unfrozen interface: missing `--eval-dir` crashes argparse
+
+Symptom:
+
+The Night-3 citation run crashed instantly, three times. `grpo_citation.py`
+exited on argparse with `error: the following arguments are required:
+--eval-dir` before any model loaded.
+
+Evidence files:
+
+```text
+runs/gpu_session_20260703/night_batch.log    (x3 "error: the following arguments are required: --eval-dir")
+runs/gpu_session_20260703/run_night.sh       (the launcher that omitted --eval-dir)
+runs/gpu_session_20260703/run_night3.sh       (the corrected launcher, passes --eval-dir $CEVAL)
+```
+
+Diagnosis:
+
+Process failure, not a code bug in the trainer. `run_night.sh` was written by the
+overnight orchestrator BEFORE `grpo_citation.py`'s CLI was finalized - it was
+authored against an unfrozen interface. When `--eval-dir` was made a required arg
+on the script, the pre-written launcher had no way to know, so it invoked the
+script without the flag and argparse rejected it immediately. Same failure class
+as F-2026-07-03-002 (script/pin API drift): a caller committed to an interface
+before that interface was frozen.
+
+Fix:
+
+Author the citation launch in `run_night3.sh` with the required
+`--eval-dir $CEVAL` (pointing at `citation_real_eval_v1`), for both the
+`--eval-only` baseline pass and the training pass. Reran successfully.
+
+New run:
+
+run_id 20260703T1725Z-e571324 (grpo_citation15) - see EXP-2026-07-04-003.
+
+Effect / lesson:
+
+Zero-cost failure (crashed before any GPU work), fully recoverable once the
+missing flag was supplied. Standing lesson: a launcher is a caller of an
+interface; do not author it against an interface that is still changing. When a
+script's required args are not yet frozen, the launcher should be written (or
+regenerated) AFTER the script, or the script should default the arg rather than
+require it. The preserved `run_night.sh` + `night_batch.log` are the linkage
+record.
+
+## F-2026-07-04-002 - 0.5B GRPO collapse REPEATS despite oversample x4 + kl-beta 0.2: capacity floor, and a sampling-vs-greedy split
+
+Symptom:
+
+The Night-1 collapse-prevention ablation (R4: GRPO-v2 on Qwen2.5-0.5B, init from
+the SFT adapter, gate-oversample x4 AND kl-beta 0.2) trained fully (400 steps)
+but the GREEDY eval @lambda=0.3 collapsed to 0.383 / gate_recall 0.00 / cost
+0.9455 - DIGIT-IDENTICAL to yesterday's un-mitigated v1 collapse
+(F-2026-07-03-003). The mitigations did not change the decoded policy.
+
+Evidence files:
+
+```text
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/grpo_v2_test_eval.json  (0.383 / gate 0.00, kill FAIL)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/reward_trace.jsonl      (late batches keep gate alive)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/trainer_log.jsonl       (KL 37.1 @ step 10)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/run_manifest.json       (gate_oversample 4, kl_beta 0.2,
+                                                                    parent-run 20260703T1507Z-e571324)
+```
+
+Diagnosis:
+
+The mitigations DID change training dynamics: gate-oversampling raised the gate
+seed frequency and kl-beta 0.2 tightened the trust region, and the training-time
+SAMPLES kept the gate action alive - late `reward_trace` batches show up to
+11/16 gate completions with gate_violation_rate as low as 0.0 (vs v1, where gate
+count decayed to 0). KL spiked to 37.1 at step 10 before settling (~0.7).
+
+But the GREEDY (argmax, temp-0) eval still collapsed to the always-deep
+attractor, identically to v1. This is the distinct observation: a
+SAMPLING-vs-GREEDY split. Under sampling the 0.5B explores the gate; under argmax
+decoding it does not - the mode of the 0.5B's action distribution sits on "deep"
+even when the distribution has non-trivial gate mass. Oversampling and KL control
+moved the DISTRIBUTION but not its MODE, and eval reads the mode. Verdict:
+capacity floor at 0.5B. The gate action is representable in the 0.5B's sampled
+policy but not recoverable as its greedy decode at this capacity.
+
+Fix (not a one-liner; options, not committed):
+
+This is a regime result, consistent with the scale-sweep finding that gate
+discipline only emerges at 3B (EXP-2026-07-04-002). Candidate probes, none
+promoted: (a) a temperature-sweep eval on this exact adapter to quantify the
+sampling-vs-greedy gap (queued, optional, TODO); (b) accept the capacity floor
+and stop trying to make 0.5B carry the gate under greedy decode; (c) the standing
+architecture answer - the safety floor lives in versioned code, not in a 0.5B RL
+policy (D-2026-07-03-003). The 3B result (SFT alone hits gate 1.000) is the
+constructive alternative to fighting the 0.5B floor.
+
+Effect / lesson:
+
+Two mitigations that provably worked in TRAINING (samples kept the gate) failed
+to move the DECODED policy - a clean caution that training-time action mix is not
+the deliverable; the greedy-decoded eval is. Always read the eval mode you will
+ship, not the sampling stats that look healthy. Reinforces the capacity-floor
+line of D-2026-07-03-003.
+
+## F-2026-07-04-003 - citation GRPO cannot kill fabrication: wrong action space (verbatim long-id copy) for a 1.5B
+
+Symptom:
+
+First citation-env GRPO on the 1.5B (EXP-2026-07-04-003) missed its
+pre-registered bar (fabricated_rate == 0 AND verdict +5) by a wide margin.
+fabricated_rate only fell 0.871 -> 0.742 (still fabricating ~3 of 4 rows), and
+verdict_acc actually DROPPED 0.2581 -> 0.1935.
+
+Evidence files:
+
+```text
+runs/citation_prompted15_test_eval.json                              (baseline: fab 0.871, verdict_acc 0.2581,
+                                                                      cite_gold 0.0645, reward -0.5613)
+runs/grpo_citation15/20260703T1725Z-e571324/citation_grpo_test_eval.json  (fab 0.742, verdict_acc 0.1935,
+                                                                      cite_gold 0.1935, reward -0.4323)
+runs/grpo_citation15/20260703T1725Z-e571324/generations.jsonl        (rollouts show fabricated ids)
+runs/grpo_citation15/20260703T1725Z-e571324/reward_trace.jsonl
+```
+
+Diagnosis:
+
+RL did move the model the right direction on evidence (cite_gold_rate TRIPLED
+0.0645 -> 0.1935, mean_reward -0.561 -> -0.432), but it could not stop fabrication
+because the ACTION SPACE is wrong for the capacity. The env requires the model to
+reproduce long evidence identifiers verbatim, character-for-character. A 1.5B
+cannot reliably copy long ids, so it invents plausible-looking ones - that is the
+fabrication. Worse, the citation objective competed with the verdict objective
+(verdict_acc fell), so under a fixed budget the model traded verdict correctness
+for citation behavior and still fabricated. This is a HARNESS-DESIGN failure, not
+a training-hparam failure: verbatim long-id copying is making the model do the
+harness's bookkeeping.
+
+Fix (pre-registered, not yet run):
+
+Citation env v2 (D-2026-07-04-002): re-render the candidate evidence spans as a
+small set of LETTER choices (A-F) and have the harness map the chosen letter back
+to the underlying id. The model's action becomes "pick the supporting candidate,"
+which a 1.5B can do, and fabrication becomes structurally impossible (a letter is
+either in-set or a parse fallback, never a hallucinated id). Then re-run 1.5B GRPO
+against the same frozen `citation_real_eval_v1` ruler and re-test the bar.
+
+Effect / lesson:
+
+"Don't make the model do the harness's job." When a small model fabricates
+structured tokens (long ids, exact quotes), first ask whether the action space is
+asking it to be a database key store. Reshaping the action space to a
+harness-mappable choice is usually the fix, not more RL steps. Directly motivates
+citation env v2.
+
+## F-2026-07-04-004 - DPO collapses exploration: a pair-design artifact (rejected == the escalate action)
+
+Symptom:
+
+The Night-1 DPO arm at 1.5B (beta=0.1, 60 steps) achieved perfect gate recall
+(1.000) but collapsed everything else: success fell to 0.58, cost to 0.139,
+reward to 0.5382 (-0.21 vs SFT), deep/escalate actions went near-zero. The model
+learned "never escalate / never go deep."
+
+Evidence files:
+
+```text
+runs/dpo_qwen15/20260703T1607Z-e571324/dpo_test_eval.json   (reward 0.5382, gate 1.000, success 0.58, cost 0.139)
+runs/dpo_qwen15/20260703T1607Z-e571324/test_preds.jsonl
+runs/dpo_qwen15_pairs.jsonl                                  (the 160 preference pairs - the artifact)
+runs/dpo_qwen15/20260703T1607Z-e571324/metrics.json         (pref-acc 0.8625, final loss 0.4346)
+```
+
+Diagnosis:
+
+Pair-design artifact, not a DPO-method failure. For cheap seeds, the constructed
+pair frequently pits a chosen `{"first":"cheap","on_fail":"finish"}` against a
+rejected `{"first":"cheap","on_fail":"escalate"}` - i.e. the REJECTED action is
+the one that escalates. DPO therefore learns to down-weight escalation everywhere,
+including where it is needed, which is why gate recall paradoxically hits 1.000
+(the model over-escalates on the few gate seeds while under-exploring on the rest)
+while success/cost collapse. The pairs taught "the escalate branch is the loser,"
+which is only true on cheap seeds. This is the mirror image of the GRPO 1.5B
+result (reward-optimal, gate-imperfect): DPO is gate-perfect, reward-collapsed.
+
+Fix (pre-registered, not yet run):
+
+DPO pair v2 (D-2026-07-04-004): the pair set must INCLUDE "failed-to-escalate"
+negatives - pairs where, on a gate/hard seed, the chosen action escalates and the
+rejected action is the cheap/finish one that should have escalated. Balancing the
+pair distribution so escalation is the WINNER on hard seeds (not uniformly the
+loser) is what lets DPO learn when to escalate rather than a blanket "don't."
+
+Effect / lesson:
+
+A preference dataset encodes a policy; if every pair that mentions escalation
+marks it as the rejected side, DPO will learn to never escalate. Pair
+construction must cover BOTH error directions (over- and under-escalation) or the
+learned policy inherits the one-sidedness. Completes the SFT/DPO/GRPO three-way
+picture on one ruler (EXP-2026-07-04-001).

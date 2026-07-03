@@ -98,20 +98,39 @@ Block F - live demo:
 - [x] A2/A3 (A100): argmax-SFT then GRPO. SFT 1.5B (0.7495) beats prompted 7B;
   GRPO verdict recorded honestly (not promoted: 1.5B +4.9 but gate 0.875, 0.5B
   collapse). EXP-2026-07-03-002/003, D-2026-07-03-003.
-- [ ] GRPO next-iteration (PRE-REGISTERED, not committed to run;
-  D-2026-07-03-003): (a) gate-seed oversampling in GRPO batches, (b) larger K,
-  (c) exploration bonus on the gate action, (d) accept the rules+model hybrid as
-  the product answer. Pick one; keep the same kill (>=3 pts over SFT AND gate
-  recall >=0.99 @lambda0.3).
-- [ ] DPO round on the existing `preference_pairs` (portfolio gap, quick win).
-- [ ] Failure-trajectory taxonomy from
-  `runs/grpo_qwen05/20260703T1507Z-e571324/generations.jsonl` (categorize the
-  0.5B collapse rollouts; feeds F-2026-07-03-003).
-- [ ] Identify the specific 1-missed-gate seed at 1.5B (same residual in SFT and
-  GRPO) - which seed, why the model misses it.
-- [ ] Judge-consistency report.
-- [ ] Capability matrix doc (per-model x metric across A1/A2/A3).
+- [x] GRPO next-iteration option (a) gate-seed oversampling x4: RAN (2026-07-04).
+  NULL at 1.5B (0.7997/gate 0.875, digit-identical to plain GRPO - the 1.5B had
+  zero all-violate groups, so the fix targeted a 0.5B disease). At 0.5B (+kl-beta
+  0.2) the collapse REPEATED in greedy eval despite samples keeping the gate alive
+  (capacity floor). EXP-2026-07-04-001/002, F-2026-07-04-002. Options (b) larger K,
+  (c) exploration bonus remain un-run; (d) hybrid stands as the product answer.
+- [x] DPO round on the existing `preference_pairs`: RAN (2026-07-04, 1.5B beta 0.1).
+  Gate-perfect (1.000) but reward-collapsed (0.5382, success 0.58) - pair artifact
+  (rejected == escalate action). Completes the SFT/DPO/GRPO three-way table.
+  EXP-2026-07-04-001, F-2026-07-04-004.
+- [x] Failure-trajectory taxonomy from the 0.5B collapse rollouts:
+  `docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md` (55%-vs-0% all-violate-group evidence).
+- [x] Identify the 1-missed-gate seed at 1.5B: it is
+  `router_contract_realtool_risk_review_AMD_00` (model plays cheap-then-escalate;
+  oracle says gate). Same seed across SFT / v1 / v2. Escalated to human review
+  before any label change (D-2026-07-04-003).
+- [x] Judge-consistency report: `docs/JUDGE_CONSISTENCY_REPORT.md`.
+- [x] Capability matrix doc (per-model x metric): `docs/CAPABILITY_MATRIX.md`.
+- [ ] MORNING HUMAN-REVIEW: rule on `router_contract_realtool_risk_review_AMD_00`
+  (gate up-front vs cheap-then-escalate acceptable) BEFORE any label change or
+  lesson extraction (D-2026-07-04-003, standing convention D-2026-07-02-006).
+- [ ] Gemma 4 cross-family arm: repeat the SFT/GRPO-v2 sweep on Gemma 4 to test
+  whether the 3B sweet-spot and 7B non-monotonic dip are Qwen-specific or general.
+  Needs user HF license acceptance + a fresh venv with transformers>=Gemma4 support.
+- [ ] Citation env v2: letter-indexed (A-F) action space mapped back by the harness;
+  re-run 1.5B GRPO vs the same `citation_real_eval_v1` ruler, same bar. PRE-REGISTERED
+  (D-2026-07-04-002), not yet run.
+- [ ] DPO pair v2: add "failed-to-escalate" negatives (escalate = chosen on gate
+  seeds) so escalation is not uniformly the rejected action (D-2026-07-04-004).
+- [ ] 0.5B temperature-sweep probe (OPTIONAL): quantify the sampling-vs-greedy gap on
+  the 0.5B v2 adapter (samples keep gate alive; greedy collapses). F-2026-07-04-002.
 - [ ] Consolidated project-plan doc (single index across the acts + RL Phase 2).
+  PARTIALLY served by the new `docs/PORTFOLIO_INDEX.md` interviewer front door.
 - [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
 - [ ] Plan C: run with an inference backend as the control column.
 - [ ] env v0.4 memory-form experiment - designed, queued behind A3 writeup.

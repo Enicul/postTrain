@@ -1,0 +1,32 @@
+{
+ "split": "test",
+ "n": 48,
+ "missing_filled_as_gate": 0,
+ "scores": {
+  "0.1": {
+   "reward": 0.566,
+   "cost": 0.139,
+   "success": 0.5799,
+   "gate_recall": 1.0
+  },
+  "0.3": {
+   "reward": 0.5382,
+   "cost": 0.139,
+   "success": 0.5799,
+   "gate_recall": 1.0
+  },
+  "0.6": {
+   "reward": 0.4965,
+   "cost": 0.139,
+   "success": 0.5799,
+   "gate_recall": 1.0
+  }
+ },
+ "kill_check_lambda0.3": {
+  "policy_reward": 0.5382,
+  "baseline_reward": 0.7495,
+  "delta": -0.2113,
+  "gate_recall": 1.0,
+  "beats_baseline_by_3pts_and_holds_gate": false
+ }
+}

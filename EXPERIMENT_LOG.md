@@ -1585,3 +1585,253 @@ batches, larger K, exploration bonus on the gate action, or accept the hybrid as
 the product answer. See D-2026-07-03-003. Also queued: failure-trajectory
 taxonomy from grpo_qwen05 generations.jsonl, and identify the 1-missed-gate seed
 at 1.5B.
+
+## EXP-2026-07-04-001 - Night 1: GRPO-v2 oversample fix (1.5B), DPO (1.5B), 0.5B collapse-prevention ablation (env v0.3)
+
+Goal:
+
+Three follow-ups to the A3 GRPO verdict, all initialized from yesterday's SFT
+adapters, all on escalation env v0.3 (test n=48, 8 gate seeds, greedy temp-0,
+seed 0, lambda=0.3, oracle 0.8473):
+
+- R1: does gate-seed oversampling (x4) - the pre-registered fix from
+  D-2026-07-03-003 - close the residual 1/8 gate miss at 1.5B?
+- R2: a DPO arm at 1.5B (beta=0.1) to complete an SFT/DPO/GRPO three-way table
+  on one ruler.
+- R4: does oversample x4 + a stronger KL beta (0.2) prevent the 0.5B collapse?
+
+Data:
+
+Base commit e571324, TRL 0.15.2, K=8, 400 GRPO steps (R1/R4), DPO 60 steps
+(R2, 3 epochs over 160 preference pairs). Init adapters: 1.5B from
+`runs/sft_qwen15/20260703T1506Z-e571324/adapter`, 0.5B from
+`runs/sft_qwen05/20260703T1505Z-e571324/adapter`.
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_night.sh
+grpo_escalation.py --gate-oversample 4 ...            (R1 1.5B, R4 0.5B +--kl-beta 0.2)
+dpo_escalation.py  --beta 0.1 ...                     (R2 1.5B)
+```
+
+Metrics (test @lambda=0.3):
+
+| arm | reward | delta vs SFT | gate_recall | cost | success | kill-check |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| R1 GRPO-v2 1.5B (oversample x4) | 0.7997 | +0.0502 | 0.875 | 0.5287 | 1.00 | FALSE (gate<0.99) |
+| R2 DPO 1.5B (beta 0.1)          | 0.5382 | -0.2113 | 1.000 | 0.139  | 0.58 | FALSE (reward<bar) |
+| R4 GRPO-v2 0.5B (osx4+klbeta.2) | 0.383  | -0.2231 | 0.00  | 0.9455 | 1.00 | FAIL (collapse)    |
+
+Findings:
+
+- R1 (oversample fix, 1.5B) is a NULL RESULT. Reward is digit-identical to
+  yesterday's plain GRPO (0.7997) and gate recall is still 0.875 - the SAME
+  single missed seed. The reason is diagnostic, not a tuning miss: the collapse
+  taxonomy (docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md) already showed the 1.5B had
+  ZERO all-violate groups, so the oversampling fix targeted a 0.5B disease the
+  1.5B patient never had. The missed seed, identified from
+  `test_preds.jsonl`, is `router_contract_realtool_risk_review_AMD_00`: the
+  model emits `{"first":"cheap","on_fail":"escalate"}` (cheap-then-escalate)
+  where the oracle wants `gate` (escalate immediately). Policy says
+  cheap -> escalate for this row across SFT / v1 / v2 - a genuine semantic
+  boundary case, queued for human review (see DECISIONS D-2026-07-04-003).
+- R2 (DPO) is the MIRROR-IMAGE of GRPO. It nailed the safety constraint (gate
+  recall 1.000, the day's only perfect-gate learned policy besides 3B) but
+  COLLAPSED exploration: success fell to 0.58, cost to 0.139, deep/escalate went
+  near-zero. Mechanism: for cheap seeds the rejected action in the pair is often
+  `cheap_then_escalate`, so DPO literally trains "never escalate" (pair sample:
+  chosen `{"first":"cheap","on_fail":"finish"}` vs rejected
+  `{"first":"cheap","on_fail":"escalate"}`). Pref-acc 0.8625, final loss 0.4346.
+  So the three-way table on one ruler now reads: SFT = balanced (0.7495 / gate
+  0.875), GRPO = reward-optimal / gate-imperfect (0.7997 / 0.875), DPO =
+  gate-perfect / reward-collapsed (0.5382 / 1.000). See F-2026-07-04-004 for the
+  pair-design artifact.
+- R4 (0.5B collapse-prevention) trained fully (400 steps) but did NOT fix the
+  decoded policy. KL spiked to 37.1 at step 10 (then settled ~0.7). The
+  training-time SAMPLES kept the gate action alive - late reward_trace batches
+  show up to 11/16 gate with gate_violation_rate as low as 0.0 - yet the GREEDY
+  eval collapsed to the same always-deep attractor: 0.383 / gate 0.00 / cost
+  0.9455, DIGIT-IDENTICAL to yesterday's v1 collapse. This is a distinct
+  observation worth recording: a SAMPLING-vs-GREEDY split, where the sampled
+  policy explores the gate but the argmax-decoded policy does not. Verdict:
+  capacity floor at 0.5B - the mitigations changed training DYNAMICS but not the
+  DECODED policy. See F-2026-07-04-002.
+
+Artifacts:
+
+```text
+runs/grpo_v2_qwen15/20260703T1551Z-e571324/{grpo_v2_test_eval.json,test_preds.jsonl,
+  generations.jsonl,reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/dpo_qwen15/20260703T1607Z-e571324/{dpo_test_eval.json,test_preds.jsonl,
+  trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/dpo_qwen15_pairs.jsonl   (160 preference pairs)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/{grpo_v2_test_eval.json,generations.jsonl,
+  reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+  (parent-run 20260703T1507Z-e571324, the v1 0.5B collapse)
+```
+
+Decision:
+
+The oversample fix is confirmed size-specific (works on the disease's actual
+host, 0.5B, in training samples; irrelevant at 1.5B). DPO and GRPO bracket the
+tradeoff: neither pure-preference nor pure-RL carries BOTH reward and the hard
+gate. The AMD_00 seed is escalated to human review before any label change
+(D-2026-07-04-003), and the DPO pair set gets a v2 that includes
+failed-to-escalate negatives (D-2026-07-04-004).
+
+Next:
+
+Night 2 scale sweep (does more capacity, not more RL, solve the gate?) and
+Night 3 citation env first-training. DPO pair v2 and 0.5B temperature-sweep probe
+queued in TODO.
+
+## EXP-2026-07-04-002 - Night 2: scale sweep 0.5B/1.5B/3B/7B (SFT then GRPO-v2), env v0.3
+
+Goal:
+
+Ask the capacity question directly: with the SAME recipe (LoRA SFT on 160 oracle
+labels, then GRPO-v2 oversample x4 from those adapters), how do reward and gate
+discipline move as the base model scales 0.5B -> 1.5B -> 3B -> 7B? Yesterday
+covered 0.5B/1.5B; this adds 3B and 7B and reads the whole curve.
+
+Data:
+
+env v0.3, test n=48, greedy temp-0, seed 0, lambda=0.3, oracle 0.8473. Base
+commit e571324. 7B GRPO ran with per-device batch 8, gradient-accumulation 2 to
+fit. Pre-registered promotion bar unchanged (>= +3 reward over SFT AND gate
+recall >= 0.99).
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_night2.sh
+sft_escalation.py  --model Qwen/Qwen2.5-{3B,7B}-Instruct ...
+grpo_escalation.py --gate-oversample 4 --init-adapter <that SFT> ...
+```
+
+Metrics (test @lambda=0.3):
+
+| model | SFT reward | SFT gate | GRPO-v2 reward | GRPO-v2 gate | delta | kill-check |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 0.5B | 0.6061 | 0.50  | 0.383 (collapse) | 0.00  | -0.223 | FAIL   |
+| 1.5B | 0.7495 | 0.875 | 0.7997           | 0.875 | +0.050 | FALSE  |
+| 3B   | 0.8428 | 1.000 | 0.8473           | 1.000 | +0.0045| FALSE  |
+| 7B   | 0.7147 | 0.75  | 0.7997           | 0.875 | +0.085 | FALSE  |
+
+(0.5B/1.5B SFT rows carried from EXP-2026-07-03-002 for the full curve.)
+
+Findings:
+
+- HEADLINE SCALE CURVE (reward / gate_recall @lambda=0.3): 0.5B 0.606/0.50
+  (SFT best; GRPO collapses) -> 1.5B 0.800/0.875 -> 3B 0.8473/1.000 (the ORACLE,
+  the ONLY size to hit perfect reward AND perfect gate) -> 7B 0.800/0.875.
+  Non-monotonic in BOTH directions: 3B is the sweet spot; both smaller and
+  larger models fall short of it.
+- 3B SFT alone reaches 0.8428 / gate 1.000 (from a prompted 3B of 0.423 / gate
+  0.00). 3B GRPO-v2 reaches 0.8473 = EXACTLY the analytic oracle to 4 decimals.
+  The kill-check is FALSE by design: GRPO beats SFT by only +0.0045 (< +3), so
+  the pre-registered criterion fires as "SFT SUFFICES AT 3B" - the RL step buys
+  nothing because SFT already sits on the oracle. This is the pre-registered bar
+  working exactly as intended (record a null RL result honestly rather than
+  claim a 0.004-point "win").
+- 7B is NON-MONOTONIC DOWN: 7B SFT (0.7147 / gate 0.75) is WORSE than both 3B
+  SFT and 1.5B SFT. Hypothesis: a 160-row LoRA cannot move 7B's stronger priors
+  (or the shared lr is mismatched for 7B) - too little data to steer the larger
+  model. 7B GRPO-v2 recovers +8.5 pts to 0.7997 and lifts gate 0.75 -> 0.875,
+  but still lands where 1.5B already was.
+- So gate discipline EMERGES 1.5B -> 3B under SFT (0.875 -> 1.000) and then
+  DEGRADES again at 7B under the same tiny-data SFT (back to 0.75). Capacity
+  helps until the data is too thin to move the priors.
+
+Artifacts:
+
+```text
+runs/sft_qwen3/20260703T1623Z-e571324/{sft_test_eval.json,test_preds.jsonl,
+  trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/grpo_v2_qwen3/20260703T1624Z-e571324/{grpo_v2_test_eval.json,generations.jsonl,
+  reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/sft_qwen7/20260703T1646Z-e571324/{sft_test_eval.json,test_preds.jsonl,...}
+runs/grpo_v2_qwen7/20260703T1648Z-e571324/{grpo_v2_test_eval.json,...}
+```
+
+Decision:
+
+3B is the sweet-spot size and "SFT suffices at 3B" is recorded via the
+pre-registered bar (D-2026-07-04-001). The 7B non-monotonic dip is a tiny-data
+LoRA / lr result, not evidence that 7B is worse in principle - flagged as an
+open item, not promoted.
+
+Next:
+
+Cross-family confirmation (Gemma 4 arm, needs HF license acceptance) to test
+whether the 3B sweet-spot and the non-monotonic 7B dip are Qwen-specific or
+general. See TODO.
+
+## EXP-2026-07-04-003 - Night 3: citation env first training run (1.5B, eval_dir citation_real_eval_v1)
+
+Goal:
+
+First-ever training on the citation agentic env (the second rung of the
+three-task ladder, Plan B). Can GRPO teach a 1.5B to (a) stop fabricating
+citations and (b) cite the gold evidence, under a reward of citation validity +
+verdict correctness with a hallucinated-citation hard negative? Pre-registered
+bar: fabricated_rate == 0 AND verdict reward improves by >= +5.
+
+Data:
+
+eval_dir `citation_real_eval_v1` (the frozen, blind-double-annotated real span
+ruler; test n=31). 1.5B base, GRPO ~200 steps, base commit e571324. Prompted
+baseline measured first as the control.
+
+Command:
+
+```text
+runs/gpu_session_20260703/run_night3.sh
+grpo_citation.py --eval-dir <citation_real_eval_v1> --model Qwen2.5-1.5B ...
+  (the required --eval-dir was omitted by the earlier run_night.sh -> crash;
+   fixed in run_night3.sh, see F-2026-07-04-001)
+```
+
+Metrics (test n=31):
+
+| arm | verdict_acc | cite_gold_rate | cite_valid_rate | fabricated_rate | mean_reward |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| prompted baseline | 0.2581 | 0.0645 | 0.129 | 0.871 | -0.5613 |
+| GRPO ~200 steps   | 0.1935 | 0.1935 | 0.258 | 0.742 | -0.4323 |
+
+Findings:
+
+- HONEST NEGATIVE. The pre-registered bar (fabricated == 0 AND verdict +5)
+  MASSIVELY failed. Fabrication only fell 0.871 -> 0.742 (still fabricating on
+  ~3 of every 4 rows), nowhere near 0. Mean reward improved (-0.561 -> -0.432)
+  and cite_gold_rate TRIPLED (0.0645 -> 0.1935) - so RL did move the model toward
+  real evidence - but verdict_acc actually DROPPED (0.2581 -> 0.1935): the model
+  traded verdict correctness for citation behavior and still fabricates.
+- Mechanism hypothesis: verbatim long-id copying is the WRONG ACTION SPACE for a
+  1.5B. Asking the model to reproduce long evidence identifiers character-for-
+  character is asking it to do the harness's bookkeeping; a small model cannot
+  reliably copy long ids, so it fabricates. Fix is a harness-design change, not
+  more RL: re-render the candidate evidence as letter choices (A-F) and let the
+  harness map the chosen letter back to the id. "Don't make the model do the
+  harness's job." Pre-registered as citation env v2 (D-2026-07-04-002).
+
+Artifacts:
+
+```text
+runs/citation_prompted15_test_eval.json                 (prompted control)
+runs/grpo_citation15/20260703T1725Z-e571324/{citation_grpo_test_eval.json,
+  generations.jsonl,reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+```
+
+Decision:
+
+Record the honest negative; do NOT iterate on hparams for the verbatim-copy
+action space. Pre-register citation env v2 with a letter-indexed (A-F) action
+space mapped back by the harness (D-2026-07-04-002), then re-run before drawing
+any conclusion about whether a 1.5B can do citation verification.
+
+Next:
+
+Implement citation env v2 (letter-indexed candidates) and re-run the 1.5B GRPO
+against the same `citation_real_eval_v1` ruler. See TODO.

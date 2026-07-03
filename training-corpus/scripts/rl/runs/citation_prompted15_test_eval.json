@@ -1,0 +1,12 @@
+{
+ "n": 31,
+ "verdict_acc": 0.2581,
+ "cite_valid_rate": 0.129,
+ "cite_gold_rate": 0.0645,
+ "fabricated_rate": 0.871,
+ "mean_reward": -0.5613,
+ "split": "test",
+ "model": "Qwen/Qwen2.5-1.5B-Instruct",
+ "adapter": null,
+ "mode": "prompted_baseline"
+}
