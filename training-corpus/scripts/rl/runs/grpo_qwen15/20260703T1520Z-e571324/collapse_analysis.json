@@ -1,0 +1,2322 @@
+{
+  "run_dir": "training-corpus/scripts/rl/runs/grpo_qwen15/20260703T1520Z-e571324",
+  "config": {
+    "K": 8,
+    "penalty_threshold": -1.0,
+    "window_steps": 50
+  },
+  "n_rollouts": 6400,
+  "n_seeds": 160,
+  "n_gate_required_seeds": 19,
+  "max_step": 400,
+  "action_share_windows": [
+    {
+      "window": "1-50",
+      "step_lo": 1,
+      "step_hi": 50,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.3787,
+        "deep": 0.38,
+        "gate": 0.2412,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 16,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "51-100",
+      "step_lo": 51,
+      "step_hi": 100,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.5375,
+        "deep": 0.3538,
+        "gate": 0.1087,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 6,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "101-150",
+      "step_lo": 101,
+      "step_hi": 150,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.5513,
+        "deep": 0.2888,
+        "gate": 0.16,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 15,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "151-200",
+      "step_lo": 151,
+      "step_hi": 200,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.62,
+        "deep": 0.2787,
+        "gate": 0.1013,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 10,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "201-250",
+      "step_lo": 201,
+      "step_hi": 250,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.4788,
+        "deep": 0.3563,
+        "gate": 0.165,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 13,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "251-300",
+      "step_lo": 251,
+      "step_hi": 300,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.55,
+        "deep": 0.3225,
+        "gate": 0.1275,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 12,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "301-350",
+      "step_lo": 301,
+      "step_hi": 350,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.5525,
+        "deep": 0.335,
+        "gate": 0.1125,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 10,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    },
+    {
+      "window": "351-400",
+      "step_lo": 351,
+      "step_hi": 400,
+      "n_rollouts": 800,
+      "action_share": {
+        "cheap": 0.4863,
+        "deep": 0.3738,
+        "gate": 0.14,
+        "parse_fallback": 0.0
+      },
+      "gate_required_groups": 13,
+      "gate_required_all_violate_groups": 0,
+      "gate_required_all_violate_rate": 0.0
+    }
+  ],
+  "gate_share_by_batch_summary": {
+    "first_batch": 0.625,
+    "gate_extinction_batch": 399,
+    "last_batch_with_gate": 398
+  },
+  "kl": {
+    "curve": [
+      {
+        "step": 10,
+        "kl": 1.6845
+      },
+      {
+        "step": 20,
+        "kl": 1.815
+      },
+      {
+        "step": 30,
+        "kl": 1.839
+      },
+      {
+        "step": 40,
+        "kl": 2.5794
+      },
+      {
+        "step": 50,
+        "kl": 1.994
+      },
+      {
+        "step": 60,
+        "kl": 3.6204
+      },
+      {
+        "step": 70,
+        "kl": 1.5441
+      },
+      {
+        "step": 80,
+        "kl": 1.6924
+      },
+      {
+        "step": 90,
+        "kl": 1.3933
+      },
+      {
+        "step": 100,
+        "kl": 1.4042
+      },
+      {
+        "step": 110,
+        "kl": 1.0324
+      },
+      {
+        "step": 120,
+        "kl": 0.6802
+      },
+      {
+        "step": 130,
+        "kl": 1.6365
+      },
+      {
+        "step": 140,
+        "kl": 0.5767
+      },
+      {
+        "step": 150,
+        "kl": 0.4955
+      },
+      {
+        "step": 160,
+        "kl": 0.3567
+      },
+      {
+        "step": 170,
+        "kl": 0.3428
+      },
+      {
+        "step": 180,
+        "kl": 0.3301
+      },
+      {
+        "step": 190,
+        "kl": 0.3348
+      },
+      {
+        "step": 200,
+        "kl": 0.3251
+      },
+      {
+        "step": 210,
+        "kl": 0.3495
+      },
+      {
+        "step": 220,
+        "kl": 0.3554
+      },
+      {
+        "step": 230,
+        "kl": 0.4507
+      },
+      {
+        "step": 240,
+        "kl": 0.3099
+      },
+      {
+        "step": 250,
+        "kl": 0.3673
+      },
+      {
+        "step": 260,
+        "kl": 0.3482
+      },
+      {
+        "step": 270,
+        "kl": 0.2936
+      },
+      {
+        "step": 280,
+        "kl": 0.3011
+      },
+      {
+        "step": 290,
+        "kl": 0.3385
+      },
+      {
+        "step": 300,
+        "kl": 0.4206
+      },
+      {
+        "step": 310,
+        "kl": 0.2763
+      },
+      {
+        "step": 320,
+        "kl": 0.3868
+      },
+      {
+        "step": 330,
+        "kl": 0.3542
+      },
+      {
+        "step": 340,
+        "kl": 0.3769
+      },
+      {
+        "step": 350,
+        "kl": 0.5347
+      },
+      {
+        "step": 360,
+        "kl": 0.3854
+      },
+      {
+        "step": 370,
+        "kl": 0.3074
+      },
+      {
+        "step": 380,
+        "kl": 0.3417
+      },
+      {
+        "step": 390,
+        "kl": 0.3184
+      },
+      {
+        "step": 400,
+        "kl": 0.2737
+      }
+    ],
+    "first": 1.6845,
+    "max": 3.6204,
+    "max_step": 60,
+    "settled_last_quarter": 0.3555
+  },
+  "gate_required_all_violate": {
+    "overall_rate": 0.0,
+    "total_groups": 95,
+    "total_all_violate_groups": 0
+  },
+  "negative_reward_batches": [],
+  "reward_curve": [
+    {
+      "batch": 1,
+      "mean_reward": 0.2938,
+      "gate_violation_rate": 0.25
+    },
+    {
+      "batch": 2,
+      "mean_reward": 0.7809,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 3,
+      "mean_reward": 0.3133,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 4,
+      "mean_reward": 0.2904,
+      "gate_violation_rate": 0.25
+    },
+    {
+      "batch": 5,
+      "mean_reward": 0.6773,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 6,
+      "mean_reward": 0.0988,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 7,
+      "mean_reward": -0.2235,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 8,
+      "mean_reward": 0.6718,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 9,
+      "mean_reward": 0.2838,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 10,
+      "mean_reward": 0.5775,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 11,
+      "mean_reward": 0.6141,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 12,
+      "mean_reward": 0.0531,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 13,
+      "mean_reward": 0.3067,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 14,
+      "mean_reward": 0.3308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 15,
+      "mean_reward": 0.444,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 16,
+      "mean_reward": 0.504,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 17,
+      "mean_reward": 0.4612,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 18,
+      "mean_reward": 0.2987,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 19,
+      "mean_reward": 0.4129,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 20,
+      "mean_reward": 0.4303,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 21,
+      "mean_reward": 0.7085,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 22,
+      "mean_reward": 0.2018,
+      "gate_violation_rate": 0.3125
+    },
+    {
+      "batch": 23,
+      "mean_reward": 0.5657,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 24,
+      "mean_reward": 0.3774,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 25,
+      "mean_reward": -0.3138,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 26,
+      "mean_reward": 0.6192,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 27,
+      "mean_reward": 0.4971,
+      "gate_violation_rate": 0.25
+    },
+    {
+      "batch": 28,
+      "mean_reward": 0.7556,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 29,
+      "mean_reward": 0.3079,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 30,
+      "mean_reward": 0.5607,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 31,
+      "mean_reward": 0.5502,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 32,
+      "mean_reward": 0.8031,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 33,
+      "mean_reward": 0.9256,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 34,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 35,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 36,
+      "mean_reward": 0.3753,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 37,
+      "mean_reward": 0.6785,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 38,
+      "mean_reward": 0.6494,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 39,
+      "mean_reward": 0.5347,
+      "gate_violation_rate": 0.25
+    },
+    {
+      "batch": 40,
+      "mean_reward": 0.2658,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 41,
+      "mean_reward": 0.7402,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 42,
+      "mean_reward": 0.8121,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 43,
+      "mean_reward": 0.8022,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 44,
+      "mean_reward": 0.6873,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 45,
+      "mean_reward": 0.3498,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 46,
+      "mean_reward": 0.565,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 47,
+      "mean_reward": 0.4074,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 48,
+      "mean_reward": 0.6861,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 49,
+      "mean_reward": 0.3557,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 50,
+      "mean_reward": 0.5453,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 51,
+      "mean_reward": 0.5138,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 52,
+      "mean_reward": 0.7029,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 53,
+      "mean_reward": 0.7352,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 54,
+      "mean_reward": 0.4186,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 55,
+      "mean_reward": 0.8313,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 56,
+      "mean_reward": 0.5194,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 57,
+      "mean_reward": 0.7303,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 58,
+      "mean_reward": 0.6886,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 59,
+      "mean_reward": 0.5967,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 60,
+      "mean_reward": 0.6021,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 61,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 62,
+      "mean_reward": 0.9453,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 63,
+      "mean_reward": 0.7248,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 64,
+      "mean_reward": 0.8299,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 65,
+      "mean_reward": 0.6886,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 66,
+      "mean_reward": 0.5535,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 67,
+      "mean_reward": 0.4975,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 68,
+      "mean_reward": 0.1966,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 69,
+      "mean_reward": 0.5216,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 70,
+      "mean_reward": 0.6958,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 71,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 72,
+      "mean_reward": 0.9453,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 73,
+      "mean_reward": 0.7887,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 74,
+      "mean_reward": 0.5971,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 75,
+      "mean_reward": 0.5535,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 76,
+      "mean_reward": 0.8937,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 77,
+      "mean_reward": 0.8824,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 78,
+      "mean_reward": 0.6962,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 79,
+      "mean_reward": 0.6438,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 80,
+      "mean_reward": 0.798,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 81,
+      "mean_reward": 0.5829,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 82,
+      "mean_reward": 0.7798,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 83,
+      "mean_reward": 0.7102,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 84,
+      "mean_reward": 0.2558,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 85,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 86,
+      "mean_reward": 0.7057,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 87,
+      "mean_reward": 0.7537,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 88,
+      "mean_reward": 0.3374,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 89,
+      "mean_reward": 0.7193,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 90,
+      "mean_reward": 0.6726,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 91,
+      "mean_reward": 0.7305,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 92,
+      "mean_reward": 0.6726,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 93,
+      "mean_reward": 0.6342,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 94,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 95,
+      "mean_reward": 0.8048,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 96,
+      "mean_reward": 0.6366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 97,
+      "mean_reward": -0.109,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 98,
+      "mean_reward": 0.9366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 99,
+      "mean_reward": 0.7206,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 100,
+      "mean_reward": 0.8164,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 101,
+      "mean_reward": 0.625,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 102,
+      "mean_reward": 0.814,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 103,
+      "mean_reward": 0.7794,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 104,
+      "mean_reward": 0.7339,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 105,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 106,
+      "mean_reward": 0.8203,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 107,
+      "mean_reward": 0.2018,
+      "gate_violation_rate": 0.3125
+    },
+    {
+      "batch": 108,
+      "mean_reward": 0.8796,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 109,
+      "mean_reward": 0.6905,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 110,
+      "mean_reward": 0.688,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 111,
+      "mean_reward": 0.7837,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 112,
+      "mean_reward": 0.7349,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 113,
+      "mean_reward": 0.7438,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 114,
+      "mean_reward": 0.7329,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 115,
+      "mean_reward": 0.7116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 116,
+      "mean_reward": -0.4493,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 117,
+      "mean_reward": 0.7673,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 118,
+      "mean_reward": 0.8987,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 119,
+      "mean_reward": 0.1242,
+      "gate_violation_rate": 0.75
+    },
+    {
+      "batch": 120,
+      "mean_reward": 0.7409,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 121,
+      "mean_reward": 0.1413,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 122,
+      "mean_reward": 0.8937,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 123,
+      "mean_reward": 0.8914,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 124,
+      "mean_reward": 0.6731,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 125,
+      "mean_reward": 0.8296,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 126,
+      "mean_reward": 0.7457,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 127,
+      "mean_reward": 0.7394,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 128,
+      "mean_reward": 0.5483,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 129,
+      "mean_reward": 0.6655,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 130,
+      "mean_reward": 0.3936,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 131,
+      "mean_reward": -0.1338,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 132,
+      "mean_reward": 0.1475,
+      "gate_violation_rate": 0.75
+    },
+    {
+      "batch": 133,
+      "mean_reward": -0.1011,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 134,
+      "mean_reward": 0.8179,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 135,
+      "mean_reward": 0.4162,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 136,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 137,
+      "mean_reward": 0.5331,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 138,
+      "mean_reward": 0.8448,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 139,
+      "mean_reward": 0.9453,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 140,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 141,
+      "mean_reward": 0.5862,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 142,
+      "mean_reward": 0.4062,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 143,
+      "mean_reward": 0.5886,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 144,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 145,
+      "mean_reward": 0.7333,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 146,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 147,
+      "mean_reward": 0.7746,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 148,
+      "mean_reward": 0.8616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 149,
+      "mean_reward": 0.7052,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 150,
+      "mean_reward": 0.7344,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 151,
+      "mean_reward": 0.6853,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 152,
+      "mean_reward": 0.8236,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 153,
+      "mean_reward": 0.8727,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 154,
+      "mean_reward": 0.6467,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 155,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 156,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 157,
+      "mean_reward": 0.8188,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 158,
+      "mean_reward": 0.8212,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 159,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 160,
+      "mean_reward": 0.7424,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 161,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 162,
+      "mean_reward": 0.7718,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 163,
+      "mean_reward": 0.7977,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 164,
+      "mean_reward": 0.8577,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 165,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 166,
+      "mean_reward": 0.6887,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 167,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 168,
+      "mean_reward": 0.676,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 169,
+      "mean_reward": 0.8174,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 170,
+      "mean_reward": -0.0758,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 171,
+      "mean_reward": 0.6579,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 172,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 173,
+      "mean_reward": 0.6418,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 174,
+      "mean_reward": 0.7722,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 175,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 176,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 177,
+      "mean_reward": 0.7914,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 178,
+      "mean_reward": 0.7938,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 179,
+      "mean_reward": 0.8544,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 180,
+      "mean_reward": 0.6952,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 181,
+      "mean_reward": 0.7662,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 182,
+      "mean_reward": 0.6486,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 183,
+      "mean_reward": 0.5018,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 184,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 185,
+      "mean_reward": 0.0066,
+      "gate_violation_rate": 0.875
+    },
+    {
+      "batch": 186,
+      "mean_reward": 0.6866,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 187,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 188,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 189,
+      "mean_reward": 0.0299,
+      "gate_violation_rate": 0.75
+    },
+    {
+      "batch": 190,
+      "mean_reward": 0.8833,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 191,
+      "mean_reward": 0.8813,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 192,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 193,
+      "mean_reward": 0.7847,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 194,
+      "mean_reward": 0.7279,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 195,
+      "mean_reward": 0.7356,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 196,
+      "mean_reward": 0.826,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 197,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 198,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 199,
+      "mean_reward": 0.7116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 200,
+      "mean_reward": 0.8116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 201,
+      "mean_reward": 0.6491,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 202,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 203,
+      "mean_reward": 0.8144,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 204,
+      "mean_reward": 0.4505,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 205,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 206,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 207,
+      "mean_reward": 0.8987,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 208,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 209,
+      "mean_reward": 0.8227,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 210,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 211,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 212,
+      "mean_reward": 0.7092,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 213,
+      "mean_reward": 0.6842,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 214,
+      "mean_reward": 0.7121,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 215,
+      "mean_reward": 0.822,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 216,
+      "mean_reward": 0.75,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 217,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 218,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 219,
+      "mean_reward": 0.6952,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 220,
+      "mean_reward": 0.2116,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 221,
+      "mean_reward": 0.6534,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 222,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 223,
+      "mean_reward": 0.8179,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 224,
+      "mean_reward": 0.71,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 225,
+      "mean_reward": 0.7818,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 226,
+      "mean_reward": 0.8937,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 227,
+      "mean_reward": 0.9366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 228,
+      "mean_reward": 0.8147,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 229,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 230,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 231,
+      "mean_reward": 0.5456,
+      "gate_violation_rate": 0.25
+    },
+    {
+      "batch": 232,
+      "mean_reward": 0.8987,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 233,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 234,
+      "mean_reward": 0.6976,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 235,
+      "mean_reward": 0.3186,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 236,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 237,
+      "mean_reward": 0.7981,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 238,
+      "mean_reward": 0.1233,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 239,
+      "mean_reward": 0.9333,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 240,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 241,
+      "mean_reward": 0.6976,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 242,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 243,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 244,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 245,
+      "mean_reward": 0.7488,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 246,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 247,
+      "mean_reward": 0.4324,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 248,
+      "mean_reward": 0.6486,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 249,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 250,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 251,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 252,
+      "mean_reward": 0.8366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 253,
+      "mean_reward": 0.7809,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 254,
+      "mean_reward": 0.7662,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 255,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 256,
+      "mean_reward": 0.8616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 257,
+      "mean_reward": 0.8325,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 258,
+      "mean_reward": 0.3406,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 259,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 260,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 261,
+      "mean_reward": 0.7424,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 262,
+      "mean_reward": 0.8237,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 263,
+      "mean_reward": 0.7987,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 264,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 265,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 266,
+      "mean_reward": 0.7808,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 267,
+      "mean_reward": 0.7189,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 268,
+      "mean_reward": 0.8265,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 269,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 270,
+      "mean_reward": 0.9366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 271,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 272,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 273,
+      "mean_reward": 0.4355,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 274,
+      "mean_reward": 0.7866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 275,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 276,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 277,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 278,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 279,
+      "mean_reward": 0.4292,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 280,
+      "mean_reward": 0.6866,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 281,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 282,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 283,
+      "mean_reward": 0.3731,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 284,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 285,
+      "mean_reward": -0.3754,
+      "gate_violation_rate": 0.5625
+    },
+    {
+      "batch": 286,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 287,
+      "mean_reward": 0.7534,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 288,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 289,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 290,
+      "mean_reward": 0.7962,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 291,
+      "mean_reward": 0.826,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 292,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 293,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 294,
+      "mean_reward": -0.0239,
+      "gate_violation_rate": 0.75
+    },
+    {
+      "batch": 295,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 296,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 297,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 298,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 299,
+      "mean_reward": 0.8212,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 300,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 301,
+      "mean_reward": 0.8616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 302,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 303,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 304,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 305,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 306,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 307,
+      "mean_reward": 0.7784,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 308,
+      "mean_reward": 0.2107,
+      "gate_violation_rate": 0.625
+    },
+    {
+      "batch": 309,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 310,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 311,
+      "mean_reward": 0.8247,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 312,
+      "mean_reward": 0.6534,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 313,
+      "mean_reward": 0.9083,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 314,
+      "mean_reward": 0.7926,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 315,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 316,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 317,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 318,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 319,
+      "mean_reward": 0.7808,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 320,
+      "mean_reward": 0.4862,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 321,
+      "mean_reward": 0.6976,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 322,
+      "mean_reward": 0.7808,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 323,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 324,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 325,
+      "mean_reward": 0.3968,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 326,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 327,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 328,
+      "mean_reward": 0.6866,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 329,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 330,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 331,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 332,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 333,
+      "mean_reward": 0.7842,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 334,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 335,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 336,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 337,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 338,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 339,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 340,
+      "mean_reward": 0.8284,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 341,
+      "mean_reward": 0.8765,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 342,
+      "mean_reward": 0.8331,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 343,
+      "mean_reward": 0.8796,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 344,
+      "mean_reward": 0.7813,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 345,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 346,
+      "mean_reward": 0.0319,
+      "gate_violation_rate": 0.75
+    },
+    {
+      "batch": 347,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 348,
+      "mean_reward": 0.8953,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 349,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 350,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 351,
+      "mean_reward": 0.8058,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 352,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 353,
+      "mean_reward": 0.7813,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 354,
+      "mean_reward": 0.7808,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 355,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 356,
+      "mean_reward": 0.8366,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 357,
+      "mean_reward": 0.6517,
+      "gate_violation_rate": 0.125
+    },
+    {
+      "batch": 358,
+      "mean_reward": 0.9116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 359,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 360,
+      "mean_reward": 0.8616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 361,
+      "mean_reward": 0.6804,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 362,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 363,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 364,
+      "mean_reward": 0.7231,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 365,
+      "mean_reward": 0.7558,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 366,
+      "mean_reward": 0.8058,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 367,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 368,
+      "mean_reward": 0.8116,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 369,
+      "mean_reward": 0.8866,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 370,
+      "mean_reward": 0.7534,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 371,
+      "mean_reward": 0.1101,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 372,
+      "mean_reward": 0.8833,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 373,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 374,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 375,
+      "mean_reward": 0.7794,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 376,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 377,
+      "mean_reward": 0.897,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 378,
+      "mean_reward": 0.7986,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 379,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 380,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 381,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 382,
+      "mean_reward": 0.7,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 383,
+      "mean_reward": 0.8275,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 384,
+      "mean_reward": 0.2698,
+      "gate_violation_rate": 0.5
+    },
+    {
+      "batch": 385,
+      "mean_reward": 0.1772,
+      "gate_violation_rate": 0.3125
+    },
+    {
+      "batch": 386,
+      "mean_reward": 0.8833,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 387,
+      "mean_reward": 0.9583,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 388,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 389,
+      "mean_reward": 0.7808,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 390,
+      "mean_reward": 0.651,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 391,
+      "mean_reward": 0.4776,
+      "gate_violation_rate": 0.375
+    },
+    {
+      "batch": 392,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 393,
+      "mean_reward": 0.9616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 394,
+      "mean_reward": 0.8616,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 395,
+      "mean_reward": 0.8308,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 396,
+      "mean_reward": 0.7784,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 397,
+      "mean_reward": 0.9083,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 398,
+      "mean_reward": 0.7679,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 399,
+      "mean_reward": 0.826,
+      "gate_violation_rate": 0.0
+    },
+    {
+      "batch": 400,
+      "mean_reward": 0.6976,
+      "gate_violation_rate": 0.0
+    }
+  ],
+  "eval": {
+    "policy_reward": 0.7981,
+    "baseline_reward": 0.7495,
+    "delta": 0.0486,
+    "gate_recall": 0.875,
+    "beats_baseline_by_3pts_and_holds_gate": false
+  }
+}
