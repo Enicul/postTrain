@@ -98,6 +98,10 @@ Block F - live demo:
 - [ ] A2/A3 (A100): argmax-SFT then GRPO; kill check GRPO vs SFT.
 - [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
 - [ ] Plan C: run with an inference backend as the control column.
+- [ ] env v0.4 memory-form experiment - designed, queued behind A3 writeup.
+  Four-arm matrix (no-memory / structured-digest / raw-long-context / Sonnet)
+  with pre-registered kills; tests what FORM state should take for a small
+  model. See `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002.
 
 ## P0 - Repo Hygiene
 

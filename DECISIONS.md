@@ -584,3 +584,49 @@ the run_id (`runs/<arm>/<run_id>/adapter`). `.gitignore` excludes
 results home means rsyncing the tree and committing summaries only. The
 FAILURE PROTOCOL (keep dir, write FAILURE_LOG entry, re-run with `--parent-run`)
 is the standing procedure for every collapse or kill-criterion stop.
+
+## D-2026-07-03-002 - Adopt the four-arm memory-form matrix for escalation env v0.4
+
+Decision:
+
+Adopt `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`: a pre-registered four-arm
+experiment on escalation env v0.4 that adds memory to lift the documented
+stateless-router ceiling (anaphora, cache-state-dependent cost, user-stage
+handling, position-context). The arms are (1) small model, no memory,
+post-trained (= A3 baseline); (2) small model, structured ~50-token digest,
+prompted vs post-trained (the MAIN hypothesis: training enables compact-memory
+use); (3) small model, raw long context, post-trained (the drowning ablation);
+(4) Sonnet, same digest, prompt-only (frontier + cost/latency anchor). Kills are
+fixed in advance: memory must add >= 3 reward pts (arm-2 post-trained over
+arm-1, gate recall >= 0.99 at lambda=0.3) or we record "memory does not pay at
+this model size"; arm 3 must collapse relative to arm 2 or the compression
+thesis is falsified; cost/speed is reported as % of Sonnet quality at % of
+Sonnet cost. Status DESIGNED, NOT YET RUN - queued behind the A1-A3 v0.3
+writeup.
+
+Why:
+
+The v0.3 env is stateless by design, and four real KIWI query classes are
+structurally unroutable without state - so the ceiling is known and adding
+memory is not the interesting decision. The interesting, harness-design
+question is **what FORM state should take for a small model**, because
+long-context degradation hits small models hardest and dumping raw L0-L3 memory
+would drown a 0.5B. Pre-registering the raw-vs-digest ablation is what makes the
+answer a measurement rather than a preference: the arm-3-minus-arm-2 gap
+quantifies the value of harness-side state compression, which is the
+interview-worthy result. F-2026-07-02-006 (a spurious id steered attention +11.6
+points) is the evidence that a small model's attention is steerable by context
+artifacts, i.e. that a deliberately structured digest should be learnable to
+attend to and raw history learnable to drown in.
+
+Consequence:
+
+env v0.4 needs a seed-schema extension (`memory_context` digest +
+`raw_history`), constructed from KIWI conversation/memory data under the
+`docs/DECISION_NODE_RECORDING_SPEC.md` snapshot fields and kept point-in-time
+clean. The digest is a hand-specified projection, so a null arm-2 result is a
+result about *this* projection, not all possible memory encodings - restated
+alongside the standing env-fidelity limits. No v0.4 seed is built and no arm is
+measured until the v0.3 small-model chain (A1-A3) has a written verdict; the
+deterministic gate floor (`risk_gate_rules_v11.py`) remains the safety backstop
+on every arm.
