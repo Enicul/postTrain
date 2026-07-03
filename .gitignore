@@ -19,3 +19,11 @@ node_modules/
 hf_cache/
 wandb/
 outputs/tmp/
+
+# RL run weights/checkpoints stay OFF git (large). Keep the summaries:
+# manifests, jsonl logs, metrics, and *_eval.json ARE committable.
+training-corpus/scripts/rl/runs/**/checkpoint-*/
+training-corpus/scripts/rl/runs/**/adapter/
+*.safetensors
+*.bin
+*.pt

@@ -83,6 +83,15 @@ Block F - live demo:
   hallucinated-citation hard negative). `scripts/rl/citation_agentic_env.py`.
 - [x] Plan C training-free GRPO loop (rollout -> semantic advantage ->
   no-regression lesson gate). `scripts/rl/training_free_grpo.py`.
+- [x] GPU-launch hardening (2026-07-03): checkpoint+resume, run-dir
+  provenance + never-overwrite failures, per-completion generations +
+  per-batch reward trace, seed/grad-accum flags, `monitor_run.py` watchdog,
+  `GPU_RUNBOOK.md` with failure protocol, pinned `requirements-rl.txt`,
+  gitignore for run weights. CPU-smoke verified. CP-2026-07-03-001,
+  D-2026-07-03-001.
+- [ ] NEXT: pull the repo to the A100 and run A1 (prompted-eval motivation
+  gate) per `scripts/rl/GPU_RUNBOOK.md`. Then A2 SFT, A3 GRPO in order,
+  each into `out-dir/<run_id>/`; run `monitor_run.py` in a second terminal.
 - [ ] A1 (GPU/inference): prompted Qwen-0.5B/1.5B/3B/7B on env v0.3 ->
   motivation gate (kill if within 3 pts of oracle at gate>=0.99). Frontier
   Claude already mapped: sonnet~=oracle/gate1.0, haiku -12.6pts/gate0.80.

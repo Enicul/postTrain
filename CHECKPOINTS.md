@@ -1040,3 +1040,47 @@ layer. Independent of that block: fix the 3 guardrail contradictions
 the capability-stage model (flywheel goal (a), currently 0 implementation).
 See TODO.md "P1 - Retrospective Recording", D-2026-07-02-009, F-2026-07-02-009.
 ```
+
+## CP-2026-07-03-001 - RL GPU-launch hardening (checkpoints, provenance, failure preservation)
+
+Status:
+
+```text
+A1->A2->A3 escalation RL scripts hardened for owner pull-and-run on one A100.
+CPU-smoke verified; not yet run on GPU. Ready to pull and launch A1.
+```
+
+Paths (postTrain, this repo):
+
+```text
+training-corpus/scripts/rl/run_logging.py     (NEW: run-dir provenance, manifest, log callback)
+training-corpus/scripts/rl/monitor_run.py     (NEW: zero-dep watchdog)
+training-corpus/scripts/rl/GPU_RUNBOOK.md     (NEW: owner step-by-step + failure protocol)
+training-corpus/scripts/rl/sft_escalation.py  (run-dir, seed, grad-accum, resume, parent-run, save_total_limit)
+training-corpus/scripts/rl/grpo_escalation.py (same + generations.jsonl + reward_trace.jsonl + save-steps)
+training-corpus/scripts/rl/eval_escalation_policy.py (minor: --seed / set_seed)
+training-corpus/scripts/rl/requirements-rl.txt (pinned == known-good, trl 0.11.4 era)
+training-corpus/scripts/rl/README.md          (run-dir usage, 7B arm note, env_seeds_v0.2 note)
+.gitignore                                    (run weights/checkpoints off git)
+```
+
+What each run now produces (in out-dir/<run_id>/):
+
+```text
+run_manifest.json   run_id, git_sha, seed, argv, config, env_seeds_version,
+                    base_model, parent_run_id, pip_freeze
+trainer_log.jsonl   every on_log dict + timestamp
+generations.jsonl   (GRPO) per-completion: step, seed_id, completion, plan, reward
+reward_trace.jsonl  (GRPO) per-batch: mean_reward, gate_violation_rate, action_mix
+metrics.json, adapter/, checkpoint-*/
+```
+
+Resume:
+
+```text
+Pull the repo to the A100. Follow scripts/rl/GPU_RUNBOOK.md: CPU smoke, then
+A1 prompted-eval (motivation gate), then A2 SFT, A3 GRPO - each into its own
+out-dir/<run_id>/. Run monitor_run.py in a second terminal. On any failure:
+keep the dir, write a FAILURE_LOG.md entry, re-run with --parent-run <run_id>.
+See D-2026-07-03-001, TODO.md "P0 - RL Phase 2".
+```

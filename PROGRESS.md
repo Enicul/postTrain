@@ -1,6 +1,35 @@
 # Progress
 
-Last updated: 2026-07-02
+Last updated: 2026-07-03
+
+## GPU-Launch Hardening (2026-07-03)
+
+The A1->A2->A3 escalation RL scripts (`training-corpus/scripts/rl/`) were
+audited runnable-but-unsafe: no checkpoint/resume, no run provenance, failed
+runs could be overwritten, no failure/error-correction record. Hardened for the
+owner's single-A100 pull-and-run:
+
+- New `run_logging.py`: `new_run_dir` (each run -> `out-dir/<run_id>/`,
+  `run_id = <UTC>-<git sha>`, REFUSES to overwrite a non-empty dir),
+  `write_manifest` (config, seeds, git sha, pip freeze, `--parent-run`
+  linkage), and a `JsonlLogCallback` that persists every `on_log` dict to
+  `trainer_log.jsonl`.
+- SFT + GRPO trainers: `--seed`, `--grad-accum`, `--resume`, `--parent-run`,
+  `save_total_limit=None`; GRPO `--save-steps` (default 50). GRPO reward_fn now
+  writes `generations.jsonl` (per completion) and `reward_trace.jsonl`
+  (per-batch mean_reward, gate_violation_rate, action_mix) - R3 failure-case
+  observability.
+- New `monitor_run.py`: zero-dep watchdog, exits nonzero + loud on NaN/inf or a
+  dead heartbeat.
+- New `GPU_RUNBOOK.md`: exact A1/A2/A3 command order, kill criteria,
+  monitoring, what-to-save, and the FAILURE PROTOCOL (keep the dir, write a
+  FAILURE_LOG entry, re-run with `--parent-run`).
+- `requirements-rl.txt` pinned to known-good (trl 0.11.4 era); `.gitignore`
+  excludes run weights/checkpoints (jsonls/manifests/metrics stay committable).
+
+CPU smoke passed: all edited modules import GPU-free, both trainers `--help`
+work, `monitor_run.py` correctly flags NaN and dead-heartbeat on a fabricated
+run dir. See CP-2026-07-03-001, D-2026-07-03-001.
 
 ## Current Direction
 

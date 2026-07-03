@@ -66,6 +66,7 @@ def main() -> None:
     ap.add_argument("--adapter", type=Path, default=None)
     ap.add_argument("--baseline-reward", type=float, default=None,
                     help="argmax-SFT reward at lambda 0.3 for the kill check")
+    ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 
@@ -88,7 +89,9 @@ def main() -> None:
                 plan_of[sid] = (r["first"], r["on_fail"])
     elif args.model:
         import torch
+        import transformers
         from transformers import AutoModelForCausalLM, AutoTokenizer
+        transformers.set_seed(args.seed)
         tok = AutoTokenizer.from_pretrained(args.model)
         model = AutoModelForCausalLM.from_pretrained(
             args.model, torch_dtype=torch.bfloat16, device_map="auto")

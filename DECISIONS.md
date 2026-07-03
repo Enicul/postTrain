@@ -545,3 +545,42 @@ uncommitted KIWI files. Enum alignment (RiskLevel/GateAction vs Bias/
 SupportLabel), tz-aware/UTC timestamps, and the sync/async adapter boundary are
 the named wiring risks. The module's 25 tests run independently in the
 meantime; nothing in KIWI's live path changes until the owner lands the tree.
+
+## D-2026-07-03-001 - Run-dir provenance + never-overwrite-failures convention for RL runs
+
+Decision:
+
+Every SFT/GRPO training run writes into `out-dir/<run_id>/` where
+`run_id = <UTC timestamp>-<short git sha>` (e.g. `20260703T0412Z-1111bfc`), and
+the trainers REFUSE to start if that dir exists and is non-empty. Each run drops
+a `run_manifest.json` (run_id, git sha, seed, argv, full config dump,
+env_seeds_version, base_model, parent_run_id, pip freeze), persists every
+`on_log` dict to `trainer_log.jsonl`, and GRPO additionally logs every
+completion (`generations.jsonl`) and per-batch aggregates (`reward_trace.jsonl`:
+mean_reward, gate_violation_rate, action_mix). A re-run that fixes a failure
+points at the failed run's id via `--parent-run`, and failed runs are never
+deleted or overwritten. Weights/checkpoints stay off git; manifests, jsonl
+logs, metrics, and *_eval.json are the committable summaries.
+
+Why:
+
+The audit found the scripts runnable but failing four hard requirements: no
+checkpoint/resume, no guarantee of retaining all data, no preservation of
+failure cases, and no record of the error-correction chain. For an interview
+artifact whose thesis is "failures are first-class evidence", a re-run silently
+overwriting a collapsed run is the worst possible default. Timestamp+sha run
+dirs make every run addressable and reproducible; the never-overwrite guard
+makes failure preservation a property of the code, not of operator discipline;
+the manifest + `--parent-run` linkage records what failed -> diagnosis -> change
+-> re-run without relying on memory. Pinning `requirements-rl.txt` while
+recording the real `pip freeze` per run keeps the pins a convenient starting
+point without pretending they are the authoritative environment.
+
+Consequence:
+
+Owner runs the chain from `scripts/rl/GPU_RUNBOOK.md`; adapter paths now carry
+the run_id (`runs/<arm>/<run_id>/adapter`). `.gitignore` excludes
+`runs/**/checkpoint-*/`, `runs/**/adapter/`, and weight blobs, so bringing
+results home means rsyncing the tree and committing summaries only. The
+FAILURE PROTOCOL (keep dir, write FAILURE_LOG entry, re-run with `--parent-run`)
+is the standing procedure for every collapse or kill-criterion stop.
