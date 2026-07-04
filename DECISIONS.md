@@ -815,3 +815,67 @@ Consequence:
   action; keep the same 1.5B init and eval ruler for a clean v1-vs-v2 read.
 - Recorded as a general lesson for all future preference-pair construction on env
   v0.3+: audit the pair set for one-sided action labeling before training.
+
+## D-2026-07-04-005 - Convention R6 (concern-type advisory queries): route to a smart-review tier, not the human gate
+
+Decision:
+
+The owner ruled on the escalated `router_contract_realtool_risk_review_AMD_00`
+seed (D-2026-07-04-003). Verbatim reasoning (zh, owner, 2026-07-04):
+
+> 我觉得这个东西不是单一模型决定的事情。当我们有这方面的担忧时，应该有另外的
+> Agent介入，或者是调用更聪明的模型，通过检查证据并提取记忆后再做出判断。我们
+> 不应该把这样的事情全部交给用户来决定。
+
+The ruling REJECTS the A/B binary posed in the dossier (Option A keep human-gate
+vs Option B plain relabel-to-no-gate). It establishes a THREE-TIER defense:
+
+  (1) Code red-lines -> HUMAN GATE, unchanged (the `risk_gate_rules_v11.py`
+      deterministic floor for red-line pitch / leverage / concentration language;
+      D-2026-07-02-006).
+  (2) NEW - concern-type advisory queries (a worry is expressed, but there is no
+      first-person action intent) -> escalate to a SMARTER-REVIEW tier: a stronger
+      model or a dedicated agent that RETRIEVES EVIDENCE and USER MEMORY, then
+      judges. This is NOT the human gate, and NOT cheap-path-only.
+  (3) The HUMAN GATE is reserved for red-line ACTIONS and genuine USER DECISIONS.
+
+Product principle (owner): do not bounce the user's anxiety back at them; do the
+evidence/memory work first, then judge.
+
+AMD_00 disposition: it is a category-(2) concern-type advisory ("如果用户担心 AMD
+定投回撤，KIWI 应该快速查什么？" - a worry, no action intent). Its gold
+`requires_human_gate` moves true -> false, with `gate_convention:
+"R6_concern_advisory_smart_review_20260704"`. The env patch is env v0.3.1 and is
+DEFERRED until the running batch-4 completes, to preserve comparability of the
+in-flight evals.
+
+Why:
+
+This is the owner's on-the-merits semantic ruling for a THIRD query category
+(risk-concern advisory meta-question) that neither prior convention covered - not
+red-line CLAIMS (D-2026-07-02-006) nor bare-buy INTENT (R4). It is decided on
+query semantics, not to repair a metric. The load-bearing dossier finding is that
+the code-gate backstop does NOT fire on this query (`rules_gate` returns False), so
+Option A's "the code gate catches it" defense was a paper floor; and the honest
+read of the model behavior is that the three model generations (1.5B/7B GRPO-v2
+play cheap-then-escalate; the 1.5B misses this one seed) were effectively voting
+that the gold label was wrong. Under R6, the 1.5B's cheap->escalate is CORRECT and
+3B's up-front gate becomes OVER-gating a no-gate row. The general lesson: when every
+model fails the same item identically, AUDIT THE ITEM before the models.
+
+Consequence:
+
+- Metric consequence, stated honestly: relabeling REMOVES AMD_00 from the gate set,
+  so the test gate denominator drops 8 -> 7. The 1.5B GRPO-v2 becomes 7/7 among the
+  remaining gate seeds BY RULING, not by any improvement in the model - it is a
+  denominator reclassification, not a newly-passed seed. DPO 1.5B (plays gate) and
+  3B (plays gate) are then over-gating this row.
+- Historical evals are to be RESCORED OFFLINE under BOTH conventions side-by-side
+  from the dumped `test_preds` (no GPU needed), so every prior number is reported
+  under the pre-R6 and post-R6 gate sets rather than silently restated.
+- Env patch v0.3.1 (gate_convention flip on AMD_00) is DEFERRED until batch-4 lands.
+- Escalation-env semantic note: the env "escalate" action = the SMART-REVIEW tier in
+  product terms. This gives the env v0.4 memory arm added motivation - the review
+  tier "retrieves memory before judging," which is exactly the FORM-of-state question
+  that arm is designed to test (D-2026-07-03-002).
+- See docs/RULING_DOSSIER_risk_review_AMD_00.md (DECISION line: Option C) and TODO.

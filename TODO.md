@@ -116,9 +116,20 @@ Block F - live demo:
   before any label change (D-2026-07-04-003).
 - [x] Judge-consistency report: `docs/JUDGE_CONSISTENCY_REPORT.md`.
 - [x] Capability matrix doc (per-model x metric): `docs/CAPABILITY_MATRIX.md`.
-- [ ] MORNING HUMAN-REVIEW: rule on `router_contract_realtool_risk_review_AMD_00`
-  (gate up-front vs cheap-then-escalate acceptable) BEFORE any label change or
-  lesson extraction (D-2026-07-04-003, standing convention D-2026-07-02-006).
+- [x] MORNING HUMAN-REVIEW: rule on `router_contract_realtool_risk_review_AMD_00`.
+  RULED 2026-07-04 (owner, Option C / Convention R6): concern-type advisory queries
+  route to a smart-review tier, NOT the human gate. AMD_00 relabeled no-gate. See
+  D-2026-07-04-005, docs/RULING_DOSSIER_risk_review_AMD_00.md.
+- [ ] env v0.3.1 gate-convention patch: flip AMD_00 `requires_human_gate` true->false
+  with `gate_convention: R6_concern_advisory_smart_review_20260704`; then OFFLINE
+  dual-convention rescore of ALL historical `test_preds` under BOTH the pre-R6 (gate
+  denom 8) and post-R6 (denom 7) gate sets, side-by-side (no GPU needed). DEFERRED
+  until batch-4 completes, to preserve comparability. D-2026-07-04-005.
+- [ ] KIWI product (design note, implementation deferred): route concern-signals
+  (worry expressed, no action intent) to the critic/verifier SMART-REVIEW tier per R6
+  — stronger model / dedicated agent that retrieves evidence + user memory before
+  judging; do NOT bounce concern back to the user as a decision, and do NOT collapse
+  it to the cheap path. Human gate stays reserved for red-line actions. D-2026-07-04-005.
 - [ ] Gemma 4 cross-family arm: repeat the SFT/GRPO-v2 sweep on Gemma 4 to test
   whether the 3B sweet-spot and 7B non-monotonic dip are Qwen-specific or general.
   Needs user HF license acceptance + a fresh venv with transformers>=Gemma4 support.
