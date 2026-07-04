@@ -1377,7 +1377,7 @@ EXP/D-2026-07-04-013..014, D-2026-07-04-010, TODO.
 
 ## CP-2026-07-04-005 - Round 7 wrap-up: full-FT probes - 0.5B GRPO collapse REATTRIBUTED to adapter capacity; LoRA protective at 7B
 
-Status: current
+Status: superseded by CP-2026-07-04-006 (the 7B "LoRA protective" reading is amended - it was an lr artifact; E1b hits exact oracle)
 
 ```text
 Full-parameter fine-tuning probes at both ends of the model range, same 160 rows / same
@@ -1444,4 +1444,62 @@ ownership question PENDING owner. Standing queue unchanged: citation collection 
 (277 -> ~400+); env v0.4 memory-arm construction (four-arm matrix, big-ticket). Second tier:
 Plan C inference-backend GRPO, lambda=0.6 exploration arm, full seed-varied 3B. See
 EXP/D-2026-07-04-015..016, D-2026-07-04-011, TODO.
+```
+
+## CP-2026-07-04-006 - Round 8: E1b - 7B full-FT at a PROPER lr hits EXACT ORACLE; the E1 "20.7 pts worse / LoRA regularizes at 7B" verdict was an lr artifact
+
+Status: current
+
+```text
+E1b is the pre-registered fair test of the E1 lr confound. It re-ran the 7B full-SFT arm
+changing ONLY the learning rate (2e-4 -> 2e-5; 2e-4 is a LoRA-standard lr, catastrophic for
+7B full-param), identical to E1 in every other respect (same model, same 160 rows, same
+frozen escalation test n=48, lambda=0.3, oracle 0.8473, seed 0), on a free GPU (no OOM chain
+this time; batch 8 / accum 2). Result: reward 0.5079 -> 0.8473 = EXACT ORACLE, gate_recall
+1.000, +13.3 over LoRA-7B-SFT (0.7147). SECOND config ever to solve the env (first: GRPO-v2
+3B x3 seeds). The pre-registered E1 bar "full beats LoRA by >=3 -> LoRA was binding" is now
+MET. Campaign self-correction #4, and it corrects #3 (the E1/D-011 "LoRA protective at 7B"
+half). The 0.5B adapter-floor reattribution (E2) STANDS - it was full-FT at the SAME lr that
+fixed it. Revised synthesis: hyperparameters must be matched to the parameterization;
+shared-lr LoRA-vs-full comparisons are confounded by construction. The scale-curve 7B dip is
+reinterpreted from "capability/data ceiling" to "config artifact." New manifest logging_dir
+hostname suffix REDACTED to _REDACTED per convention (redaction_note appended). Single seed;
+3B (LoRA-GRPO, 3 seeds) remains the strongest REPLICATED result. Origin: owner's prompts
+drove this entire probe line.
+```
+
+Headline results:
+
+```text
+E1b - 7B FULL-FT SFT, PROPER lr (frozen test n=48):
+  full-SFT 7B @ lr 2e-5 : reward 0.8473 / gate 1.000 / success 1.0  == EXACT ORACLE (0.8473)
+  chain (only lr changed): 2e-4 full -> 0.5079 ; 2e-5 full -> 0.8473 ; LoRA-7B-SFT -> 0.7147
+  kill_check lambda0.3: 0.8473 vs baseline 0.7147, delta +0.1326, beats_by_3pts_and_holds_gate = TRUE
+  (reward: lambda0.1 0.9491 / lambda0.6 0.6945; gate 1.000 at all lambdas)
+  => E1 "20.7 pts worse / LoRA regularizes at 7B" = lr artifact. Pre-registered bar MET (+13.3).
+  => Env now solved by TWO configs: 3B LoRA-GRPO (3 seeds, zero variance) + 7B full-SFT (single seed).
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/fullsft_qwen7_lowlr/20260704T1157Z-e571324/   (E1b; fullsft7b_lowlr_test_eval.json, metrics, manifest, test_preds, trainer_log; --parent-run 20260704T0805Z-e571324)
+DECISIONS.md D-2026-07-04-011                       (dated amendment appended in place)
+DECISIONS.md D-2026-07-04-012                       (the amendment: revised synthesis + per-arm-tuning lesson)
+docs/PORTFOLIO_INDEX.md                             (finding #9 reframed; scale-curve "7B dip = config artifact"; env solved by two configs)
+```
+
+Log ids this round: EXP-2026-07-04-017 (E1b, 7B full-FT proper lr = exact oracle);
+D-2026-07-04-012 (amendment to D-2026-07-04-011 + per-arm-tuning lesson); CP-2026-07-04-006.
+
+Resume:
+
+```text
+E1b DONE - 7B full-FT at proper lr (2e-5) hits exact oracle (0.8473 / gate 1.000, +13.3 over
+LoRA); the E1 lr confound is resolved and D-011's 7B half amended (D-012). Env solved by two
+configs (3B LoRA-GRPO replicated; 7B full-SFT single-seed). Optional, NOT committed: E1b seed
+replication; LoRA-7B lr sweep. Standing queue unchanged: citation collection batch-2
+(277 -> ~400+); env v0.4 memory-arm construction (four-arm matrix, big-ticket). Second tier:
+Plan C inference-backend GRPO, lambda=0.6 exploration arm, full seed-varied 3B. See
+EXP-2026-07-04-017, D-2026-07-04-012, D-2026-07-04-011, TODO.
 ```

@@ -15,7 +15,9 @@ fool ourselves, measured where prompting alone falls short, and **trained only
 where the data said training pays** — post-training small open models (Qwen2.5
 0.5B–7B) on a cost-shaped escalation-routing task. The crown-jewel result is
 **reproducible with zero variance**: a **3B lands exactly on the analytic oracle
-(0.8473 / gate 1.000) across three seeds (std 0)**. A secondary result — a
+(0.8473 / gate 1.000) across three seeds (std 0)**. The env is now solved by a
+**second config too** — 7B full-parameter SFT at a proper lr also hits the exact
+oracle (single seed; the 3B remains the strongest *replicated* result). A secondary result — a
 **trained 1.5B beating a prompted 7B** — held at our first seed but did **not**
 survive multi-seed averaging, and we say so: it is a seed-0-only claim, downgraded
 to a mean±std (0.7024 ± 0.0333). Throughout, the hard safety constraint (when to
@@ -216,9 +218,15 @@ citation env v2 (D-2026-07-04-002/008).
    downgrade). Kill bar unchanged — 0.5B full still not deployable (gate 0.75 < 0.99).
    *Single-seed probe (seed 0).* (EXP-2026-07-04-015, D-2026-07-04-011.)
 
-5. **Non-monotonic 7B.** 7B SFT (0.7147 / gate 0.75) is *worse* than 3B and 1.5B
-   SFT — a 160-row LoRA is too thin to move 7B priors. Scale helps until the data
-   is too thin to steer the larger model.
+5. **The 7B "dip" was a CONFIG ARTIFACT, not a capability ceiling (REATTRIBUTED
+   2026-07-04).** 7B *LoRA*-SFT (0.7147 / gate 0.75) sits *below* 3B and 1.5B SFT on the
+   scale curve — originally read as "a 160-row LoRA is too thin to move 7B priors."
+   **E1b refuted that:** full-parameter SFT on the *same* 160 rows at a proper lr (2e-5,
+   vs the LoRA-standard 2e-4) hits **0.8473 = EXACT ORACLE / gate 1.000**, +13.3 over the
+   LoRA point. So the dip is a property of *that configuration* (LoRA at its standard lr),
+   not of 7B capacity or of the data being too thin. The scale-curve observation stands for
+   that config; its **interpretation** changes from "capability/data ceiling" to
+   "configuration artifact." *(EXP-2026-07-04-017, D-2026-07-04-012; see finding #9.)*
 
 6. **DPO / GRPO mirror image — DPO's over-conservatism is STRUCTURAL (three-method
    comparison closed).** On one ruler at 1.5B: GRPO is reward-optimal / gate-imperfect
@@ -267,24 +275,32 @@ citation env v2 (D-2026-07-04-002/008).
    train data is construction-labeled (spot-audited 93.3%), not human-gold
    (EXP-2026-07-04-004/011/012/013/014, D-2026-07-04-002/008/009/010, F-2026-07-04-003).
 
-9. **Trainable-parameter budget must match data size — LoRA is a bottleneck at the small end
-   and a regularizer at the large end (single-seed probes).** Two full-parameter fine-tuning
-   probes on the **same 160 rows / same frozen escalation test (n=48)**, toggling *only* the
-   trainable budget (LoRA r=16 → full), reverse in **opposite directions**. *At 0.5B, MORE
-   capacity rescues:* full-GRPO 0.5B goes **0.383 / gate 0.00 → 0.7533 / gate 0.75**, no
-   collapse — the collapse was an adapter-capacity floor, not a model floor (finding #4,
-   reattributed). *At 7B, LESS capacity is better:* full-SFT 7B is **0.5079 vs LoRA's 0.7147,
-   −20.7 pts** — the pre-registered bar ("full beats LoRA by ≥3 → LoRA binding") **inverted**;
-   at 160 rows LoRA acts as a **regularizer / protective shell** and full-param updates
-   over-write the pretrained priors (this also explains the non-monotonic 7B, finding #5).
-   Unified: **budget must scale inversely with the model-to-data ratio** — LoRA is *never*
-   merely a cost compromise. Origin: the owner's parameterization question ("我们的RL做的也是
-   LoRA?…可以尝试全量微调嘛?"). **Honest limits:** both probes **single seed (seed 0)**; the
-   LoRA-GRPO collapse baseline was 2/3 seeds; and the 7B full-FT used the **LoRA-default lr
-   (2e-4), NOT retuned** for full FT (full FT typically wants ~10× lower lr) — so the rigorous
-   E1 claim is narrow ("full FT at *unchanged hyperparameters* is much worse at 7B"), with a
-   lower-lr sweep (E1b) pre-registered as an optional follow-up
-   (EXP-2026-07-04-015/016, D-2026-07-04-011, F-2026-07-04-007).
+9. **Hyperparameters must be MATCHED to the parameterization — a shared-lr LoRA-vs-full
+   comparison is confounded by construction; with matched hp, full-FT wins at BOTH ends
+   (single-seed probes).** Full-parameter fine-tuning probes on the **same 160 rows / same
+   frozen escalation test (n=48)**, toggling the trainable budget (LoRA r=16 → full). The 7B
+   arm turns on a single knob — the learning rate — and that is the whole story:
+
+   > **the three-number chain (7B, only lr changed): LoRA-SFT 0.7147 → full-SFT @ lr 2e-4
+   > = 0.5079 → full-SFT @ lr 2e-5 = 0.8473 = EXACT ORACLE.**
+
+   *At 0.5B, MORE capacity rescues:* full-GRPO 0.5B goes **0.383 / gate 0.00 → 0.7533 / gate
+   0.75**, no collapse — the collapse was an adapter-capacity floor, not a model floor (finding
+   #4, reattributed). This 0.5B reattribution **stands**: it was full-FT at the *same* lr that
+   fixed it, so lr cannot explain it. *At 7B, full-FT at a PROPER lr (2e-5) hits the exact
+   oracle* (0.8473 / gate 1.000, **+13.3** over LoRA) — the pre-registered bar ("full beats
+   LoRA by ≥3 → LoRA was binding") is now **MET**. The earlier E1 reading ("full-FT 20.7 pts
+   worse / LoRA is a regularizer at 7B") was an **lr artifact**: 2e-4 is a LoRA-standard lr,
+   catastrophic for 7B full-param. **Revised principle:** LoRA-vs-full comparisons at a
+   *shared* lr are confounded by construction — the lr that is standard for one arm is wrong
+   for the other; **tune hyperparameters per arm or the comparison is void.** Origin: the
+   owner's prompts drove this whole probe line (the parameterization question "我们的RL做的也是
+   LoRA?…可以尝试全量微调嘛?" and the push to run the fair lr test). **The escalation env is now
+   solved by TWO configs: 3B LoRA-GRPO (3 seeds, zero variance) and 7B full-SFT (single seed).**
+   **Honest limits:** the 7B oracle solve is **single seed (seed 0)** — 3B remains the strongest
+   *replicated* result; the 0.5B probes are single-seed and the LoRA-GRPO collapse baseline was
+   2/3 seeds; optional follow-ups **not committed**: E1b seed replication, a LoRA-7B lr sweep
+   (EXP-2026-07-04-015/016/017, D-2026-07-04-011/012, F-2026-07-04-007).
 
 **"Do we need RL, and how much does it buy?" — a measured, TASK-DEPENDENT answer.** RL
 over the best SFT baseline, per task, on the same frozen eval:
@@ -337,14 +353,16 @@ on escalation RL only ever optimizes *above* a code-enforced safety floor
   *prompted* (no Gemma training yet); a Gemma SFT/GRPO sweep is backlog. Gemma 4 is a
   MatFormer reporting *effective* (selective-activation) params (E2B ≈ 2.3B, E4B ≈
   4.5B) — comparisons to dense Qwen sizes are approximate.
-- **The full-FT probes are single-seed, and the 7B one carries an lr confound.** The
-  parameterization-budget finding (#9) rests on two **single-seed (seed 0)** runs; the
-  0.5B non-collapse is one seed against a 2/3-seed LoRA collapse baseline. Critically, the
-  7B full-FT used the **same lr (2e-4) as the LoRA runs — NOT retuned** for full FT (which
-  typically wants ~10× lower lr), so part of the 20.7-pt 7B damage may be lr-mismatch rather
-  than the full-vs-LoRA axis. The honest E1 claim is therefore narrow ("full FT at *unchanged
-  hyperparameters* is much worse at 7B"); a lower-lr full-FT sweep (E1b) is pre-registered as
-  an optional follow-up, not run (D-2026-07-04-011).
+- **The full-FT probes are single-seed; the E1 lr confound is now RESOLVED (E1b).** The
+  hyperparameter-parameterization finding (#9) rests on **single-seed (seed 0)** runs; the
+  0.5B non-collapse is one seed against a 2/3-seed LoRA collapse baseline. The E1 lr confound
+  (the 7B full-FT originally used the LoRA-standard lr 2e-4, NOT retuned) was **cleared by E1b**:
+  toggling *only* the lr (2e-4 → 2e-5) took the 7B full-SFT from 0.5079 to **0.8473 = exact
+  oracle**, so the 20.7-pt E1 gap was lr, not parameterization. The **7B oracle solve is itself
+  single-seed** — 3B (LoRA-GRPO, 3 seeds, zero variance) remains the strongest *replicated*
+  result. A LoRA-7B lr sweep (to confirm the +13.3 is a matched-per-arm win, not one-arm tuning)
+  and an E1b seed replication are pre-registered as optional follow-ups, **not committed**
+  (EXP-2026-07-04-017, D-2026-07-04-012).
 
 ---
 

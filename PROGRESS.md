@@ -2,6 +2,52 @@
 
 Last updated: 2026-07-04
 
+## Round 8 Wrap-Up: E1b - 7B full-FT at a PROPER lr hits EXACT ORACLE; the E1 "LoRA regularizes at 7B" verdict was an lr artifact (2026-07-04)
+
+E1b is the pre-registered fair test of the E1 lr confound, and it drove the campaign's
+FOURTH self-correction - one that corrects the THIRD. Origin: the owner's prompts, which
+opened the parameterization probe line (E1/E2) and then pushed to run the fair lr test
+rather than let E1's confounded verdict stand.
+
+**E1b - 7B full-FT SFT at proper lr = EXACT ORACLE (EXP-2026-07-04-017).** Re-ran the E1 7B
+full-SFT arm changing ONLY the learning rate (2e-4 -> 2e-5; 2e-4 is a LoRA-standard lr,
+catastrophic for 7B full-param), identical to E1 in every other respect (same model, same
+160 rows, same frozen escalation test n=48, lambda=0.3, oracle 0.8473, seed 0), on a free
+GPU (batch 8 / accum 2, no OOM chain this time). Result: reward **0.8473 == oracle 0.8473,
+gate_recall 1.000, success 1.0** - +13.3 over LoRA-7B-SFT (0.7147). SECOND config ever to
+solve the escalation env (first: GRPO-v2 3B x3 seeds). kill_check lambda0.3: 0.8473 vs
+0.7147, delta +0.1326, beats_baseline_by_3pts_and_holds_gate = TRUE.
+
+**THE VERDICT CHAIN.** The three-number chain (only lr changed): LoRA-7B-SFT 0.7147 ;
+full-FT @ 2e-4 = 0.5079 ; full-FT @ 2e-5 = 0.8473.
+- The E1 "full-FT is 20.7 pts worse at 7B" result is reattributed to an LR MISMATCH.
+- The "160 rows cannot move 7B priors" hypothesis is REFUTED - same 160 rows at the correct
+  lr = exact oracle. The E1 "LoRA is protective / a regularizer at 7B" reading was itself the
+  lr artifact.
+- The pre-registered E1 bar ("full beats LoRA by >=3 -> LoRA was binding") is now MET at
+  +13.3 with the fair lr: LoRA WAS binding at 7B.
+
+**THE AMENDMENT (D-2026-07-04-012, amends D-2026-07-04-011 in place - original NOT erased).**
+Revised synthesis: hyperparameters must be MATCHED to the parameterization; LoRA-vs-full
+comparisons at a SHARED lr are CONFOUNDED BY CONSTRUCTION. With hyperparameters matched per
+arm, full-FT wins at BOTH tested ends - 0.5B (full-FT rescued GRPO from adapter-floor
+collapse) and 7B (full-SFT = exact oracle). The 0.5B adapter-floor reattribution (E2) STANDS
+unchanged: it was full-FT at the SAME lr (2e-4) that fixed it, so lr cannot explain it - only
+the 7B half moves. The scale-curve 7B dip (LoRA at its standard lr) remains a TRUE
+observation for that config, but its interpretation changes from "capability/data ceiling" to
+"configuration artifact." The escalation task is now solved by TWO configs: 3B (LoRA-GRPO,
+3 seeds, zero variance) and 7B (full-SFT, single seed).
+
+**LESSON.** When comparing parameterizations, tune the hyperparameters PER ARM or the
+comparison is void - a single shared lr silently benchmarks "LoRA at LoRA's lr vs full-FT at
+LoRA's lr", not the parameterization axis.
+
+**Honest flags.** E1b is SINGLE SEED; 3B remains the strongest REPLICATED result. Optional
+follow-ups NOT committed: E1b seed replication; a LoRA-7B lr sweep. New run manifest
+logging_dir hostname suffix REDACTED per convention (redaction_note appended); weights
+git-excluded. Log ids: EXP-2026-07-04-017 (E1b); D-2026-07-04-012 (amendment +
+per-arm-tuning lesson); CP-2026-07-04-006.
+
 ## Round 7 Wrap-Up: full-FT probes - 0.5B GRPO collapse REATTRIBUTED to adapter capacity; LoRA protective at 7B (2026-07-04)
 
 Two full-parameter fine-tuning probes on the SAME 160 rows / SAME frozen escalation test

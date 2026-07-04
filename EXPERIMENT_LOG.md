@@ -2707,3 +2707,98 @@ Next:
 
 Pairs with EXP-2026-07-04-015 (0.5B, the reversal in the other direction) into the unified
 parameterization-budget synthesis (D-2026-07-04-011).
+
+## EXP-2026-07-04-017 - E1b: full-parameter SFT at 7B with a PROPER lr (2e-4 -> 2e-5) hits EXACT ORACLE - the E1 "full-FT is 20.7 pts worse" result was an lr artifact (escalation, frozen test n=48)
+
+Goal:
+
+The pre-registered E1b probe - the fair test of the E1 lr confound. E1
+(EXP-2026-07-04-016) found full-SFT 7B 20.7 pts WORSE than LoRA-7B-SFT and concluded "LoRA
+is a regularizer at 7B", but recorded an HONEST CONFOUND: the full-FT run used the
+LoRA-default lr (2e-4), which is catastrophic for 7B full-param (full FT wants ~10x lower).
+E1b toggles ONLY the learning rate (2e-4 -> 2e-5), identical to E1 in every other respect
+(same model, same 160 train rows, same frozen escalation test n=48, same seed 0), on a free
+GPU. Pre-registered E1 bar (quoted): "full beats LoRA by >=3 pts -> LoRA was binding."
+
+Data:
+
+Escalation env, n=48 frozen test, lambda=0.3 kill-check, oracle 0.8473, baseline
+(LoRA-7B-SFT) 0.7147. One arm: full-SFT 7B, 160 train rows, seed 0 (single-seed probe),
+lr 2e-5 (the ONLY change vs E1's 2e-4), batch 8 / accum 2 (a free GPU - no OOM chain this
+time, unlike E1). Base commit e571324. run_id 20260704T1157Z-e571324,
+--parent-run 20260704T0805Z-e571324 (the E1 successful full-FT run this revises).
+
+Command:
+
+```text
+sft_escalation.py --model Qwen/Qwen2.5-7B-Instruct --train sft_train.jsonl \
+  --full-finetune --optim adamw_bnb_8bit --gradient-checkpointing \
+  --batch-size 8 --grad-accum 2 --lr 2e-5 \
+  --parent-run 20260704T0805Z-e571324 --out-dir runs/fullsft_qwen7_lowlr --seed 0
+```
+
+Metrics (frozen test n=48; reward at lambda=0.3; gate = gate_recall):
+
+| arm | trainable budget | lr | reward | gate | success | note |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| LoRA-SFT 7B (baseline)  | LoRA r=16 | 2e-4 | 0.7147 | -    | -   | prior baseline |
+| full-SFT 7B E1 (prior)  | full      | 2e-4 | 0.5079 | 0.75 | 0.6632 | 20.7 pts worse - lr artifact |
+| full-SFT 7B E1b (this)  | full      | 2e-5 | 0.8473 | 1.000 | 1.0   | EXACT ORACLE |
+
+kill_check_lambda0.3: policy 0.8473 vs baseline 0.7147, delta +0.1326,
+beats_baseline_by_3pts_and_holds_gate = TRUE. (reward at lambda 0.1 = 0.9491, at
+lambda 0.6 = 0.6945; gate_recall 1.000 and success 1.0 at all three lambdas.)
+
+Pre-registered E1 bar (quoted): "full beats LoRA by >=3 pts -> LoRA was binding." NOW MET
+at +13.3 (0.7147 -> 0.8473) with the fair lr.
+
+Findings (the verdict chain, recorded precisely):
+
+- EXACT ORACLE. reward 0.8473 == oracle 0.8473, gate_recall 1.000. This is the SECOND
+  config ever to solve the escalation env (first: GRPO-v2 3B x3 seeds). Delta vs
+  LoRA-7B-SFT = +13.3 pts.
+- The E1 "full-FT is 20.7 pts worse" result is REATTRIBUTED to an LR MISMATCH. 2e-4 is a
+  LoRA-standard lr and is catastrophic for 7B full-FT. Chain at fixed everything-else:
+  2e-4 full -> 0.5079; 2e-5 full -> 0.8473.
+- The "160 rows cannot move 7B priors" hypothesis is REFUTED: the SAME 160 rows at the
+  correct lr = exact oracle. The E1 "LoRA is protective / a regularizer at 7B" reading was
+  itself the lr artifact, not a property of the parameterization axis.
+- The pre-registered E1 bar is now MET (+13.3 >= 3): with a fair lr, LoRA WAS binding at 7B
+  - the adapter was leaving capability on the table that full-param updates recover exactly.
+- The original scale-curve 7B dip (LoRA at its standard lr) remains a TRUE observation for
+  THAT config, but its interpretation changes from "capability/data ceiling" to
+  "configuration artifact." The task is now solved at both 3B (LoRA-GRPO, 3 seeds, zero
+  variance) and 7B (full-SFT, single seed).
+- Campaign self-correction #4 - and it corrects #3 (the E1/D-011 "7B needs LESS trainable
+  budget / LoRA regularizes" half of the parameterization synthesis). Feeds the amendment
+  to D-2026-07-04-011.
+
+Failures / honest caveats:
+
+- SINGLE SEED (seed 0). The oracle result is a single-seed solve; 3B remains the strongest
+  REPLICATED result (LoRA-GRPO, 3 seeds, zero variance). A seed sweep would harden E1b.
+- Optional follow-ups NOT committed: E1b seed replication; a LoRA-7B lr sweep (to check
+  whether LoRA's 0.7147 also moves with lr, i.e. that the +13.3 is a genuine
+  parameterization win at matched-per-arm lr and not just "we happened to tune one arm").
+- n=48 frozen test; 160 train rows; greedy decode.
+
+Artifacts:
+
+```text
+runs/fullsft_qwen7_lowlr/20260704T1157Z-e571324/{fullsft7b_lowlr_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl}   (--parent-run 20260704T0805Z-e571324)
+```
+
+Decision:
+
+E1's "20.7 pts worse / LoRA-as-regularizer-at-7B" verdict is reattributed to lr mismatch;
+with matched hyperparameters full-FT hits exact oracle at 7B (0.8473) and MEETS the
+pre-registered bar (+13.3). This AMENDS the 7B half of D-2026-07-04-011 (append a dated
+amendment; do NOT erase). The 0.5B adapter-floor reattribution (E2/EXP-2026-07-04-015)
+STANDS - it was full-FT at the SAME lr that fixed it, so lr cannot explain that one.
+
+Next:
+
+Env now solved by TWO configs (3B LoRA-GRPO replicated; 7B full-SFT single-seed).
+Optional, NOT committed: E1b seed replication; LoRA-7B lr sweep. Feeds D-2026-07-04-011
+amendment, PORTFOLIO_INDEX finding #9, CP-2026-07-04-006.

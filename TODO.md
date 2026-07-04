@@ -217,9 +217,17 @@ FULL-PARAMETER FINE-TUNING PROBES (E1/E2) - DONE. Origin: owner's parameterizati
   by >=3 -> LoRA binding") NOT met, INVERTED. LoRA is a REGULARIZER at 7B / 160 rows.
   CONFOUND: lr NOT retuned (same 2e-4). Completed after a 3-attempt OOM chain
   (F-2026-07-04-007). Single seed.
-- [ ] E1b (OPTIONAL, pre-registered, NOT committed): lower-lr full-FT 7B sweep (~10x lower
-  lr) - a fair test of the E1 lr confound. Run only if the full-vs-LoRA axis at 7B needs to
-  be disentangled from lr-mismatch.
+- [x] E1b - lower-lr full-FT 7B (fair test of the E1 lr confound). DONE 2026-07-04
+  (EXP-2026-07-04-017): changed ONLY lr 2e-4 -> 2e-5, all else identical to E1. reward
+  0.5079 -> 0.8473 = EXACT ORACLE, gate 1.000, +13.3 over LoRA-7B-SFT 0.7147. Pre-registered
+  bar "full beats LoRA by >=3 -> LoRA was binding" NOW MET. E1's "20.7 pts worse / LoRA
+  regularizes at 7B" = lr artifact; D-2026-07-04-011 7B half AMENDED (D-2026-07-04-012). Env
+  now solved by TWO configs (3B LoRA-GRPO 3 seeds + 7B full-SFT single seed). Single seed.
+- [ ] (optional, NOT committed) E1b seed replication - promote the 7B full-SFT exact-oracle
+  solve from single-seed to seed-varied.
+- [ ] (optional, NOT committed) LoRA-7B lr sweep - confirm the +13.3 is a genuine
+  matched-per-arm parameterization win (that LoRA's 0.7147 does not also jump with lr), not
+  one-arm tuning. Lesson (D-2026-07-04-012): comparing parameterizations at a shared lr is void.
 - [ ] (optional, hardening) seed-varied full-GRPO-0.5B to promote the adapter-floor
   reattribution from a single-seed non-collapse to a seed-varied result.
 - [x] NEIGHBOR GPU-PROCESS OWNERSHIP - RESOLVED 2026-07-04: owner confirmed the ~34GB

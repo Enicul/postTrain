@@ -1170,3 +1170,76 @@ Consequence:
 - General lesson: trainable-parameter budget is a first-class hyperparameter that must scale
   INVERSELY with the model-to-data ratio - small models on fixed data want more of it, large
   models on the same data want less. Never treat LoRA as a pure cost lever.
+
+AMENDMENT 2026-07-04 (see D-2026-07-04-012, EXP-2026-07-04-017): the 7B HALF of the synthesis
+above (item (2) "at 7B LESS trainable capacity is better / LoRA is a regularizer / full-FT
+destroyed it") was an LR ARTIFACT and is SUPERSEDED. E1b re-ran the 7B full-SFT with the ONLY
+change being lr 2e-4 -> 2e-5 (a proper full-FT lr; 2e-4 is a LoRA-standard lr, catastrophic
+for 7B full-param): reward 0.5079 -> 0.8473 = EXACT ORACLE, gate 1.000, +13.3 over LoRA-7B-SFT
+0.7147. The pre-registered E1 bar "full beats LoRA by >=3 -> LoRA was binding" is now MET.
+The text above is PRESERVED (not erased) as the record of the pre-amendment reading. The
+0.5B half (item (1), the adapter-floor reattribution) STANDS UNCHANGED: it was full-FT at the
+SAME lr that rescued it, so lr cannot explain it. See D-2026-07-04-012 for the revised
+synthesis.
+
+## D-2026-07-04-012 - AMENDMENT to D-2026-07-04-011: the 7B "LoRA-as-regularizer" half was an lr artifact; with matched hyperparameters full-FT wins at BOTH ends. Revised synthesis: "hyperparameters must be matched to the parameterization; shared-lr LoRA-vs-full comparisons are confounded by construction"
+
+Decision:
+
+E1b (EXP-2026-07-04-017) re-ran the 7B full-SFT arm changing ONLY the learning rate
+(2e-4 -> 2e-5), identical to E1 (EXP-2026-07-04-016) in every other respect (same model, same
+160 rows, same frozen escalation test n=48, lambda=0.3, oracle 0.8473, seed 0). Result:
+reward 0.5079 -> 0.8473 = EXACT ORACLE, gate_recall 1.000, +13.3 over LoRA-7B-SFT (0.7147).
+This AMENDS D-2026-07-04-011 (a dated amendment is appended in place; the original body is
+NOT erased). This is the campaign's FOURTH self-correction, and it corrects the THIRD (the
+E1 "LoRA is protective at 7B" half of D-011).
+
+The verdict chain (recorded precisely):
+
+- The E1 "full-FT is 20.7 pts worse at 7B" result is reattributed to an LR MISMATCH: 2e-4 is
+  a LoRA-standard lr and is catastrophic for 7B full-param. Chain at fixed-everything-else:
+  2e-4 full -> 0.5079; 2e-5 full -> 0.8473.
+- The "160 rows cannot move 7B priors" hypothesis is REFUTED: the SAME 160 rows at the
+  correct lr = exact oracle. The E1 "LoRA is a regularizer / protective shell at 7B" reading
+  was the artifact, not a property of the parameterization axis.
+- REVISED UNIFIED SYNTHESIS: hyperparameters must be MATCHED to the parameterization.
+  LoRA-vs-full comparisons at a SHARED lr are CONFOUNDED BY CONSTRUCTION. With
+  hyperparameters matched per arm, full-FT wins at BOTH tested ends: 0.5B (full-FT rescued
+  GRPO from adapter-floor collapse, 0.383/0.00 -> 0.7533/0.75) AND 7B (full-SFT = exact
+  oracle, 0.8473/1.000, +13.3 over LoRA). The D-011 frame "trainable budget must scale
+  INVERSELY with model-to-data ratio" no longer holds as stated - it was reading an lr
+  artifact at the 7B end as a capacity law.
+- The 0.5B adapter-floor reattribution (D-011 item (1) / EXP-2026-07-04-015) STANDS: it was
+  full-FT at the SAME lr (2e-4, the SFT default) that fixed it, so lr cannot explain that
+  one. Only the 7B half moves.
+- The original scale-curve 7B dip (LoRA at its standard lr) remains a TRUE observation FOR
+  THAT CONFIG; its INTERPRETATION changes from "capability/data ceiling" to "configuration
+  artifact." The escalation task is now solved at BOTH 3B (LoRA-GRPO, 3 seeds, zero variance)
+  and 7B (full-SFT, single seed) - two configs total.
+
+Why:
+
+The only clean way to test the E1 lr confound was to hold the entire E1 configuration fixed
+and toggle ONLY the learning rate. Doing that flipped 0.5079 -> exact oracle, which is decisive:
+nothing else moved, so the 20.7-pt E1 gap (and the "LoRA regularizes at 7B" reading built on
+it) was lr, not parameterization. And a shared-lr LoRA-vs-full comparison can never be a fair
+parameterization test, because the lr that is standard for one arm is wrong for the other - so
+the comparison is confounded by construction unless each arm is tuned.
+
+Consequence:
+
+- LESSON RECORDED: when comparing parameterizations (LoRA vs full-FT, or any two trainable-
+  budget regimes), tune the hyperparameters PER ARM or the comparison is VOID. A single shared
+  lr silently benchmarks "LoRA at LoRA's lr vs full-FT at LoRA's lr", not the parameterization.
+- Origin credited: the owner's prompts drove this entire probe line - the parameterization
+  question that opened E1/E2 ("我们的RL做的也是LoRA?…可以尝试全量微调嘛?"), and then the
+  explicit push to run the fair lr test rather than let E1's confounded verdict stand.
+- Kill bar: at 7B, full-SFT now MEETS the +3 pre-registered bar and holds gate at 1.000; the
+  0.5B kill bar is UNCHANGED (0.5B full still not deployable alone, gate 0.75 < 0.99).
+- PORTFOLIO_INDEX: finding #9 reframed from "parameterization budget must match data" to
+  "hyperparameter-parameterization matching", carrying the three-number chain
+  0.5079 / 0.7147 / 0.8473; env noted as solved by two configs; scale-curve section gains the
+  "7B dip = config artifact" annotation; honest limits note E1b is single-seed.
+- HONEST FLAGS: E1b is SINGLE SEED; 3B remains the strongest REPLICATED result. Optional
+  follow-ups NOT committed: E1b seed replication; a LoRA-7B lr sweep (to confirm the +13.3 is
+  a genuine matched-per-arm parameterization win, not one-arm tuning).
