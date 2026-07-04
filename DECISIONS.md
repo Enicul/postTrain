@@ -1243,3 +1243,101 @@ Consequence:
 - HONEST FLAGS: E1b is SINGLE SEED; 3B remains the strongest REPLICATED result. Optional
   follow-ups NOT committed: E1b seed replication; a LoRA-7B lr sweep (to confirm the +13.3 is
   a genuine matched-per-arm parameterization win, not one-arm tuning).
+
+## D-2026-07-04-013 - Escalation env v0.3 is SATURATED: seven-plus configs hit the analytic oracle exactly; the eval has lost discriminative power at the top, the scale-curve "drama" is reattributed to configuration regime (self-correction #5), and the exam is upgraded (env v0.4). Deployment answer for KIWI: 1.5B full-FT reaches oracle - the local-router question is ANSWERED for this task tier
+
+Decision:
+
+Two rounds of full-parameter fine-tuning results this session - seed replication
+(EXP-2026-07-04-018) and grid fill (EXP-2026-07-04-019) on the SAME frozen escalation test
+(n=48, lambda=0.3, analytic oracle 0.8473) - push the count of configurations that hit the
+oracle EXACTLY to SEVEN-PLUS. Escalation env v0.3 is therefore recorded as SATURATED: it is
+frozen as the historical ruler and RETIRED for method comparisons at the top tier. The
+roster of oracle-solving configs (all 0.8473 / gate 1.000 unless noted):
+
+  1. 3B LoRA-GRPO-v2, seeds {0,1,2} - zero variance (EXP-2026-07-04-007; the crown jewel).
+  2. 7B full-SFT @ lr 2e-5, seeds {0,1,2} - zero variance (EXP-2026-07-04-017/018; second
+     replicated solver).
+  3. 1.5B full-SFT, seed 0 (EXP-2026-07-04-019).
+  4. 1.5B full-GRPO (init from #3), seed 0 (EXP-2026-07-04-019).
+  5. 3B full-SFT, seed 0 (EXP-2026-07-04-019).
+  6. 0.5B full-GRPO, seed 1 of {0,1,2} - one seed FULLY SOLVED the env at 0.5B
+     (EXP-2026-07-04-018; mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179, so this is a
+     per-seed high, not a mean).
+  (3B LoRA-SFT at 0.8428 / gate 1.000 sits just below on reward but already at perfect gate.)
+
+Consequences, recorded in full:
+
+(i) THE EVAL HAS LOST DISCRIMINATIVE POWER AT THE TOP. When two full-seed-replicated configs
+and three more single-seed configs all land on the analytic ceiling to four decimals, further
+method comparisons on v0.3 are UNINFORMATIVE at the top - you cannot rank methods that all
+score the maximum. v0.3 stays valid for the BOTTOM of the range (0.5B still varies, prompted
+arms still fail the gate) and as a historical ruler, but it can no longer separate strong
+methods.
+
+(ii) THE SCALE-CURVE DRAMA IS REATTRIBUTED TO CONFIGURATION REGIME, NOT CAPABILITY. The
+memorable LoRA scale curve - 3B sweet spot, 1.5B stuck at a 0.875-gate plateau, 7B "dip"
+below both - is now understood as a CONFIGURATION-REGIME phenomenon (LoRA r=16 + a shared
+learning rate), not a set of model-capability limits. Under full-FT at a matched lr: 1.5B hits
+oracle and pulls the AMD_00 gate nail LoRA never pulled (EXP-2026-07-04-019); 7B hits oracle
+(the "dip" was an lr artifact, D-2026-07-04-012); 0.5B stops collapsing (adapter-floor
+reattribution, D-2026-07-04-011). This is the campaign's FIFTH self-correction, and it EXTENDS
+#3/#4 (the parameterization-budget and lr-artifact corrections): those fixed individual cells;
+this reframes the WHOLE curve. (Self-correction ledger: #1 multi-seed 1.5B headline downgrade;
+#2 0.5B collapse = adapter floor not model floor; #3 the E1 "LoRA regularizes at 7B" reading;
+#4 that reading was an lr artifact / E1b; #5 the entire scale-curve drama = configuration
+regime, not capability.)
+
+(iii) THE HONEST REFRAMING. We thought we were measuring model-CAPABILITY boundaries; we were
+measuring CONFIGURATION boundaries. With the confounds removed (per-arm-matched lr, adequate
+trainable budget), the 160-row escalation task is SOLVABLE FROM 1.5B UP (and, once, from
+0.5B). The scale curve was a portrait of our hyperparameters, not of the models.
+
+(iv) THE DEPLOYMENT ANSWER FOR KIWI. 1.5B full-FT reaches the oracle (0.8473 / gate 1.000).
+The local-router question for THIS task tier is ANSWERED: a 1.5B, fully fine-tuned, is a
+sufficient local escalation router on env v0.3. The safety floor still lives in versioned
+code on every arm (D-2026-07-03-003); the trained 1.5B is the cost-efficient policy above it.
+
+(v) DISCRIMINATIVE POWER IS RESTORED BY UPGRADING THE EXAM. Env v0.4 (memory-dependent seeds,
+dynamic cost, twin pairs) is the successor ruler; the code shipped this session (commit
+0cecbc0). Synthetic persona data generation is in progress; the v0.4 staging/ personas dir is
+untracked by design until the builder curates it. v0.4 re-opens the four-arm memory-form
+experiment (D-2026-07-03-002) with a ruler that a full-FT 1.5B cannot trivially max out.
+
+Why:
+
+The ladder's whole discipline is to let measurement decide where each task stops, and the
+symmetric discipline is to let measurement decide when a ruler is USED UP. Seven-plus configs
+on the analytic ceiling is not a triumph to celebrate as "we solved it seven ways" - it is the
+signal that the exam no longer discriminates, exactly as one item that every model fails is the
+signal to audit the item (D-2026-07-04-005, the AMD_00 ruling). The two are the same reflex in
+opposite directions: when every model fails the same item, audit the item; when every config
+aces the exam, upgrade the exam. Recording the saturation honestly - including that it
+retroactively reframes our own headline scale curve as a configuration artifact - is more
+valuable as portfolio evidence than leaving a stack of oracle solves to imply the methods were
+meaningfully different.
+
+Consequence:
+
+- Env v0.3 status: SATURATED / RETIRED for method comparisons at the top; FROZEN as the
+  historical ruler (still valid at the bottom of the range and for the completed narrative).
+- The full-FT column is added to the PORTFOLIO_INDEX headline matrix WITH ERROR BARS where
+  replicated (7B full-SFT ×3, zero variance; 0.5B full-GRPO ×3, mean+/-std) and single-seed
+  flags on the grid-fill cells (1.5B full-SFT, 1.5B full-GRPO, 3B full-SFT).
+- The saturation verdict becomes the CLOSING ARC of the escalation story in the portfolio:
+  "env solved -> exam upgraded."
+- Self-correction count is now FIVE; the portfolio lists them.
+- Honest limits refreshed: the grid-fill cells are single-seed; the replicated solvers are 3B
+  LoRA-GRPO (×3) and 7B full-SFT (×3); 0.5B's oracle solve is 1/3 seeds (a per-seed high, not
+  the mean); the deployment claim is on env v0.3 (a simulated, n=48 ruler), and env v0.4 is
+  the un-saturated successor.
+- Plan C ANNOTATION (deliberate): Plan C (training-free / inference-backend GRPO control) is
+  queued on GPU and remains a VALID no-weights CONTROL run on v0.3. Its promotion bar was
+  defined against PROMPTED-1.5B on v0.3 - i.e. it competes at the PROMPT tier, not the
+  saturated top tier - so the saturation of the top tier does NOT invalidate it. Plan C stays
+  a legitimate v0.3 experiment because prompted arms never cleared the gate 0.99 bar; there is
+  still discriminative room where Plan C plays.
+- General lesson (recorded): a ruler has a lifecycle. It is born (build + freeze), it is used
+  (measure), and it RETIRES when either every item is trivially failed (audit the items) or
+  every config trivially aces it (upgrade the exam). Saturation is a first-class result, not a
+  victory lap.

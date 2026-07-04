@@ -1,0 +1,12 @@
+{
+ "run_id": "20260704T1325Z-e571324",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "train_file": "sft_train.jsonl",
+ "train_rows": 160,
+ "epochs": 3.0,
+ "lr": 0.0002,
+ "parameterization": "full",
+ "optim": "adamw_torch",
+ "gradient_checkpointing": false,
+ "final_loss": 0.5304232344031334
+}

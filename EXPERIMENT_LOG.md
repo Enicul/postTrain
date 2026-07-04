@@ -2802,3 +2802,212 @@ Next:
 Env now solved by TWO configs (3B LoRA-GRPO replicated; 7B full-SFT single-seed).
 Optional, NOT committed: E1b seed replication; LoRA-7B lr sweep. Feeds D-2026-07-04-011
 amendment, PORTFOLIO_INDEX finding #9, CP-2026-07-04-006.
+
+## EXP-2026-07-04-018 - Seed replication of the two full-FT headlines: 7B full-SFT is the SECOND zero-variance oracle solver; 0.5B full-GRPO NEVER collapses and one seed FULLY SOLVES the env (escalation, frozen test n=48, seeds {0,1,2})
+
+Goal:
+
+The two full-FT headlines from EXP-2026-07-04-015/017 were single-seed (seed 0). E1b's 7B
+full-SFT exact-oracle solve and E2's 0.5B full-GRPO adapter-floor reattribution were each
+flagged for seed replication. Run both across seeds {0,1,2} on the SAME frozen escalation
+test (n=48) to promote them from single-seed probes to seed-varied results (or to expose
+seed-fragility). Two questions: (A) does 7B full-SFT @ lr 2e-5 hit the oracle reproducibly,
+or was seed 0 lucky? (B) does 0.5B full-GRPO's non-collapse hold across seeds, or was the
+seed-0 non-collapse itself the lucky draw against the LoRA collapse baseline?
+
+Data:
+
+Escalation env, n=48 frozen test, lambda={0.1,0.3,0.6}, analytic oracle 0.8473 at lambda=0.3,
+gate = gate_recall. Two arms, each seeds {0,1,2}, base commit e571324:
+  - 7B full-SFT @ lr 2e-5 (the E1b config), full-parameter, 160 train rows. Seeds add
+    20260704T1319Z and 20260704T1329Z to the E1b seed-0 run 20260704T1157Z.
+  - 0.5B full-GRPO from per-seed full-SFT inits (full-parameter GRPO). Seeds add
+    20260704T1325Z and 20260704T1335Z to the E2 seed-0 run 20260704T0753Z; the SFT inits
+    are runs/fullsft_qwen05/{…T0752Z (s0), …T1325Z (s1), …T1335Z (s2)}.
+Aggregates recomputed across the three per-seed evals.
+
+Command:
+
+```text
+# per seed s in {0,1,2}:
+sft_escalation.py  --model Qwen/Qwen2.5-7B-Instruct  --full-finetune --lr 2e-5 \
+  --out-dir runs/fullsft_qwen7_lowlr --seed s
+sft_escalation.py  --model Qwen/Qwen2.5-0.5B-Instruct --full-finetune \
+  --out-dir runs/fullsft_qwen05 --seed s
+grpo_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct --full-finetune \
+  --init-from runs/fullsft_qwen05/<per-seed run> --out-dir runs/fullgrpo_qwen05 --seed s
+# batch driver: runs/gpu_session_20260704/seeds_full.log (local, gitignored)
+```
+
+Metrics - A. 7B full-SFT @ lr 2e-5, seeds {0,1,2} (frozen test n=48, lambda=0.3):
+
+| seed | run_id | reward | gate_recall | success |
+| --- | --- | ---: | ---: | ---: |
+| 0 | 20260704T1157Z-e571324 | 0.8473 | 1.000 | 1.0 |
+| 1 | 20260704T1319Z-e571324 | 0.8473 | 1.000 | 1.0 |
+| 2 | 20260704T1329Z-e571324 | 0.8473 | 1.000 | 1.0 |
+| **mean +/- std** | (aggregate_fullsft7b_lowlr.json) | **0.8473 +/- 0.0000** | **1.000 +/- 0.0** | 1.0 |
+
+(lambda=0.1: 0.9491 +/- 0.0 / gate 1.000; lambda=0.6: 0.6945 +/- 0.0 / gate 1.000 - zero
+variance at every lambda.)
+
+Metrics - B. 0.5B full-GRPO (per-seed full-SFT inits), seeds {0,1,2} (frozen test n=48, lambda=0.3):
+
+| seed | run_id | reward | gate_recall | success | note |
+| --- | --- | ---: | ---: | ---: | --- |
+| 0 | 20260704T0753Z-e571324 | 0.7533 | 0.75 | 1.0 | E2 seed-0 |
+| 1 | 20260704T1325Z-e571324 | **0.8473** | **1.000** | 1.0 | **FULLY SOLVED the env at 0.5B** |
+| 2 | 20260704T1335Z-e571324 | 0.7533 | 0.75 | 1.0 | |
+| **mean +/- std** | (aggregate_fullgrpo05.json) | **0.7846 +/- 0.0443** | **0.8333 +/- 0.1179** | 1.0 | |
+
+(lambda=0.1: 0.8912 +/- 0.0410 / gate 0.8333 +/- 0.1179; lambda=0.6: 0.6248 +/- 0.0493 /
+gate 0.8333 +/- 0.1179. Per-seed gate identical across lambdas: [0.75, 1.0, 0.75].)
+
+Findings:
+
+- A. 7B full-SFT @ lr 2e-5 is REPLICATED WITH ZERO VARIANCE: 0.8473 / gate 1.000 on ALL
+  THREE seeds - exact oracle, std 0. This is now the SECOND config replicated across three
+  seeds (the first: 3B LoRA-GRPO, EXP-2026-07-04-007). The E1b single-seed caveat is
+  DISCHARGED for this arm: the 7B full-SFT oracle solve is no longer seed-0-only.
+- B. THE 0.5B GRPO COLLAPSE DID NOT REPRODUCE IN ANY SEED. No seed shows the <0.5-gate
+  always-deep collapse signature; the WORST seed is 0.7533 / gate 0.75 (still +14.7 over the
+  0.6061 LoRA-SFT baseline). The adapter-floor reattribution (EXP-2026-07-04-015) is now
+  SEED-REPLICATED, not a single-seed argument against a 2/3-seed LoRA collapse baseline.
+- B, the standout: SEED 1 FULLY SOLVED THE ENV at 0.5B - reward 0.8473 = exact oracle, gate
+  1.000. A 0.5B model reaching the analytic oracle under full-parameter GRPO is a striking
+  result; it did not survive as the mean (2/3 seeds land at 0.7533/0.75), so it is reported
+  as a per-seed high, not a headline mean.
+- KILL BAR STILL NOT PASSED for 0.5B: mean gate 0.8333 < 0.99, and 2/3 seeds at 0.75. The
+  replication hardens the reattribution (collapse = adapter capacity, not model capacity)
+  and shows one seed can hit oracle, but 0.5B full-GRPO is NOT deployable alone on the mean.
+
+Failures / honest caveats:
+
+- 0.5B full-GRPO variance is real (reward std 0.0443, gate std 0.1179): the oracle solve is
+  1/3 seeds, not a reliable property. The kill verdict is unchanged; the replicated claim is
+  "no collapse in any seed" and "mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179", not
+  "0.5B solves the env".
+- 7B full-SFT lr was 2e-5 (the E1b proper lr); n=48 frozen test; 160 train rows; greedy decode.
+- Both arms recomputed from the per-seed *_test_eval.json via the aggregate jsons (mean/std/
+  min/max + per-seed + eval_paths), consistent with the multi-seed recording convention.
+
+Artifacts:
+
+```text
+runs/fullsft_qwen7_lowlr/{20260704T1157Z,20260704T1319Z,20260704T1329Z}-e571324/fullsft7b_lowlr_test_eval.json
+runs/fullgrpo_qwen05/{20260704T0753Z,20260704T1325Z,20260704T1335Z}-e571324/fullgrpo_test_eval.json
+runs/fullsft_qwen05/{20260704T0752Z,20260704T1325Z,20260704T1335Z}-e571324/   (per-seed full-SFT inits)
+runs/aggregate_fullsft7b_lowlr.json   (7B full-SFT, 3 seeds, mean/std/min/max + per-seed)
+runs/aggregate_fullgrpo05.json        (0.5B full-GRPO, 3 seeds, mean/std/min/max + per-seed)
+runs/gpu_session_20260704/seeds_full.log   (batch driver log; local, gitignored)
+```
+
+Decision:
+
+The 7B full-SFT oracle solve is REPLICATED (zero variance, ×3 seeds) - the second replicated
+solver of the env. The 0.5B full-GRPO adapter-floor reattribution is SEED-REPLICATED (no
+collapse in any seed; one seed hits oracle), mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179;
+kill bar unchanged. Feeds the saturation verdict (D-2026-07-04-013), PORTFOLIO_INDEX headline
+matrix (full-FT column with error bars), CP-2026-07-04-007.
+
+Next:
+
+Grid fill (EXP-2026-07-04-019) closes the intermediate sizes under full-FT; together they
+feed the SATURATION verdict.
+
+## EXP-2026-07-04-019 - Grid fill: 1.5B full-SFT, 1.5B full-GRPO, 3B full-SFT all hit EXACT ORACLE under the v0.3 convention - the AMD_00 gate nail LoRA never pulled, full-SFT pulls (escalation, frozen test n=48, single seed)
+
+Goal:
+
+Fill the middle of the full-FT scale grid. Seed replication (EXP-2026-07-04-018) covered the
+0.5B and 7B ends; the intermediate sizes (1.5B, 3B) were only ever run under LoRA on the
+escalation env. Run full-parameter SFT at 1.5B and 3B, plus full-parameter GRPO at 1.5B (init
+from the 1.5B full-SFT), on the SAME frozen escalation test (n=48) at lr 2e-5. This closes the
+grid: with these three cells, EVERY size from 1.5B up is measured under full-FT. Of specific
+interest: LoRA at 1.5B plateaued at gate 0.875 - the sole miss being the AMD_00 gate seed that
+LoRA never pulled across SFT/GRPO-v1/GRPO-v2. Does full-SFT at 1.5B pull it (under the
+pre-R6 v0.3 convention where AMD_00 is still a gate row)?
+
+Data:
+
+Escalation env, n=48 frozen test, lambda={0.1,0.3,0.6}, oracle 0.8473 at lambda=0.3, gate =
+gate_recall. THREE arms, ALL single-seed (seed 0), full-parameter, lr 2e-5, 160 train rows,
+base commit e571324. Gate scored under the v0.3 convention (AMD_00 in the gate set, denom 8) -
+NOT the R6 convention - to keep comparability with the in-portfolio v0.3 numbers.
+  - 1.5B full-SFT  : sft_escalation.py --model Qwen/Qwen2.5-1.5B-Instruct --full-finetune.
+  - 1.5B full-GRPO : grpo_escalation.py --full-finetune --init-from <the 1.5B full-SFT>.
+  - 3B full-SFT    : sft_escalation.py --model Qwen/Qwen2.5-3B-Instruct  --full-finetune.
+
+Command:
+
+```text
+sft_escalation.py  --model Qwen/Qwen2.5-1.5B-Instruct --full-finetune --lr 2e-5 --out-dir runs/fullsft_qwen15 --seed 0
+grpo_escalation.py --model Qwen/Qwen2.5-1.5B-Instruct --full-finetune --init-from runs/fullsft_qwen15/…T1341Z… --out-dir runs/fullgrpo_qwen15 --seed 0
+sft_escalation.py  --model Qwen/Qwen2.5-3B-Instruct  --full-finetune --lr 2e-5 --out-dir runs/fullsft_qwen3  --seed 0
+# batch driver: runs/gpu_session_20260704/grid_fill.log (local, gitignored)
+```
+
+Metrics (frozen test n=48; lambda=0.3; gate = gate_recall, v0.3 convention denom 8):
+
+| arm | model | trainable budget | reward | gate | success | vs LoRA at this size |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| full-SFT 1.5B (this)  | 1.5B | full | **0.8473** | **1.000** | 1.0 | LoRA-SFT 1.5B was 0.800 / gate 0.875 |
+| full-GRPO 1.5B (this) | 1.5B | full (init from full-SFT) | **0.8473** | **1.000** | 1.0 | LoRA-GRPO-v2 1.5B was 0.7997 / gate 0.875 |
+| full-SFT 3B (this)    | 3B   | full | **0.8473** | **1.000** | 1.0 | LoRA-SFT 3B was 0.8428 / gate 1.000 (LoRA-GRPO-v2 3B = 0.8473) |
+
+(All three: lambda=0.1 reward 0.9491, lambda=0.6 reward 0.6945, gate 1.000 and success 1.0 at
+all three lambdas - the exact oracle profile.)
+
+Findings:
+
+- ALL THREE HIT EXACT ORACLE: 0.8473 / gate 1.000 / success 1.0. Full-SFT alone reaches the
+  analytic ceiling at 1.5B AND 3B; full-GRPO at 1.5B (init from the full-SFT that already sits
+  on the oracle) holds it (no room to improve - a "SFT suffices" at 1.5B under full-FT).
+- THE AMD_00 GATE NAIL: full-SFT 1.5B pulls the AMD_00 gate seed under the v0.3 convention -
+  the seed that LoRA never pulled at 1.5B across SFT / GRPO-v1 / GRPO-v2 (all stuck at gate
+  0.875 = 7/8, missing exactly AMD_00). Full-parameter updates gate it up-front, so 1.5B
+  full-SFT is 8/8 under v0.3. (Note the R6 reclassification, D-2026-07-04-005, later removes
+  AMD_00 from the gate set for everyone; here we report the pre-R6 v0.3 gate, denom 8, for a
+  clean LoRA-vs-full comparison at 1.5B.)
+- SO: under full-FT, 1.5B is no longer the 0.875-gate plateau it was under LoRA - the "1.5B
+  0.875 plateau" of the LoRA scale curve is a CONFIGURATION-REGIME phenomenon, not a 1.5B
+  capacity limit. This is the direct evidence for the saturation verdict's reframing.
+- GRID NOW CLOSED under full-FT: 0.5B (full-GRPO, 3 seeds, no collapse, 1 seed oracle) ->
+  1.5B (full-SFT + full-GRPO, oracle) -> 3B (full-SFT, oracle; LoRA-GRPO also oracle ×3) ->
+  7B (full-SFT, oracle ×3 zero variance). The env is solved from 1.5B up under full-FT (and
+  once, at 0.5B).
+
+Failures / honest caveats:
+
+- ALL THREE grid cells are SINGLE-SEED (seed 0). They are the config-fill of the grid, NOT
+  seed-replicated results; the seed-replicated solvers remain 3B LoRA-GRPO (×3) and 7B
+  full-SFT (×3, EXP-2026-07-04-018). A single-seed oracle solve at 1.5B/3B is a directional
+  grid-fill, not a variance-bounded claim.
+- Gate reported under the v0.3 convention (denom 8) for LoRA-vs-full comparability; the R6
+  dual-convention rescore (denom 7) is the separate offline artifact (D-2026-07-04-005).
+- n=48 frozen test; 160 train rows; lr 2e-5; greedy decode.
+
+Artifacts:
+
+```text
+runs/fullsft_qwen15/20260704T1341Z-e571324/{fullsft15_test_eval.json,metrics.json,run_manifest.json,test_preds.jsonl,trainer_log.jsonl}
+runs/fullgrpo_qwen15/20260704T1343Z-e571324/{fullgrpo15_test_eval.json,metrics.json,run_manifest.json,test_preds.jsonl,trainer_log.jsonl,reward_trace.jsonl,generations.jsonl}
+runs/fullsft_qwen3/20260704T1355Z-e571324/{fullsft3_test_eval.json,metrics.json,run_manifest.json,test_preds.jsonl,trainer_log.jsonl}
+runs/gpu_session_20260704/grid_fill.log   (batch driver log; local, gitignored)
+```
+
+Decision:
+
+Full-FT solves the escalation env at 1.5B (SFT and GRPO) and 3B (SFT), each hitting exact
+oracle; 1.5B full-SFT pulls the AMD_00 gate nail LoRA never pulled (v0.3 convention). Combined
+with the seed replication (EXP-2026-07-04-018) this makes SEVEN-PLUS configs on the oracle and
+triggers the SATURATION verdict (D-2026-07-04-013). Feeds PORTFOLIO_INDEX (full-FT column,
+saturation arc), CP-2026-07-04-007.
+
+Next:
+
+Env v0.3 is SATURATED (D-2026-07-04-013): frozen as the historical ruler, retired for method
+comparisons at the top; discriminative power to be restored by env v0.4 (memory-dependent
+seeds, dynamic cost, twin pairs; code shipped this session, commit 0cecbc0; synthetic persona
+data generation in progress in staging/, untracked by design). Lesson: when every model fails
+the same item, audit the item; when every config aces the exam, upgrade the exam.

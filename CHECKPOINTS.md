@@ -1448,7 +1448,7 @@ EXP/D-2026-07-04-015..016, D-2026-07-04-011, TODO.
 
 ## CP-2026-07-04-006 - Round 8: E1b - 7B full-FT at a PROPER lr hits EXACT ORACLE; the E1 "20.7 pts worse / LoRA regularizes at 7B" verdict was an lr artifact
 
-Status: current
+Status: superseded by CP-2026-07-04-007 (seed replication + grid fill -> env v0.3 SATURATED; the 7B full-SFT oracle solve is now replicated ×3 with zero variance)
 
 ```text
 E1b is the pre-registered fair test of the E1 lr confound. It re-ran the 7B full-SFT arm
@@ -1502,4 +1502,80 @@ replication; LoRA-7B lr sweep. Standing queue unchanged: citation collection bat
 (277 -> ~400+); env v0.4 memory-arm construction (four-arm matrix, big-ticket). Second tier:
 Plan C inference-backend GRPO, lambda=0.6 exploration arm, full seed-varied 3B. See
 EXP-2026-07-04-017, D-2026-07-04-012, D-2026-07-04-011, TODO.
+```
+
+## CP-2026-07-04-007 - Round 9: seed replication + grid fill -> escalation env v0.3 is SATURATED (seven-plus oracle configs); exam upgraded to v0.4
+
+Status: current
+
+```text
+Two full-parameter result rounds this session close the full-FT scale grid and force the big
+verdict: escalation env v0.3 is SATURATED and RETIRED for top-tier method comparisons (frozen
+as the historical ruler). Seven-plus configs now hit the analytic oracle (0.8473 / gate 1.000)
+exactly. A. SEED REPLICATION (EXP-2026-07-04-018, seeds {0,1,2}): 7B full-SFT @ lr 2e-5 =
+0.8473 / gate 1.000 on ALL THREE seeds (zero variance) - SECOND replicated solver, E1b caveat
+discharged; 0.5B full-GRPO (per-seed full-SFT inits) NO collapse in any seed, one seed FULLY
+SOLVED the env (0.8473/1.000), mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179 - adapter-floor
+reattribution now seed-replicated, kill bar unchanged. B. GRID FILL (EXP-2026-07-04-019, single
+seed, full-FT @ lr 2e-5): 1.5B full-SFT 0.8473/1.000 (pulls the AMD_00 gate nail LoRA never
+pulled, v0.3 denom 8), 1.5B full-GRPO 0.8473/1.000, 3B full-SFT 0.8473/1.000. C. SATURATION
+VERDICT (D-2026-07-04-013): (i) eval lost discriminative power at the top; (ii) scale-curve
+drama = CONFIGURATION REGIME (LoRA r=16 + shared lr), not capability - CAMPAIGN SELF-CORRECTION
+#5, extending #3/#4; (iii) reframing: we measured configuration boundaries, not capability
+boundaries; task solvable from 1.5B up (once from 0.5B); (iv) KIWI deployment answer: 1.5B
+full-FT reaches oracle - local-router question ANSWERED for this tier (safety floor stays in
+code); (v) discriminative power restored by env v0.4 (code shipped commit 0cecbc0; persona data
+in progress, staging/ untracked by design). Plan C stays a VALID no-weights v0.3 control (prompt
+tier, not saturated top tier). The 9 new run_manifest.json logging_dir hostname suffixes were
+REDACTED per convention (redaction_note appended); weights git-excluded. Lesson: when every
+model fails the same item, audit the item; when every config aces the exam, upgrade the exam.
+```
+
+Headline results:
+
+```text
+A. SEED REPLICATION (frozen test n=48, lambda=0.3):
+  7B full-SFT @ 2e-5 seeds {0,1,2} : 0.8473 / 1.000 x3  == EXACT ORACLE, std 0  (2nd replicated solver)
+  0.5B full-GRPO   seeds {0,1,2}   : 0.7533/0.75 , 0.8473/1.000 (seed1 SOLVES) , 0.7533/0.75
+     mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179 ; NO collapse any seed ; kill bar unchanged (0.833 < 0.99)
+B. GRID FILL (frozen test n=48, lambda=0.3, single seed, full-FT @ 2e-5):
+  1.5B full-SFT  : 0.8473 / 1.000   (pulls AMD_00 gate nail LoRA never pulled ; v0.3 denom 8, 8/8)
+  1.5B full-GRPO : 0.8473 / 1.000   (init from the 1.5B full-SFT)
+  3B   full-SFT  : 0.8473 / 1.000
+  => grid solved from 1.5B up under full-FT (and once, at 0.5B).
+ROSTER of oracle solvers (seven-plus): 3B LoRA-GRPO x3 ; 7B full-SFT x3 ; 1.5B full-SFT ;
+  1.5B full-GRPO ; 3B full-SFT ; 0.5B full-GRPO (1/3 seeds).
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/fullsft_qwen7_lowlr/{20260704T1157Z,20260704T1319Z,20260704T1329Z}-e571324/  (7B full-SFT x3 seeds; fullsft7b_lowlr_test_eval.json + manifest/logs)
+runs/fullgrpo_qwen05/{20260704T0753Z,20260704T1325Z,20260704T1335Z}-e571324/       (0.5B full-GRPO x3 seeds; fullgrpo_test_eval.json + manifest/logs/reward_trace/generations)
+runs/fullsft_qwen05/{20260704T0752Z,20260704T1325Z,20260704T1335Z}-e571324/        (per-seed 0.5B full-SFT inits)
+runs/fullsft_qwen15/20260704T1341Z-e571324/    (1.5B full-SFT; fullsft15_test_eval.json + manifest/logs)
+runs/fullgrpo_qwen15/20260704T1343Z-e571324/   (1.5B full-GRPO; fullgrpo15_test_eval.json + manifest/logs/reward_trace/generations)
+runs/fullsft_qwen3/20260704T1355Z-e571324/     (3B full-SFT; fullsft3_test_eval.json + manifest/logs)
+runs/aggregate_fullsft7b_lowlr.json            (7B full-SFT, 3 seeds; mean/std/min/max + per-seed + eval_paths)
+runs/aggregate_fullgrpo05.json                 (0.5B full-GRPO, 3 seeds; mean/std/min/max + per-seed + eval_paths)
+runs/gpu_session_20260704/{seeds_full,grid_fill}.log   (batch drivers; local, gitignored)
+DECISIONS.md D-2026-07-04-013                  (the saturation verdict)
+docs/PORTFOLIO_INDEX.md                        (full-FT column with error bars; saturation closing arc; self-correction count = 5)
+```
+
+Log ids this round: EXP-2026-07-04-018 (seed replication), EXP-2026-07-04-019 (grid fill);
+D-2026-07-04-013 (env v0.3 saturation verdict); CP-2026-07-04-007.
+
+Resume:
+
+```text
+Seed replication + grid fill DONE; env v0.3 SATURATED (seven-plus oracle configs) and RETIRED
+for top-tier method comparisons - frozen as the historical ruler. 7B full-SFT is the second
+zero-variance oracle solver; 0.5B full-GRPO adapter-floor reattribution is seed-replicated (no
+collapse any seed; 1 seed hits oracle). KIWI deployment answer: 1.5B full-FT reaches oracle for
+this task tier. NEXT (standing queue): env v0.4 dataset assembly IN PROGRESS (staging personas,
+builder-owned, untracked; env code shipped commit 0cecbc0) - the successor ruler that restores
+discriminative power; citation collection batch-2 (277 -> ~400+). Second tier: Plan C
+(no-weights v0.3 control, prompt tier - still valid), lambda=0.6 exploration arm, full
+seed-varied 3B. See EXP-2026-07-04-018/019, D-2026-07-04-013, TODO.
 ```

@@ -2,7 +2,7 @@
 
 *The interviewer front door. Start here; every claim links to its evidence.*
 
-Last updated: 2026-07-04.
+Last updated: 2026-07-04 (Round 9 — env v0.3 saturated).
 
 ---
 
@@ -15,12 +15,20 @@ fool ourselves, measured where prompting alone falls short, and **trained only
 where the data said training pays** — post-training small open models (Qwen2.5
 0.5B–7B) on a cost-shaped escalation-routing task. The crown-jewel result is
 **reproducible with zero variance**: a **3B lands exactly on the analytic oracle
-(0.8473 / gate 1.000) across three seeds (std 0)**. The env is now solved by a
-**second config too** — 7B full-parameter SFT at a proper lr also hits the exact
-oracle (single seed; the 3B remains the strongest *replicated* result). A secondary result — a
-**trained 1.5B beating a prompted 7B** — held at our first seed but did **not**
-survive multi-seed averaging, and we say so: it is a seed-0-only claim, downgraded
-to a mean±std (0.7024 ± 0.0333). Throughout, the hard safety constraint (when to
+(0.8473 / gate 1.000) across three seeds (std 0)**. Then full-parameter fine-tuning
+kept clearing it: **7B full-SFT hits the exact oracle on three seeds (std 0) too**,
+and single-seed full-SFT at **1.5B and 3B** — plus full-GRPO at 1.5B — all land on
+0.8473 / gate 1.000. With **seven-plus configs on the analytic ceiling, we call env
+v0.3 SATURATED**: the eval has lost discriminative power at the top, so we froze it
+as a historical ruler and **upgraded the exam** (env v0.4). The honest reframe: the
+memorable scale curve (3B sweet spot, 1.5B plateau, 7B dip) turned out to be a
+**configuration-regime** artifact (LoRA r=16 + a shared lr), not a set of capability
+limits — once the confounds are removed the task is solvable from **1.5B up** (and,
+once, from 0.5B). **Deployment answer for KIWI: a fully-fine-tuned 1.5B reaches the
+oracle — the local-router question is answered for this task tier.** A secondary
+result — a **trained 1.5B beating a prompted 7B** — held at our first seed but did
+**not** survive multi-seed averaging, and we say so: it is a seed-0-only claim,
+downgraded to a mean±std (0.7024 ± 0.0333). Throughout, the hard safety constraint (when to
 escalate a risky action to a human) is kept as a **versioned code floor**, not
 something we hope RL learns — because our own instrumented RL runs show pure RL
 strands exactly that kind of rare, hard constraint. Every negative result is
@@ -61,6 +69,26 @@ baseline** (EXP-2026-07-04-010, D-2026-07-04-009). Evidence: `runs/dpo_qwen15/�
 `runs/gemma_prompted/{e2b,e4b}_test_eval.json`. **Caveat:** Gemma 4 is a MatFormer with
 *effective* (selective-activation) params, not dense — size comparisons to dense Qwen
 are approximate.
+
+**Full-parameter fine-tuning column (the saturation set).** Full-FT at a matched lr (2e-5),
+same 160 labels, same frozen test n=48, λ=0.3. Error bars where seed-replicated {0,1,2};
+single-seed cells flagged `[s0]`. Every cell here hits the analytic oracle except the 0.5B
+mean.
+
+| Base model | Full-SFT | Full-GRPO | Evidence |
+| --- | --- | --- | --- |
+| **0.5B** | 0.5899 / 0.75 `[s0]` | **0.7846 ± 0.0443 / gate 0.8333 ± 0.1179** (seed 1 = 0.8473 / 1.000 = **oracle**; no collapse any seed) | `runs/fullsft_qwen05/…T0752Z…/`, `runs/aggregate_fullgrpo05.json` |
+| **1.5B** | **0.8473 / 1.000 = ORACLE** `[s0]` (pulls the AMD_00 gate nail LoRA never pulled) | **0.8473 / 1.000 = ORACLE** `[s0]` | `runs/fullsft_qwen15/…T1341Z…/`, `runs/fullgrpo_qwen15/…T1343Z…/` |
+| **3B** | **0.8473 / 1.000 = ORACLE** `[s0]` | — | `runs/fullsft_qwen3/…T1355Z…/` |
+| **7B** | **0.8473 ± 0.0000 / gate 1.000 ± 0.0 = ORACLE ×3 seeds** | — | `runs/aggregate_fullsft7b_lowlr.json` |
+
+So the escalation env is solved by **seven-plus configs**: 3B LoRA-GRPO ×3, 7B full-SFT ×3
+(both zero variance), 1.5B full-SFT, 1.5B full-GRPO, 3B full-SFT, and 0.5B full-GRPO (1/3
+seeds). **The two zero-variance replicated solvers are 3B LoRA-GRPO and 7B full-SFT.** The 1.5B
+full-SFT cell is notable: full-parameter updates pull the `AMD_00` gate seed up-front (v0.3
+convention, denom 8) that LoRA never pulled at 1.5B across SFT / GRPO-v1 / GRPO-v2 — direct
+evidence that the LoRA "1.5B 0.875 plateau" was a configuration artifact, not a 1.5B ceiling
+(EXP-2026-07-04-018/019, D-2026-07-04-013).
 
 **Oracle line:** analytic oracle reward 0.8473 at λ=0.3 (the mix is
 λ-invariant below λ=1; the learnable quantity is inferring p_cheap-success and
@@ -302,6 +330,40 @@ citation env v2 (D-2026-07-04-002/008).
    2/3 seeds; optional follow-ups **not committed**: E1b seed replication, a LoRA-7B lr sweep
    (EXP-2026-07-04-015/016/017, D-2026-07-04-011/012, F-2026-07-04-007).
 
+10. **Env v0.3 is SATURATED — the closing arc: env solved → exam upgraded (2026-07-04).**
+    Seed replication and grid fill this round pushed the count of configs that hit the analytic
+    oracle *exactly* to **seven-plus**: 3B LoRA-GRPO ×3 (zero variance) and 7B full-SFT ×3
+    (zero variance) are the two **replicated** solvers; 1.5B full-SFT, 1.5B full-GRPO, 3B
+    full-SFT are single-seed grid-fill solvers; and 0.5B full-GRPO solved it in **1 of 3 seeds**
+    (a per-seed high, not the mean 0.7846 ± 0.0443). When that many configs land on the ceiling
+    to four decimals, **the eval can no longer rank strong methods** — it has lost discriminative
+    power at the top. Consequences: **(i)** v0.3 is frozen as a historical ruler and **retired**
+    for top-tier method comparisons (still valid at the bottom of the range, where 0.5B varies
+    and prompted arms fail the gate). **(ii)** The memorable scale-curve drama (3B sweet spot,
+    1.5B 0.875 plateau, 7B dip) is **reattributed to configuration regime** (LoRA r=16 + a shared
+    lr), *not* capability — under full-FT at a matched lr the curve flattens onto the oracle from
+    1.5B up. This is the campaign's **fifth self-correction**, and it *extends* #3/#4: those fixed
+    individual cells, this reframes the whole curve. **(iii)** The honest reframe: *we thought we
+    were measuring model-capability boundaries; we were measuring configuration boundaries.*
+    **(iv)** Deployment answer for KIWI: a fully fine-tuned **1.5B reaches the oracle** — the
+    local-router question is **answered** for this task tier (the safety floor still lives in
+    code on every arm). **(v)** Discriminative power is restored by **env v0.4** (memory-dependent
+    seeds, dynamic cost, twin pairs; env code shipped this session, commit `0cecbc0`; synthetic
+    persona data generation in progress, `staging/` untracked by design until the builder curates
+    it). **Lesson:** *when every model fails the same item, audit the item; when every config aces
+    the exam, upgrade the exam* — a ruler has a lifecycle, and saturation is a first-class result,
+    not a victory lap. (EXP-2026-07-04-018/019, D-2026-07-04-013.)
+
+**The five self-corrections (the campaign's honesty ledger).** #1 — the "trained 1.5B beats
+prompted 7B" headline held at seed 0 but not at the mean; downgraded to seed-0-only
+(D-2026-07-04-006, finding #3). #2 — the 0.5B GRPO collapse is an **adapter**-capacity floor,
+not a **model**-capacity floor; full-FT does not collapse (D-2026-07-04-011, finding #4). #3 —
+the E1 reading "LoRA is a regularizer at 7B / full-FT is 20.7 pts worse" (D-2026-07-04-011).
+#4 — that reading was an **lr artifact**: at a proper lr full-FT hits exact oracle at 7B
+(E1b, D-2026-07-04-012, finding #9), correcting #3. #5 — the **entire scale-curve drama** is a
+**configuration regime**, not a capability curve; with confounds removed the task is solved
+from 1.5B up (D-2026-07-04-013, finding #10), extending #3/#4.
+
 **"Do we need RL, and how much does it buy?" — a measured, TASK-DEPENDENT answer.** RL
 over the best SFT baseline, per task, on the same frozen eval:
 
@@ -321,9 +383,22 @@ on escalation RL only ever optimizes *above* a code-enforced safety floor
 
 ## 5. Honest limits — what we do *not* claim
 
-- **Error bars on three configs only.** SFT 1.5B, GRPO-v2 3B, and GRPO 0.5B carry
-  mean±std over seeds {0,1,2}; every other cell is **single seed (seed 0)**, flagged
-  `[s0]` in the table — treat those deltas as directional, not significant.
+- **Error bars on the replicated configs only; the full-FT grid-fill cells are single-seed.**
+  SFT 1.5B, GRPO-v2 3B, GRPO 0.5B, **7B full-SFT**, and **0.5B full-GRPO** carry mean±std over
+  seeds {0,1,2}; every other cell — including the **1.5B full-SFT, 1.5B full-GRPO, and 3B
+  full-SFT grid-fill oracle solves** — is **single seed (seed 0)**, flagged `[s0]`. The
+  seed-replicated oracle solvers are exactly two: **3B LoRA-GRPO** and **7B full-SFT** (both
+  zero variance). The single-seed grid-fill cells are directional config-fill, not
+  variance-bounded claims. The **0.5B full-GRPO oracle solve is 1 of 3 seeds** (a per-seed high,
+  not the mean 0.7846 ± 0.0443 / gate 0.8333 ± 0.1179).
+- **Env v0.3 is saturated, and the deployment claim is on v0.3.** Seven-plus configs hit the
+  analytic oracle, so v0.3 no longer discriminates strong methods at the top; it is frozen as a
+  historical ruler (D-2026-07-04-013). The "1.5B full-FT reaches oracle / KIWI local-router
+  answered" claim is on **env v0.3** — a simulated, n=48 ruler — for **this task tier**; env
+  v0.4 (memory-dependent seeds, dynamic cost, twin pairs) is the un-saturated successor and its
+  persona dataset is still in assembly (`staging/`, untracked by design). The scale curve is a
+  portrait of our hyperparameters, not of the models — stated as a self-correction, not a
+  finding about capability.
 - **GRPO variance isolated, not full-pipeline.** The 3B ×3-seed replication varies the
   GRPO *sampling* seed only (all three init from the same seed-0 3B SFT adapter). A
   full SFT+GRPO seed-varied 3B run (to bound total pipeline variance) is backlog.

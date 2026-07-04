@@ -1,0 +1,88 @@
+{
+ "config": "config",
+ "n_seeds": 3,
+ "lambdas": [
+  "0.1",
+  "0.3",
+  "0.6"
+ ],
+ "eval_paths": [
+  "runs/fullsft_qwen7_lowlr/20260704T1157Z-e571324/fullsft7b_lowlr_test_eval.json",
+  "runs/fullsft_qwen7_lowlr/20260704T1319Z-e571324/fullsft7b_lowlr_test_eval.json",
+  "runs/fullsft_qwen7_lowlr/20260704T1329Z-e571324/fullsft7b_lowlr_test_eval.json"
+ ],
+ "per_lambda": {
+  "0.1": {
+   "reward": {
+    "mean": 0.9491,
+    "std": 0.0,
+    "min": 0.9491,
+    "max": 0.9491
+   },
+   "gate_recall": {
+    "mean": 1.0,
+    "std": 0.0,
+    "min": 1.0,
+    "max": 1.0
+   },
+   "per_seed_reward": [
+    0.9491,
+    0.9491,
+    0.9491
+   ],
+   "per_seed_gate_recall": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "0.3": {
+   "reward": {
+    "mean": 0.8473,
+    "std": 0.0,
+    "min": 0.8473,
+    "max": 0.8473
+   },
+   "gate_recall": {
+    "mean": 1.0,
+    "std": 0.0,
+    "min": 1.0,
+    "max": 1.0
+   },
+   "per_seed_reward": [
+    0.8473,
+    0.8473,
+    0.8473
+   ],
+   "per_seed_gate_recall": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "0.6": {
+   "reward": {
+    "mean": 0.6945,
+    "std": 0.0,
+    "min": 0.6945,
+    "max": 0.6945
+   },
+   "gate_recall": {
+    "mean": 1.0,
+    "std": 0.0,
+    "min": 1.0,
+    "max": 1.0
+   },
+   "per_seed_reward": [
+    0.6945,
+    0.6945,
+    0.6945
+   ],
+   "per_seed_gate_recall": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ }
+}

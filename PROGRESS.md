@@ -2,6 +2,64 @@
 
 Last updated: 2026-07-04
 
+## Round 9 Wrap-Up: seed replication + grid fill -> env v0.3 is SATURATED; exam upgraded to v0.4 (2026-07-04)
+
+Two rounds of full-parameter results this session close the full-FT scale grid and force the
+big verdict: escalation env v0.3 is SATURATED. Seven-plus configs now hit the analytic oracle
+(0.8473 / gate 1.000) exactly. This is the CLOSING ARC of the escalation story: env solved ->
+exam upgraded.
+
+**A. SEED REPLICATION of the two full-FT headlines (EXP-2026-07-04-018, seeds {0,1,2}).**
+- **7B full-SFT @ lr 2e-5: 0.8473 / gate 1.000 on ALL THREE seeds - EXACT ORACLE, zero
+  variance** (aggregate_fullsft7b_lowlr.json). This is now the SECOND config replicated across
+  three seeds (first: 3B LoRA-GRPO). E1b's single-seed caveat is DISCHARGED for this arm.
+- **0.5B full-GRPO (per-seed full-SFT inits): NO COLLAPSE in any seed.** Seeds at lambda=0.3:
+  0.7533/0.75, **0.8473/1.000 (seed 1 FULLY SOLVED the env at 0.5B!)**, 0.7533/0.75. Mean
+  **0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179** (aggregate_fullgrpo05.json). The adapter-floor
+  reattribution (D-2026-07-04-011) is now SEED-REPLICATED, not a single-seed argument. Kill bar
+  unchanged (mean gate 0.833 < 0.99; the oracle solve is 1/3 seeds, a per-seed high not a mean).
+
+**B. GRID FILL (EXP-2026-07-04-019, all single-seed, full-FT @ lr 2e-5).**
+- **1.5B full-SFT: 0.8473 / gate 1.000** - and it PULLS the AMD_00 gate nail that LoRA never
+  pulled at 1.5B (LoRA was stuck at gate 0.875 across SFT/GRPO-v1/GRPO-v2; full-SFT gates it
+  up-front under the v0.3 convention, denom 8, 8/8).
+- **1.5B full-GRPO (init from that full-SFT): 0.8473 / gate 1.000.**
+- **3B full-SFT: 0.8473 / gate 1.000.**
+- Grid now closed under full-FT: solved from 1.5B up (and once, at 0.5B).
+
+**C. THE SATURATION VERDICT (D-2026-07-04-013).** Seven-plus configs on the analytic ceiling ->
+(i) the eval has LOST DISCRIMINATIVE POWER at the top - method comparisons on v0.3 are now
+uninformative there; (ii) the scale-curve "drama" (3B sweet spot, 1.5B 0.875 plateau, 7B dip)
+is reattributed to CONFIGURATION REGIME (LoRA r=16 + shared lr), not capability - the CAMPAIGN'S
+FIFTH self-correction, extending #3/#4; (iii) honest reframing: "we thought we were measuring
+model-capability boundaries; we were measuring configuration boundaries; with confounds removed
+the 160-row task is solvable from 1.5B up (and sometimes 0.5B)"; (iv) DEPLOYMENT ANSWER FOR
+KIWI: 1.5B full-FT reaches oracle - the local-router question is ANSWERED for this task tier
+(safety floor stays in code); (v) discriminative power restored by env v0.4 (memory-dependent
+seeds, dynamic cost, twin pairs; code shipped this session, commit 0cecbc0; synthetic persona
+data generation in progress, staging/ untracked by design).
+
+Self-correction ledger is now FIVE: #1 multi-seed 1.5B downgrade; #2 0.5B collapse = adapter
+floor; #3 the "LoRA regularizes at 7B" reading; #4 that reading was an lr artifact (E1b); #5
+the whole scale-curve drama = configuration regime, not capability.
+
+**Plan C note.** Plan C (training-free / inference-backend GRPO control) is queued on GPU and
+remains a VALID no-weights CONTROL on v0.3: its promotion bar was set against PROMPTED-1.5B,
+i.e. it competes at the PROMPT tier (where no arm cleared gate 0.99), not the saturated top
+tier - so v0.3's top-tier saturation does not invalidate it.
+
+**Lesson.** When every model fails the same item, audit the item; when every config aces the
+exam, upgrade the exam. A ruler has a lifecycle - it retires when it can no longer discriminate.
+
+Evidence (all local this round; weights git-excluded): `runs/fullsft_qwen7_lowlr/` (3 seed
+dirs), `runs/fullgrpo_qwen05/` (3 seed dirs) + `runs/fullsft_qwen05/` (3 per-seed inits),
+`runs/fullsft_qwen15/`, `runs/fullgrpo_qwen15/`, `runs/fullsft_qwen3/`,
+`runs/aggregate_fullsft7b_lowlr.json`, `runs/aggregate_fullgrpo05.json`; batch drivers
+`runs/gpu_session_20260704/{seeds_full,grid_fill}.log` (local, gitignored). The 9 new
+run_manifest.json logging_dir hostname suffixes were REDACTED to _REDACTED per convention
+(redaction_note appended). Log ids: EXP-2026-07-04-018 (seed replication), -019 (grid fill);
+D-2026-07-04-013 (saturation verdict); CP-2026-07-04-007.
+
 ## Round 8 Wrap-Up: E1b - 7B full-FT at a PROPER lr hits EXACT ORACLE; the E1 "LoRA regularizes at 7B" verdict was an lr artifact (2026-07-04)
 
 E1b is the pre-registered fair test of the E1 lr confound, and it drove the campaign's

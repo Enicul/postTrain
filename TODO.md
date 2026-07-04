@@ -223,13 +223,30 @@ FULL-PARAMETER FINE-TUNING PROBES (E1/E2) - DONE. Origin: owner's parameterizati
   bar "full beats LoRA by >=3 -> LoRA was binding" NOW MET. E1's "20.7 pts worse / LoRA
   regularizes at 7B" = lr artifact; D-2026-07-04-011 7B half AMENDED (D-2026-07-04-012). Env
   now solved by TWO configs (3B LoRA-GRPO 3 seeds + 7B full-SFT single seed). Single seed.
-- [ ] (optional, NOT committed) E1b seed replication - promote the 7B full-SFT exact-oracle
-  solve from single-seed to seed-varied.
+- [x] E1b SEED REPLICATION - 7B full-SFT exact-oracle solve promoted single-seed -> seed-varied.
+  DONE 2026-07-04 (EXP-2026-07-04-018): seeds {0,1,2} all 0.8473 / gate 1.000 = EXACT ORACLE,
+  ZERO VARIANCE (aggregate_fullsft7b_lowlr.json). SECOND config replicated x3 (first: 3B
+  LoRA-GRPO). E1b single-seed caveat DISCHARGED.
+- [x] SEED-VARIED full-GRPO-0.5B - adapter-floor reattribution promoted single-seed -> seed-varied.
+  DONE 2026-07-04 (EXP-2026-07-04-018): seeds {0,1,2} = 0.7533/0.75, 0.8473/1.000 (seed 1 FULLY
+  SOLVES the env at 0.5B), 0.7533/0.75; mean 0.7846 +/- 0.0443 / gate 0.8333 +/- 0.1179
+  (aggregate_fullgrpo05.json). NO collapse in ANY seed - reattribution seed-replicated. Kill bar
+  unchanged (mean gate 0.833 < 0.99; the oracle solve is 1/3 seeds, a per-seed high not a mean).
+- [x] GRID FILL - close the intermediate full-FT sizes. DONE 2026-07-04 (EXP-2026-07-04-019,
+  all single-seed, full-FT @ lr 2e-5): 1.5B full-SFT 0.8473/1.000 (PULLS the AMD_00 gate nail
+  LoRA never pulled at 1.5B, v0.3 denom 8), 1.5B full-GRPO 0.8473/1.000, 3B full-SFT 0.8473/1.000.
+  Grid solved from 1.5B up under full-FT.
 - [ ] (optional, NOT committed) LoRA-7B lr sweep - confirm the +13.3 is a genuine
   matched-per-arm parameterization win (that LoRA's 0.7147 does not also jump with lr), not
   one-arm tuning. Lesson (D-2026-07-04-012): comparing parameterizations at a shared lr is void.
-- [ ] (optional, hardening) seed-varied full-GRPO-0.5B to promote the adapter-floor
-  reattribution from a single-seed non-collapse to a seed-varied result.
+
+ENV v0.3 STATUS: SATURATED / RETIRED for top-tier method comparisons (D-2026-07-04-013). Seven-plus
+configs now hit the analytic oracle (0.8473 / gate 1.000) exactly: 3B LoRA-GRPO x3 ; 7B full-SFT
+x3 ; 1.5B full-SFT ; 1.5B full-GRPO ; 3B full-SFT ; 0.5B full-GRPO (1/3 seeds). The eval has lost
+discriminative power at the top; the scale-curve drama is reattributed to CONFIGURATION REGIME,
+not capability (self-correction #5). v0.3 is FROZEN as the historical ruler (still valid at the
+bottom of the range and for the completed narrative). KIWI deployment answer: 1.5B full-FT reaches
+oracle - the local-router question is ANSWERED for this task tier (safety floor stays in code).
 - [x] NEIGHBOR GPU-PROCESS OWNERSHIP - RESOLVED 2026-07-04: owner confirmed the ~34GB
   coexisting process (compute_capture.py, deepseek/confiqa) is THEIR OWN separate project.
   GPU 0 is time-shared between our runs and the owner's other work. Operating rule going
@@ -241,15 +258,24 @@ QUEUE (promoted next levers, in order):
 - [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time
   discipline / boundary-class balance; then re-run on the combined train pool. THE SOLE
   remaining live lever for the (otherwise CLOSED) citation line.
-- [ ] env v0.4 memory-form experiment (construction) - STANDING BIG-TICKET: build the
-  four-arm matrix (no-memory / structured-digest / raw-long-context / Sonnet) with
-  pre-registered kills; tests what FORM state should take for a small model. The R6
-  smart-review tier ("retrieve memory before judging") sharpens its motivation. See
-  `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005.
+- [~] env v0.4 memory-form experiment - STANDING BIG-TICKET, NOW PROMOTED (v0.3 is SATURATED,
+  D-2026-07-04-013 - v0.4 is the successor ruler that restores discriminative power). ENV CODE
+  SHIPPED this session (commit 0cecbc0: memory-dependent seeds, dynamic cost, twin pairs).
+  DATASET ASSEMBLY IN PROGRESS: synthetic persona data generation underway; the v0.4 `staging/`
+  personas dir is BUILDER-OWNED and UNTRACKED BY DESIGN until curated - do NOT commit it.
+  REMAINING: finish persona curation, then build the four-arm matrix (no-memory /
+  structured-digest / raw-long-context / Sonnet) with pre-registered kills; tests what FORM
+  state should take for a small model. The R6 smart-review tier ("retrieve memory before
+  judging") sharpens its motivation. See `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`,
+  D-2026-07-03-002/005.
 
 SECOND tier:
 
-- [ ] Plan C: run with an inference backend as the control column.
+- [ ] Plan C: run with an inference backend as the control column. QUEUED on GPU. NOTE
+  (D-2026-07-04-013): Plan C remains a VALID no-weights CONTROL run on v0.3 despite v0.3's
+  top-tier saturation - its promotion bar was defined against PROMPTED-1.5B, so it competes at
+  the PROMPT tier (where no arm cleared gate 0.99), NOT the saturated top tier. The saturation
+  does not invalidate it.
 - [ ] GRPO lambda=0.6 exploration arm.
 - [ ] Full-pipeline (SFT+GRPO seed-varied) 3B multi-seed to close the last variance
   caveat on the crown jewel (current 3B multi-seed isolates GRPO sampling variance only).
