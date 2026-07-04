@@ -203,6 +203,61 @@ On the 0.5B GRPO-v2 adapter (greedy `gate_recall == 0`), run
 - Defaults (`--n-samples 1 --temperature 0`) are greedy/argmax and leave the
   existing eval numbers unchanged.
 
+## Batch 4 protocol (`run_batch4.sh`) - error bars, cross-family, citation SFT
+Every portfolio number so far is SINGLE-SEED (seed 0) - the top credibility gap.
+Batch 4 closes it and adds two cross-cutting probes. Pull-and-run on the A100;
+`run_batch4.sh` has the exact command order (paths relative to this dir). Two
+venvs: `PY=~/postTrain/.venv-rl/bin/python` (training, Qwen), and a SEPARATE
+`GPY=~/postTrain/.venv-gemma/bin/python` (transformers 5.13, Gemma PROMPTED eval
+only - the scripts must not assume the training venv, hence the additive
+`--loader`/`--chat-template` flags and their lazy, guarded imports).
+
+New tooling:
+- `aggregate_seeds.py` (stdlib, no GPU): given N eval jsons for one config at
+  different seeds, emits mean/std/min/max for reward@each-lambda and gate_recall,
+  `n_seeds`, and the per-seed values to `--out` json + a compact markdown table.
+  Population std (ddof=0): single-seed input -> std 0.0, no divide-by-zero.
+- `sft_citation.py`: SFT baseline for the citation task in the LETTERS action
+  space. Rows are built from `CitationAgenticEnv` split=="train" (62 claims):
+  prompt = `env.render_prompt(cid)` (lettered menu), completion = one-line
+  `{"cite": "<gold letter>", "verdict": "<gold label>"}`. The gold letter is
+  looked up through `env.letter_map(cid)` and NEVER re-derived - the letter for
+  the gold evidence depends on candidate ordering. `--labels-only` (stdlib)
+  prints the letter/label mix and ASSERTS every gold letter maps back to the gold
+  evidence_id (0 mismatches) before any GPU time. Eval the adapter via
+  `grpo_citation.py --eval-only --action-space letters --adapter ...`.
+- `eval_escalation_policy.py` additive flags: `--loader {causal,auto}` (default
+  `causal` = unchanged Qwen path; `auto` tries `AutoModelForCausalLM` then falls
+  back to `AutoModelForImageTextToText`, since Gemma 4 is
+  `Gemma4ForConditionalGeneration`); `--chat-template` (explicit single-user-turn
+  wrapping for Gemma-it). Default behaviour is byte-identical for existing Qwen
+  runs.
+
+Phase A design (pre-registered): GRPO seeds 1,2 REUSE the seed-0 SFT adapter as
+init rather than retraining SFT per seed. This isolates GRPO SAMPLING variance
+from SFT variance and keeps the batch inside budget. SFT variance is measured
+SEPARATELY, and only at 1.5B, by retraining SFT-1.5B from scratch each seed. The
+seed-0 eval jsons already on disk (`sft_qwen15/20260703T1506Z*`,
+`grpo_v2_qwen3/20260703T1624Z*`, `grpo_qwen05/20260703T1507Z*`) are seed 0 of the
+{0,1,2} aggregate.
+
+### Three pre-registered claims this batch tests
+1. **Multi-seed error bars.** Report `mean±std` over seeds {0,1,2}. The
+   **3B-oracle** claim (GRPO-v2 3B reaches ~oracle reward + holds the gate) and
+   the **0.5B-collapse** claim (plain GRPO 0.5B loses the gate) STAND ONLY IF
+   they replicate across all 3 seeds - i.e. the effect must survive the std, not
+   just seed 0.
+2. **Gemma cross-family (prompted).** Does the small-model gate failure replicate
+   CROSS-FAMILY on Gemma 4 E2B-it / E4B-it (prompted, no training)? Caveat: these
+   are MatFormer models with EFFECTIVE params E2B=2.3B / E4B=4.5B vs Qwen dense,
+   so the comparison is by effective-params band, not architecture-matched.
+3. **Citation SFT (the decoupling probe).** Does SUPERVISED training move
+   `verdict_acc` where GRPO's citation-component reward did NOT
+   (EXP-2026-07-04-003)? `sft_citation.py` 1.5B in the letters space, evaluated on
+   the same frozen `citation_real_eval_v1` test ruler, decouples "can a 1.5B learn
+   the verdict when supervised on it" from "does the RL citation objective squeeze
+   verdict accuracy away".
+
 ## 7B arm (A100 OOM knobs)
 Scaling from Qwen2.5-0.5B to a 7B model on the single A100 80GB:
 - per-device batch 8 + `--grad-accum 2` (both trainers take `--grad-accum`),

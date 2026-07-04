@@ -134,6 +134,19 @@ def main() -> None:
                          "metrics plus gate_action_presence_rate "
                          "(F-2026-07-04-002 follow-up).")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--loader", default="causal", choices=["causal", "auto"],
+                    help="model mode: 'causal' (default) = AutoModelForCausalLM, "
+                         "unchanged for Qwen. 'auto' tries AutoModelForCausalLM and "
+                         "falls back to AutoModelForImageTextToText when the arch "
+                         "is not a plain CausalLM (Gemma 4 is "
+                         "Gemma4ForConditionalGeneration, cross-family eval on the "
+                         "separate transformers-5.13 venv).")
+    ap.add_argument("--chat-template", action="store_true",
+                    help="model mode: wrap the rendered prompt as a single user "
+                         "message via tokenizer.apply_chat_template("
+                         "add_generation_prompt=True) instead of feeding the raw "
+                         "completion prompt. Output is parsed identically. Default "
+                         "off keeps existing Qwen runs byte-identical.")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--dump-preds", type=Path, default=None,
                     help="model mode only: write per-seed jsonl {seed_id, first, "
@@ -166,21 +179,44 @@ def main() -> None:
         from transformers import AutoModelForCausalLM, AutoTokenizer
         transformers.set_seed(args.seed)
         tok = AutoTokenizer.from_pretrained(args.model)
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model, torch_dtype=torch.bfloat16, device_map="auto")
+        # loader: 'causal' (default, Qwen path, byte-identical) vs 'auto' (Gemma 4
+        # is Gemma4ForConditionalGeneration, so AutoModelForCausalLM may raise;
+        # fall back to AutoModelForImageTextToText). Cross-family eval runs on the
+        # separate transformers-5.13 venv; keep the import lazy + guarded.
+        if args.loader == "causal":
+            model = AutoModelForCausalLM.from_pretrained(
+                args.model, torch_dtype=torch.bfloat16, device_map="auto")
+        else:
+            try:
+                model = AutoModelForCausalLM.from_pretrained(
+                    args.model, torch_dtype=torch.bfloat16, device_map="auto")
+            except (ValueError, KeyError, OSError, TypeError) as e:
+                from transformers import AutoModelForImageTextToText
+                print(json.dumps({"loader_fallback": "AutoModelForImageTextToText",
+                                  "causal_error": str(e)[:200]}))
+                model = AutoModelForImageTextToText.from_pretrained(
+                    args.model, torch_dtype=torch.bfloat16, device_map="auto")
         if args.adapter:
             from peft import PeftModel
             model = PeftModel.from_pretrained(model, str(args.adapter))
         model.eval()
+
+        def build_input(prompt_text: str):
+            """Tokenize one prompt. Default (no --chat-template) reproduces the
+            existing Qwen path byte-for-byte: wrap as a single user message and
+            apply the chat template with add_generation_prompt=True. The flag is
+            the explicit cross-family switch (same wrapping, stated intent for
+            Gemma-it models whose tokenizer ships its own template)."""
+            msgs = [{"role": "user", "content": prompt_text}]
+            text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+            return tok(text, return_tensors="pt").to(model.device)
         dump_fh = None
         if args.dump_preds:
             args.dump_preds.parent.mkdir(parents=True, exist_ok=True)
             dump_fh = args.dump_preds.open("w", encoding="utf-8")
         for sid in ids:
             seed = reward.env.seeds[sid]
-            msgs = [{"role": "user", "content": render_prompt(seed)}]
-            text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
-            enc = tok(text, return_tensors="pt").to(model.device)
+            enc = build_input(render_prompt(seed))
             if sampled_mode:
                 # N samples/seed at temperature T (num_return_sequences batches them)
                 with torch.no_grad():
