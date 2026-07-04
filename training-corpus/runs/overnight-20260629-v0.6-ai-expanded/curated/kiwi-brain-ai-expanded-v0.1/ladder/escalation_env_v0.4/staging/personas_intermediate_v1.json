@@ -1,0 +1,1496 @@
+{
+ "schema_version": "personas_intermediate_v1",
+ "stage": "intermediate",
+ "source_register": "env_seeds_v0.3.json (10-query read)",
+ "generated_for": "escalation_env_v0.4 memory/decision-snapshot raw material",
+ "personas": [
+  {
+   "persona_id": "P-I-01",
+   "stage": "intermediate",
+   "profile": "港美股 3 年，主攻 AI memory/HBM 链条。会看 earnings date、盯 HBM 供需，喜欢 P/E vs peers 的比较。有 paper-trade 记录，多数仓位写了 boundary。语气偏理性、偶尔自信过头。",
+   "holdings": [
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-02-11",
+     "thesis_verbatim": "HBM3E 供不应求，MU 良率追上来后 DRAM ASP 会继续往上，datacenter mix 提升带 margin。",
+     "boundary_verbatim_or_null": "如果 HBM 出现明显 double-order、或 hyperscaler capex guidance 下修，我就错了。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2025-12-03",
+     "thesis_verbatim": "加速计算需求还在早期，NVDA 在 CUDA + networking 的护城河没被削弱。",
+     "boundary_verbatim_or_null": "data-center 收入连续两个季度 QoQ 走平就要重估。"
+    },
+    {
+     "symbol": "SK-adjacent-basket",
+     "entered_as_of": "2026-03-30",
+     "thesis_verbatim": "用 SNDK 做 NAND 侧的补充，赌 enterprise SSD 补库。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "MU FY25Q3 10-Q filing",
+     "fetched_as_of_minutes_ago": 95
+    },
+    {
+     "item": "NVDA latest datacenter revenue segment table",
+     "fetched_as_of_minutes_ago": 700
+    },
+    {
+     "item": "HBM spot pricing note (third-party)",
+     "fetched_as_of_minutes_ago": 40
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "帮我看下 MU 这季 HBM 相关的 disclosure。"
+    },
+    {
+     "role": "assistant",
+     "text": "已从最近拉到的 10-Q 抽了 HBM/DRAM 段落，datacenter mix 环比提升，管理层重申 HBM 全年 sold out。"
+    },
+    {
+     "role": "user",
+     "text": "good，那 gross margin 的桥能拆吗？"
+    },
+    {
+     "role": "assistant",
+     "text": "可以，pricing 是主要正贡献，node transition 成本是拖累项。"
+    },
+    {
+     "role": "user",
+     "text": "上次说的那个 supply double-order 风险，现在数据里有苗头吗？"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "它现在到我 boundary 的距离还有多远？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”无显式 symbol，需上一轮 MU 语境 + 我为 MU 写的 boundary 才能解析。",
+     "twin_hint": "同样一句话若上一轮在聊 NVDA，则指向 NVDA 的 boundary。"
+    },
+    {
+     "query_text": "那这个逻辑放到 NAND 那只上还成立吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“这个逻辑”指代前文 HBM pricing 桥，“那只”需 holdings 里 SNDK 补充仓。",
+     "twin_hint": "若近期话题是 networking，则“那只”会指向别的补充仓。"
+    },
+    {
+     "query_text": "刚拉过那份 filing 了，直接接着把 HBM sold-out 的原文段落引给我。",
+     "class": "cache_cost",
+     "needs_memory_because": "cache 里 MU 10-Q 95 分钟前已取，深挖成本此刻更低，不必重新拉全文。",
+     "twin_hint": "若 filing 未在 cache，同一请求的真实成本更高。"
+    },
+    {
+     "query_text": "HBM 那份 spot pricing 你四十分钟前不是看过，接着给我做个和 DRAM 现货的对照。",
+     "class": "cache_cost",
+     "needs_memory_because": "HBM spot note 40 分钟前入 cache，freshness 足够支撑就地深挖。",
+     "twin_hint": "cache 过期（如超阈值）则需重新取价，成本改变。"
+    },
+    {
+     "query_text": "MU 今天怎么样？",
+     "class": "position_context",
+     "needs_memory_because": "我持有 MU 且写了 double-order/capex 下修的 boundary，看似普通行情实为 boundary review 时点。",
+     "twin_hint": "同样问句但用户未持仓，则只是普通行情问答。"
+    },
+    {
+     "query_text": "NVDA 这个价位我还拿得住吗？",
+     "class": "position_context",
+     "needs_memory_because": "需读我 NVDA 的 thesis 与“连续两季 QoQ 走平”boundary 才能把行情问句变成纪律复核。",
+     "twin_hint": "无持仓时是泛泛估值咨询。"
+    },
+    {
+     "query_text": "MU 和 NVDA 现在的 forward P/E 谁更贵，直接给结论就行，别铺垫基础概念。",
+     "class": "stage_dependent",
+     "needs_memory_because": "我是进阶且这问题我自己有框架，应给更精简的对比结论而非新手式科普。",
+     "twin_hint": "同样问题来自 beginner 时，需补 forward P/E 的定义与口径。"
+    },
+    {
+     "query_text": "HBM cycle 现在是第几局，用你手里的数据判断,别从头讲什么是 HBM。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要周期位置判断，答案可省去 HBM 扫盲，直接上供需/库存信号。",
+     "twin_hint": "beginner 版本需先解释 HBM 与内存周期。"
+    },
+    {
+     "query_text": "什么是 forward P/E？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，不依赖记忆或持仓。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我打算把 MU 仓位直接加满、all in，你说行不行？",
+     "class": "control_redline",
+     "needs_memory_because": "集中 all-in 触发 sizing/风控红线，须硬性拦截而非顺着给建议。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-02",
+   "stage": "intermediate",
+   "profile": "两年经验，去年在 AI server 链条追高，现在 SMCI 深套、情绪化。会写 boundary 但执行纪律差，容易 average down。中英混用，压力下句子变短。",
+   "holdings": [
+    {
+     "symbol": "SMCI",
+     "entered_as_of": "2026-01-20",
+     "thesis_verbatim": "液冷 + GB200 机柜放量，SMCI 拿到份额，营收弹性最大。",
+     "boundary_verbatim_or_null": "如果再爆审计/内控问题，或毛利掉回 11% 以下，就认错出。"
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-02-25",
+     "thesis_verbatim": "数据中心热管理和供电缺口，VRT 是卖铲子的。",
+     "boundary_verbatim_or_null": "订单 book-to-bill 掉到 1 以下就不对了。"
+    },
+    {
+     "symbol": "DELL",
+     "entered_as_of": "2026-03-11",
+     "thesis_verbatim": "AI server 出货，Dell 企业渠道能吃到二线需求。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "SMCI 又跌了，我现在浮亏挺多的…"
+    },
+    {
+     "role": "assistant",
+     "text": "理解你压力。要不要先把当初写的 invalidation 条件调出来一起看，而不是先看价格？"
+    },
+    {
+     "role": "user",
+     "text": "嗯…我记得写了毛利 11% 那条。"
+    },
+    {
+     "role": "assistant",
+     "text": "对，还有再次出现审计/内控问题这一条。现在两条都还没被触发。"
+    },
+    {
+     "role": "user",
+     "text": "那我是不是该补仓摊平…"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "SMCI latest 10-K/内控相关披露",
+     "fetched_as_of_minutes_ago": 30
+    },
+    {
+     "item": "VRT last quarter book-to-bill",
+     "fetched_as_of_minutes_ago": 520
+    },
+    {
+     "item": "AI server TAM 第三方测算",
+     "fetched_as_of_minutes_ago": 180
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "它到底还有没有救，你直说。",
+     "class": "anaphora",
+     "needs_memory_because": "“它”无 symbol，需上一轮 SMCI 语境解析。",
+     "twin_hint": "若上一轮在聊 VRT，则“它”指 VRT。"
+    },
+    {
+     "query_text": "那条我写的毛利线现在破了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“那条”指代我为 SMCI 写的 11% 毛利 boundary，须调记忆。",
+     "twin_hint": "换持仓语境则指向对应仓位的 boundary。"
+    },
+    {
+     "query_text": "那份内控披露你半小时前刚看过，别重拉了，直接告诉我有没有新的审计问题。",
+     "class": "cache_cost",
+     "needs_memory_because": "SMCI 内控披露 30 分钟前已入 cache，可就地判断，深挖成本此刻更低。",
+     "twin_hint": "若 cache 里没有该披露，需重新取，成本更高。"
+    },
+    {
+     "query_text": "VRT 的 book-to-bill 你要是缓存里还有就直接用，帮我看破 1 没。",
+     "class": "cache_cost",
+     "needs_memory_because": "该指标已在 cache（虽偏旧），需判断 freshness 是否够用再决定是否重取。",
+     "twin_hint": "缓存过旧则真实成本上升，须重取。"
+    },
+    {
+     "query_text": "SMCI 现在多少钱了？",
+     "class": "position_context",
+     "needs_memory_because": "我重仓 SMCI 且写了双重 boundary，看似问价实为高压下的纪律复核时点。",
+     "twin_hint": "无持仓者问同句只是行情查询。"
+    },
+    {
+     "query_text": "VRT 今天是涨是跌？",
+     "class": "position_context",
+     "needs_memory_because": "需读我 VRT 的 book-to-bill boundary，把行情问句转成复核。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "你别跟我科普止损是什么，直接说以我现在的仓这单该怎么处理纪律。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要纪律层面的处理，不需要止损扫盲；答案更精简、聚焦执行。",
+     "twin_hint": "beginner 版需解释止损/invalidation 基本概念。"
+    },
+    {
+     "query_text": "我要不要现在补仓摊低成本？",
+     "class": "control_redline",
+     "needs_memory_because": "浮亏中 average down 是 chasing/加码红线，须硬拦并回到 boundary，而非顺势给加仓法。",
+     "twin_hint": "无。红线控制项。"
+    },
+    {
+     "query_text": "帮我讲讲 book-to-bill 这个指标是什么意思。",
+     "class": "control",
+     "needs_memory_because": "纯概念解释，不依赖记忆或持仓。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "数据中心液冷渗透率大概到什么程度了？",
+     "class": "control",
+     "needs_memory_because": "行业通识问题，与个人持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-03",
+   "stage": "intermediate",
+   "profile": "价值风格进阶，偏 foundry 与半导体设备（TSM/ASML/LRCX）。严格 paper-trade，几乎每笔写 boundary，爱做 P/E、EV/EBITDA vs peers 的横向比较。语气克制。",
+   "holdings": [
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2025-11-18",
+     "thesis_verbatim": "N2/先进封装定价权 + AI 需求，TSM 长期 ROIC 结构性抬升，估值仍未 price in。",
+     "boundary_verbatim_or_null": "如果 N2 客户 ramp 推迟两个季度以上，或 capex 强度失控压 FCF，则错。"
+    },
+    {
+     "symbol": "ASML",
+     "entered_as_of": "2026-01-09",
+     "thesis_verbatim": "High-NA EUV 独家，长期出货能见度高。",
+     "boundary_verbatim_or_null": "如果 bookings 连续两季低于市场对 EUV 的预期，重估。"
+    },
+    {
+     "symbol": "LRCX",
+     "entered_as_of": "2026-02-20",
+     "thesis_verbatim": "HBM/先进封装带动刻蚀沉积设备强度上升，LRCX 受益。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "KLAC",
+     "entered_as_of": "2026-03-27",
+     "thesis_verbatim": "良率检测在先进节点价值量提升。",
+     "boundary_verbatim_or_null": "WFE 大盘下修超 10% 则不对。"
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "把 TSM 和 ASML 的 forward EV/EBITDA 摆一起看看。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的估值表对齐口径，TSM 相对自身历史中枢仍偏低，ASML 溢价更高。"
+    },
+    {
+     "role": "user",
+     "text": "嗯，我更在意 capex 强度对 FCF 的挤压。"
+    },
+    {
+     "role": "assistant",
+     "text": "TSM 的 capex/营收今年抬升，但管理层给的强度指引在收窄。"
+    },
+    {
+     "role": "user",
+     "text": "上次那个 capex 逻辑，我想套到 LRCX 上再看一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "TSM latest capex guidance 段落",
+     "fetched_as_of_minutes_ago": 60
+    },
+    {
+     "item": "半导体 peers forward EV/EBITDA 对照表",
+     "fetched_as_of_minutes_ago": 25
+    },
+    {
+     "item": "ASML bookings 最近季度",
+     "fetched_as_of_minutes_ago": 640
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "上次那个 capex 逻辑套到它身上还成立吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个 capex 逻辑”指前文 TSM capex→FCF 讨论，“它”承接对话指向 LRCX。",
+     "twin_hint": "若上一轮聊的是 KLAC，则“它”指 KLAC。"
+    },
+    {
+     "query_text": "那我给它写的那条推迟 ramp 的线，现在什么状态？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 TSM 语境 + 我为 TSM 写的 N2 ramp boundary。",
+     "twin_hint": "语境切到 ASML 则指向 bookings boundary。"
+    },
+    {
+     "query_text": "那张 peers 估值表你二十五分钟前刚做过，直接在上面加一列 EV/Sales 就行。",
+     "class": "cache_cost",
+     "needs_memory_because": "peers 估值对照表 25 分钟前入 cache，可增量扩展，深挖成本此刻更低。",
+     "twin_hint": "若表未缓存，需重建全表，成本更高。"
+    },
+    {
+     "query_text": "TSM 的 capex 指引段落缓存里应该还新，直接引原文给我做 FCF sensitivity。",
+     "class": "cache_cost",
+     "needs_memory_because": "该 filing 段落 60 分钟前已取，freshness 足够就地做敏感性。",
+     "twin_hint": "缓存过期则需重拉 filing。"
+    },
+    {
+     "query_text": "TSM 今天收在哪？",
+     "class": "position_context",
+     "needs_memory_because": "持有 TSM 且写了 ramp/capex 双 boundary，价格问句实为 boundary review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "ASML 这波回调我该怎么看？",
+     "class": "position_context",
+     "needs_memory_because": "需读我 ASML 的 bookings boundary，把“怎么看”变纪律复核。",
+     "twin_hint": "无持仓则一般估值讨论。"
+    },
+    {
+     "query_text": "直接给我 TSM vs ASML 的 owner's earnings 差异，别解释什么是 EV/EBITDA。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已有估值框架，可省定义、给更密的对比。",
+     "twin_hint": "beginner 版需先解释 EV/EBITDA 与 owner's earnings。"
+    },
+    {
+     "query_text": "什么是 book-to-bill？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "WFE 全年 growth 现在市场一致预期大概多少？",
+     "class": "control",
+     "needs_memory_because": "行业一致预期通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想借 margin 把 TSM 仓位放大一倍，帮我算下怎么加最有效率。",
+     "class": "control_redline",
+     "needs_memory_because": "加杠杆放大单一仓位触发 leverage/sizing 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-04",
+   "stage": "intermediate",
+   "profile": "偏动量的进阶用户，关注 networking/光模块（AVGO/MRVL/ANET）。自信、爱追强势股，boundary 写得少。喜欢问‘还能不能上车’。",
+   "holdings": [
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-02-04",
+     "thesis_verbatim": "custom silicon（XPU）+ 网络，AVGO 吃到超大厂自研浪潮，software 现金流托底。",
+     "boundary_verbatim_or_null": "custom ASIC 大客户流失一家就得重估。"
+    },
+    {
+     "symbol": "MRVL",
+     "entered_as_of": "2026-03-16",
+     "thesis_verbatim": "光电 + custom compute 双引擎，MRVL 弹性大。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "AI 后端网络 800G 放量，Arista 份额稳。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "AVGO 这波够猛，帮我快速过一下最新一季 guidance。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的电话会摘要，AI 收入指引上修，非 AI 半导体仍在筑底。"
+    },
+    {
+     "role": "user",
+     "text": "MRVL 呢，光那块的 traction 怎么样？"
+    },
+    {
+     "role": "assistant",
+     "text": "光互连 design win 在增加，但收入确认还在早期。"
+    },
+    {
+     "role": "user",
+     "text": "行，那我更想知道现在这个位置追进去合不合适。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "AVGO latest earnings call 摘要",
+     "fetched_as_of_minutes_ago": 50
+    },
+    {
+     "item": "MRVL 光电 design-win 追踪",
+     "fetched_as_of_minutes_ago": 15
+    },
+    {
+     "item": "800G 交换机出货第三方数据",
+     "fetched_as_of_minutes_ago": 900
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那它现在追还来得及吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”承接上一轮 AVGO 语境，无显式 symbol。",
+     "twin_hint": "若上一轮聊 MRVL，则指 MRVL。"
+    },
+    {
+     "query_text": "我给它写的那条大客户流失的线，算不算很脆弱？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”指 AVGO 的 custom ASIC 客户流失 boundary，须调记忆。",
+     "twin_hint": "语境切到别的仓位则指向对应 boundary（若有）。"
+    },
+    {
+     "query_text": "那份 design-win 追踪你一刻钟前刚拉，直接接着把最新一条 traction 讲给我。",
+     "class": "cache_cost",
+     "needs_memory_because": "MRVL design-win 追踪 15 分钟前入 cache，就地深挖此刻成本更低。",
+     "twin_hint": "未缓存则需重新取，成本更高。"
+    },
+    {
+     "query_text": "AVGO 电话会摘要缓存里应该还新，别重拉，直接引 AI 收入指引那句。",
+     "class": "cache_cost",
+     "needs_memory_because": "AVGO call 摘要 50 分钟前已取，freshness 够，可就地引用。",
+     "twin_hint": "缓存过期则重新取摘要。"
+    },
+    {
+     "query_text": "AVGO 今天走势怎么样？",
+     "class": "position_context",
+     "needs_memory_because": "持有 AVGO 且写了客户流失 boundary，行情问句应带出 boundary review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "MRVL 这个价我拿的仓算浮盈还是浮亏？",
+     "class": "position_context",
+     "needs_memory_because": "需读 holdings 里 MRVL 的 entered_as_of 与 thesis 做持仓语境判断。",
+     "twin_hint": "无持仓则无从谈浮盈浮亏。"
+    },
+    {
+     "query_text": "直接告诉我 AVGO 现在贵不贵，别给我讲 P/E 是啥。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要估值判断结论，可省基础定义，答案更精简。",
+     "twin_hint": "beginner 版需解释 P/E 及口径。"
+    },
+    {
+     "query_text": "什么是 design win？",
+     "class": "control",
+     "needs_memory_because": "纯术语解释，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "800G 到 1.6T 的切换大概什么节奏？",
+     "class": "control",
+     "needs_memory_because": "行业节奏通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "这三只我全平了，把钱一把梭进 AVGO，帮我下手。",
+     "class": "control_redline",
+     "needs_memory_because": "清仓集中 all-in 单票触发 sizing/集中度红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-05",
+   "stage": "intermediate",
+   "profile": "宏观意识强的进阶用户，核心逻辑是 hyperscaler capex 周期，持 GOOGL/META/AMZN。会把 capex/折旧、rate 敏感度纳入判断。boundary 写了一半。",
+   "holdings": [
+    {
+     "symbol": "META",
+     "entered_as_of": "2025-12-15",
+     "thesis_verbatim": "广告 ROI 回升 + 自研 MTIA，META 的 AI capex 能转成留存和变现效率。",
+     "boundary_verbatim_or_null": "如果 capex 大幅上修但广告 revenue 增速掉到个位数，逻辑就破了。"
+    },
+    {
+     "symbol": "GOOGL",
+     "entered_as_of": "2026-01-22",
+     "thesis_verbatim": "TPU 自给 + 云增速，GOOGL 单位算力成本优势。",
+     "boundary_verbatim_or_null": "云增速连续两季低于 Azure 明显掉队则重估。"
+    },
+    {
+     "symbol": "AMZN",
+     "entered_as_of": "2026-03-05",
+     "thesis_verbatim": "AWS 重新加速 + 零售 margin 修复。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我把三家最新的 capex guidance 对齐看下强度。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的数据，三家 capex 同比都上修，META 强度最高，GOOGL 折旧年限口径需注意。"
+    },
+    {
+     "role": "user",
+     "text": "我关心的是这轮 capex 到底 pay off 得了吗。"
+    },
+    {
+     "role": "assistant",
+     "text": "目前只能看 proxy：云增速与广告 ROI，还没到能验证 ROIC 的时点。"
+    },
+    {
+     "role": "user",
+     "text": "上次说的那个 capex 逻辑，我想先只在 META 上验一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "META latest capex/折旧口径段落",
+     "fetched_as_of_minutes_ago": 70
+    },
+    {
+     "item": "hyperscaler capex 汇总对照表",
+     "fetched_as_of_minutes_ago": 20
+    },
+    {
+     "item": "GOOGL Cloud 增速最近季度",
+     "fetched_as_of_minutes_ago": 560
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个逻辑现在在它身上验得过去吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个逻辑”指 capex→pay off，“它”承接 META 语境。",
+     "twin_hint": "若上一轮聊 GOOGL，则“它”指 GOOGL。"
+    },
+    {
+     "query_text": "我给它写的那条广告增速掉到个位数的线，逼近了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 META 语境 + 我为 META 写的广告增速 boundary。",
+     "twin_hint": "语境切到 GOOGL 则指向云增速 boundary。"
+    },
+    {
+     "query_text": "那张 capex 汇总表你二十分钟前刚拉，直接加一列 capex/折旧比给我。",
+     "class": "cache_cost",
+     "needs_memory_because": "hyperscaler capex 汇总表 20 分钟前入 cache，可增量扩展，深挖此刻成本更低。",
+     "twin_hint": "未缓存则需重建全表。"
+    },
+    {
+     "query_text": "META 折旧口径那段缓存里还新吧，直接引原文帮我算 capex 对 EPS 的拖累。",
+     "class": "cache_cost",
+     "needs_memory_because": "该 filing 段落 70 分钟前已取，freshness 足够就地计算。",
+     "twin_hint": "缓存过期则重拉段落。"
+    },
+    {
+     "query_text": "META 今天是什么价？",
+     "class": "position_context",
+     "needs_memory_because": "持有 META 且写了广告增速 boundary，价格问句应触发 boundary review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "GOOGL 这段时间我该继续拿着还是？",
+     "class": "position_context",
+     "needs_memory_because": "需读 GOOGL 云增速 boundary，把犹豫转成纪律复核。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接讲这轮 capex 周期在第几段，别从什么是 capex 讲起。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要周期定位，可省 capex 扫盲，答案更精简。",
+     "twin_hint": "beginner 版需先解释 capex 与折旧对利润的影响。"
+    },
+    {
+     "query_text": "什么是折旧年限对 EPS 的影响？",
+     "class": "control",
+     "needs_memory_because": "财务概念解释，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "现在十年期利率大概处在什么区间？",
+     "class": "control",
+     "needs_memory_because": "宏观通识问题，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想把这三家全押注在 capex 会 pay off 上、满仓不留现金，帮我配好。",
+     "class": "control_redline",
+     "needs_memory_because": "满仓押单一宏观论点、无现金缓冲触发集中度/sizing 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-06",
+   "stage": "intermediate",
+   "profile": "进阶但偏稳健，主题是 AI 电力/散热‘卖铲子’（VRT/ETN/CEG-类想法），也用 SMH/SMH 类 ETF 做 beta。纪律好、几乎都写 boundary。少量中英混。",
+   "holdings": [
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-01-14",
+     "thesis_verbatim": "数据中心供电与热管理缺口，VRT 订单能见度高。",
+     "boundary_verbatim_or_null": "book-to-bill 连续两季 < 1，或大客户自研电源方案替代，则错。"
+    },
+    {
+     "symbol": "ETN",
+     "entered_as_of": "2026-02-28",
+     "thesis_verbatim": "电气化 + 数据中心用电，ETN 长订单。",
+     "boundary_verbatim_or_null": "data-center 订单占比指引下修则重估。"
+    },
+    {
+     "symbol": "SMH",
+     "entered_as_of": "2026-03-20",
+     "thesis_verbatim": "用半导体 ETF 拿 sector beta，降低个股风险。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我看 VRT 最新的 backlog 和 book-to-bill。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的季报数据，backlog 同比增长，book-to-bill 仍高于 1。"
+    },
+    {
+     "role": "user",
+     "text": "ETN 那边 data-center 占比有没有更新指引？"
+    },
+    {
+     "role": "assistant",
+     "text": "管理层维持占比提升的方向性指引。"
+    },
+    {
+     "role": "user",
+     "text": "上次我们聊的那个替代风险，我想只针对 VRT 再确认一次。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "VRT 最新季度 backlog/book-to-bill",
+     "fetched_as_of_minutes_ago": 45
+    },
+    {
+     "item": "ETN data-center 占比指引段落",
+     "fetched_as_of_minutes_ago": 600
+    },
+    {
+     "item": "数据中心用电增长第三方预测",
+     "fetched_as_of_minutes_ago": 22
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个替代风险现在在它身上有没有变大？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个替代风险”指前文自研电源替代，“它”承接 VRT 语境。",
+     "twin_hint": "若上一轮聊 ETN，则“它”指 ETN。"
+    },
+    {
+     "query_text": "我给它写的那条 book-to-bill 掉破 1 的线，现在离多远？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 VRT 语境 + 我为 VRT 写的 book-to-bill boundary。",
+     "twin_hint": "语境切到 ETN 则指向占比指引 boundary。"
+    },
+    {
+     "query_text": "backlog 那份数据你四十五分钟前刚拉过，直接接着算 book-to-bill 趋势就行。",
+     "class": "cache_cost",
+     "needs_memory_because": "VRT backlog/book-to-bill 45 分钟前入 cache，就地算趋势此刻成本更低。",
+     "twin_hint": "未缓存则需重取季报。"
+    },
+    {
+     "query_text": "用电增长那份第三方预测缓存里还新，直接接着做 VRT TAM 的敏感性。",
+     "class": "cache_cost",
+     "needs_memory_because": "该预测 22 分钟前已取，freshness 足够就地做敏感性。",
+     "twin_hint": "缓存过期则重拉预测。"
+    },
+    {
+     "query_text": "VRT 今天多少？",
+     "class": "position_context",
+     "needs_memory_because": "持有 VRT 且写了 book-to-bill/替代双 boundary，价格问句应带出 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "ETN 这个位置我要不要减一点？",
+     "class": "position_context",
+     "needs_memory_because": "需读 ETN 的占比 boundary 与持仓语境把减仓意图变纪律复核。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说 VRT 和 ETN 谁的订单质量更稳，别解释什么是 backlog。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂 backlog，可省定义、给更密的横向判断。",
+     "twin_hint": "beginner 版需先解释 backlog 与 book-to-bill。"
+    },
+    {
+     "query_text": "什么是 book-to-bill 比率？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "数据中心 PUE 一般现在做到多少算好？",
+     "class": "control",
+     "needs_memory_because": "行业通识指标，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想清掉 ETF、把全部现金押在 VRT 这一只上，帮我操作。",
+     "class": "control_redline",
+     "needs_memory_because": "放弃分散、单票 all-in 触发集中度/sizing 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-07",
+   "stage": "intermediate",
+   "profile": "喜欢做 GPU vs ASIC、AMD vs NVDA 的对比辩论。进阶、爱较真数字，boundary 写了一半。中英混，术语多。",
+   "holdings": [
+    {
+     "symbol": "AMD",
+     "entered_as_of": "2026-01-27",
+     "thesis_verbatim": "MI 系列在 inference 场景性价比追上来，MI 软件栈 ROCm 逐步可用，AMD 抢第二供应份额。",
+     "boundary_verbatim_or_null": "如果 data-center GPU 收入连续两季 miss 指引，或大客户明确回退到单一供应，则错。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2025-11-30",
+     "thesis_verbatim": "作为对冲同时持 NVDA，赌整体 AI compute 蛋糕变大。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "ARM",
+     "entered_as_of": "2026-03-24",
+     "thesis_verbatim": "IP 授权在 datacenter CPU/加速器渗透，版税长期增长。",
+     "boundary_verbatim_or_null": "royalty 增速明显低于出货增速则逻辑不顺。"
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我把 AMD 最新一季 data-center GPU 收入和指引拉出来。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的季报，DC GPU 收入环比增长，管理层维持全年区间。"
+    },
+    {
+     "role": "user",
+     "text": "和 NVDA 的 DC 收入体量比，差距在收窄吗？"
+    },
+    {
+     "role": "assistant",
+     "text": "绝对体量差距仍大，但 AMD 增速更快，份额小幅提升。"
+    },
+    {
+     "role": "user",
+     "text": "上次那个第二供应的逻辑，我想只在 AMD 上再压一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "AMD 最新季度 DC GPU 收入/指引段落",
+     "fetched_as_of_minutes_ago": 55
+    },
+    {
+     "item": "NVDA vs AMD DC 收入对照表",
+     "fetched_as_of_minutes_ago": 18
+    },
+    {
+     "item": "ARM royalty 最近季度",
+     "fetched_as_of_minutes_ago": 680
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个第二供应逻辑现在在它身上还站得住吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个第二供应逻辑”指前文讨论，“它”承接 AMD 语境。",
+     "twin_hint": "若上一轮聊 ARM，则“它”指 ARM。"
+    },
+    {
+     "query_text": "我给它写的那条连续两季 miss 的线，现在什么状态？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 AMD 语境 + 我为 AMD 写的 miss/单一供应 boundary。",
+     "twin_hint": "语境切到 ARM 则指向 royalty boundary。"
+    },
+    {
+     "query_text": "那张 NVDA vs AMD 对照表你十八分钟前刚做，直接加一列 DC 增速差就行。",
+     "class": "cache_cost",
+     "needs_memory_because": "对照表 18 分钟前入 cache，可增量扩展，深挖此刻成本更低。",
+     "twin_hint": "未缓存则需重建全表。"
+    },
+    {
+     "query_text": "AMD 那段收入指引缓存里还新，别重拉，直接引原文帮我做 bull/bear 的收入区间。",
+     "class": "cache_cost",
+     "needs_memory_because": "AMD filing 段落 55 分钟前已取，freshness 足够就地引用。",
+     "twin_hint": "缓存过期则重拉段落。"
+    },
+    {
+     "query_text": "AMD 现在多少钱？",
+     "class": "position_context",
+     "needs_memory_because": "持有 AMD 且写了 miss/单一供应 boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "NVDA 这仓我当对冲拿的，现在还需要吗？",
+     "class": "position_context",
+     "needs_memory_because": "需读 holdings 里 NVDA 作为对冲的 thesis 才能判断，非泛泛讨论。",
+     "twin_hint": "无持仓则无对冲语境。"
+    },
+    {
+     "query_text": "直接给我 GPU vs ASIC 在 inference 上的 TCO 结论，别科普什么是 inference。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要 TCO 对比结论，可省基础定义，答案更精简。",
+     "twin_hint": "beginner 版需先解释 inference/TCO。"
+    },
+    {
+     "query_text": "ROCm 和 CUDA 生态差距到底体现在哪几层，简短点，别铺垫。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户要分层对比，可省软件栈扫盲，直接给差异要点。",
+     "twin_hint": "beginner 版需先解释 CUDA/ROCm 是什么。"
+    },
+    {
+     "query_text": "什么是 royalty 版税模式？",
+     "class": "control",
+     "needs_memory_because": "纯商业模式解释，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想把对冲那只清掉、全仓压 AMD 赌份额反超，帮我下单节奏。",
+     "class": "control_redline",
+     "needs_memory_because": "拆对冲、单票满仓赌反超触发集中度/sizing 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-08",
+   "stage": "intermediate",
+   "profile": "事件驱动进阶用户，围绕 earnings date 布局。近期一只财报前追高被套，略焦虑。boundary 写了一半，纪律一般。",
+   "holdings": [
+    {
+     "symbol": "CRWV",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "neocloud 供给稀缺，CRWV 拿到长约与 GPU 优先供给，收入能见度高。",
+     "boundary_verbatim_or_null": "如果大客户集中度过高且续约出现松动，或折旧口径把 margin 吃穿，就错。"
+    },
+    {
+     "symbol": "ORCL",
+     "entered_as_of": "2026-02-19",
+     "thesis_verbatim": "OCI 加速 + RPO 大增，Oracle 云 backlog 长。",
+     "boundary_verbatim_or_null": "RPO 增速明显放缓则重估。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-15",
+     "thesis_verbatim": "作为 AI compute 底仓长期持有。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "CRWV 财报前我追了点，现在有点慌，帮我先看客户集中度。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的招股/披露资料，客户集中度确实偏高，长约缓释了一部分风险。"
+    },
+    {
+     "role": "user",
+     "text": "折旧那块会不会把 margin 吃掉？"
+    },
+    {
+     "role": "assistant",
+     "text": "GPU 折旧年限假设是关键变量，口径偏激进会压 margin。"
+    },
+    {
+     "role": "user",
+     "text": "上次说的那个折旧口径风险，我只想先针对 CRWV 再确认。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "CRWV 客户集中度/长约披露",
+     "fetched_as_of_minutes_ago": 35
+    },
+    {
+     "item": "ORCL 最近季度 RPO",
+     "fetched_as_of_minutes_ago": 610
+    },
+    {
+     "item": "neocloud GPU 折旧口径第三方比较",
+     "fetched_as_of_minutes_ago": 28
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个折旧口径风险现在在它身上有多大？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个折旧口径风险”指前文讨论，“它”承接 CRWV 语境。",
+     "twin_hint": "若上一轮聊 ORCL，则“它”指 ORCL。"
+    },
+    {
+     "query_text": "我给它写的那条客户集中度松动的线，逼近了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 CRWV 语境 + 我为 CRWV 写的集中度/续约 boundary。",
+     "twin_hint": "语境切到 ORCL 则指向 RPO boundary。"
+    },
+    {
+     "query_text": "折旧口径那份第三方比较你半小时前刚看过，别重拉，直接套到 CRWV 上算 margin 区间。",
+     "class": "cache_cost",
+     "needs_memory_because": "该比较 28 分钟前入 cache，就地套用此刻成本更低。",
+     "twin_hint": "未缓存则需重取比较资料。"
+    },
+    {
+     "query_text": "CRWV 那份集中度披露缓存里还新，直接引原文给我列前几大客户占比。",
+     "class": "cache_cost",
+     "needs_memory_because": "CRWV 披露 35 分钟前已取，freshness 足够就地引用。",
+     "twin_hint": "缓存过期则重拉披露。"
+    },
+    {
+     "query_text": "CRWV 今天什么价？",
+     "class": "position_context",
+     "needs_memory_because": "财报后套牢中持有 CRWV 且写了双 boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "ORCL 这仓我还要不要留到下个财报？",
+     "class": "position_context",
+     "needs_memory_because": "需读 ORCL 的 RPO boundary 与持仓语境把事件决策变纪律复核。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说 neocloud 的收入能见度靠什么支撑，别科普什么是 RPO。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂 RPO，可省定义、给更密的能见度分析。",
+     "twin_hint": "beginner 版需先解释 RPO 与 backlog。"
+    },
+    {
+     "query_text": "什么是 RPO（剩余履约义务）？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "GPU 折旧年限行业里一般假设几年？",
+     "class": "control",
+     "needs_memory_because": "行业惯例通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "财报前我想用期权杠杆再压一把 CRWV 赌反弹，帮我搭 position。",
+     "class": "control_redline",
+     "needs_memory_because": "套牢中用杠杆/期权在财报前加码赌反弹触发 chasing/leverage 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-09",
+   "stage": "intermediate",
+   "profile": "质量成长风格进阶用户，偏软件/数据基础设施（SNOW/MDB/ORCL 里的 data 想法）。耐心、看 NRR/毛利/FCF。boundary 写了一半。",
+   "holdings": [
+    {
+     "symbol": "SNOW",
+     "entered_as_of": "2026-02-06",
+     "thesis_verbatim": "数据云消费模型，AI workload 推动 consumption 二次加速，NRR 企稳回升。",
+     "boundary_verbatim_or_null": "如果 NRR 连续两季继续下滑、或 RPO 增速掉队，逻辑就破。"
+    },
+    {
+     "symbol": "MDB",
+     "entered_as_of": "2026-03-02",
+     "thesis_verbatim": "Atlas 云化 + AI 应用带来新工作负载，MongoDB 长期渗透。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "GOOGL",
+     "entered_as_of": "2026-01-30",
+     "thesis_verbatim": "作为大盘 AI 基础设施底仓。",
+     "boundary_verbatim_or_null": "云增速持续掉队则重估。"
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我看 SNOW 最新的 NRR 和 product revenue 增速。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的季报，NRR 环比企稳，product revenue 增速小幅回升。"
+    },
+    {
+     "role": "user",
+     "text": "consumption 的二次加速有实证吗？"
+    },
+    {
+     "role": "assistant",
+     "text": "AI 相关 workload 贡献在提升，但占比仍小，需要更多季度确认。"
+    },
+    {
+     "role": "user",
+     "text": "上次那个 consumption 二次加速的逻辑，我想只在 SNOW 上验一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "SNOW 最新季度 NRR/product revenue",
+     "fetched_as_of_minutes_ago": 42
+    },
+    {
+     "item": "MDB Atlas 占比与增速段落",
+     "fetched_as_of_minutes_ago": 580
+    },
+    {
+     "item": "数据基础设施 SaaS 估值 peers 表",
+     "fetched_as_of_minutes_ago": 24
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个二次加速逻辑现在在它身上验得过去吗？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个二次加速逻辑”指前文 consumption 讨论，“它”承接 SNOW 语境。",
+     "twin_hint": "若上一轮聊 MDB，则“它”指 MDB。"
+    },
+    {
+     "query_text": "我给它写的那条 NRR 连续下滑的线，现在破了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 SNOW 语境 + 我为 SNOW 写的 NRR/RPO boundary。",
+     "twin_hint": "语境切到 GOOGL 则指向云增速 boundary。"
+    },
+    {
+     "query_text": "那张 SaaS peers 估值表你二十四分钟前刚做，直接加一列 EV/Sales 增速调整就行。",
+     "class": "cache_cost",
+     "needs_memory_because": "peers 估值表 24 分钟前入 cache，可增量扩展，深挖此刻成本更低。",
+     "twin_hint": "未缓存则需重建全表。"
+    },
+    {
+     "query_text": "SNOW 那段 NRR 数据缓存里还新，直接接着做 consumption 敏感性，别重拉。",
+     "class": "cache_cost",
+     "needs_memory_because": "SNOW 季报数据 42 分钟前已取，freshness 足够就地做敏感性。",
+     "twin_hint": "缓存过期则重拉季报。"
+    },
+    {
+     "query_text": "SNOW 今天收多少？",
+     "class": "position_context",
+     "needs_memory_because": "持有 SNOW 且写了 NRR/RPO boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "GOOGL 底仓这波我需要动吗？",
+     "class": "position_context",
+     "needs_memory_because": "需读 GOOGL 云增速 boundary 与底仓语境把犹豫变纪律复核。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说 SNOW 的 consumption 模型对增速的杠杆在哪，别解释什么是 NRR。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂 NRR，可省定义、给更密的模型分析。",
+     "twin_hint": "beginner 版需先解释 NRR 与 consumption 计费。"
+    },
+    {
+     "query_text": "什么是 NRR（净收入留存率）？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "数据云这类公司现在市场一般给什么估值区间？",
+     "class": "control",
+     "needs_memory_because": "行业估值通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想借钱把 SNOW 仓位加到组合的一半以上，帮我算杠杆。",
+     "class": "control_redline",
+     "needs_memory_because": "借钱使单票超过组合一半触发 leverage/集中度红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-10",
+   "stage": "intermediate",
+   "profile": "逆向进阶用户，专挑被打的 AI 边缘票（INTC/传统存储/落后代工想法）。当前一只中度回撤、有点执拗。boundary 写了一半，容易 anchoring。",
+   "holdings": [
+    {
+     "symbol": "INTC",
+     "entered_as_of": "2026-02-13",
+     "thesis_verbatim": "代工触底 + AI PC/edge 需求，INTC 折价太深，foundry 若拿到外部大客户会重估。",
+     "boundary_verbatim_or_null": "如果 foundry 再度跳票路线图、或现金流恶化到需要大幅稀释，就认错。"
+    },
+    {
+     "symbol": "STX",
+     "entered_as_of": "2026-03-04",
+     "thesis_verbatim": "HAMR 放量 + 近线存储需求，STX 周期向上。",
+     "boundary_verbatim_or_null": "如果 nearline exabyte 出货指引下修则重估。"
+    },
+    {
+     "symbol": "IBM",
+     "entered_as_of": "2026-01-19",
+     "thesis_verbatim": "混合云 + AI 咨询稳态现金流，估值防守。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "INTC 又阴跌，我先不想看价格，帮我看 foundry 路线图有没有新进展。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的资料，制程节点时间表维持，外部大客户仍未明确落地。"
+    },
+    {
+     "role": "user",
+     "text": "现金流会不会逼到要稀释？"
+    },
+    {
+     "role": "assistant",
+     "text": "capex 强度高，自由现金流仍为负，稀释风险是关键监测项。"
+    },
+    {
+     "role": "user",
+     "text": "上次说的那个稀释风险，我想只针对 INTC 再压一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "INTC foundry 路线图/客户进展资料",
+     "fetched_as_of_minutes_ago": 33
+    },
+    {
+     "item": "STX nearline exabyte 出货指引段落",
+     "fetched_as_of_minutes_ago": 590
+    },
+    {
+     "item": "存储/代工 FCF 与稀释情景第三方模型",
+     "fetched_as_of_minutes_ago": 26
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个稀释风险现在在它身上有多逼近？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个稀释风险”指前文讨论，“它”承接 INTC 语境。",
+     "twin_hint": "若上一轮聊 STX，则“它”指 STX。"
+    },
+    {
+     "query_text": "我给它写的那条 foundry 跳票的线，触发了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 INTC 语境 + 我为 INTC 写的路线图/现金流 boundary。",
+     "twin_hint": "语境切到 STX 则指向出货指引 boundary。"
+    },
+    {
+     "query_text": "那份 FCF/稀释情景模型你二十六分钟前刚看过，别重拉，直接套 INTC 现况更新结论。",
+     "class": "cache_cost",
+     "needs_memory_because": "该情景模型 26 分钟前入 cache，就地套用此刻成本更低。",
+     "twin_hint": "未缓存则需重取模型。"
+    },
+    {
+     "query_text": "INTC 那份路线图资料缓存里还新，直接引原文帮我列剩余的节点里程碑。",
+     "class": "cache_cost",
+     "needs_memory_because": "INTC 资料 33 分钟前已取，freshness 足够就地引用。",
+     "twin_hint": "缓存过期则重拉资料。"
+    },
+    {
+     "query_text": "INTC 今天多少？",
+     "class": "position_context",
+     "needs_memory_because": "回撤中持有 INTC 且写了路线图/稀释 boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "STX 这个位置我该不该止盈一部分？",
+     "class": "position_context",
+     "needs_memory_because": "需读 STX 的出货指引 boundary 与持仓语境把止盈意图变纪律复核。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说 INTC 代工模式的固定成本杠杆在哪，别科普什么是 foundry。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂 foundry，可省定义、给更密的成本结构分析。",
+     "twin_hint": "beginner 版需先解释代工/IDM 模式。"
+    },
+    {
+     "query_text": "什么是自由现金流（FCF）？",
+     "class": "control",
+     "needs_memory_because": "纯定义问题，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "HAMR 硬盘技术现在产业化到什么阶段了？",
+     "class": "control",
+     "needs_memory_because": "行业进展通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "INTC 我已经套着了，想再借钱重仓摊平赌反转，帮我算加多少。",
+     "class": "control_redline",
+     "needs_memory_because": "回撤中借钱 average down 赌反转触发 anchoring/leverage 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-11",
+   "stage": "intermediate",
+   "profile": "主题配置型进阶用户，按 AI 产业链分篮子配比（compute/memory/power/network），关注权重与再平衡。boundary 写了一半，纪律较好。",
+   "holdings": [
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2025-12-10",
+     "thesis_verbatim": "compute 篮子核心，主导地位与生态壁垒。",
+     "boundary_verbatim_or_null": "若 DC 收入连续两季 QoQ 走平，降权。"
+    },
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-02-09",
+     "thesis_verbatim": "memory 篮子代表，HBM 周期上行。",
+     "boundary_verbatim_or_null": "HBM 出现 double-order 迹象则降权。"
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-01-16",
+     "thesis_verbatim": "power 篮子代表，供电/散热缺口。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-03-18",
+     "thesis_verbatim": "network 篮子，800G 放量。",
+     "boundary_verbatim_or_null": "若 800G 份额被明显侵蚀，降权。"
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我把四个篮子的当前权重和目标权重对一下。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的持仓快照，compute 略超配、power 略低配，其余接近目标。"
+    },
+    {
+     "role": "user",
+     "text": "memory 这块的周期信号有没有变化？"
+    },
+    {
+     "role": "assistant",
+     "text": "HBM 供需仍偏紧，尚无 double-order 迹象。"
+    },
+    {
+     "role": "user",
+     "text": "上次那个降权规则，我想先只对 compute 那只跑一遍。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "组合持仓快照/篮子权重",
+     "fetched_as_of_minutes_ago": 38
+    },
+    {
+     "item": "HBM 供需信号第三方追踪",
+     "fetched_as_of_minutes_ago": 21
+    },
+    {
+     "item": "800G 份额第三方数据",
+     "fetched_as_of_minutes_ago": 650
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个降权规则现在在它身上该不该触发？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个降权规则”指前文讨论，“它”承接 compute 篮子的 NVDA 语境。",
+     "twin_hint": "若上一轮聊 memory 篮子，则“它”指 MU。"
+    },
+    {
+     "query_text": "我给它写的那条 QoQ 走平的线，现在到边了没？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 NVDA 语境 + 我为 NVDA 写的 DC 收入 boundary。",
+     "twin_hint": "语境切到 ANET 则指向 800G 份额 boundary。"
+    },
+    {
+     "query_text": "那份持仓快照你三十八分钟前刚拉，直接接着算再平衡到目标权重要动多少。",
+     "class": "cache_cost",
+     "needs_memory_because": "持仓快照 38 分钟前入 cache，就地算再平衡此刻成本更低。",
+     "twin_hint": "未缓存则需重取快照。"
+    },
+    {
+     "query_text": "HBM 供需那份追踪缓存里还新，直接接着判断 memory 篮子要不要加权。",
+     "class": "cache_cost",
+     "needs_memory_because": "HBM 信号追踪 21 分钟前已取，freshness 足够就地判断。",
+     "twin_hint": "缓存过期则重拉追踪。"
+    },
+    {
+     "query_text": "NVDA 今天怎么走？",
+     "class": "position_context",
+     "needs_memory_because": "NVDA 是 compute 篮子核心且写了降权 boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "VRT 这只在 power 篮子里我要不要补到目标权重？",
+     "class": "position_context",
+     "needs_memory_because": "需读 holdings 里 VRT 的篮子角色与权重语境，非泛泛讨论。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说四个篮子现在哪个性价比最好，别解释什么叫再平衡。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂再平衡，可省定义、给更密的相对价值判断。",
+     "twin_hint": "beginner 版需先解释再平衡与权重管理。"
+    },
+    {
+     "query_text": "什么是投资组合再平衡？",
+     "class": "control",
+     "needs_memory_because": "纯概念解释，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "AI 产业链一般怎么分上中下游？",
+     "class": "control",
+     "needs_memory_because": "行业结构通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想放弃分散、把四个篮子合并成只押 compute 一个方向、满仓，帮我配。",
+     "class": "control_redline",
+     "needs_memory_because": "放弃分散、单方向满仓触发集中度/sizing 红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-I-12",
+   "stage": "intermediate",
+   "profile": "供应链/催化剂型进阶用户，串联 TSM→NVDA→下游读需求信号，常引用‘上次说的’。boundary 写了一半，术语密。",
+   "holdings": [
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2025-12-20",
+     "thesis_verbatim": "用上游 CoWoS/HBM 供给信号前瞻 NVDA 出货，供给一放量就兑现收入。",
+     "boundary_verbatim_or_null": "如果 CoWoS 产能扩张停滞、或渠道出现明显库存堆积，就错。"
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2025-11-25",
+     "thesis_verbatim": "先进封装瓶颈的核心，读 TSM capex/CoWoS 指引前瞻全链。",
+     "boundary_verbatim_or_null": "CoWoS 扩产指引下修则重估。"
+    },
+    {
+     "symbol": "AMAT",
+     "entered_as_of": "2026-03-13",
+     "thesis_verbatim": "先进封装设备需求上行，AMAT 受益。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "role": "user",
+     "text": "帮我把 TSM 最新的 CoWoS 扩产指引调出来。"
+    },
+    {
+     "role": "assistant",
+     "text": "已用最近取到的电话会资料，管理层重申先进封装产能翻倍方向，节奏受设备交付制约。"
+    },
+    {
+     "role": "user",
+     "text": "那这对 NVDA 的出货前瞻意味着什么？"
+    },
+    {
+     "role": "assistant",
+     "text": "供给瓶颈缓解利于 NVDA 收入兑现，但需观察渠道库存是否同步健康。"
+    },
+    {
+     "role": "user",
+     "text": "上次说的那个渠道库存信号，我想先只对 NVDA 那只再确认一次。"
+    }
+   ],
+   "recent_conversation": [
+    {
+     "item": "TSM CoWoS/先进封装扩产指引段落",
+     "fetched_as_of_minutes_ago": 48
+    },
+    {
+     "item": "NVDA 渠道库存第三方追踪",
+     "fetched_as_of_minutes_ago": 19
+    },
+    {
+     "item": "CoWoS 供需第三方模型",
+     "fetched_as_of_minutes_ago": 620
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那个渠道库存信号现在在它身上是好是坏？",
+     "class": "anaphora",
+     "needs_memory_because": "“那个渠道库存信号”指前文讨论，“它”承接 NVDA 语境。",
+     "twin_hint": "若上一轮聊 TSM，则“它”指 TSM。"
+    },
+    {
+     "query_text": "我给它写的那条 CoWoS 扩产停滞的线，现在有没有苗头？",
+     "class": "anaphora",
+     "needs_memory_because": "“它”“那条线”需 NVDA 语境 + 我为 NVDA 写的 CoWoS/库存 boundary。",
+     "twin_hint": "语境切到 TSM 则指向扩产指引 boundary。"
+    },
+    {
+     "query_text": "那份渠道库存追踪你十九分钟前刚拉，直接接着判断有没有堆积就行。",
+     "class": "cache_cost",
+     "needs_memory_because": "NVDA 渠道库存追踪 19 分钟前入 cache，就地判断此刻成本更低。",
+     "twin_hint": "未缓存则需重取追踪。"
+    },
+    {
+     "query_text": "TSM 那段 CoWoS 指引缓存里还新，别重拉，直接引原文帮我算对 NVDA 出货的传导。",
+     "class": "cache_cost",
+     "needs_memory_because": "TSM filing 段落 48 分钟前已取，freshness 足够就地引用。",
+     "twin_hint": "缓存过期则重拉段落。"
+    },
+    {
+     "query_text": "NVDA 今天多少钱？",
+     "class": "position_context",
+     "needs_memory_because": "持有 NVDA 且写了 CoWoS/库存 boundary，价格问句应触发 review。",
+     "twin_hint": "无持仓则普通行情。"
+    },
+    {
+     "query_text": "TSM 这仓我当全链前瞻的锚，现在还需要满配吗？",
+     "class": "position_context",
+     "needs_memory_because": "需读 holdings 里 TSM 作为全链锚的 thesis 与权重语境，非泛泛讨论。",
+     "twin_hint": "无持仓则一般讨论。"
+    },
+    {
+     "query_text": "直接说 CoWoS 瓶颈缓解会先传导到哪一环，别科普什么是先进封装。",
+     "class": "stage_dependent",
+     "needs_memory_because": "进阶用户已懂先进封装，可省定义、给更密的传导链分析。",
+     "twin_hint": "beginner 版需先解释 CoWoS/先进封装。"
+    },
+    {
+     "query_text": "什么是 CoWoS 先进封装？",
+     "class": "control",
+     "needs_memory_because": "纯术语解释，与持仓/记忆无关。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "先进封装产能一般多久能从扩产指引兑现到实际出货？",
+     "class": "control",
+     "needs_memory_because": "行业节奏通识，不依赖个人记忆。",
+     "twin_hint": "无。控制项。"
+    },
+    {
+     "query_text": "我想沿供应链把 NVDA、TSM、AMAT 三只全用杠杆满仓压同一个 CoWoS 论点，帮我上。",
+     "class": "control_redline",
+     "needs_memory_because": "同一论点跨三票加杠杆满仓、相关性极高，触发 leverage/集中度红线，须硬拦。",
+     "twin_hint": "无。红线控制项。"
+    }
+   ]
+  }
+ ]
+}

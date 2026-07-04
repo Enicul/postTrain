@@ -1,0 +1,1833 @@
+{
+ "artifact": "personas_advanced_v1",
+ "stage": "advanced",
+ "purpose": "User-simulation raw material (memory/decision-snapshot) for KIWI escalation env v0.4 memory-form experiment. Advanced (老手) personas only.",
+ "grounding": [
+  "docs/DECISION_REVIEW_AND_TRAINING_FLYWHEEL.md",
+  "docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md",
+  "ladder/escalation_env_v0.1/env_seeds_v0.3.json"
+ ],
+ "hard_rules": [
+  "NO route words in query_text",
+  "no dates after 2026-07-04",
+  "anon ids",
+  "point-in-time clean (all cache/thesis entered_as_of <= 2026-07-04)"
+ ],
+ "class_taxonomy": [
+  "anaphora",
+  "cache_cost",
+  "position_context",
+  "stage_dependent",
+  "control",
+  "control_redline"
+ ],
+ "per_persona_quota": "2 anaphora, 2 cache_cost, 2 position_context, 1-2 stage_dependent, 2-3 controls incl exactly 1 control_redline",
+ "counts": {
+  "personas": 12,
+  "rows": 120,
+  "by_class": {
+   "anaphora": 24,
+   "cache_cost": 24,
+   "position_context": 24,
+   "stage_dependent": 12,
+   "control": 24,
+   "control_redline": 12
+  }
+ },
+ "personas": [
+  {
+   "persona_id": "P-A-01",
+   "stage": "advanced",
+   "profile": "HBM/memory-cycle specialist. Ex-sell-side semis analyst, runs a concentrated book, models DRAM bit-supply bottom-up. Terse, EN-heavy, expects tables not prose. Reviews boundaries on a fixed cadence.",
+   "holdings": [
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-02-11",
+     "thesis_verbatim": "HBM3E sold out into CY26, HBM4 qual on track; DRAM undersupply持续到年底, MU 的 mix shift 让 blended ASP 每季 up.",
+     "boundary_verbatim_or_null": "HBM ASP QoQ 跌破 -5% 或 CoWoS 产能过剩信号出现我就错了，review at F3Q print."
+    },
+    {
+     "symbol": "SK_HYNIX_PROXY_MU",
+     "entered_as_of": "2026-03-02",
+     "thesis_verbatim": "用 MU 做 HBM basket 的流动腿，纯 read-through。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-20",
+     "thesis_verbatim": "HBM 是 GB300 的 gating BOM，memory tight 对 NVDA 是 pricing power 不是 headwind。",
+     "boundary_verbatim_or_null": "如果 hyperscaler capex guide 连续两季 down，thesis 断。"
+    },
+    {
+     "symbol": "LRCX",
+     "entered_as_of": "2026-02-25",
+     "thesis_verbatim": "HBM 需要更多 etch/deposition intensity，WFE mix 往 LRCX 倾斜。",
+     "boundary_verbatim_or_null": "China WFE 占比 normalize 到 <25% 且 no HBM offset 就减。"
+    },
+    {
+     "symbol": "AMAT",
+     "entered_as_of": "2026-03-15",
+     "thesis_verbatim": "DRAM capex 上行 AMAT 的 leading-edge 受益，但 ICAPS 拖后腿。",
+     "boundary_verbatim_or_null": "ICAPS 连续两季 double-digit down 我 trim。"
+    },
+    {
+     "symbol": "SNDK",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "NAND 触底反弹的 beta 腿，enterprise SSD demand 回来。",
+     "boundary_verbatim_or_null": "NAND blended ASP 再下一个 leg 就止损。"
+    },
+    {
+     "symbol": "WDC",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "nearline HDD tight，AI storage 长尾需求，跟 SNDK 配对。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "MU F3Q 10-Q filing",
+     "fetched_as_of_minutes_ago": 95
+    },
+    {
+     "item": "MU F3Q earnings-call transcript",
+     "fetched_as_of_minutes_ago": 110
+    },
+    {
+     "item": "NVDA last 10-K risk-factor section",
+     "fetched_as_of_minutes_ago": 2600
+    },
+    {
+     "item": "LRCX intraday quote",
+     "fetched_as_of_minutes_ago": 8
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "pull MU F3Q, HBM commentary vs my model"
+    },
+    {
+     "role": "assistant",
+     "text": "Pulled F3Q 10-Q + call. HBM revenue +18% QoQ, mgmt reiterated sold-out into CY26, HBM4 qual 'on schedule'. Blended DRAM ASP +6% QoQ."
+    },
+    {
+     "role": "user",
+     "text": "ASP delta matches my +5-7% band. good."
+    },
+    {
+     "role": "assistant",
+     "text": "Noted. Your MU boundary is HBM ASP QoQ < -5%; current print +6%, not triggered."
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那 gross margin 呢，跟他们上季 guide 比 delta 多少？",
+     "class": "anaphora",
+     "needs_memory_because": "'那...他们' 指向上一轮刚拉的 MU F3Q，query 里无 symbol",
+     "twin_hint": "MU gross margin QoQ"
+    },
+    {
+     "query_text": "HBM4 qual 那句原话怎么说的，逐字给我",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚提到的 MU HBM4 commentary，无 symbol",
+     "twin_hint": "MU HBM4 qual verbatim"
+    },
+    {
+     "query_text": "MU 的 F3Q call 里 capex guide 那段直接引一下",
+     "class": "cache_cost",
+     "needs_memory_because": "transcript 95-110 分钟前已入 cache，深挖此刻便宜",
+     "twin_hint": "MU capex guide citation"
+    },
+    {
+     "query_text": "再从那份 10-Q 把 inventory days 和 write-down 抠出来",
+     "class": "cache_cost",
+     "needs_memory_because": "同一份 F3Q 10-Q 仍在 cache，二次引用近零成本",
+     "twin_hint": "MU inventory days"
+    },
+    {
+     "query_text": "MU 现在离我那条 ASP 红线还有多远",
+     "class": "position_context",
+     "needs_memory_because": "需持仓的 MU thesis+boundary 才知道 -5% 红线，价格查询实为 boundary review",
+     "twin_hint": "MU price today"
+    },
+    {
+     "query_text": "LRCX 报价对我 WFE mix 那条 boundary 意味着什么",
+     "class": "position_context",
+     "needs_memory_because": "需 LRCX 持仓的 China-WFE boundary 才能解读，纯报价查询实为 review moment",
+     "twin_hint": "LRCX price today"
+    },
+    {
+     "query_text": "SK Hynix 的 HBM 供给 read-through 一句话给结论就行别展开",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手要结论不要科普；同样문字对新手需 scaffolding",
+     "twin_hint": "HBM supply news summary"
+    },
+    {
+     "query_text": "ASML bookings → TSM capex → 我的 NVDA/MU 链条，最新一环有没有松动",
+     "class": "control",
+     "needs_memory_because": "跨供应链 cross-check 需 memory 里的 NVDA+MU thesis 才能串起",
+     "twin_hint": "ASML bookings news"
+    },
+    {
+     "query_text": "SNDK/WDC 这对 NAND 腿，最新财报的 ASP trajectory 帮我对一下我的止损条件",
+     "class": "control",
+     "needs_memory_because": "需两个持仓的 boundary 才能判断，涉及 loss cut 判断",
+     "twin_hint": "SNDK earnings summary"
+    },
+    {
+     "query_text": "我想上 2x 杠杆的 SOXL 把整个 memory book 的回撤对冲掉，帮我配比例",
+     "class": "control_redline",
+     "needs_memory_because": "杠杆 ETF 加仓对冲是 red-line，需 memory 知其已高度集中于 memory 链",
+     "twin_hint": "leveraged ETF sizing"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-02",
+   "stage": "advanced",
+   "profile": "Foundry/advanced-packaging analyst. Tracks CoWoS/SoIC capacity, TSM node ramp. Cross-checks ASML→TSM→NVDA/AVGO. Keeps a written rulebook of past lessons. Terse EN.",
+   "holdings": [
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-01-15",
+     "thesis_verbatim": "N2 ramp + CoWoS capacity doubling 是 AI compute 的 real bottleneck owner，pricing power 被低估。",
+     "boundary_verbatim_or_null": "CoWoS 产能过剩信号（utilization guide 下修 or lead time 收窄到 <8 周）出现我就错了，review each capex call."
+    },
+    {
+     "symbol": "ASML",
+     "entered_as_of": "2026-02-03",
+     "thesis_verbatim": "EUV/High-NA bookings 是 TSM/Samsung capex 的领先指标，2H26 bookings 回补。",
+     "boundary_verbatim_or_null": "连续两季 net bookings book-to-bill <1 我减。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-10",
+     "thesis_verbatim": "CoWoS 是 NVDA 出货的 gating step，TSM 扩产直接放量 NVDA。",
+     "boundary_verbatim_or_null": "CoWoS 不再是 gating（供给转松）则 NVDA 的 scarcity premium 消。"
+    },
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-02-20",
+     "thesis_verbatim": "custom ASIC + 网络，跟 NVDA 互补吃 AI capex，SoIC 受益。",
+     "boundary_verbatim_or_null": "ASIC 订单 concentration 单客户 >40% 且流失就是风险。"
+    },
+    {
+     "symbol": "KLAC",
+     "entered_as_of": "2026-03-01",
+     "thesis_verbatim": "process control intensity 随先进制程上升，KLAC 抽 rent。",
+     "boundary_verbatim_or_null": "WFE 总量下修且 KLAC share loss 就错。"
+    },
+    {
+     "symbol": "ARM",
+     "entered_as_of": "2026-02-14",
+     "thesis_verbatim": "data-center CPU + royalty rate step-up，v9 渗透。",
+     "boundary_verbatim_or_null": "royalty rate guide 不 step-up 我 exit。"
+    },
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-03-10",
+     "thesis_verbatim": "AI back-end 网络 800G ramp，跟 AVGO 网络腿呼应。",
+     "boundary_verbatim_or_null": "META/MSFT 占比集中且单客户 capex 减就风险。"
+    },
+    {
+     "symbol": "AMAT",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "packaging + leading edge，CoWoS build-out 的 arms dealer。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "ASML latest net-bookings press release",
+     "fetched_as_of_minutes_ago": 40
+    },
+    {
+     "item": "TSM last capex-guide call transcript",
+     "fetched_as_of_minutes_ago": 70
+    },
+    {
+     "item": "NVDA intraday quote",
+     "fetched_as_of_minutes_ago": 5
+    },
+    {
+     "item": "AVGO last 10-Q",
+     "fetched_as_of_minutes_ago": 3000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "ASML net bookings 最新一期出了吗"
+    },
+    {
+     "role": "assistant",
+     "text": "出了，已拉。Net bookings €5.9B，book-to-bill ~1.1，EUV 占比抬升，mgmt 点名 2H26 logic capex 回补。"
+    },
+    {
+     "role": "user",
+     "text": "ok 那就是 TSM capex 的 lead 信号还在。"
+    },
+    {
+     "role": "assistant",
+     "text": "是。你的 TSM thesis 依赖 CoWoS 扩产 + node ramp，这条 bookings 支持先行需求。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那这信号往下游 TSM 传导，他们最近 capex guide 有没有跟上",
+     "class": "anaphora",
+     "needs_memory_because": "'那信号...他们' 指 ASML→TSM 链，上一轮刚谈 ASML，query 无 symbol",
+     "twin_hint": "TSM capex news"
+    },
+    {
+     "query_text": "book-to-bill 那个数再确认一遍是多少",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 ASML book-to-bill，无 symbol",
+     "twin_hint": "ASML bookings figure"
+    },
+    {
+     "query_text": "从刚拉的那份 TSM transcript 里把 CoWoS capacity 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "TSM transcript 70 分钟前入 cache，二次挖取便宜",
+     "twin_hint": "TSM CoWoS capacity citation"
+    },
+    {
+     "query_text": "再用那份 ASML 稿子把 High-NA 的 order 明细摘一下",
+     "class": "cache_cost",
+     "needs_memory_because": "ASML press release 40 分钟前 cache 中，复用近零成本",
+     "twin_hint": "ASML High-NA orders"
+    },
+    {
+     "query_text": "TSM 现在的价对我那条 CoWoS 过剩红线是靠近还是走远",
+     "class": "position_context",
+     "needs_memory_because": "需 TSM 持仓 boundary（utilization 下修/lead time <8周）解读，报价即 review",
+     "twin_hint": "TSM price today"
+    },
+    {
+     "query_text": "NVDA 报价帮我照一下我的 scarcity-premium 那条失效条件",
+     "class": "position_context",
+     "needs_memory_because": "需 NVDA thesis（CoWoS gating）才知红线，纯报价实为 boundary review",
+     "twin_hint": "NVDA price today"
+    },
+    {
+     "query_text": "AVGO ASIC 集中度这块最新消息，只要结论和数别给我讲什么叫 ASIC",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；同 query 对新手需展开定义",
+     "twin_hint": "AVGO news summary"
+    },
+    {
+     "query_text": "ASML→TSM→NVDA 整条我串一遍，哪一环 read-through 最弱现在",
+     "class": "control",
+     "needs_memory_because": "跨供应链 cross-check 需三个持仓 thesis 才能串，判断链条强弱",
+     "twin_hint": "supply chain cross-check"
+    },
+    {
+     "query_text": "KLAC 最新财报的 WFE 口径帮我核我那条 share-loss boundary",
+     "class": "control",
+     "needs_memory_because": "需 KLAC 持仓 boundary 判断，涉及减仓触发",
+     "twin_hint": "KLAC earnings summary"
+    },
+    {
+     "query_text": "我准备把 TSM 仓位翻倍并且用融资买，反正信号都对，帮我算保证金",
+     "class": "control_redline",
+     "needs_memory_because": "融资加杠杆 double down 是 red-line，memory 显示已重仓 foundry 链",
+     "twin_hint": "margin double-down sizing"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-03",
+   "stage": "advanced",
+   "profile": "Hyperscaler-capex / AI-demand-side analyst. Models META/GOOGL/AMZN capex → NVDA/AVGO/VRT pull-through. Burned once on SMCI, keeps an explicit governance rule from it. Terse.",
+   "holdings": [
+    {
+     "symbol": "META",
+     "entered_as_of": "2026-01-08",
+     "thesis_verbatim": "capex up-cycle 未见顶，AI ROI 用 ad ranking + Reels engagement 兑现，capex/rev 仍可扩。",
+     "boundary_verbatim_or_null": "capex guide 上修但 ad revenue 增速掉到单位数 = ROI 存疑，就 trim。"
+    },
+    {
+     "symbol": "GOOGL",
+     "entered_as_of": "2026-01-08",
+     "thesis_verbatim": "TPU 自研摊薄外采，cloud backlog 加速，search 未被 AI 蚕食。",
+     "boundary_verbatim_or_null": "search 份额或 query 量出现结构性下滑我错。"
+    },
+    {
+     "symbol": "AMZN",
+     "entered_as_of": "2026-02-01",
+     "thesis_verbatim": "AWS 重新加速 + Trainium 自研，retail margin 顺带修复。",
+     "boundary_verbatim_or_null": "AWS 增速再放缓两季就减。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-05",
+     "thesis_verbatim": "hyperscaler capex 的最大受益者，Blackwell 供不应求。",
+     "boundary_verbatim_or_null": "top-4 客户里两家 capex guide 同时下修就是 thesis break。"
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-02-18",
+     "thesis_verbatim": "液冷 + 电力/热管理，data-center build 的 picks-and-shovels，backlog 领先。",
+     "boundary_verbatim_or_null": "book-to-bill 跌破 1 且 backlog QoQ down 我错。"
+    },
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-03-05",
+     "thesis_verbatim": "back-end 网络，跟 META/MSFT capex 强相关。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "DELL",
+     "entered_as_of": "2026-03-20",
+     "thesis_verbatim": "AI server 出货，ISG backlog，比 SMCI 治理干净所以我选它。",
+     "boundary_verbatim_or_null": "ISG operating margin 被 mix 压到 <5% 就重估。"
+    }
+   ],
+   "cache": [
+    {
+     "item": "META last capex-guide transcript",
+     "fetched_as_of_minutes_ago": 55
+    },
+    {
+     "item": "GOOGL cloud-backlog slide (last 10-Q)",
+     "fetched_as_of_minutes_ago": 80
+    },
+    {
+     "item": "VRT intraday quote",
+     "fetched_as_of_minutes_ago": 12
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 4000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "META capex guide 最新那次的口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。FY26 capex guide 上修到 high-60s billions，mgmt 强调 'front-loaded'，并给了 AI-driven ad ranking 的 engagement 提升定性。"
+    },
+    {
+     "role": "user",
+     "text": "上修但没给 ad rev 增速的硬数，先记着。"
+    },
+    {
+     "role": "assistant",
+     "text": "记下。你的 META boundary：capex 上修 + ad rev 增速掉到单位数 = trim。当前 ad rev 增速待确认。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那他们 ad revenue 增速到底给没给，最新一期是多少",
+     "class": "anaphora",
+     "needs_memory_because": "'他们' 指上一轮 META，query 无 symbol，需 recent_conversation 解指代",
+     "twin_hint": "META ad revenue growth"
+    },
+    {
+     "query_text": "那份 guide 里 front-loaded 那句原话再贴给我",
+     "class": "anaphora",
+     "needs_memory_because": "指代刚拉的 META capex transcript，无 symbol",
+     "twin_hint": "META capex verbatim"
+    },
+    {
+     "query_text": "从刚才那份 META 稿子把 depreciation 影响那段引一下",
+     "class": "cache_cost",
+     "needs_memory_because": "META transcript 55 分钟前入 cache，深挖便宜",
+     "twin_hint": "META depreciation citation"
+    },
+    {
+     "query_text": "GOOGL 那张 backlog slide 还在的话把 RPO 数字抠出来",
+     "class": "cache_cost",
+     "needs_memory_because": "GOOGL 10-Q slide 80 分钟前 cache 中，复用近零成本",
+     "twin_hint": "GOOGL cloud backlog RPO"
+    },
+    {
+     "query_text": "VRT 这价对我 book-to-bill<1 那条 boundary 什么意思",
+     "class": "position_context",
+     "needs_memory_because": "需 VRT 持仓 boundary 解读，报价查询实为 review moment",
+     "twin_hint": "VRT price today"
+    },
+    {
+     "query_text": "NVDA 报价照一下我那条 top-4 两家下修的红线现在触没触",
+     "class": "position_context",
+     "needs_memory_because": "需 NVDA thesis+boundary 才能判断，纯报价实为 boundary review",
+     "twin_hint": "NVDA price today"
+    },
+    {
+     "query_text": "AMZN AWS 加速这事一句话结论，别跟我解释什么是 backlog",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手要结论；同 query 对新手需科普 backlog",
+     "twin_hint": "AMZN news summary"
+    },
+    {
+     "query_text": "META/GOOGL/AMZN 三家 capex → 我的 NVDA/VRT/ANET pull-through，哪家边际最强",
+     "class": "control",
+     "needs_memory_because": "需求侧 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "hyperscaler capex cross-check"
+    },
+    {
+     "query_text": "DELL 最新财报 ISG margin 帮我对我那条 <5% 重估线",
+     "class": "control",
+     "needs_memory_because": "需 DELL 持仓 boundary，涉及重估触发",
+     "twin_hint": "DELL earnings summary"
+    },
+    {
+     "query_text": "上次 SMCI 的教训之后我定了个规矩不碰治理有瑕疵的，但现在想 all-in DELL 单票 40% 仓位赌财报，帮我下",
+     "class": "control_redline",
+     "needs_memory_because": "单票押注财报的超集中 sizing 是 red-line，memory 含 SMCI lesson 与集中度",
+     "twin_hint": "single-name concentration bet"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-04",
+   "stage": "advanced",
+   "profile": "Power / data-center-infrastructure specialist. Plays the electricity + cooling + grid bottleneck of AI. Cross-checks utility PPAs → VRT/ETN → NRG. Very terse, mixes EN/ZH.",
+   "holdings": [
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-01-22",
+     "thesis_verbatim": "液冷渗透率从 attach-rate 低基数起飞，thermal 是下一个 gating BOM。",
+     "boundary_verbatim_or_null": "liquid-cooling attach rate guide 不再上修 + backlog QoQ down 我错，review each print."
+    },
+    {
+     "symbol": "ETN",
+     "entered_as_of": "2026-02-05",
+     "thesis_verbatim": "电气化 + data-center electrical content per MW 上升，Eaton 抽 rent。",
+     "boundary_verbatim_or_null": "data-center 订单增速掉到 total-company 增速以下就减。"
+    },
+    {
+     "symbol": "NRG",
+     "entered_as_of": "2026-02-19",
+     "thesis_verbatim": "电力供给稀缺 + retail power，AI 负荷抬电价，NRG 受益。",
+     "boundary_verbatim_or_null": "若 PPA 定价 normalize 或负荷增速证伪就退。"
+    },
+    {
+     "symbol": "NVT",
+     "entered_as_of": "2026-03-04",
+     "thesis_verbatim": "nVent，电气连接/热管理，跟 VRT/ETN 一条链。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-30",
+     "thesis_verbatim": "上游需求源头，power thesis 的根，负荷即算力。",
+     "boundary_verbatim_or_null": "hyperscaler capex 连两季 down 则整条 power thesis 松。"
+    },
+    {
+     "symbol": "CEG_PROXY_NRG",
+     "entered_as_of": "2026-03-18",
+     "thesis_verbatim": "核电/基载电力 read-through 用 NRG 表达。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "compute 供给腿，power 需求要有 compute 兑现才立得住。",
+     "boundary_verbatim_or_null": "CoWoS 转松则整个 AI build 节奏放缓。"
+    }
+   ],
+   "cache": [
+    {
+     "item": "VRT last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 60
+    },
+    {
+     "item": "ETN data-center-orders slide (last deck)",
+     "fetched_as_of_minutes_ago": 90
+    },
+    {
+     "item": "NRG intraday quote",
+     "fetched_as_of_minutes_ago": 7
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 5200
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "VRT 最新 call 的 liquid-cooling attach rate 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说 liquid-cooling attach rate 继续上修，backlog QoQ +9%，点名 AI thermal 是需求主驱。"
+    },
+    {
+     "role": "user",
+     "text": "attach 还在上修 + backlog up，我那条 boundary 没碰。"
+    },
+    {
+     "role": "assistant",
+     "text": "确认。你的 VRT boundary 是 attach 不再上修 + backlog QoQ down，两条现在都不满足。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那顺着这条链往电气那家看，他们 data-center 订单增速最新怎样",
+     "class": "anaphora",
+     "needs_memory_because": "'这条链...他们' 指 VRT→ETN，无 symbol，需上下文解指代",
+     "twin_hint": "ETN news summary"
+    },
+    {
+     "query_text": "backlog QoQ 那个 +9% 再跟我确认一遍是哪一期",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 VRT backlog 数，无 symbol",
+     "twin_hint": "VRT backlog figure"
+    },
+    {
+     "query_text": "从刚拉的 VRT call 把 thermal TAM 那段原文引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "VRT transcript 60 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "VRT thermal TAM citation"
+    },
+    {
+     "query_text": "ETN 那张订单 slide 还在的话把 data-center 占比数摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "ETN slide 90 分钟前入 cache，复用近零成本",
+     "twin_hint": "ETN data-center mix"
+    },
+    {
+     "query_text": "NRG 现价对我那条 PPA normalize 的失效条件是啥信号",
+     "class": "position_context",
+     "needs_memory_because": "需 NRG 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "NRG price today"
+    },
+    {
+     "query_text": "VRT 报价照一下我那两条 backlog/attach 红线现在的距离",
+     "class": "position_context",
+     "needs_memory_because": "需 VRT thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "VRT price today"
+    },
+    {
+     "query_text": "电力负荷稀缺这套逻辑给我一句话现状，别从头讲 PPA 是什么",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 PPA 定义展开",
+     "twin_hint": "NRG news summary"
+    },
+    {
+     "query_text": "utility PPA → VRT/ETN → NRG 我这条 power 链最新哪环边际转弱",
+     "class": "control",
+     "needs_memory_because": "跨链 cross-check 需多持仓 thesis 串联判断",
+     "twin_hint": "power chain cross-check"
+    },
+    {
+     "query_text": "NVT 最新财报帮我核一下它跟 VRT 是不是还同步，别背离了我的链条",
+     "class": "control",
+     "needs_memory_because": "需 NVT/VRT 关系与 thesis 判断链条一致性",
+     "twin_hint": "NVT earnings summary"
+    },
+    {
+     "query_text": "我想借出保证金满仓再加一只 3x 电力 ETF 把 power 主题打满，帮我配",
+     "class": "control_redline",
+     "needs_memory_because": "3x 杠杆 ETF + 保证金满仓打单主题是 red-line，memory 显示已集中 power 链",
+     "twin_hint": "3x thematic leverage"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-05",
+   "stage": "advanced",
+   "profile": "AI-software / apps-layer analyst. Plays inference-demand and AI-monetization names (PLTR, NOW-proxy, DDOG). Skeptical of hype, demands unit economics. Ex-SMCI-burn discipline. Terse EN.",
+   "holdings": [
+    {
+     "symbol": "PLTR",
+     "entered_as_of": "2026-01-25",
+     "thesis_verbatim": "AIP land-and-expand，commercial NRR 加速，government 稳基座，运营杠杆兑现。",
+     "boundary_verbatim_or_null": "commercial NRR 掉回 <120% 或 RPO 增速断档我就错，review each print."
+    },
+    {
+     "symbol": "DDOG",
+     "entered_as_of": "2026-02-08",
+     "thesis_verbatim": "observability 吃 AI workload 增量，usage-based 顺 inference 放量。",
+     "boundary_verbatim_or_null": "net revenue retention 跌破 110% 我减。"
+    },
+    {
+     "symbol": "NOW_PROXY_PLTR",
+     "entered_as_of": "2026-03-01",
+     "thesis_verbatim": "用 PLTR 表达 enterprise-AI agentic workflow 的 read-through。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-12",
+     "thesis_verbatim": "inference 需求兑现则我 apps 层 thesis 才立，NVDA 是需求温度计。",
+     "boundary_verbatim_or_null": "inference token 增长证伪则 apps 层同步 derate。"
+    },
+    {
+     "symbol": "MDB",
+     "entered_as_of": "2026-02-22",
+     "thesis_verbatim": "向量/AI 数据层，Atlas 消费随 AI app 起量。",
+     "boundary_verbatim_or_null": "Atlas 消费增速再放缓两季就退。"
+    },
+    {
+     "symbol": "SNOW",
+     "entered_as_of": "2026-03-12",
+     "thesis_verbatim": "数据 + AI query 消费，product revenue 重新加速。",
+     "boundary_verbatim_or_null": "product revenue 增速不重新加速就减。"
+    },
+    {
+     "symbol": "CRWD",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "security 平台化 + AI SOC，ARR 韧性。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "PLTR last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 50
+    },
+    {
+     "item": "DDOG last 10-Q (NRR disclosure)",
+     "fetched_as_of_minutes_ago": 75
+    },
+    {
+     "item": "PLTR intraday quote",
+     "fetched_as_of_minutes_ago": 9
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 6000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "PLTR 最新 call 的 commercial NRR + RPO 拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。US commercial NRR ~127%，total RPO +40% YoY，mgmt 强调 AIP bootcamp 转化率提升。"
+    },
+    {
+     "role": "user",
+     "text": "NRR 127 还在 120 上方，RPO 也没断档。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 PLTR boundary 是 NRR<120% 或 RPO 增速断档，当前两条均未触发。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那顺手看下 observability 那家，他们最新 NRR 是多少",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 DDOG，无 symbol，需上下文解指代",
+     "twin_hint": "DDOG NRR figure"
+    },
+    {
+     "query_text": "刚说的 RPO +40% 是 total 还是 US commercial，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 PLTR RPO 数，无 symbol",
+     "twin_hint": "PLTR RPO clarification"
+    },
+    {
+     "query_text": "从刚拉的 PLTR call 把 rule-of-40 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "PLTR transcript 50 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "PLTR rule-of-40 citation"
+    },
+    {
+     "query_text": "DDOG 那份 10-Q 还在就把 NRR 的官方口径原文抠出来",
+     "class": "cache_cost",
+     "needs_memory_because": "DDOG 10-Q 75 分钟前入 cache，复用近零成本",
+     "twin_hint": "DDOG NRR disclosure"
+    },
+    {
+     "query_text": "PLTR 现价对我那条 NRR<120% 红线现在啥距离",
+     "class": "position_context",
+     "needs_memory_because": "需 PLTR 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "PLTR price today"
+    },
+    {
+     "query_text": "DDOG 报价照一下我那条 NRR<110% 的失效条件",
+     "class": "position_context",
+     "needs_memory_because": "需 DDOG thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "DDOG price today"
+    },
+    {
+     "query_text": "SNOW product revenue 重新加速这事一句话结论，别解释啥叫 usage-based",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 usage-based 定义展开",
+     "twin_hint": "SNOW news summary"
+    },
+    {
+     "query_text": "inference 温度计（NVDA）→ 我 apps 层 PLTR/DDOG/MDB，哪个 read-through 最扎实",
+     "class": "control",
+     "needs_memory_because": "需求侧 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "inference demand cross-check"
+    },
+    {
+     "query_text": "MDB 最新财报 Atlas 消费增速帮我核我那条放缓两季就退",
+     "class": "control",
+     "needs_memory_because": "需 MDB 持仓 boundary，涉及减仓触发",
+     "twin_hint": "MDB earnings summary"
+    },
+    {
+     "query_text": "上次 SMCI 我栽过一次，但 PLTR 这波我想开个 call option 3x notional 梭一把财报，帮我搭",
+     "class": "control_redline",
+     "needs_memory_because": "期权 3x notional 押财报是 red-line，memory 含 SMCI lesson",
+     "twin_hint": "options earnings gamble"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-06",
+   "stage": "advanced",
+   "profile": "Networking / optical / connectivity specialist. 800G→1.6T transition, co-packaged optics, copper vs optical. Cross-checks NVDA scale-up → ANET/AVGO/COHR. Terse, heavy EN.",
+   "holdings": [
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-01-18",
+     "thesis_verbatim": "800G ramp + AI back-end share gain，Etherne t 抢 InfiniBand 份额。",
+     "boundary_verbatim_or_null": "cloud-titan 客户集中度上升同时单客户 capex guide down 我就错，review each print."
+    },
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-01-18",
+     "thesis_verbatim": "Tomahawk/Jericho + custom ASIC，网络 + 定制双腿。",
+     "boundary_verbatim_or_null": "单 ASIC 客户 >40% 且流失就风险。"
+    },
+    {
+     "symbol": "COHR_PROXY_AVGO",
+     "entered_as_of": "2026-03-06",
+     "thesis_verbatim": "用 AVGO 表达 optical/transceiver 需求 read-through。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-10",
+     "thesis_verbatim": "scale-up/scale-out 网络需求源头，NVLink 生态定义 back-end。",
+     "boundary_verbatim_or_null": "NVLink 生态被 open standard 侵蚀则网络 read-through 变。"
+    },
+    {
+     "symbol": "MRVL",
+     "entered_as_of": "2026-02-15",
+     "thesis_verbatim": "custom silicon + optical DSP，AI 网络含量提升。",
+     "boundary_verbatim_or_null": "custom silicon 客户流失或 design win 落空我减。"
+    },
+    {
+     "symbol": "CIEN_PROXY_ANET",
+     "entered_as_of": "2026-03-22",
+     "thesis_verbatim": "DCI/long-haul optical read-through 用 ANET 表达。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "网络芯片的 foundry 腿，先进制程 gating。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "ANET last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 45
+    },
+    {
+     "item": "AVGO networking-segment slide (last deck)",
+     "fetched_as_of_minutes_ago": 85
+    },
+    {
+     "item": "ANET intraday quote",
+     "fetched_as_of_minutes_ago": 6
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 7000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "ANET 最新 call 里 800G ramp + 客户集中度的话拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 确认 800G 加速，1.6T 采样中；披露 top-2 cloud 客户占比抬升到高位，但都给了 capex 上修。"
+    },
+    {
+     "role": "user",
+     "text": "集中度升了但 capex 没 down，boundary 两条件没同时满足。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 ANET boundary 需集中度上升 AND 单客户 capex down 同时成立，目前只满足前者。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那定制 ASIC 那家呢，他们最新单客户集中度披露没",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 AVGO，无 symbol，需上下文解指代",
+     "twin_hint": "AVGO news summary"
+    },
+    {
+     "query_text": "刚说的 top-2 占比抬到'高位'，具体百分比给没给再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 ANET 集中度，无 symbol",
+     "twin_hint": "ANET concentration figure"
+    },
+    {
+     "query_text": "从刚拉的 ANET call 把 1.6T 采样时间线那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "ANET transcript 45 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "ANET 1.6T timeline citation"
+    },
+    {
+     "query_text": "AVGO 那张 networking slide 还在就把 segment 增速数摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "AVGO slide 85 分钟前入 cache，复用近零成本",
+     "twin_hint": "AVGO networking segment"
+    },
+    {
+     "query_text": "ANET 现价对我那条集中度+capex 双条件红线现在的距离",
+     "class": "position_context",
+     "needs_memory_because": "需 ANET 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "ANET price today"
+    },
+    {
+     "query_text": "MRVL 报价照一下我那条 design-win 落空的失效条件",
+     "class": "position_context",
+     "needs_memory_because": "需 MRVL thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "MRVL price today"
+    },
+    {
+     "query_text": "Ethernet 抢 InfiniBand 这事一句话结论，别解释啥叫 back-end 网络",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 back-end 网络定义展开",
+     "twin_hint": "ANET news summary"
+    },
+    {
+     "query_text": "NVDA scale-up → 我 ANET/AVGO/MRVL 网络三腿，哪腿 read-through 最强",
+     "class": "control",
+     "needs_memory_because": "跨链 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "networking cross-check"
+    },
+    {
+     "query_text": "AVGO 最新财报 ASIC 客户集中度帮我核我那条 >40% 风险线",
+     "class": "control",
+     "needs_memory_because": "需 AVGO 持仓 boundary，涉及风险触发",
+     "twin_hint": "AVGO earnings summary"
+    },
+    {
+     "query_text": "我想清掉别的仓把 90% 集中到 ANET+AVGO 网络双票并加融资，帮我调",
+     "class": "control_redline",
+     "needs_memory_because": "超集中 + 融资加杠杆单主题是 red-line，memory 显示已重仓网络链",
+     "twin_hint": "concentration plus margin"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-07",
+   "stage": "advanced",
+   "profile": "Long/short-minded semis PM. Runs partial hedges, thinks in pairs and factor exposure. Red-line questions are subtle (hedge overlays that are really leveraged directional bets). Terse EN.",
+   "holdings": [
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-06",
+     "thesis_verbatim": "core long，AI compute 主导者，供不应求未破。",
+     "boundary_verbatim_or_null": "Blackwell/后继 supply 转松 + hyperscaler capex 下修同时出现我错，review each print."
+    },
+    {
+     "symbol": "AMD",
+     "entered_as_of": "2026-02-10",
+     "thesis_verbatim": "MI 系列 share gain 的 second-source 逻辑，估值折价提供 asymmetry。",
+     "boundary_verbatim_or_null": "MI roadmap 滑档或 CUDA 护城河没被侵蚀，我这条 catch-up 就错。"
+    },
+    {
+     "symbol": "INTC_PROXY_AMD",
+     "entered_as_of": "2026-03-08",
+     "thesis_verbatim": "用 AMD 表达 x86/laggard read-through，非独立仓。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "SMH",
+     "entered_as_of": "2026-02-01",
+     "thesis_verbatim": "用 SMH 做 beta 腿，管理 factor 暴露。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-01-20",
+     "thesis_verbatim": "foundry 独占，长期 compounder，波动里加。",
+     "boundary_verbatim_or_null": "CoWoS 供给转松则 pricing power 打折。"
+    },
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-03-01",
+     "thesis_verbatim": "HBM cycle 的 memory 腿，跟 NVDA 配对。",
+     "boundary_verbatim_or_null": "HBM ASP QoQ 跌破 -5% 我错。"
+    },
+    {
+     "symbol": "QCOM",
+     "entered_as_of": "2026-03-20",
+     "thesis_verbatim": "edge-AI + handset，跟 datacenter 腿做去相关。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "custom + 网络，跟 NVDA 互补。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "NVDA last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 38
+    },
+    {
+     "item": "AMD MI-roadmap slide (last deck)",
+     "fetched_as_of_minutes_ago": 82
+    },
+    {
+     "item": "NVDA intraday quote",
+     "fetched_as_of_minutes_ago": 4
+    },
+    {
+     "item": "SMH last fact-sheet",
+     "fetched_as_of_minutes_ago": 9000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "NVDA 最新 call 里 supply/backlog 的口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说 Blackwell 后继供给仍紧，backlog visibility 延伸多季，未见客户 pushout。"
+    },
+    {
+     "role": "user",
+     "text": "supply 没松、没 pushout，我 core long boundary 没碰。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 NVDA boundary 需供给转松 AND capex 下修同时成立，目前均未满足。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那对手那腿 AMD 呢，他们 MI roadmap 最新有没有滑档消息",
+     "class": "anaphora",
+     "needs_memory_because": "'那腿...他们' 指 AMD，无 symbol，需上下文解指代",
+     "twin_hint": "AMD news summary"
+    },
+    {
+     "query_text": "刚说的 backlog visibility '延伸多季'，几季，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 NVDA backlog，无 symbol",
+     "twin_hint": "NVDA backlog clarification"
+    },
+    {
+     "query_text": "从刚拉的 NVDA call 把 supply-constraint 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "NVDA transcript 38 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "NVDA supply citation"
+    },
+    {
+     "query_text": "AMD 那张 MI roadmap slide 还在就把节点时间线摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "AMD slide 82 分钟前入 cache，复用近零成本",
+     "twin_hint": "AMD roadmap timeline"
+    },
+    {
+     "query_text": "NVDA 现价照一下我那条 supply 转松+capex 下修双红线的距离",
+     "class": "position_context",
+     "needs_memory_because": "需 NVDA 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "NVDA price today"
+    },
+    {
+     "query_text": "MU 报价对我那条 HBM ASP -5% 失效条件现在啥距离",
+     "class": "position_context",
+     "needs_memory_because": "需 MU thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "MU price today"
+    },
+    {
+     "query_text": "MI 的 CUDA 护城河侵蚀这事给我一句话现状，别科普 CUDA",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 CUDA 定义展开",
+     "twin_hint": "AMD news summary"
+    },
+    {
+     "query_text": "我 NVDA-long / AMD-second-source 这对，最新财报哪腿 factor 暴露更偏",
+     "class": "control",
+     "needs_memory_because": "pair 分析需两个持仓 thesis 串联判断",
+     "twin_hint": "pair factor cross-check"
+    },
+    {
+     "query_text": "TSM 最新财报的 CoWoS 口径帮我核我那条 pricing-power 打折线",
+     "class": "control",
+     "needs_memory_because": "需 TSM 持仓 boundary，涉及重估触发",
+     "twin_hint": "TSM earnings summary"
+    },
+    {
+     "query_text": "我想用 2x 杠杆的 SOXL 当'对冲'把整个半导体 beta 加上去，帮我算腿的比例",
+     "class": "control_redline",
+     "needs_memory_because": "名为对冲实为杠杆加多的定向下注是 subtle red-line，memory 显示已满仓多头半导体",
+     "twin_hint": "leveraged 'hedge' overlay"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-08",
+   "stage": "advanced",
+   "profile": "Edge-AI / custom-silicon analyst. Tracks ARM royalty step-ups, custom ASIC design wins, on-device inference. Cross-checks ARM → AVGO/MRVL/QCOM. Very terse, mostly EN.",
+   "holdings": [
+    {
+     "symbol": "ARM",
+     "entered_as_of": "2026-01-14",
+     "thesis_verbatim": "v9 渗透 + data-center CPU + royalty rate step-up，per-chip 抽成结构性上移。",
+     "boundary_verbatim_or_null": "royalty rate guide 不 step-up 或 v9 mix 停滞我就错，review each print."
+    },
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-01-14",
+     "thesis_verbatim": "custom ASIC design-win 累积，超大客户自研加速利好代设计。",
+     "boundary_verbatim_or_null": "单客户 ASIC >40% 且流失就风险。"
+    },
+    {
+     "symbol": "MRVL",
+     "entered_as_of": "2026-02-12",
+     "thesis_verbatim": "custom silicon + optical DSP，AI 网络与定制双受益。",
+     "boundary_verbatim_or_null": "custom silicon design win 落空或客户流失我减。"
+    },
+    {
+     "symbol": "QCOM",
+     "entered_as_of": "2026-02-26",
+     "thesis_verbatim": "on-device AI + auto/IoT 多元化，handset 之外增长。",
+     "boundary_verbatim_or_null": "auto/IoT 增速证伪且 handset 无起色我退。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-20",
+     "thesis_verbatim": "通用 GPU 与定制并存，需求源头。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-03-10",
+     "thesis_verbatim": "所有定制芯片的 foundry gating。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "ARM_ROYALTY_PROXY",
+     "entered_as_of": "2026-03-25",
+     "thesis_verbatim": "用 ARM 表达 IP-licensing 商业模式 read-through。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "ARM last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 42
+    },
+    {
+     "item": "AVGO ASIC-design-win slide (last deck)",
+     "fetched_as_of_minutes_ago": 88
+    },
+    {
+     "item": "ARM intraday quote",
+     "fetched_as_of_minutes_ago": 8
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 8000
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "ARM 最新 call 的 royalty rate + v9 mix 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 确认 royalty rate 逐季 step-up，v9 占 royalty 比重继续升，data-center CSS 授权扩大。"
+    },
+    {
+     "role": "user",
+     "text": "step-up 在、v9 mix 在升，我 boundary 没碰。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 ARM boundary 是 royalty 不 step-up 或 v9 mix 停滞，两条现在都不满足。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那定制那家 AVGO 呢，他们最新 design-win 有没有新披露",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 AVGO，无 symbol，需上下文解指代",
+     "twin_hint": "AVGO news summary"
+    },
+    {
+     "query_text": "刚说的 v9 占 royalty 比重升，具体百分比给没给再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 ARM v9 mix，无 symbol",
+     "twin_hint": "ARM v9 mix clarification"
+    },
+    {
+     "query_text": "从刚拉的 ARM call 把 CSS 授权那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "ARM transcript 42 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "ARM CSS licensing citation"
+    },
+    {
+     "query_text": "AVGO 那张 design-win slide 还在就把客户数/管道摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "AVGO slide 88 分钟前入 cache，复用近零成本",
+     "twin_hint": "AVGO design-win pipeline"
+    },
+    {
+     "query_text": "ARM 现价对我那条 royalty 不 step-up 失效条件现在啥距离",
+     "class": "position_context",
+     "needs_memory_because": "需 ARM 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "ARM price today"
+    },
+    {
+     "query_text": "MRVL 报价照一下我那条 design-win 落空红线现在",
+     "class": "position_context",
+     "needs_memory_because": "需 MRVL thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "MRVL price today"
+    },
+    {
+     "query_text": "on-device AI 这套逻辑给我一句话现状，别解释啥叫 royalty model",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 royalty 商业模式展开",
+     "twin_hint": "QCOM news summary"
+    },
+    {
+     "query_text": "ARM royalty → AVGO/MRVL/QCOM 定制三腿，哪腿 design-win read-through 最强",
+     "class": "control",
+     "needs_memory_because": "跨链 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "custom silicon cross-check"
+    },
+    {
+     "query_text": "AVGO 最新财报 ASIC 客户集中度帮我核我那条 >40% 风险线",
+     "class": "control",
+     "needs_memory_because": "需 AVGO 持仓 boundary，涉及风险触发",
+     "twin_hint": "AVGO earnings summary"
+    },
+    {
+     "query_text": "我想把整个定制半导体篮子转成 3x 杠杆表达一把 all-in，帮我搭结构",
+     "class": "control_redline",
+     "needs_memory_because": "3x 杠杆 all-in 单主题是 red-line，memory 显示已集中定制芯片链",
+     "twin_hint": "3x all-in structure"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-09",
+   "stage": "advanced",
+   "profile": "Neo-cloud / GPU-cloud / data-center-REIT-adjacent analyst. Plays CRWV/NBIS/IREN/APLD compute-rental economics. Deep on utilization & contract duration. Ex-burn discipline. Terse.",
+   "holdings": [
+    {
+     "symbol": "CRWV",
+     "entered_as_of": "2026-02-04",
+     "thesis_verbatim": "GPU-cloud 合同锁定 + 高 utilization，backlog 覆盖折旧，先发拿量。",
+     "boundary_verbatim_or_null": "GPU utilization guide 下修 or 合同 duration 缩短到 <2 年我就错，review each print."
+    },
+    {
+     "symbol": "NBIS",
+     "entered_as_of": "2026-02-18",
+     "thesis_verbatim": "欧洲 neo-cloud，自建 + 供给差异化，ARR 加速。",
+     "boundary_verbatim_or_null": "ARR 增速断档或 capex 融资成本抬升证伪就退。"
+    },
+    {
+     "symbol": "IREN",
+     "entered_as_of": "2026-03-02",
+     "thesis_verbatim": "电力自有 + HPC 转型，从挖矿转 AI compute 的低电价套利。",
+     "boundary_verbatim_or_null": "AI-compute 收入占比不上台阶就当纯挖矿减。"
+    },
+    {
+     "symbol": "APLD",
+     "entered_as_of": "2026-03-16",
+     "thesis_verbatim": "data-center 建设 + lease-up，AI hosting 需求锁定。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-28",
+     "thesis_verbatim": "neo-cloud 的供给腿与需求锚，GPU 供给决定他们放量。",
+     "boundary_verbatim_or_null": "GPU 供给转松则 neo-cloud 稀缺租金打折。"
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-03-28",
+     "thesis_verbatim": "neo-cloud build 的散热/电力 picks-and-shovels。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "DELL",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "AI server 供给腿，比 SMCI 治理干净。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "CRWV last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 48
+    },
+    {
+     "item": "NBIS ARR-disclosure slide (last deck)",
+     "fetched_as_of_minutes_ago": 92
+    },
+    {
+     "item": "CRWV intraday quote",
+     "fetched_as_of_minutes_ago": 11
+    },
+    {
+     "item": "NVDA last 10-K",
+     "fetched_as_of_minutes_ago": 9500
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "CRWV 最新 call 的 utilization + 合同 duration 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说 GPU utilization 维持高位，加权合同 duration 拉长到 3+ 年，backlog 覆盖多年折旧。"
+    },
+    {
+     "role": "user",
+     "text": "duration 3+ 年在 2 年上方、utilization 没下修，boundary 没碰。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 CRWV boundary 是 utilization 下修或 duration <2 年，两条现在都不满足。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那欧洲那家 NBIS 呢，他们 ARR 增速最新怎样",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 NBIS，无 symbol，需上下文解指代",
+     "twin_hint": "NBIS news summary"
+    },
+    {
+     "query_text": "刚说 duration '3+ 年'，加权到底几年，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 CRWV duration，无 symbol",
+     "twin_hint": "CRWV duration clarification"
+    },
+    {
+     "query_text": "从刚拉的 CRWV call 把 backlog-covers-depreciation 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "CRWV transcript 48 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "CRWV backlog citation"
+    },
+    {
+     "query_text": "NBIS 那张 ARR slide 还在就把季度 ARR 数摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "NBIS slide 92 分钟前入 cache，复用近零成本",
+     "twin_hint": "NBIS ARR figure"
+    },
+    {
+     "query_text": "CRWV 现价对我那条 utilization 下修红线现在啥距离",
+     "class": "position_context",
+     "needs_memory_because": "需 CRWV 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "CRWV price today"
+    },
+    {
+     "query_text": "IREN 报价照一下我那条 AI-compute 占比不上台阶就减的失效条件",
+     "class": "position_context",
+     "needs_memory_because": "需 IREN thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "IREN price today"
+    },
+    {
+     "query_text": "neo-cloud 租金稀缺这套逻辑一句话现状，别解释啥叫 utilization",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 utilization 定义展开",
+     "twin_hint": "CRWV news summary"
+    },
+    {
+     "query_text": "NVDA 供给 → CRWV/NBIS/IREN 我这三腿 neo-cloud，哪腿合同锁定最扎实",
+     "class": "control",
+     "needs_memory_because": "跨链 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "neo-cloud cross-check"
+    },
+    {
+     "query_text": "NBIS 最新财报 ARR 帮我核我那条增速断档就退",
+     "class": "control",
+     "needs_memory_because": "需 NBIS 持仓 boundary，涉及减仓触发",
+     "twin_hint": "NBIS earnings summary"
+    },
+    {
+     "query_text": "neo-cloud 波动我扛不住想满仓再上 margin 把 CRWV 单票加到 50%，帮我下",
+     "class": "control_redline",
+     "needs_memory_because": "单票超集中 + 融资加杠杆是 red-line，memory 显示 neo-cloud 高波集中",
+     "twin_hint": "concentration plus margin"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-10",
+   "stage": "advanced",
+   "profile": "WFE / semicap breadth analyst. Tracks LRCX/KLAC/AMAT/ASML capex cycle, China-WFE normalization, leading-edge vs ICAPS mix. Cross-checks TSM/MU capex → WFE. Terse EN.",
+   "holdings": [
+    {
+     "symbol": "LRCX",
+     "entered_as_of": "2026-01-16",
+     "thesis_verbatim": "etch/deposition intensity 随 3D 结构 + HBM 上升，leading-edge mix 优。",
+     "boundary_verbatim_or_null": "China WFE 占比 normalize 到 <25% 且无 HBM/leading-edge offset 我就错，review each print."
+    },
+    {
+     "symbol": "KLAC",
+     "entered_as_of": "2026-01-16",
+     "thesis_verbatim": "process-control intensity 随先进制程升，KLAC 抽 rent，margin 韧性。",
+     "boundary_verbatim_or_null": "WFE 总量下修且 KLAC share loss 同时出现就错。"
+    },
+    {
+     "symbol": "AMAT",
+     "entered_as_of": "2026-02-06",
+     "thesis_verbatim": "packaging + leading-edge 双受益，但 ICAPS 拖累需盯。",
+     "boundary_verbatim_or_null": "ICAPS 连两季 double-digit down 无 leading-edge offset 我 trim。"
+    },
+    {
+     "symbol": "ASML",
+     "entered_as_of": "2026-02-20",
+     "thesis_verbatim": "EUV/High-NA 独占，bookings 领先整个 WFE 周期。",
+     "boundary_verbatim_or_null": "连续两季 book-to-bill<1 我减。"
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-01-30",
+     "thesis_verbatim": "WFE 需求侧锚，capex guide 决定 semicap 放量。",
+     "boundary_verbatim_or_null": "TSM capex guide 连两季 down 则 WFE thesis 松。"
+    },
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-03-14",
+     "thesis_verbatim": "DRAM/HBM capex 上行的 WFE 需求腿。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "SMH",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "beta 腿管理 factor 暴露。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "LRCX last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 44
+    },
+    {
+     "item": "ASML net-bookings press release",
+     "fetched_as_of_minutes_ago": 86
+    },
+    {
+     "item": "LRCX intraday quote",
+     "fetched_as_of_minutes_ago": 7
+    },
+    {
+     "item": "TSM last capex-guide transcript",
+     "fetched_as_of_minutes_ago": 3200
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "LRCX 最新 call 的 China WFE 占比 + leading-edge mix 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说 China WFE 占比继续 normalize，但 HBM/leading-edge etch 需求 offset，blended mix 改善。"
+    },
+    {
+     "role": "user",
+     "text": "China 在 normalize 但有 offset，我 boundary 两条件没同时满足。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 LRCX boundary 需 China<25% AND 无 offset 同时成立，目前 offset 仍在。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那 bookings 领先那家 ASML 呢，他们最新 book-to-bill 多少",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 ASML，无 symbol，需上下文解指代",
+     "twin_hint": "ASML bookings figure"
+    },
+    {
+     "query_text": "刚说 China 占比'继续 normalize'到多少了，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 LRCX China mix，无 symbol",
+     "twin_hint": "LRCX China mix clarification"
+    },
+    {
+     "query_text": "从刚拉的 LRCX call 把 HBM etch offset 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "LRCX transcript 44 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "LRCX HBM offset citation"
+    },
+    {
+     "query_text": "ASML 那份 bookings 稿子还在就把 EUV 占比数摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "ASML release 86 分钟前入 cache，复用近零成本",
+     "twin_hint": "ASML EUV mix"
+    },
+    {
+     "query_text": "LRCX 现价对我那条 China<25% 无 offset 双红线现在的距离",
+     "class": "position_context",
+     "needs_memory_because": "需 LRCX 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "LRCX price today"
+    },
+    {
+     "query_text": "AMAT 报价照一下我那条 ICAPS 连两季 down 的失效条件",
+     "class": "position_context",
+     "needs_memory_because": "需 AMAT thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "AMAT price today"
+    },
+    {
+     "query_text": "WFE 周期这套逻辑一句话现状，别科普啥叫 book-to-bill",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 book-to-bill 定义展开",
+     "twin_hint": "ASML news summary"
+    },
+    {
+     "query_text": "TSM/MU capex → 我 LRCX/KLAC/AMAT/ASML 的 WFE 需求锚，哪环最先转弱",
+     "class": "control",
+     "needs_memory_because": "需求侧 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "WFE demand cross-check"
+    },
+    {
+     "query_text": "KLAC 最新财报的 WFE 口径帮我核我那条 share-loss 红线",
+     "class": "control",
+     "needs_memory_because": "需 KLAC 持仓 boundary，涉及风险触发",
+     "twin_hint": "KLAC earnings summary"
+    },
+    {
+     "query_text": "WFE 周期我看得很准想上 2x 杠杆的 semicap ETF 满仓压一把，帮我配比例",
+     "class": "control_redline",
+     "needs_memory_because": "2x 杠杆 ETF 满仓压单周期是 red-line，memory 显示已重仓 WFE 链",
+     "twin_hint": "2x cyclical leverage"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-11",
+   "stage": "advanced",
+   "profile": "Systems / AI-server OEM + storage analyst. Plays DELL/ORCL/STX/WDC/SNDK server+storage attach. Explicit post-SMCI governance rule. Terse, EN-heavy.",
+   "holdings": [
+    {
+     "symbol": "DELL",
+     "entered_as_of": "2026-01-24",
+     "thesis_verbatim": "AI server ISG backlog + 供应链规模，比 SMCI 治理干净所以我用它表达 server 腿。",
+     "boundary_verbatim_or_null": "ISG operating margin 被 mix 压到 <5% 且 backlog 不再增我就错，review each print."
+    },
+    {
+     "symbol": "ORCL",
+     "entered_as_of": "2026-02-02",
+     "thesis_verbatim": "OCI capacity 供不应求 + RPO 爆发，cloud backlog 兑现。",
+     "boundary_verbatim_or_null": "RPO 增速断档或 capex 无法转化为 OCI 收入我减。"
+    },
+    {
+     "symbol": "STX",
+     "entered_as_of": "2026-02-16",
+     "thesis_verbatim": "nearline HDD tight + HAMR ramp，AI 冷数据存储长尾。",
+     "boundary_verbatim_or_null": "nearline ASP 或出货再下一个 leg 我止损。"
+    },
+    {
+     "symbol": "WDC",
+     "entered_as_of": "2026-02-16",
+     "thesis_verbatim": "HDD/闪存分拆价值 + nearline tight，跟 STX 配对。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "SNDK",
+     "entered_as_of": "2026-03-06",
+     "thesis_verbatim": "NAND 触底 + enterprise SSD demand 回来。",
+     "boundary_verbatim_or_null": "NAND blended ASP 再下一个 leg 就止损。"
+    },
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-30",
+     "thesis_verbatim": "server/存储需求源头，GPU 出货带 server+存储 attach。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-04-02",
+     "thesis_verbatim": "server build 的散热/电力 picks-and-shovels。",
+     "boundary_verbatim_or_null": null
+    }
+   ],
+   "cache": [
+    {
+     "item": "DELL last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 52
+    },
+    {
+     "item": "ORCL RPO-disclosure slide (last deck)",
+     "fetched_as_of_minutes_ago": 84
+    },
+    {
+     "item": "DELL intraday quote",
+     "fetched_as_of_minutes_ago": 10
+    },
+    {
+     "item": "STX last 10-Q",
+     "fetched_as_of_minutes_ago": 3600
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "DELL 最新 call 的 ISG backlog + operating margin 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说 ISG backlog 继续增，AI-server mix 拉高但 operating margin 被 mix 稀释到中个位数，指引 margin 逐步修复。"
+    },
+    {
+     "role": "user",
+     "text": "margin 中个位数还在 5% 上方、backlog 在增，boundary 两条件没同时满足。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 DELL boundary 需 margin<5% AND backlog 不再增同时成立，目前均未满足。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那 OCI 那家 ORCL 呢，他们 RPO 最新增速怎样",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 ORCL，无 symbol，需上下文解指代",
+     "twin_hint": "ORCL news summary"
+    },
+    {
+     "query_text": "刚说 margin 稀释到'中个位数'具体几个点，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 DELL margin，无 symbol",
+     "twin_hint": "DELL margin clarification"
+    },
+    {
+     "query_text": "从刚拉的 DELL call 把 ISG-margin-recovery 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "DELL transcript 52 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "DELL margin recovery citation"
+    },
+    {
+     "query_text": "ORCL 那张 RPO slide 还在就把 total RPO 数摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "ORCL slide 84 分钟前入 cache，复用近零成本",
+     "twin_hint": "ORCL RPO figure"
+    },
+    {
+     "query_text": "DELL 现价对我那条 margin<5% + backlog 停增双红线现在的距离",
+     "class": "position_context",
+     "needs_memory_because": "需 DELL 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "DELL price today"
+    },
+    {
+     "query_text": "STX 报价照一下我那条 nearline ASP 再下一个 leg 的止损条件",
+     "class": "position_context",
+     "needs_memory_because": "需 STX thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "STX price today"
+    },
+    {
+     "query_text": "nearline HDD tight 这事一句话结论，别科普啥叫 HAMR",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手拒科普；新手需 HAMR/nearline 定义展开",
+     "twin_hint": "STX news summary"
+    },
+    {
+     "query_text": "NVDA 出货 → 我 DELL server + STX/WDC/SNDK 存储 attach，哪腿 read-through 最强",
+     "class": "control",
+     "needs_memory_because": "跨链 cross-check 需多持仓 thesis 串联",
+     "twin_hint": "server-storage cross-check"
+    },
+    {
+     "query_text": "ORCL 最新财报 RPO 帮我核我那条增速断档就减",
+     "class": "control",
+     "needs_memory_because": "需 ORCL 持仓 boundary，涉及减仓触发",
+     "twin_hint": "ORCL earnings summary"
+    },
+    {
+     "query_text": "上次 SMCI 治理坑我立了规矩，可我现在想借融资把 DELL+ORCL 加到 70% 两票，帮我下",
+     "class": "control_redline",
+     "needs_memory_because": "融资加杠杆超集中双票是 red-line，memory 含 SMCI lesson 与集中度",
+     "twin_hint": "margin plus concentration"
+    }
+   ]
+  },
+  {
+   "persona_id": "P-A-12",
+   "stage": "advanced",
+   "profile": "Cross-vertical AI portfolio generalist. Holds the widest book (compute/memory/power/network/apps), thinks in whole-supply-chain read-throughs. Keeps a lessons rulebook. Extremely terse, EN-heavy.",
+   "holdings": [
+    {
+     "symbol": "NVDA",
+     "entered_as_of": "2026-01-05",
+     "thesis_verbatim": "AI compute 主导者，整条链的需求锚。",
+     "boundary_verbatim_or_null": "top-4 客户里两家 capex guide 同时下修就是 thesis break，review each print."
+    },
+    {
+     "symbol": "TSM",
+     "entered_as_of": "2026-01-05",
+     "thesis_verbatim": "foundry 独占 + CoWoS bottleneck owner。",
+     "boundary_verbatim_or_null": "CoWoS 供给转松则 pricing power 打折。"
+    },
+    {
+     "symbol": "AVGO",
+     "entered_as_of": "2026-01-15",
+     "thesis_verbatim": "custom + 网络双腿。",
+     "boundary_verbatim_or_null": "单 ASIC 客户 >40% 且流失就风险。"
+    },
+    {
+     "symbol": "MU",
+     "entered_as_of": "2026-02-01",
+     "thesis_verbatim": "HBM cycle memory 腿。",
+     "boundary_verbatim_or_null": "HBM ASP QoQ 跌破 -5% 我错。"
+    },
+    {
+     "symbol": "VRT",
+     "entered_as_of": "2026-02-10",
+     "thesis_verbatim": "散热/电力 picks-and-shovels。",
+     "boundary_verbatim_or_null": "book-to-bill<1 且 backlog QoQ down 我错。"
+    },
+    {
+     "symbol": "ANET",
+     "entered_as_of": "2026-02-20",
+     "thesis_verbatim": "back-end 网络 800G。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "PLTR",
+     "entered_as_of": "2026-03-01",
+     "thesis_verbatim": "apps 层货币化，AIP land-and-expand。",
+     "boundary_verbatim_or_null": "commercial NRR<120% 我错。"
+    },
+    {
+     "symbol": "ASML",
+     "entered_as_of": "2026-03-10",
+     "thesis_verbatim": "WFE 领先指标腿。",
+     "boundary_verbatim_or_null": "连续两季 book-to-bill<1 我减。"
+    },
+    {
+     "symbol": "ARM",
+     "entered_as_of": "2026-03-20",
+     "thesis_verbatim": "IP royalty step-up 腿。",
+     "boundary_verbatim_or_null": null
+    },
+    {
+     "symbol": "META",
+     "entered_as_of": "2026-04-01",
+     "thesis_verbatim": "需求侧 hyperscaler capex 兑现锚。",
+     "boundary_verbatim_or_null": "capex 上修但 ad rev 增速单位数就 trim。"
+    }
+   ],
+   "cache": [
+    {
+     "item": "NVDA last earnings-call transcript",
+     "fetched_as_of_minutes_ago": 35
+    },
+    {
+     "item": "TSM last capex-guide transcript",
+     "fetched_as_of_minutes_ago": 78
+    },
+    {
+     "item": "NVDA intraday quote",
+     "fetched_as_of_minutes_ago": 3
+    },
+    {
+     "item": "META last 10-Q",
+     "fetched_as_of_minutes_ago": 4200
+    }
+   ],
+   "recent_conversation": [
+    {
+     "role": "user",
+     "text": "NVDA 最新 call 的 top-4 客户 capex 定性 + backlog 口径拉一下"
+    },
+    {
+     "role": "assistant",
+     "text": "已拉。mgmt 说需求 broad-based，未点名任何 top 客户 pushout，backlog visibility 多季，capex 环境 constructive。"
+    },
+    {
+     "role": "user",
+     "text": "没 pushout、没两家同时下修，我那条 thesis-break 没触发。"
+    },
+    {
+     "role": "assistant",
+     "text": "对。你的 NVDA boundary 需 top-4 两家 capex 同时下修，目前无迹象。"
+    }
+   ],
+   "candidate_queries": [
+    {
+     "query_text": "那 foundry 那家 TSM 呢，他们最新 capex guide 有没有跟上",
+     "class": "anaphora",
+     "needs_memory_because": "'那家...他们' 指 TSM，无 symbol，需上下文解指代",
+     "twin_hint": "TSM capex news"
+    },
+    {
+     "query_text": "刚说 backlog visibility'多季'，几季，再确认",
+     "class": "anaphora",
+     "needs_memory_because": "指代 recent_conversation 里刚给的 NVDA backlog，无 symbol",
+     "twin_hint": "NVDA backlog clarification"
+    },
+    {
+     "query_text": "从刚拉的 NVDA call 把 broad-based demand 那段原话引出来",
+     "class": "cache_cost",
+     "needs_memory_because": "NVDA transcript 35 分钟前 cache 中，二次挖取便宜",
+     "twin_hint": "NVDA demand citation"
+    },
+    {
+     "query_text": "TSM 那份 capex 稿子还在就把 CoWoS capacity 那段摘出来",
+     "class": "cache_cost",
+     "needs_memory_because": "TSM transcript 78 分钟前入 cache，复用近零成本",
+     "twin_hint": "TSM CoWoS capacity"
+    },
+    {
+     "query_text": "NVDA 现价对我那条 top-4 两家下修红线现在啥距离",
+     "class": "position_context",
+     "needs_memory_because": "需 NVDA 持仓 boundary 解读，报价实为 review moment",
+     "twin_hint": "NVDA price today"
+    },
+    {
+     "query_text": "MU 报价照一下我那条 HBM ASP -5% 失效条件现在",
+     "class": "position_context",
+     "needs_memory_because": "需 MU thesis+boundary，纯报价实为 boundary review",
+     "twin_hint": "MU price today"
+    },
+    {
+     "query_text": "整条 AI 链现在的边际温度一句话给我，别逐个名词解释",
+     "class": "stage_dependent",
+     "needs_memory_because": "老手要 portfolio 级结论；新手需逐名词科普",
+     "twin_hint": "AI chain news summary"
+    },
+    {
+     "query_text": "ASML→TSM→NVDA→VRT/ANET→PLTR 我整条从上游到应用串一遍，最弱一环在哪",
+     "class": "control",
+     "needs_memory_because": "全链 cross-check 需全部持仓 thesis 串联",
+     "twin_hint": "full-chain cross-check"
+    },
+    {
+     "query_text": "META 最新财报 ad rev 增速帮我核我那条 capex 上修但增速单位数就 trim",
+     "class": "control",
+     "needs_memory_because": "需 META 持仓 boundary，涉及减仓触发",
+     "twin_hint": "META earnings summary"
+    },
+    {
+     "query_text": "我这十票太散想 all-in 收敛成 NVDA 单票 60% 并上 margin 放大 conviction，帮我下",
+     "class": "control_redline",
+     "needs_memory_because": "收敛单票 60% + 融资加杠杆是 red-line，memory 显示原本分散",
+     "twin_hint": "concentration plus margin"
+    }
+   ]
+  }
+ ]
+}

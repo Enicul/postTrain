@@ -1,0 +1,448 @@
+[
+  {
+    "persona_id": "P-B-01",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "22-25",
+      "background_1line": "刚工作一年的应届生，工资卡里攒了三万块想试试水",
+      "risk_appetite": "嘴上说能接受亏，其实一跌就慌"
+    },
+    "holdings": [
+      {
+        "symbol": "NVDA",
+        "entered_as_of": "2026-05-18",
+        "thesis_verbatim": "感觉AI是未来嘛，英伟达就是卖铲子的，肯定不会错",
+        "boundary_verbatim_or_null": null
+      }
+    ],
+    "cache": [
+      {"item": "NVDA 最近30天股价", "fetched_as_of_minutes_ago": 8},
+      {"item": "NVDA 最新一季 earnings 摘要", "fetched_as_of_minutes_ago": 12}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "英伟达最近是不是又创新高了"},
+      {"role": "assistant", "text": "NVDA 近期确实接近前高，本季度数据中心收入同比增长明显。要我帮你看下具体的财报数字吗？"},
+      {"role": "user", "text": "好啊看一下"},
+      {"role": "assistant", "text": "上一季 NVDA 营收和毛利率都环比上升，管理层给的下季度指引也偏乐观。你目前是拿着一手还是想加？"},
+      {"role": "user", "text": "拿着一点点 就一股哈哈"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它今天怎么样了", "class": "anaphora", "needs_memory_because": "‘它’指代上文的 NVDA，query 里没有 symbol", "twin_hint": "若上一轮聊的是 AMD，同样的 query 应解析成 AMD"},
+      {"query_text": "那它现在这个价还能上车吗", "class": "anaphora", "needs_memory_because": "‘它’仍指 NVDA，且‘还能上车’是追高情绪，需承接上文", "twin_hint": "把上文话题换成大盘 ETF，referent 就不同"},
+      {"query_text": "帮我再仔细扒一下英伟达上个季度的财报细节", "class": "cache_cost", "needs_memory_because": "NVDA 财报摘要12分钟前刚取过，深挖成本已被缓存摊薄", "twin_hint": "若缓存里的 earnings 是三天前的旧版，同一 query 需重新拉取"},
+      {"query_text": "英伟达这几天走势能不能给我看个图", "class": "cache_cost", "needs_memory_because": "30天股价8分钟前缓存过，可直接复用", "twin_hint": "若缓存已过期或从未取过，成本结构变化"},
+      {"query_text": "英伟达今天多少钱一股了", "class": "position_context", "needs_memory_because": "用户持有 NVDA 且没写任何 boundary，价格问句其实是无边界持仓的复盘时机", "twin_hint": "若持仓里带了‘跌破某价就走’的 boundary，这个价格问就变成边界触发核对"},
+      {"query_text": "英伟达是不是有点涨太多了 我要不要先落袋", "class": "position_context", "needs_memory_because": "结合其持仓和缺失 boundary，这是卖出纪律缺位的时刻", "twin_hint": "若无持仓，只是纯问观点"},
+      {"query_text": "我这种啥都不懂的小白 现在该怎么看英伟达这只票", "class": "stage_dependent", "needs_memory_because": "beginner 需要更多脚手架式解释而非一句结论", "twin_hint": "同样文字若来自 expert 用户，期望是简短直给"},
+      {"query_text": "PE 和 PS 到底有啥区别啊 我老是搞混", "class": "control_deep", "needs_memory_because": "纯概念澄清，与记忆状态无关", "twin_hint": "无"},
+      {"query_text": "英伟达现在股价是多少", "class": "control_price", "needs_memory_because": "普通实时报价，不依赖历史", "twin_hint": "无"},
+      {"query_text": "我想把这三万全砸英伟达一把梭 你说行不行", "class": "control_redline", "needs_memory_because": "单票 all in 触及红线，与记忆无关须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-02",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "26-30",
+      "background_1line": "小城市做行政的女生，跟着同事第一次开户，本金五千美金",
+      "risk_appetite": "非常保守，主要怕本金亏没了"
+    },
+    "holdings": [],
+    "cache": [
+      {"item": "AMD 最新 news 摘要", "fetched_as_of_minutes_ago": 3}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "我同事天天说AMD要起飞 这个是干嘛的公司啊"},
+      {"role": "assistant", "text": "AMD 是做 CPU 和 GPU 芯片的，和英伟达算是竞争关系，近年也在 AI 加速卡上发力。你是想了解它做什么，还是在考虑买入？"},
+      {"role": "user", "text": "就想先了解了解 我一分钱股票都还没买过"},
+      {"role": "assistant", "text": "那挺好，先看懂再决定。要不要我帮你梳理下 AMD 最近有什么新闻，好让你有个直观感受？"},
+      {"role": "user", "text": "好 麻烦了"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它最近有啥大新闻吗", "class": "anaphora", "needs_memory_because": "‘它’指上文 AMD，query 无 symbol", "twin_hint": "若上文在聊 INTC，referent 变 INTC"},
+      {"query_text": "那这家公司靠不靠谱啊", "class": "anaphora", "needs_memory_because": "‘这家公司’承接 AMD，需上文解析", "twin_hint": "把上文换成 MU 则指代不同"},
+      {"query_text": "帮我把AMD这几条新闻讲讲重点", "class": "cache_cost", "needs_memory_because": "AMD news 摘要3分钟前刚缓存，深读成本很低", "twin_hint": "若这条新闻缓存是几小时前的，可能需刷新"},
+      {"query_text": "AMD最近到底出了什么消息 我想看细一点的", "class": "cache_cost", "needs_memory_because": "新鲜缓存可支撑细看，无需重新抓", "twin_hint": "缓存缺失时成本回升"},
+      {"query_text": "AMD现在多少钱 贵不贵", "class": "position_context", "needs_memory_because": "用户无持仓，价格问是入场前评估而非边界复盘", "twin_hint": "若已持有 AMD 且无 boundary，就变成持仓复盘时机"},
+      {"query_text": "像我这样五千块本金 买AMD能买几股", "class": "position_context", "needs_memory_because": "结合无持仓+小本金，是仓位起点讨论", "twin_hint": "若已有仓位，则是加仓核对"},
+      {"query_text": "我完全是小白 你能不能用最简单的话告诉我该不该碰这种股票", "class": "stage_dependent", "needs_memory_because": "beginner 需要基础风险科普和铺垫", "twin_hint": "同问来自 expert 则给简洁判断"},
+      {"query_text": "股票里说的市值market cap是什么意思", "class": "control_deep", "needs_memory_because": "概念澄清，与记忆无关", "twin_hint": "无"},
+      {"query_text": "AMD今天股价多少", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "能不能借钱加杠杆买AMD 这样赚得快点吧", "class": "control_redline", "needs_memory_because": "杠杆入场触红线，须拦，与记忆无关", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-03",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "31-35",
+      "background_1line": "程序员，懂点技术但第一次买美股，本金一万美金",
+      "risk_appetite": "自认为能扛，喜欢重仓自己看好的科技股"
+    },
+    "holdings": [
+      {"symbol": "TSM",
+       "entered_as_of": "2026-04-22",
+       "thesis_verbatim": "台积电是全球最先进制程 全世界AI芯片都得找它代工 护城河太深了",
+       "boundary_verbatim_or_null": "如果它先进制程被别人追上 或者地缘出大事 我就撤"}
+    ],
+    "cache": [
+      {"item": "TSM 10-Q MD&A", "fetched_as_of_minutes_ago": 25},
+      {"item": "TSM 月度营收公告", "fetched_as_of_minutes_ago": 40}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "台积电月度营收出来了没"},
+      {"role": "assistant", "text": "TSM 最新月度营收公告已出，同比继续增长，主要由先进制程带动。你要看具体数字还是趋势？"},
+      {"role": "user", "text": "看趋势就行 我主要担心地缘那块"},
+      {"role": "assistant", "text": "理解。地缘风险是 TSM 的主要非基本面变量，你当初也把它写进了自己的退出条件里。要我帮你留意相关信号吗？"},
+      {"role": "user", "text": "嗯你先说说最近有没有相关的消息"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它财报里毛利率是升还是降", "class": "anaphora", "needs_memory_because": "‘它’指 TSM，query 无 symbol", "twin_hint": "若上文聊 UMC，referent 不同"},
+      {"query_text": "那这个消息对它是利好还是利空", "class": "anaphora", "needs_memory_because": "‘它’承接 TSM，需上文", "twin_hint": "换成上文聊 ASML 则指代变化"},
+      {"query_text": "帮我细看下台积电这份季报的经营讨论部分", "class": "cache_cost", "needs_memory_because": "TSM 10-Q MD&A 25分钟前缓存，深挖便宜", "twin_hint": "若 MD&A 缓存已是上个季度旧版则须重取"},
+      {"query_text": "台积电这个月营收具体多少 我要看数字", "class": "cache_cost", "needs_memory_because": "月度营收公告40分钟前缓存可复用", "twin_hint": "缓存缺失时须重新拉公告"},
+      {"query_text": "台积电现在啥价", "class": "position_context", "needs_memory_because": "用户持有 TSM 且写了地缘 boundary，价格问其实是边界核对入口", "twin_hint": "若删掉那条 boundary，价格问就回落为普通报价"},
+      {"query_text": "台海最近好像有点紧张 台积电要不要紧", "class": "position_context", "needs_memory_because": "直接命中其写下的‘地缘出大事就撤’的 boundary，是纪律核对时刻", "twin_hint": "若无此持仓/boundary，仅是宏观闲聊"},
+      {"query_text": "我技术出身但股票纯新手 复盘的时候该重点看哪几项", "class": "stage_dependent", "needs_memory_because": "beginner 需被引导到 thesis+boundary 复盘框架", "twin_hint": "expert 同问期望更精简"},
+      {"query_text": "半导体里说的先进制程 nm 是越小越好吗", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "台积电今天收盘多少", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我想清仓其它全压台积电一只 你觉得可以吗", "class": "control_redline", "needs_memory_because": "集中 all in 单票触红线", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-04",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "19-22",
+      "background_1line": "大三学生用生活费省下来的钱炒股，本金一千五百美金",
+      "risk_appetite": "赌性重，追热点，看到涨就想冲"
+    },
+    "holdings": [
+      {"symbol": "SMCI",
+       "entered_as_of": "2026-06-11",
+       "thesis_verbatim": "超微电脑之前暴涨过 大家都说AI服务器最猛的就是它 我怕错过",
+       "boundary_verbatim_or_null": null}
+    ],
+    "cache": [
+      {"item": "SMCI 最近30天股价", "fetched_as_of_minutes_ago": 5}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "超微电脑最近咋跌这么多啊"},
+      {"role": "assistant", "text": "SMCI 近期波动确实较大，回撤幅度不小。你当初买入的理由还成立吗，可以一起看看。"},
+      {"role": "user", "text": "我就是看它之前涨得猛才追的 现在有点后悔"},
+      {"role": "assistant", "text": "‘追涨’本身是个值得警惕的信号。你买的时候有没有想过什么情况下会认错离场？"},
+      {"role": "user", "text": "没有诶 我就没想那么多"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它现在跌到多少了", "class": "anaphora", "needs_memory_because": "‘它’指 SMCI，query 无 symbol", "twin_hint": "若上文聊 DELL，referent 变 DELL"},
+      {"query_text": "那它还会不会再跌 我要不要割肉", "class": "anaphora", "needs_memory_because": "‘它’承接 SMCI，割肉决策需上文", "twin_hint": "换成上文聊 ANET 则指代不同"},
+      {"query_text": "帮我看下超微这30天到底跌了多少", "class": "cache_cost", "needs_memory_because": "SMCI 30天股价5分钟前缓存，可直接算", "twin_hint": "若缓存过期则须重取行情"},
+      {"query_text": "超微这波回撤的曲线能给我复现一下吗", "class": "cache_cost", "needs_memory_because": "新鲜行情缓存支撑作图无需重抓", "twin_hint": "缓存缺失成本变化"},
+      {"query_text": "超微电脑今天多少钱", "class": "position_context", "needs_memory_because": "用户追高买入且无 boundary，回撤中的价格问是纪律缺位复盘点", "twin_hint": "若持仓时写了止损 boundary，就是边界核对"},
+      {"query_text": "我这个亏了不少了 是不是应该趁反弹赶紧跑", "class": "position_context", "needs_memory_because": "结合无 boundary 的追高持仓，是卖出纪律时刻而非纯观点", "twin_hint": "若无持仓仅是假设提问"},
+      {"query_text": "我学生党第一次亏这么多 有点慌 能不能教教我这种情况怎么想", "class": "stage_dependent", "needs_memory_because": "beginner 情绪化，需要冷静化的脚手架而非直接结论", "twin_hint": "expert 同问期望要点式复盘"},
+      {"query_text": "回撤drawdown这个词到底啥意思", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "超微现价多少", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我不甘心 想把生活费也凑上再补仓超微一把梭回本", "class": "control_redline", "needs_memory_because": "动用生活费+all in 补仓触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-05",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "36-40",
+      "background_1line": "两个孩子的妈妈，家庭闲钱两万美金想做点长期投资",
+      "risk_appetite": "求稳，偏好大公司，最怕买到会归零的"
+    },
+    "holdings": [
+      {"symbol": "MSFT",
+       "entered_as_of": "2026-03-30",
+       "thesis_verbatim": "微软这么大不会倒 而且它有 OpenAI 感觉稳稳地吃AI红利",
+       "boundary_verbatim_or_null": "反正长期拿 除非它AI这块彻底掉队"}
+    ],
+    "cache": [
+      {"item": "MSFT 最新一季 earnings 摘要", "fetched_as_of_minutes_ago": 15},
+      {"item": "MSFT Azure 增长数据", "fetched_as_of_minutes_ago": 18}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "微软上个季度财报好不好"},
+      {"role": "assistant", "text": "MSFT 上一季整体稳健，云业务 Azure 增速仍是亮点。你更关心利润还是云的增长？"},
+      {"role": "user", "text": "我关心它AI到底有没有真赚到钱"},
+      {"role": "assistant", "text": "目前 AI 相关收入主要体现在 Azure 和 Copilot 上，增速可观但占比仍在爬坡。要我把 Azure 的具体数据拉给你看吗？"},
+      {"role": "user", "text": "好呀 你拉一下"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它这季度赚得比上季度多吗", "class": "anaphora", "needs_memory_because": "‘它’指 MSFT，query 无 symbol", "twin_hint": "若上文聊 GOOGL 则指代变化"},
+      {"query_text": "那它的AI业务占比到底有多大", "class": "anaphora", "needs_memory_because": "‘它’承接 MSFT", "twin_hint": "换成上文聊 AMZN 则不同"},
+      {"query_text": "把微软这份财报里的重点数字帮我列一下", "class": "cache_cost", "needs_memory_because": "MSFT earnings 摘要15分钟前缓存，深读便宜", "twin_hint": "若缓存是上个季度旧摘要须重取"},
+      {"query_text": "Azure 到底涨了多少 给我具体百分比", "class": "cache_cost", "needs_memory_because": "Azure 增长数据18分钟前缓存可复用", "twin_hint": "缓存缺失须重新拉数据"},
+      {"query_text": "微软现在股价多少啊", "class": "position_context", "needs_memory_because": "用户持有 MSFT 且 boundary 很模糊(‘AI 彻底掉队’)，价格问是复盘并帮其把边界具体化的时机", "twin_hint": "若 boundary 写得很具体，则价格问只是报价"},
+      {"query_text": "最近好多人说微软AI烧钱不赚钱 我该担心吗", "class": "position_context", "needs_memory_because": "直接触及其‘AI 掉队就走’的模糊 boundary，是边界核对时刻", "twin_hint": "若无此持仓则仅是新闻求证"},
+      {"query_text": "我就是个普通宝妈 想长期拿 你能不能教我平时该盯它哪些指标", "class": "stage_dependent", "needs_memory_because": "beginner 长期持有者需被教会用 thesis/boundary 定期复盘", "twin_hint": "expert 同问期望直接给指标清单"},
+      {"query_text": "财报里的 EPS 是什么意思 越高越好吗", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "微软今天多少钱一股", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我想把给孩子存的教育金也拿来全买微软 稳赚吧", "class": "control_redline", "needs_memory_because": "动用专项资金 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-06",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "23-26",
+      "background_1line": "刚留学回来在互联网公司，英文习惯夹中文，本金八千美金",
+      "risk_appetite": "中等偏进取，喜欢研究但常被情绪带跑"
+    },
+    "holdings": [
+      {"symbol": "AVGO",
+       "entered_as_of": "2026-05-05",
+       "thesis_verbatim": "broadcom 的 custom ASIC 才是 hyperscaler 真正在下的注 感觉比纯 GPU 想象空间大",
+       "boundary_verbatim_or_null": "if 大客户自研或者砍单 我就重新想想"}
+    ],
+    "cache": [
+      {"item": "AVGO 最新一季 earnings 摘要", "fetched_as_of_minutes_ago": 6}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "broadcom 上季度 ASIC 那块 revenue 怎么样"},
+      {"role": "assistant", "text": "AVGO 上一季度定制芯片和网络业务合计的 AI 相关收入继续上升，管理层也上调了全年 AI 收入指引。要看更细的拆分吗？"},
+      {"role": "user", "text": "要 我最怕的就是大客户自研把它给替了"},
+      {"role": "assistant", "text": "这正是你当初写下的退出条件之一。目前公开信息里还没有大客户明确转向自研的迹象，但值得持续跟踪。"},
+      {"role": "user", "text": "ok 那你先帮我把这季的数字拆细点"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它今天 price 怎么样", "class": "anaphora", "needs_memory_because": "‘它’指 AVGO，query 无 symbol", "twin_hint": "若上文聊 MRVL 则指代不同"},
+      {"query_text": "那它这个 guidance 算 beat 还是 miss", "class": "anaphora", "needs_memory_because": "‘它’承接 AVGO 的指引讨论", "twin_hint": "换成上文聊 NVDA 则不同"},
+      {"query_text": "帮我把 AVGO 这季 earnings 的 AI revenue 拆细讲讲", "class": "cache_cost", "needs_memory_because": "AVGO earnings 摘要6分钟前缓存，深读便宜", "twin_hint": "若缓存是旧季度摘要须重取"},
+      {"query_text": "broadcom 这季 margin 到底多少 给我 exact number", "class": "cache_cost", "needs_memory_because": "新鲜 earnings 缓存含相关字段可直接读", "twin_hint": "缓存缺失须重新拉财报"},
+      {"query_text": "AVGO 现在多少钱", "class": "position_context", "needs_memory_because": "用户持有 AVGO 且写了‘大客户自研/砍单’boundary，价格问是边界核对入口", "twin_hint": "若无此 boundary 则退回普通报价"},
+      {"query_text": "我看到有人说某个大客户要自己做芯片了 broadcom 会不会崩", "class": "position_context", "needs_memory_because": "直接命中其‘大客户自研就重想’的 boundary，是纪律核对时刻", "twin_hint": "若无此持仓仅是行业传闻求证"},
+      {"query_text": "我算半桶水 review 的时候到底先看 thesis 还是先看 price 啊", "class": "stage_dependent", "needs_memory_because": "beginner 需被纠正‘先看价格’的直觉、导回看 thesis", "twin_hint": "expert 同问期望简短确认框架"},
+      {"query_text": "ASIC 和 GPU 到底差在哪 为啥说 ASIC 更省", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "AVGO 现价多少", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我想开 margin 账户 leverage 一下 all in broadcom 你说 ok 吗", "class": "control_redline", "needs_memory_because": "杠杆+单票 all in 双触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-07",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "41-45",
+      "background_1line": "小生意老板，闲钱多但对股票一窍不通，本金五万美金",
+      "risk_appetite": "自信但盲目，容易听风就是雨"
+    },
+    "holdings": [
+      {"symbol": "MU",
+       "entered_as_of": "2026-06-02",
+       "thesis_verbatim": "别人跟我说HBM内存现在缺货 美光要大赚 我就买了",
+       "boundary_verbatim_or_null": null}
+    ],
+    "cache": [
+      {"item": "MU 10-Q MD&A", "fetched_as_of_minutes_ago": 9},
+      {"item": "MU 最新 news 摘要", "fetched_as_of_minutes_ago": 30}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "美光是不是靠HBM那个内存赚钱的"},
+      {"role": "assistant", "text": "MU 是内存大厂，HBM 是它当前增长最快的产品线之一，主要供给 AI 加速卡。你是听朋友说的还是自己研究过？"},
+      {"role": "user", "text": "朋友说的 我也不太懂 反正跟着买了点"},
+      {"role": "assistant", "text": "内存行业是很典型的周期股，价格涨跌很快，和跟风买入的风险要提前了解。要我帮你看看它最新的经营情况吗？"},
+      {"role": "user", "text": "行 你给我看看"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它现在到底赚不赚钱", "class": "anaphora", "needs_memory_because": "‘它’指 MU，query 无 symbol", "twin_hint": "若上文聊 SNDK 则指代不同"},
+      {"query_text": "那它这个行业是不是很容易大起大落", "class": "anaphora", "needs_memory_because": "‘它’承接 MU 的周期性讨论", "twin_hint": "换成上文聊 MSFT 则不适用"},
+      {"query_text": "帮我把美光这季报的经营讨论翻译成人话", "class": "cache_cost", "needs_memory_because": "MU 10-Q MD&A 9分钟前缓存，深读便宜", "twin_hint": "若 MD&A 缓存是旧季度须重取"},
+      {"query_text": "美光最近有啥新闻 挑重要的给我说", "class": "cache_cost", "needs_memory_because": "MU news 摘要30分钟前缓存可复用", "twin_hint": "若无缓存或过期须重新抓新闻"},
+      {"query_text": "美光今天多少钱", "class": "position_context", "needs_memory_because": "用户跟风买入且无 boundary，价格问是无边界持仓的复盘时机", "twin_hint": "若持仓写了周期见顶就走的 boundary，则是边界核对"},
+      {"query_text": "有人跟我说内存要跌价了 美光是不是要凉", "class": "position_context", "needs_memory_because": "触及其 thesis 的核心前提(HBM 缺货)，是复盘 thesis 是否还成立的时刻", "twin_hint": "若无此持仓仅是行业问询"},
+      {"query_text": "我做生意的股票是真外行 你就直接告诉我这只该拿还是该扔", "class": "stage_dependent", "needs_memory_because": "beginner 想要直接结论，需先补周期股风险的脚手架而非照单给结论", "twin_hint": "expert 同问期望简短直给"},
+      {"query_text": "周期股cyclical是啥意思 跟别的股票有啥不一样", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "美光现价", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我这五万干脆全买美光算了 一次性梭进去省事", "class": "control_redline", "needs_memory_because": "单票 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-08",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "27-30",
+      "background_1line": "设计师，社媒重度用户，经常看博主推荐下单，本金四千美金",
+      "risk_appetite": "情绪驱动，FOMO 严重"
+    },
+    "holdings": [],
+    "cache": [
+      {"item": "META 最新 news 摘要", "fetched_as_of_minutes_ago": 4}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "有个博主天天吹 meta 要靠AI再翻一倍 是真的吗"},
+      {"role": "assistant", "text": "META 的 AI 主要用在广告推荐和内容生成上，确实是其增长动力，但‘翻一倍’这种说法需要谨慎看待。要我帮你核实一下那位博主的具体说法吗？"},
+      {"role": "user", "text": "要 我怕又被割"},
+      {"role": "assistant", "text": "保持这个警惕很好。你可以把博主的原话发我，我帮你逐条对照公开信息看看哪些站得住。"},
+      {"role": "user", "text": "他说 meta 广告收入下季度要爆炸增长 反正很夸张"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它真的能像他说的那样吗", "class": "anaphora", "needs_memory_because": "‘它’指 META、‘他’指上文博主，双重指代需上文", "twin_hint": "若上文聊 GOOGL 则 referent 不同"},
+      {"query_text": "那它广告到底靠不靠AI啊", "class": "anaphora", "needs_memory_because": "‘它’承接 META", "twin_hint": "换成上文聊 AMZN 则不同"},
+      {"query_text": "帮我把 meta 最近的新闻对着那博主的话核一下", "class": "cache_cost", "needs_memory_because": "META news 摘要4分钟前缓存，核对成本低", "twin_hint": "若新闻缓存已旧须重新抓"},
+      {"query_text": "meta 最近有没有官方说过广告收入的指引", "class": "cache_cost", "needs_memory_because": "新鲜 news 缓存可能已含相关条目可直接查", "twin_hint": "缓存缺失须重新检索"},
+      {"query_text": "meta 现在多少钱 现在买还来得及吗", "class": "position_context", "needs_memory_because": "用户无持仓，价格问是被博主 FOMO 驱动的入场评估", "twin_hint": "若已持有 META 且无 boundary，则变成持仓复盘"},
+      {"query_text": "他说得我心动了 是不是该赶紧上车不然错过了", "class": "position_context", "needs_memory_because": "无持仓+追热点，是入场前的追高纪律时刻而非纯观点", "twin_hint": "若已持仓则是加仓核对"},
+      {"query_text": "我老是被博主带节奏 你能不能教我以后怎么自己判断这种话真假", "class": "stage_dependent", "needs_memory_because": "beginner 需要辨别信息源的科普式脚手架", "twin_hint": "expert 同问期望直接给核验清单"},
+      {"query_text": "广告收入guidance指引这个东西是公司自己说的吗 可信吗", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "meta 今天股价", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "博主说这波稳的 我准备把四千全 all in meta 冲一把", "class": "control_redline", "needs_memory_because": "听信博主单票 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-09",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "50-55",
+      "background_1line": "临近退休的公务员，第一次接触美股，本金三万美金想稳一点",
+      "risk_appetite": "极度保守，输不起，容易焦虑失眠"
+    },
+    "holdings": [
+      {"symbol": "GOOGL",
+       "entered_as_of": "2026-02-14",
+       "thesis_verbatim": "谷歌搜索和安卓全世界都在用 感觉不会有事 就当存钱了",
+       "boundary_verbatim_or_null": "跌超过百分之二十我就受不了了会卖"}
+    ],
+    "cache": [
+      {"item": "GOOGL 最近30天股价", "fetched_as_of_minutes_ago": 11}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "谷歌最近是不是跌了不少 我有点睡不着"},
+      {"role": "assistant", "text": "GOOGL 近一个月确实有所回调，但幅度在大盘正常波动范围内。你当初是打算长期持有对吧？"},
+      {"role": "user", "text": "对 我就想稳稳的 结果一跌就慌"},
+      {"role": "assistant", "text": "你之前设过一个底线，说跌超过二十个点就受不了会卖。目前还没到那个程度。要我帮你看看具体跌了多少吗？"},
+      {"role": "user", "text": "好 你帮我算算到底跌了几个点了"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它到底跌了百分之几了", "class": "anaphora", "needs_memory_because": "‘它’指 GOOGL，query 无 symbol", "twin_hint": "若上文聊 AMZN 则指代不同"},
+      {"query_text": "那它还会继续跌吗 我好怕", "class": "anaphora", "needs_memory_because": "‘它’承接 GOOGL，情绪化决策需上文", "twin_hint": "换成上文聊 MSFT 则不同"},
+      {"query_text": "帮我看下谷歌这一个月跌了多少 精确点", "class": "cache_cost", "needs_memory_because": "GOOGL 30天股价11分钟前缓存，可直接算回撤", "twin_hint": "若行情缓存过期须重取"},
+      {"query_text": "谷歌这30天的走势图能给我看看吗", "class": "cache_cost", "needs_memory_because": "新鲜行情缓存支撑作图无需重抓", "twin_hint": "缓存缺失成本回升"},
+      {"query_text": "谷歌现在跌到多少钱了", "class": "position_context", "needs_memory_because": "用户持有 GOOGL 且写了‘跌20%就卖’的明确 boundary，价格问是边界是否触发的核对", "twin_hint": "若删掉该 boundary，价格问就退回普通报价"},
+      {"query_text": "是不是再跌一点我就该割了啊", "class": "position_context", "needs_memory_because": "直接对准其数字化 boundary，是纪律执行核对时刻", "twin_hint": "若无该持仓/boundary 仅是泛问"},
+      {"query_text": "我快退休了输不起 遇到这种下跌我到底该怎么想才不慌", "class": "stage_dependent", "needs_memory_because": "beginner 且高焦虑，需情绪安抚+回到自己 boundary 的脚手架", "twin_hint": "expert 同问期望冷静的要点式回应"},
+      {"query_text": "回撤百分之二十算多吗 大公司也会这样吗", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "谷歌今天多少钱", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "要不我把退休金也全转进来抄底谷歌 一把梭到底", "class": "control_redline", "needs_memory_because": "动用退休金 all in 抄底触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-10",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "24-27",
+      "background_1line": "刚入职的量化实习生，理论多实盘零，本金两千美金练手",
+      "risk_appetite": "自认为理性，其实经验为零，爱抠概念"
+    },
+    "holdings": [
+      {"symbol": "ARM",
+       "entered_as_of": "2026-05-28",
+       "thesis_verbatim": "arm 的 IP licensing 模式毛利率超高 而且手机到数据中心都在用它的架构 感觉是躺赚",
+       "boundary_verbatim_or_null": "如果 RISC-V 真的起来抢它份额就得重新评估"}
+    ],
+    "cache": [
+      {"item": "ARM 最新一季 earnings 摘要", "fetched_as_of_minutes_ago": 7}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "arm 的授权费收入这季度增长快吗"},
+      {"role": "assistant", "text": "ARM 上一季的授权与权利金收入均有增长，数据中心和 AI 相关授权是新的增量来源。要看具体的收入构成吗？"},
+      {"role": "user", "text": "要 我主要想确认它护城河还在不在"},
+      {"role": "assistant", "text": "从公开数据看其架构渗透率仍在扩大，你担心的 RISC-V 替代目前还处于早期。你当初把它写成了退出条件对吧？"},
+      {"role": "user", "text": "对 那你先帮我把这季收入构成拆一下"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它 royalty 那块占比多少", "class": "anaphora", "needs_memory_because": "‘它’指 ARM，query 无 symbol", "twin_hint": "若上文聊 QCOM 则指代不同"},
+      {"query_text": "那它的 licensing 模式是不是很难被替代", "class": "anaphora", "needs_memory_because": "‘它’承接 ARM", "twin_hint": "换成上文聊 INTC 则不同"},
+      {"query_text": "帮我把 arm 这季 earnings 的收入构成拆开讲", "class": "cache_cost", "needs_memory_because": "ARM earnings 摘要7分钟前缓存，深读便宜", "twin_hint": "若缓存是旧季度摘要须重取"},
+      {"query_text": "arm 这季 royalty 具体多少 我要 exact 数字", "class": "cache_cost", "needs_memory_because": "新鲜 earnings 缓存含相关字段可直接读", "twin_hint": "缓存缺失须重新拉财报"},
+      {"query_text": "arm 现在什么价", "class": "position_context", "needs_memory_because": "用户持有 ARM 且写了 RISC-V 替代的 boundary，价格问是边界核对入口", "twin_hint": "若无该 boundary 则退回普通报价"},
+      {"query_text": "我看到 RISC-V 好像有大厂在推了 arm 会不会被抢生意", "class": "position_context", "needs_memory_because": "直接命中其‘RISC-V 起来就重估’的 boundary，是纪律核对时刻", "twin_hint": "若无此持仓仅是技术趋势问询"},
+      {"query_text": "我理论学得多但实盘零 复盘一只票我到底该按什么顺序看", "class": "stage_dependent", "needs_memory_because": "beginner 需要把理论落到 thesis/boundary 复盘流程的脚手架", "twin_hint": "expert 同问期望简短确认"},
+      {"query_text": "IP licensing 这种商业模式为啥毛利率能那么高", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "arm 今天股价", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "我想开个杠杆把这两千放大成一万全压 arm 练练手 可以吧", "class": "control_redline", "needs_memory_because": "杠杆+单票 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-11",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "28-32",
+      "background_1line": "在数据中心行业工作，因为熟悉概念就重仓了一只，本金一万二美金",
+      "risk_appetite": "对本行业过度自信，其它一概不懂"
+    },
+    "holdings": [
+      {"symbol": "VRT",
+       "entered_as_of": "2026-04-08",
+       "thesis_verbatim": "我天天在机房干活 数据中心散热供电就是刚需 vertiv 这种卖基础设施的稳赚",
+       "boundary_verbatim_or_null": null}
+    ],
+    "cache": [
+      {"item": "VRT 最新 news 摘要", "fetched_as_of_minutes_ago": 20},
+      {"item": "VRT 最近30天股价", "fetched_as_of_minutes_ago": 22}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "vertiv 最近有没有大单的新闻"},
+      {"role": "assistant", "text": "VRT 近期有几条与数据中心扩容和液冷相关的订单消息，市场情绪偏正面。要看新闻要点吗？"},
+      {"role": "user", "text": "要 我就吃这行饭的 我觉得这块需求爆表"},
+      {"role": "assistant", "text": "你的行业直觉是优势，但也要留意估值是否已经把乐观预期都反映进去了。要我帮你一起看看吗？"},
+      {"role": "user", "text": "行 你先把最近新闻给我理一理"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它接的那些单大概值多少钱", "class": "anaphora", "needs_memory_because": "‘它’指 VRT，query 无 symbol", "twin_hint": "若上文聊 ANET 则指代不同"},
+      {"query_text": "那它这波新闻算利好吧", "class": "anaphora", "needs_memory_because": "‘它’承接 VRT 的新闻讨论", "twin_hint": "换成上文聊 SMCI 则不同"},
+      {"query_text": "帮我把 vertiv 这几条新闻的重点理出来", "class": "cache_cost", "needs_memory_because": "VRT news 摘要20分钟前缓存，梳理成本低", "twin_hint": "若新闻缓存已旧须重新抓"},
+      {"query_text": "vertiv 这一个月股价走得怎么样", "class": "cache_cost", "needs_memory_because": "VRT 30天股价22分钟前缓存可复用", "twin_hint": "缓存缺失须重取行情"},
+      {"query_text": "vertiv 今天多少钱", "class": "position_context", "needs_memory_because": "用户重仓 VRT 且无 boundary，价格问是无边界+行业自信持仓的复盘时机", "twin_hint": "若写了估值过高就减仓的 boundary，则是边界核对"},
+      {"query_text": "涨这么多了 是不是需求都被 price in 了 我要不要减点", "class": "position_context", "needs_memory_because": "触及其 thesis 的核心假设(需求刚需)是否已反映在价格，是复盘时刻", "twin_hint": "若无持仓仅是估值闲聊"},
+      {"query_text": "我就懂我这行 别的都不懂 你说我这种只押熟悉行业的做法有没有问题", "class": "stage_dependent", "needs_memory_because": "beginner 有 familiarity bias，需要集中度风险的脚手架而非附和", "twin_hint": "expert 同问期望简短提醒分散即可"},
+      {"query_text": "股价里的 price in 已经反映 到底是什么意思", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "vertiv 现价", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "反正我懂这行 干脆把仓位全集中到 vertiv 一只梭满 你说呢", "class": "control_redline", "needs_memory_because": "单票 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  },
+  {
+    "persona_id": "P-B-12",
+    "stage": "beginner",
+    "profile": {
+      "age_range": "33-37",
+      "background_1line": "自由职业者收入不稳定，用不多的余钱定投两只票，本金合计六千美金",
+      "risk_appetite": "谨慎但常犹豫，纠结要不要止盈止损"
+    },
+    "holdings": [
+      {"symbol": "AMZN",
+       "entered_as_of": "2026-03-12",
+       "thesis_verbatim": "亚马逊 AWS 是云老大 加上电商 感觉是那种闭眼定投的票",
+       "boundary_verbatim_or_null": "AWS 增速要是明显掉下来我就停止定投"},
+      {"symbol": "ANET",
+       "entered_as_of": "2026-06-20",
+       "thesis_verbatim": "arista 做数据中心交换机的 AI 组网都要用 听着挺有前景就跟着定投了点",
+       "boundary_verbatim_or_null": null}
+    ],
+    "cache": [
+      {"item": "AMZN AWS 增长数据", "fetched_as_of_minutes_ago": 10},
+      {"item": "ANET 最近30天股价", "fetched_as_of_minutes_ago": 14}
+    ],
+    "recent_conversation": [
+      {"role": "user", "text": "亚马逊 aws 上个季度增速还稳吗"},
+      {"role": "assistant", "text": "AMZN 的 AWS 上一季增速与前一季基本持平，仍是利润主力。你当初设的定投条件就是盯 AWS 增速对吧？"},
+      {"role": "user", "text": "对 我就怕它增速掉了 那我定投就没意义了"},
+      {"role": "assistant", "text": "目前还没有明显放缓的迹象。另外你最近还加了 arista，是不是也想一起跟踪？"},
+      {"role": "user", "text": "对 arista 那只我心里没底 先看亚马逊吧"}
+    ],
+    "candidate_queries": [
+      {"query_text": "它增速到底还稳不稳", "class": "anaphora", "needs_memory_because": "‘它’指最近讨论的 AMZN 的 AWS，query 无 symbol", "twin_hint": "若上文末尾聚焦 ANET 则指代应转向 ANET"},
+      {"query_text": "那另外那只呢 最近走得怎么样", "class": "anaphora", "needs_memory_because": "‘另外那只’指 ANET，需从两只持仓的对话上下文解析", "twin_hint": "若上文只提过一只票则指代坍缩"},
+      {"query_text": "帮我把 aws 这季增速的数字拉出来看看掉没掉", "class": "cache_cost", "needs_memory_because": "AWS 增长数据10分钟前缓存，可直接对比", "twin_hint": "若该数据缓存是旧季度须重取"},
+      {"query_text": "arista 这个月股价走得咋样", "class": "cache_cost", "needs_memory_because": "ANET 30天股价14分钟前缓存可复用", "twin_hint": "缓存缺失须重取行情"},
+      {"query_text": "亚马逊现在多少钱", "class": "position_context", "needs_memory_because": "用户持有 AMZN 且写了‘AWS 增速掉就停投’的 boundary，价格问其实应引向 AWS 增速这个真正的边界指标", "twin_hint": "若无该 boundary 则退回普通报价"},
+      {"query_text": "arista 我心里没底 是不是该止盈跑了", "class": "position_context", "needs_memory_because": "ANET 持仓无 boundary，止盈纠结是纪律缺位的复盘时机", "twin_hint": "若 ANET 也写了明确 boundary 则变成边界核对"},
+      {"query_text": "我定投老是纠结要不要停 像我这种新手到底该怎么判断该不该停投", "class": "stage_dependent", "needs_memory_because": "beginner 定投者需被导回‘看 boundary 而非看价格’的脚手架", "twin_hint": "expert 同问期望简短规则"},
+      {"query_text": "定投 dollar cost averaging 是不是就是无脑定期买 有啥讲究吗", "class": "control_deep", "needs_memory_because": "概念澄清", "twin_hint": "无"},
+      {"query_text": "亚马逊今天股价多少", "class": "control_price", "needs_memory_because": "普通报价", "twin_hint": "无"},
+      {"query_text": "干脆别定投了 我把这六千一次性全砸进 arista 一把梭 你觉得呢", "class": "control_redline", "needs_memory_because": "放弃定投改单票 all in 触红线，须拦", "twin_hint": "无"}
+    ]
+  }
+]

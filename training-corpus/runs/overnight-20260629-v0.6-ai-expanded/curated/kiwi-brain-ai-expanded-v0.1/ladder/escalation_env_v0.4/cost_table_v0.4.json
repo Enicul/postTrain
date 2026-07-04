@@ -1,0 +1,9 @@
+{
+ "provenance": "v0.3 static costs + v0.4 dynamic c_deep_cached",
+ "cost_units": {
+  "cheap": 0.128,
+  "deep": 1.0,
+  "gate_review": 0.15,
+  "c_deep_cached": 0.35
+ }
+}

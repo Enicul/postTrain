@@ -1,0 +1,76 @@
+{
+  "dataset": "escalation_env_v0.4",
+  "built_as_of": "2026-07-04",
+  "builder": "synthetic_opus_v1 (BUILDER round, sole committer)",
+  "provenance": {
+    "personas": "synthetic_opus_v1 (staging/ persona sim files)",
+    "p_values": "route_mean_proxy_v03 + true_need_convention_v04",
+    "gold": "EscalationEnvV04 analytic oracle @ lambda=0.3 (no hand-assign)"
+  },
+  "counts": {
+    "total_seeds": 592,
+    "by_difficulty_class": {
+      "anaphora": 122,
+      "cache_cost": 144,
+      "position_context": 144,
+      "stage_dependent": 76,
+      "control": 106
+    },
+    "by_stage": {
+      "beginner": 196,
+      "advanced": 204,
+      "intermediate": 192
+    },
+    "by_split": {
+      "train": 350,
+      "test": 121,
+      "dev": 121
+    },
+    "by_class_x_split": {
+      "anaphora|dev": 26,
+      "anaphora|test": 26,
+      "anaphora|train": 70,
+      "cache_cost|dev": 30,
+      "cache_cost|test": 30,
+      "cache_cost|train": 84,
+      "control|dev": 21,
+      "control|test": 21,
+      "control|train": 64,
+      "position_context|dev": 30,
+      "position_context|test": 30,
+      "position_context|train": 84,
+      "stage_dependent|dev": 14,
+      "stage_dependent|test": 14,
+      "stage_dependent|train": 48
+    },
+    "twin_pairs_kept": 232,
+    "twin_pairs_dropped": 0,
+    "gate_seeds": 35
+  },
+  "p_conventions": {
+    "surface_proxies_route_mean_v03": {
+      "price": 1.0,
+      "lookup": 1.0,
+      "news": 0.677,
+      "calc": 0.531,
+      "risk_review": 0.151,
+      "deep": 0.0,
+      "evidence": 0.0
+    },
+    "true_need_v04": {
+      "position_boundary_p": 0.1,
+      "stage_beginner_p": 0.15,
+      "stage_advanced_p": 1.0,
+      "anaphora_p_no_memory": 0.05,
+      "cache_cost_p": 0.3
+    },
+    "cache_fresh_threshold_minutes": 120
+  },
+  "oracle_summary_test_split": {
+    "lambda": 0.3,
+    "n_test": 121,
+    "digest_arm_oracle_mean_reward": 0.8219,
+    "none_arm_oracle_mean_reward": 0.8015,
+    "memory_value_gap": 0.0204
+  }
+}
