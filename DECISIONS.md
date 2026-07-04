@@ -1109,3 +1109,64 @@ Consequence:
   verdict.
 - Caveat carried forward: both today's probes are single-seed, n=31, construction-labeled
   train - directional negatives that closed the OPEN levers, not certified laws.
+
+## D-2026-07-04-011 - "Trainable-parameter budget must match data size": LoRA is a BOTTLENECK at the small end and a REGULARIZER at the large end - never merely a cost compromise; the 0.5B GRPO collapse is REATTRIBUTED to adapter capacity
+
+Decision:
+
+Two full-parameter fine-tuning probes on the SAME 160 rows / SAME frozen escalation test
+(n=48, lambda=0.3, oracle 0.8473), toggling ONLY the trainable-parameter budget
+(LoRA r=16 -> full-param), reverse in OPPOSITE directions - and together they give one
+principle. Origin: the owner's parameterization question ("我们的RL做的也是LoRA?…可以尝试
+全量微调嘛?"); the reattribution below is credited to that question.
+
+(1) AT THE SMALL END (0.5B), MORE trainable capacity RESCUES the model. Full-FT flipped the
+GRPO collapse: LoRA-GRPO 0.5B was 0.383 / gate 0.00 (collapsed 2/3 seeds); full-GRPO 0.5B
+from a full-SFT init is 0.7533 / gate 0.75 - NO collapse (EXP-2026-07-04-015). The full-SFT
+arm alone already moved gate 0.50 -> 0.75 at matched reward (0.5899 vs LoRA 0.6061).
+REATTRIBUTION: the 0.5B GRPO collapse is NOT a model-capacity floor - it is an
+ADAPTER-capacity floor (LoRA r=16). The collapse really happened (under LoRA); its CAUSE is
+reattributed. This is the campaign's SECOND self-correction (first: the multi-seed downgrade
+of the 1.5B headline).
+
+(2) AT THE LARGE END (7B), LESS trainable capacity is BETTER. Full-FT DESTROYED it:
+LoRA-SFT 7B was 0.7147; full-SFT 7B is 0.5079 - 20.7 pts WORSE (EXP-2026-07-04-016). At 160
+rows, LoRA at 7B acts as a REGULARIZER / protective shell; full-param updates over-write the
+pretrained priors on tiny data.
+
+(3) THE UNIFIED PRINCIPLE: TRAINABLE-PARAMETER BUDGET MUST MATCH DATA SIZE. Same 160 rows:
+0.5B needed MORE trainable capacity (full-FT rescued GRPO from adapter-floor collapse,
+0.383/0.00 -> 0.7533/0.75); 7B needed LESS (full-FT damaged it, 0.7147 -> 0.5079). LoRA is a
+BOTTLENECK at the small end and a REGULARIZER at the large end - never merely a cost
+compromise. "Use LoRA to save money" is the wrong frame; the right frame is matching
+trainable budget to how much the data can support.
+
+Why:
+
+The cleanest way to separate "model capacity" from "adapter capacity" is to hold model, data,
+and eval fixed and toggle ONLY the trainable-parameter budget. Doing that at both ends of the
+model-size range is what turns two isolated results into a principle: the SAME toggle helps at
+0.5B and hurts at 7B, so the operative variable is neither "bigger model" nor "more params"
+in the abstract - it is the RATIO of trainable capacity to data. The 0.5B non-collapse under
+full-FT is precisely what licenses reattributing the collapse from model floor to adapter
+floor: nothing else changed.
+
+Consequence:
+
+- Kill bar UNCHANGED: 0.5B full is still NOT deployable alone (gate 0.75 < 0.99). The
+  reattribution rewrites the WHY of the collapse, not its deployability.
+- E1 HONEST CONFOUND carried forward: the 7B full-FT used the LoRA-default lr (2e-4), NOT
+  retuned for full FT (full FT typically wants ~10x lower lr). E1's rigorous claim is narrow:
+  "full FT at UNCHANGED hyperparameters is much worse at 7B." E1b (a lower-lr full-FT sweep)
+  is PRE-REGISTERED AS OPTIONAL FOLLOW-UP, not committed.
+- FAILURE_TAXONOMY_GRPO_COLLAPSE.md: a single top addendum line points to this reattribution
+  (EXP-2026-07-04-015 / this D); the original analysis body is NOT rewritten - do not rewrite
+  history.
+- PORTFOLIO_INDEX: update the 0.5B collapse finding (reattribution) and add the
+  parameterization-budget principle as a new numbered research finding; both marked as
+  single-seed probes; refresh honest limits (the lr confound at E1).
+- Both probes are single-seed (seed 0); the collapsed LoRA baseline was 2/3 seeds. Directional
+  reattributions that closed the open capacity question, not seed-varied laws.
+- General lesson: trainable-parameter budget is a first-class hyperparameter that must scale
+  INVERSELY with the model-to-data ratio - small models on fixed data want more of it, large
+  models on the same data want less. Never treat LoRA as a pure cost lever.

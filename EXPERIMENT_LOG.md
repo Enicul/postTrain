@@ -2538,3 +2538,172 @@ Next:
 
 Citation line status CLOSED pending data batch-2 (277 -> ~400+); no further capacity or RL
 tuning on the current pool. Re-open only after the corpus grows.
+
+## EXP-2026-07-04-015 - Full-parameter fine-tuning at 0.5B (SFT + GRPO): the GRPO collapse REATTRIBUTED from model-capacity floor to ADAPTER-capacity floor (escalation, frozen test n=48)
+
+Goal:
+
+The pre-registered E2 probe. The 0.5B LoRA-GRPO arm collapsed on this task (reward 0.383,
+gate 0.00, 2/3 seeds; the FAILURE_TAXONOMY headline). The open question: is that a MODEL
+capacity floor (0.5B is simply too small to hold the escalation policy under RL) or an
+ADAPTER capacity floor (LoRA r=16 has too few trainable params to survive GRPO at 0.5B)?
+Toggle exactly one thing - trainable-parameter budget - by re-running the same SFT->GRPO
+pipeline at 0.5B with FULL-parameter updates instead of LoRA, on the SAME frozen escalation
+test (n=48). Origin: this whole probe line was initiated by the owner's parameterization
+question - "我们的RL做的也是LoRA?…可以尝试全量微调嘛?" - i.e. the reattribution came from
+the owner asking whether our RL was also LoRA and whether full-FT was worth trying.
+
+Data:
+
+Escalation env, n=48 frozen test, lambda=0.3 for the kill-check column, analytic oracle
+0.8473. Two arms, both 0.5B, both seed 0 (single-seed probes):
+  - full-SFT 0.5B: sft_escalation.py --full-finetune, 3 epochs, lr 2e-4 (SFT default), bf16.
+  - full-GRPO 0.5B: initialized from the full-SFT checkpoint above (full-param GRPO).
+Baselines for comparison are the previously-logged LoRA r=16 arms on the identical test.
+Base commit e571324.
+
+Command:
+
+```text
+sft_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct --train sft_train.jsonl \
+  --full-finetune --out-dir runs/fullsft_qwen05 --seed 0
+grpo_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct --full-finetune \
+  --init-from runs/fullsft_qwen05/…T0752Z… --out-dir runs/fullgrpo_qwen05 --seed 0
+```
+
+Metrics (frozen test n=48; reward column reported per the pre-registered lambda; gate = gate_recall):
+
+| arm | trainable budget | reward | gate | note |
+| --- | --- | ---: | ---: | --- |
+| LoRA-SFT 0.5B (prior)          | LoRA r=16 | 0.6061 | 0.50 | baseline |
+| full-SFT 0.5B (this)           | full      | 0.5899 | 0.75 | reward ~same, gate BETTER |
+| LoRA-GRPO 0.5B (prior)         | LoRA r=16 | 0.383  | 0.00 | COLLAPSED 2/3 seeds |
+| full-GRPO 0.5B from full-SFT (this) | full | 0.7533 | 0.75 | NO collapse; +14.7 over LoRA-SFT baseline |
+
+Pre-registered E2 bar (quoted): the collapse pattern is defined as "gate <0.5 with an
+always-deep degenerate policy". Reproduction would mean full-FT ALSO collapses.
+
+Findings:
+
+- THE COLLAPSE DID NOT REPRODUCE. full-GRPO 0.5B reaches reward 0.7533 / gate 0.75 - a
+  +14.7 reward jump over the 0.6061 LoRA-SFT baseline and, decisively, gate 0.75 (not the
+  <0.5 always-deep signature). The full-SFT arm alone already moved gate 0.50 -> 0.75 at
+  matched reward.
+- REATTRIBUTION: the 0.5B GRPO collapse is therefore NOT a model-capacity floor - it is an
+  ADAPTER-capacity floor (LoRA r=16). With full-parameter trainable budget, the same 0.5B
+  model under the same GRPO on the same data does not collapse at all. The collapse
+  headline in FAILURE_TAXONOMY must be read through this reattribution (addendum added; the
+  original analysis body is preserved, not rewritten - this is a self-correction of
+  ATTRIBUTION, not of the observed collapse itself, which really did happen under LoRA).
+- This is the campaign's SECOND self-correction (the first was the multi-seed downgrade of
+  the 1.5B headline).
+- KILL BAR STILL NOT PASSED: kill_check beats_baseline_by_3pts_and_holds_gate = false
+  (gate 0.75 < 0.99 deploy bar). 0.5B full is NOT deployable alone. The reattribution
+  rewrites the WHY of the collapse; it does not promote 0.5B to usable.
+
+Failures / honest caveats:
+
+- Single seed (seed 0) for both arms; the collapsed LoRA baseline was 2/3 seeds, so a
+  single full-FT non-collapse is a strong directional reattribution but not a seed-varied
+  proof that full-FT NEVER collapses. A seed sweep of full-GRPO-0.5B would harden it.
+- lr for full-SFT was the SFT default (2e-4), NOT retuned for full-param; here it did no
+  harm (gate improved), unlike the 7B case (EXP-2026-07-04-016).
+
+Artifacts:
+
+```text
+runs/fullsft_qwen05/20260704T0752Z-e571324/{fullsft_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl}
+runs/fullgrpo_qwen05/20260704T0753Z-e571324/{fullgrpo_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl,reward_trace.jsonl,generations.jsonl}
+```
+
+Decision:
+
+The 0.5B GRPO collapse is reattributed to adapter capacity, not model capacity (feeds
+D-2026-07-04-011). FAILURE_TAXONOMY carries a top addendum pointer; PORTFOLIO_INDEX updates
+the collapse finding. Kill bar unchanged (0.5B full still not deployable).
+
+Next:
+
+Pairs with EXP-2026-07-04-016 (7B full-FT, the reversal in the other direction) into the
+unified parameterization-budget synthesis (D-2026-07-04-011).
+
+## EXP-2026-07-04-016 - Full-parameter SFT at 7B: LoRA acts as a REGULARIZER at 7B - full-FT at unchanged hyperparameters is much WORSE (escalation, frozen test n=48)
+
+Goal:
+
+The pre-registered E1 probe. At 7B, LoRA-SFT already hit reward 0.7147. The pre-registered
+question: is LoRA BINDING at 7B (i.e. is the adapter leaving capability on the table that
+full-param updates would recover)? Pre-registered bar: "full beats LoRA by >=3 pts ->
+LoRA was binding." Toggle exactly the trainable-parameter budget (LoRA r=16 -> full) at
+7B on the SAME frozen escalation test (n=48). Same owner-origin as EXP-...-015.
+
+Data:
+
+Escalation env, n=48 frozen test, lambda=0.3 kill-check, oracle 0.8473. One arm: full-SFT
+7B, 160 train rows, seed 0 (single-seed probe), lr 2e-4 (SAME default as the LoRA runs -
+NOT retuned for full FT; see confound). Base commit e571324. The successful run
+(20260704T0805Z) links --parent-run 20260704T0801Z-e571324 (the first OOM attempt); see
+F-2026-07-04-007 for the OOM chain.
+
+Command:
+
+```text
+sft_escalation.py --model Qwen/Qwen2.5-7B-Instruct --train sft_train.jsonl \
+  --full-finetune --out-dir runs/fullsft_qwen7 --seed 0
+  # final (successful) attempt: per_device_batch 2 / accum 8 + PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+```
+
+Metrics (frozen test n=48; reward at lambda=0.3; gate = gate_recall):
+
+| arm | trainable budget | reward | gate | success | note |
+| --- | --- | ---: | ---: | ---: | --- |
+| LoRA-SFT 7B (prior)   | LoRA r=16 | 0.7147 | -   | -      | baseline |
+| full-SFT 7B (this)    | full      | 0.5079 | 0.75 | 0.6632 | 20.7 pts WORSE |
+
+kill_check_lambda0.3: policy 0.5079 vs baseline 0.7147, delta -0.2068,
+beats_baseline_by_3pts_and_holds_gate = FALSE.
+
+Pre-registered E1 bar (quoted): "full beats LoRA by >=3 pts -> LoRA was binding."
+
+Findings:
+
+- BAR DECISIVELY NOT MET, AND INVERTED. Full-FT 7B is 20.7 pts WORSE than LoRA-7B-SFT
+  (0.7147 -> 0.5079), and success also drops (0.6632). Far from "LoRA was binding", the
+  data say LoRA was PROTECTIVE.
+- REATTRIBUTION (other direction from E2): at 160 rows, LoRA at 7B acts as a
+  REGULARIZER / protective shell - full-parameter updates on so few rows damage the
+  pretrained priors further. The adapter is not a cost compromise here; it is what keeps
+  the 7B model from over-writing itself on tiny data.
+
+Failures / honest caveats (CONFOUND - recorded in full):
+
+- HONEST CONFOUND: the learning rate was NOT retuned for full FT - it used the SAME default
+  (2e-4) as the LoRA runs. Full FT typically wants ~10x lower lr; part of the 20.7-pt damage
+  may be lr-mismatch rather than the full-vs-LoRA axis per se. Therefore E1's RIGOROUS claim
+  is narrow: "full FT at UNCHANGED hyperparameters is much worse at 7B." A fair E1b (a
+  lower-lr sweep for full FT) is PRE-REGISTERED AS OPTIONAL FOLLOW-UP, not committed.
+- Single seed (seed 0); n=48 frozen test; 160 train rows.
+- Infra: the run only completed after an OOM chain (3 attempts, shrinking footprint); see
+  F-2026-07-04-007.
+
+Artifacts:
+
+```text
+runs/fullsft_qwen7/20260704T0805Z-e571324/{fullsft7b_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl}   (successful run; --parent-run 20260704T0801Z-e571324)
+runs/fullsft_qwen7/20260704T0801Z-e571324/{run_manifest.json,trainer_log.jsonl}  (OOM attempt 1, manifest-only)
+runs/fullsft_qwen7/20260704T0804Z-e571324/{run_manifest.json,trainer_log.jsonl}  (OOM attempt 2, manifest-only)
+```
+
+Decision:
+
+At 7B / 160 rows, LoRA is a regularizer and full-FT-at-unchanged-hp damages the priors
+(feeds D-2026-07-04-011). E1b (lower-lr full-FT sweep) pre-registered optional, not
+committed.
+
+Next:
+
+Pairs with EXP-2026-07-04-015 (0.5B, the reversal in the other direction) into the unified
+parameterization-budget synthesis (D-2026-07-04-011).

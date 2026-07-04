@@ -1402,3 +1402,49 @@ identity of the model (a cross-family arm), the model id is a LOAD-BEARING param
 and must be reviewed like a hyperparameter - wrong-family numbers look completely
 normal and would silently corrupt the cross-family conclusion. Add model-id
 verification to the pre-launch review checklist for any model-identity experiment.
+
+## F-2026-07-04-007 - 7B full-FT OOM chain (3 attempts) + discovery of a coexisting non-ours GPU process; fixed by shrinking our footprint
+
+Symptom:
+
+Standing up the 7B full-parameter SFT arm (EXP-2026-07-04-016) OOMed twice on GPU 0
+before succeeding on the third configuration. The GPU had less free memory than a 7B
+full-FT job expected.
+
+Evidence:
+
+```text
+runs/fullsft_qwen7/20260704T0801Z-e571324/{run_manifest.json,trainer_log.jsonl}  (attempt 1: batch 8 / accum 2 - OOM)
+runs/fullsft_qwen7/20260704T0804Z-e571324/{run_manifest.json,trainer_log.jsonl}  (attempt 2: batch 4 / accum 4 - OOM by ~800MB)
+runs/fullsft_qwen7/20260704T0805Z-e571324/{run_manifest.json,trainer_log.jsonl}  (attempt 3: batch 2 / accum 8 + expandable_segments - SUCCEEDED)
+```
+
+Attempts 2 and 3 carry parent_run_id 20260704T0801Z-e571324 (linked back to the first
+attempt); the successful run is the source of the EXP-...-016 numbers.
+
+Diagnosis:
+
+- Attempt 1 (per_device_batch 8, accum 2): OOM at ~44.7 GB ours PLUS ~34.16 GB occupied by
+  a COEXISTING process on the same GPU 0 - discovered here to be `compute_capture.py`
+  (deepseek / confiqa), running under the SAME account but NOT ours, holding ~34 GB.
+- Attempt 2 (per_device_batch 4, accum 4): OOM by only ~800 MB - i.e. we were just over the
+  line once the neighbor's ~34 GB was accounted for.
+- Attempt 3 (per_device_batch 2, accum 8, PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True):
+  fit and completed. Effective tokens/step held roughly constant by raising accumulation as
+  batch shrank.
+
+Fix:
+
+Completed E1 by SHRINKING OUR FOOTPRINT (batch 8->4->2, accum 2->4->8, plus
+expandable_segments) to coexist with the neighbor process. We did NOT touch, kill, or
+migrate the coexisting `compute_capture.py` process - it is not ours. The ownership /
+right-to-reclaim question for that ~34 GB has been ESCALATED TO THE OWNER (pending).
+
+Effect / lesson:
+
+ON A SHARED BOX, BUDGET AROUND YOUR NEIGHBORS, DON'T EVICT THEM. A ~34 GB coexisting
+process (same account, different owner) is why a 7B full-FT that "should fit" did not; the
+right move was to shrink our own footprint and link the OOM attempts as parent runs for a
+legible chain, not to reclaim memory we don't own. Raise accumulation as you drop batch to
+hold the effective batch size. Ownership of the neighbor process escalated to the owner
+(pending) rather than resolved unilaterally.

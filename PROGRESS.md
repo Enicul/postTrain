@@ -2,6 +2,52 @@
 
 Last updated: 2026-07-04
 
+## Round 7 Wrap-Up: full-FT probes - 0.5B GRPO collapse REATTRIBUTED to adapter capacity; LoRA protective at 7B (2026-07-04)
+
+Two full-parameter fine-tuning probes on the SAME 160 rows / SAME frozen escalation test
+(n=48, lambda=0.3, oracle 0.8473), toggling ONLY the trainable-parameter budget
+(LoRA r=16 -> full). They reverse in OPPOSITE directions and give one principle. Origin:
+the owner's parameterization question ("我们的RL做的也是LoRA?…可以尝试全量微调嘛?").
+
+**E2 - 0.5B full-FT: THE REVERSAL (EXP-2026-07-04-015).** full-SFT 0.5B = reward 0.5899 /
+gate 0.75 (LoRA-SFT was 0.6061 / 0.50 - reward ~same, gate BETTER). full-GRPO 0.5B from
+the full-SFT init = reward 0.7533 / gate 0.75, +14.7 over the 0.6061 LoRA-SFT baseline and
+NO collapse - versus LoRA-GRPO's 0.383 / gate 0.00 (collapsed 2/3 seeds). The pre-registered
+collapse signature (gate <0.5 with an always-deep policy) did NOT reproduce. So the 0.5B
+GRPO collapse is REATTRIBUTED from a MODEL-capacity floor to an ADAPTER-capacity floor
+(LoRA r=16). This is the campaign's SECOND self-correction (first: the multi-seed 1.5B
+downgrade). Kill bar STILL not passed (gate 0.75 < 0.99) - 0.5B full is not deployable
+alone; only the collapse headline is rewritten.
+
+**E1 - 7B full-FT SFT: THE REVERSAL, OTHER DIRECTION (EXP-2026-07-04-016).** full-SFT 7B =
+reward 0.5079 / gate 0.75 - 20.7 pts WORSE than LoRA-7B-SFT (0.7147). The pre-registered
+bar ("full beats LoRA by >=3 -> LoRA was binding") is NOT met; it INVERTED. At 160 rows,
+LoRA at 7B is a REGULARIZER / protective shell - full-param updates damage the priors
+further. HONEST CONFOUND: lr was NOT retuned for full FT (same 2e-4 default; full FT wants
+~10x lower), so part of the damage may be lr-mismatch; E1's rigorous claim is narrow ("full
+FT at unchanged hyperparameters is much worse"), and E1b (a low-lr sweep) is pre-registered
+OPTIONAL, not committed.
+
+**THE SYNTHESIS - "trainable-parameter budget must match data size" (D-2026-07-04-011).**
+Same 160 rows: 0.5B needed MORE trainable capacity (full-FT rescued GRPO from adapter-floor
+collapse, 0.383/0.00 -> 0.7533/0.75); 7B needed LESS (full-FT destroyed it, 0.7147 ->
+0.5079). LoRA is a BOTTLENECK at the small end and a REGULARIZER at the large end - never
+merely a cost compromise.
+
+**Infra (F-2026-07-04-007).** The 7B run completed only after a 3-attempt OOM chain
+(batch 8/accum 2 OOM at 44.7GB ours + 34.16GB neighbor; batch 4/accum 4 OOM by ~800MB;
+batch 2/accum 8 + expandable_segments SUCCEEDED). A ~34GB coexisting process
+(compute_capture.py, deepseek/confiqa, same account not ours) on GPU 0 was discovered and
+NOT touched; we shrank our footprint to coexist. Ownership escalated to the owner (pending).
+
+Evidence (all local this round; weights git-excluded): `runs/fullsft_qwen05/`,
+`runs/fullgrpo_qwen05/`, `runs/fullsft_qwen7/` (3 dirs: 1 successful + 2 OOM manifest-only).
+Caveats: both probes single-seed (seed 0); the LoRA-GRPO collapse baseline was 2/3 seeds -
+directional reattributions, not seed-varied laws. The 5 new run_manifest.json logging_dir
+hostname suffixes were redacted per convention. Log ids: EXP-2026-07-04-015 (0.5B),
+-016 (7B); F-2026-07-04-007 (OOM chain); D-2026-07-04-011 (parameterization-budget
+synthesis); CP-2026-07-04-005.
+
 ## Round 6 Wrap-Up: citation chain CLOSED - capacity null, RL null, data is the lever (2026-07-04)
 
 Two clean negatives closed the citation attribution chain, and the founding "do we need

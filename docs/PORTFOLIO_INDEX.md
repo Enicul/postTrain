@@ -201,12 +201,20 @@ citation env v2 (D-2026-07-04-002/008).
    are now mean±std with single-seed cells flagged (D-2026-07-04-006). This is exactly
    why we reseeded.
 
-4. **Collapse is probabilistic, not deterministic.** 0.5B GRPO collapses in **2/3 seeds**
+4. **Collapse is probabilistic, not deterministic — and is an ADAPTER-capacity floor, not a
+   model-capacity floor (REATTRIBUTED 2026-07-04).** 0.5B GRPO collapses in **2/3 seeds**
    (0.383 / gate 0.0); seed 1 partially recovered (0.6448 / gate 0.5, beating SFT). And
    the temperature probe showed the collapse is **genuine knowledge loss, not a decoding
    artifact**: on the collapsed adapter the gate action is absent at T=0.7 (presence 0.0)
    and barely surfaces at T=1.0 (presence 0.25 / per-sample gate 0.0625) — below the
-   pre-registered 0.9 threshold (EXP-2026-07-04-006/007).
+   pre-registered 0.9 threshold (EXP-2026-07-04-006/007). **REATTRIBUTION:** re-running the
+   *same* 0.5B GRPO with **full-parameter** updates instead of LoRA r=16 does **not collapse**
+   — full-GRPO 0.5B reaches **reward 0.7533 / gate 0.75** (+14.7 over the 0.6061 LoRA-SFT
+   baseline; full-SFT 0.5B already moved gate 0.50 → 0.75 at matched reward). So the collapse
+   is caused by the **adapter's** trainable-parameter budget (LoRA r=16), **not** by 0.5B model
+   capacity. This is the campaign's **second self-correction** (first: the multi-seed 1.5B
+   downgrade). Kill bar unchanged — 0.5B full still not deployable (gate 0.75 < 0.99).
+   *Single-seed probe (seed 0).* (EXP-2026-07-04-015, D-2026-07-04-011.)
 
 5. **Non-monotonic 7B.** 7B SFT (0.7147 / gate 0.75) is *worse* than 3B and 1.5B
    SFT — a 160-row LoRA is too thin to move 7B priors. Scale helps until the data
@@ -259,6 +267,25 @@ citation env v2 (D-2026-07-04-002/008).
    train data is construction-labeled (spot-audited 93.3%), not human-gold
    (EXP-2026-07-04-004/011/012/013/014, D-2026-07-04-002/008/009/010, F-2026-07-04-003).
 
+9. **Trainable-parameter budget must match data size — LoRA is a bottleneck at the small end
+   and a regularizer at the large end (single-seed probes).** Two full-parameter fine-tuning
+   probes on the **same 160 rows / same frozen escalation test (n=48)**, toggling *only* the
+   trainable budget (LoRA r=16 → full), reverse in **opposite directions**. *At 0.5B, MORE
+   capacity rescues:* full-GRPO 0.5B goes **0.383 / gate 0.00 → 0.7533 / gate 0.75**, no
+   collapse — the collapse was an adapter-capacity floor, not a model floor (finding #4,
+   reattributed). *At 7B, LESS capacity is better:* full-SFT 7B is **0.5079 vs LoRA's 0.7147,
+   −20.7 pts** — the pre-registered bar ("full beats LoRA by ≥3 → LoRA binding") **inverted**;
+   at 160 rows LoRA acts as a **regularizer / protective shell** and full-param updates
+   over-write the pretrained priors (this also explains the non-monotonic 7B, finding #5).
+   Unified: **budget must scale inversely with the model-to-data ratio** — LoRA is *never*
+   merely a cost compromise. Origin: the owner's parameterization question ("我们的RL做的也是
+   LoRA?…可以尝试全量微调嘛?"). **Honest limits:** both probes **single seed (seed 0)**; the
+   LoRA-GRPO collapse baseline was 2/3 seeds; and the 7B full-FT used the **LoRA-default lr
+   (2e-4), NOT retuned** for full FT (full FT typically wants ~10× lower lr) — so the rigorous
+   E1 claim is narrow ("full FT at *unchanged hyperparameters* is much worse at 7B"), with a
+   lower-lr sweep (E1b) pre-registered as an optional follow-up
+   (EXP-2026-07-04-015/016, D-2026-07-04-011, F-2026-07-04-007).
+
 **"Do we need RL, and how much does it buy?" — a measured, TASK-DEPENDENT answer.** RL
 over the best SFT baseline, per task, on the same frozen eval:
 
@@ -310,6 +337,14 @@ on escalation RL only ever optimizes *above* a code-enforced safety floor
   *prompted* (no Gemma training yet); a Gemma SFT/GRPO sweep is backlog. Gemma 4 is a
   MatFormer reporting *effective* (selective-activation) params (E2B ≈ 2.3B, E4B ≈
   4.5B) — comparisons to dense Qwen sizes are approximate.
+- **The full-FT probes are single-seed, and the 7B one carries an lr confound.** The
+  parameterization-budget finding (#9) rests on two **single-seed (seed 0)** runs; the
+  0.5B non-collapse is one seed against a 2/3-seed LoRA collapse baseline. Critically, the
+  7B full-FT used the **same lr (2e-4) as the LoRA runs — NOT retuned** for full FT (which
+  typically wants ~10× lower lr), so part of the 20.7-pt 7B damage may be lr-mismatch rather
+  than the full-vs-LoRA axis. The honest E1 claim is therefore narrow ("full FT at *unchanged
+  hyperparameters* is much worse at 7B"); a lower-lr full-FT sweep (E1b) is pre-registered as
+  an optional follow-up, not run (D-2026-07-04-011).
 
 ---
 

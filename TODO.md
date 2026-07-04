@@ -202,6 +202,31 @@ re-open the capacity question at 400+, but not at 122 rows. (D-2026-07-04-010.)
   => Task-dependent RL synthesis (D-2026-07-04-010): escalation +4.9/1.5B, +0.45/3B;
   citation verdict 0.0. "Not RL for RL's sake" now empirical, per-task.
 
+FULL-PARAMETER FINE-TUNING PROBES (E1/E2) - DONE. Origin: owner's parameterization question
+("我们的RL做的也是LoRA?…可以尝试全量微调嘛?"). Same 160 rows / same frozen escalation test
+(n=48), toggling ONLY trainable budget (LoRA r=16 -> full). D-2026-07-04-011.
+
+- [x] E2 - 0.5B full-FT (SFT + GRPO). DONE 2026-07-04 (EXP-2026-07-04-015): full-SFT 0.5B
+  reward 0.5899 / gate 0.75 (LoRA-SFT 0.6061 / 0.50 - gate BETTER); full-GRPO 0.5B from
+  full-SFT init reward 0.7533 / gate 0.75 (+14.7 over LoRA-SFT baseline), NO collapse vs
+  LoRA-GRPO 0.383 / gate 0.00. => 0.5B GRPO collapse REATTRIBUTED to ADAPTER capacity (LoRA
+  r=16), not model capacity. Second campaign self-correction. Kill bar still not passed
+  (gate 0.75 < 0.99). Single seed.
+- [x] E1 - 7B full-FT SFT. DONE 2026-07-04 (EXP-2026-07-04-016): full-SFT 7B reward 0.5079 /
+  gate 0.75 - 20.7 pts WORSE than LoRA-7B-SFT 0.7147; pre-registered bar ("full beats LoRA
+  by >=3 -> LoRA binding") NOT met, INVERTED. LoRA is a REGULARIZER at 7B / 160 rows.
+  CONFOUND: lr NOT retuned (same 2e-4). Completed after a 3-attempt OOM chain
+  (F-2026-07-04-007). Single seed.
+- [ ] E1b (OPTIONAL, pre-registered, NOT committed): lower-lr full-FT 7B sweep (~10x lower
+  lr) - a fair test of the E1 lr confound. Run only if the full-vs-LoRA axis at 7B needs to
+  be disentangled from lr-mismatch.
+- [ ] (optional, hardening) seed-varied full-GRPO-0.5B to promote the adapter-floor
+  reattribution from a single-seed non-collapse to a seed-varied result.
+- [ ] NEIGHBOR GPU-PROCESS OWNERSHIP - PENDING OWNER: a ~34GB coexisting process
+  (compute_capture.py, deepseek/confiqa; same account, NOT ours) occupies GPU 0, discovered
+  during the E1 OOM chain (F-2026-07-04-007). We did not touch it; the right-to-reclaim /
+  ownership question is escalated to the owner and awaits their answer.
+
 QUEUE (promoted next levers, in order):
 
 - [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time

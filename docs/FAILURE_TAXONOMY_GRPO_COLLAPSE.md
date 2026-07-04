@@ -1,5 +1,7 @@
 # Failure-Trajectory Taxonomy: GRPO Policy Collapse (Qwen2.5-0.5B)
 
+> **2026-07-04 addendum:** reattributed to adapter capacity — see EXP-2026-07-04-015 / D-2026-07-04-011; full-param 0.5B GRPO does not collapse (reward 0.7533 / gate 0.75). The collapse below is real but is an **adapter-capacity floor (LoRA r=16)**, not a model-capacity floor. Original analysis unchanged.
+
 **Run:** `training-corpus/scripts/rl/runs/grpo_qwen05/20260703T1507Z-e571324/`
 **Contrast (healthy):** `training-corpus/scripts/rl/runs/grpo_qwen15/20260703T1520Z-e571324/`
 **Config:** Qwen2.5-0.5B-Instruct + LoRA, GRPO K=8, 400 steps, escalation env v0.3, actions {cheap, deep, gate}, λ=0.3, safety penalty −2.0 for un-gated gate-required seeds. Gate-required seeds = 24/160 train (recovered empirically; see below).

@@ -1318,7 +1318,7 @@ exploration arm, full SFT+GRPO seed-varied 3B. See EXP/D-2026-07-04-010..012, TO
 
 ## CP-2026-07-04-004 - Round 6 wrap-up: citation chain CLOSED (capacity null, RL null, data is the lever)
 
-Status: current
+Status: prior
 
 ```text
 Citation attribution chain CLOSED end to end. Two clean negatives ran the last two links
@@ -1373,4 +1373,75 @@ order: citation collection batch 2 -> ~400+; env v0.4 memory-arm construction (f
 matrix, D-2026-07-03-002/005, standing big-ticket). Second tier: Plan C training-free /
 inference-backend GRPO, lambda=0.6 exploration arm, full SFT+GRPO seed-varied 3B. See
 EXP/D-2026-07-04-013..014, D-2026-07-04-010, TODO.
+```
+
+## CP-2026-07-04-005 - Round 7 wrap-up: full-FT probes - 0.5B GRPO collapse REATTRIBUTED to adapter capacity; LoRA protective at 7B
+
+Status: current
+
+```text
+Full-parameter fine-tuning probes at both ends of the model range, same 160 rows / same
+frozen escalation test (n=48, lambda=0.3, oracle 0.8473), toggling ONLY trainable-parameter
+budget (LoRA r=16 -> full). They reverse in OPPOSITE directions and yield one principle:
+"trainable-parameter budget must match data size." At 0.5B, full-FT RESCUED GRPO from the
+collapse (0.383/gate 0.00 -> 0.7533/gate 0.75, NO collapse) => the 0.5B GRPO collapse is
+REATTRIBUTED from a model-capacity floor to an ADAPTER-capacity floor (LoRA r=16). At 7B,
+full-FT DESTROYED it (0.7147 -> 0.5079, -20.7 pts) => LoRA is a REGULARIZER at 7B on tiny
+data. Campaign's SECOND self-correction (first: multi-seed 1.5B downgrade). Kill bar
+unchanged (0.5B full gate 0.75 < 0.99, not deployable). All probes single-seed (seed 0).
+7B run completed only after a 3-attempt OOM chain around a ~34GB coexisting non-ours GPU
+process (ownership escalated to owner, pending). New run dirs local under
+training-corpus/scripts/rl/runs/; weights git-excluded. The infra hostname suffix
+(hostname suffix) in the 5 new run_manifest.json logging_dir fields was REDACTED to _REDACTED
+per convention (redaction_note appended). Origin: owner's parameterization question
+"我们的RL做的也是LoRA?…可以尝试全量微调嘛?".
+```
+
+Headline results:
+
+```text
+E2 - 0.5B FULL-FT (frozen test n=48):
+  full-SFT 0.5B : reward 0.5899 / gate 0.75  (LoRA-SFT was 0.6061 / 0.50 - reward ~same, gate BETTER)
+  full-GRPO 0.5B (from full-SFT init): reward 0.7533 / gate 0.75  (+14.7 over 0.6061 LoRA-SFT baseline)
+    vs LoRA-GRPO 0.383 / gate 0.00 (collapsed 2/3 seeds). NO COLLAPSE.
+  => collapse REATTRIBUTED to adapter capacity (LoRA r=16), not model capacity. Kill bar still not passed (0.75 < 0.99).
+E1 - 7B FULL-FT SFT (frozen test n=48):
+  full-SFT 7B : reward 0.5079 / gate 0.75  vs LoRA-SFT-7B 0.7147  => 20.7 pts WORSE.
+  Pre-registered bar "full beats LoRA by >=3 -> LoRA binding" NOT met; INVERTED.
+  => LoRA is a REGULARIZER at 7B / 160 rows. CONFOUND: lr NOT retuned (same 2e-4 default; full FT wants ~10x lower).
+     Rigorous claim: "full FT at unchanged hyperparameters is much worse." E1b (low-lr sweep) pre-registered OPTIONAL.
+UNIFIED: "trainable-parameter budget must match data size." 0.5B needed MORE (full rescued GRPO);
+  7B needed LESS (full destroyed it). LoRA = bottleneck at small end, regularizer at large end - not a cost compromise.
+  Caveats: both probes single-seed (seed 0); LoRA-GRPO collapse baseline was 2/3 seeds; directional reattributions.
+INFRA: 7B OOM chain - attempt1 batch8/accum2 OOM (44.7GB ours + 34.16GB neighbor); attempt2 batch4/accum4 OOM by ~800MB;
+  attempt3 batch2/accum8 + expandable_segments SUCCEEDED. Coexisting compute_capture.py (deepseek/confiqa, ~34GB,
+  same account not ours) discovered on GPU 0, NOT touched; footprint shrunk to coexist. Ownership escalated (pending).
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/fullsft_qwen05/20260704T0752Z-e571324/    (E2 full-SFT 0.5B; fullsft_test_eval.json, metrics, manifest, test_preds, trainer_log)
+runs/fullgrpo_qwen05/20260704T0753Z-e571324/   (E2 full-GRPO 0.5B; fullgrpo_test_eval.json, metrics, manifest, test_preds, trainer_log, reward_trace, generations)
+runs/fullsft_qwen7/20260704T0805Z-e571324/     (E1 successful full-SFT 7B; fullsft7b_test_eval.json, metrics, manifest, test_preds, trainer_log; --parent-run 20260704T0801Z)
+runs/fullsft_qwen7/20260704T0801Z-e571324/     (E1 OOM attempt 1, manifest-only)
+runs/fullsft_qwen7/20260704T0804Z-e571324/     (E1 OOM attempt 2, manifest-only)
+docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md         (top addendum line: reattribution pointer)
+docs/PORTFOLIO_INDEX.md                        (0.5B collapse reattribution + parameterization-budget finding)
+```
+
+Log ids this round: EXP-2026-07-04-015 (0.5B full-FT, reattribution), -016 (7B full-FT,
+LoRA-as-regularizer); F-2026-07-04-007 (7B OOM chain + neighbor process); D-2026-07-04-011
+(parameterization-budget synthesis + reattribution + E1b optional); CP-2026-07-04-005.
+
+Resume:
+
+```text
+Full-FT probe line DONE (E2 reattribution + E1 reversal + unified synthesis). Optional
+follow-ups: E1b (lower-lr full-FT 7B sweep - fair test of the lr confound); seed-varied
+full-GRPO-0.5B to harden the non-collapse. Neighbor GPU-process (compute_capture.py ~34GB)
+ownership question PENDING owner. Standing queue unchanged: citation collection batch-2
+(277 -> ~400+); env v0.4 memory-arm construction (four-arm matrix, big-ticket). Second tier:
+Plan C inference-backend GRPO, lambda=0.6 exploration arm, full seed-varied 3B. See
+EXP/D-2026-07-04-015..016, D-2026-07-04-011, TODO.
 ```
