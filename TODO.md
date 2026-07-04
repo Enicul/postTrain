@@ -156,9 +156,19 @@ Block F - live demo:
 
 PROMOTED next levers (top tier):
 
-- [ ] Plan B: grow citation corpus 131 -> 300-500 rows, then re-run citation SFT/GRPO.
+- [~] Plan B: grow citation corpus 131 -> 300-500 rows, then re-run citation SFT/GRPO.
   The verdict head is data-starved (D-2026-07-04-008); corpus growth is the identified
   next lever. Optionally probe the verdict at 3B once the corpus is larger.
+  DONE 2026-07-04 (partial toward 300-500): citation_train_expansion_v1 built -
+  +146 construction-labeled TRAIN/dev rows from 21 AI-vertical SEC issuers
+  (10-K/10-Q/20-F/8-K) under citation_contract_repair_v0.1/citation_train_expansion_v1/;
+  frozen eval untouched. Labels construction_v1_unaudited; 10% blind spot-audit
+  93.3% agreement (>=90% gate), one C2 correction applied. Label mix
+  verified 70 / contradicts 35 / partial 22 / insufficient 19 (un-starves the
+  boundary classes vs eval train's 1 contradicts / 1 partial). SFT letters file
+  emitted + verified via sft_citation.py --eval-dir --labels-only (0 mapping
+  mismatches). REMAINING: pool now 131 + 146 = 277; a further batch reaches
+  300-500, then re-run citation SFT/GRPO on the combined train pool.
 - [ ] DPO beta sweep: sweep beta (0.1 is likely over-constraining toward the reference)
   to test whether exploration/success recovers, since pair v2 alone did not
   (EXP-2026-07-04-005, D-2026-07-04-004 amended).

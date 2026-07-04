@@ -1,0 +1,63 @@
+{
+  "accepted_rate": 1.0,
+  "as_of": "2026-07-04",
+  "case_count": 146,
+  "collection_id": "citation_train_expansion_v1",
+  "contract_id": "citation_contract_repair_v0.1",
+  "created_at": "2026-07-04T06:44:49Z",
+  "environment": {
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "failure_count": 0,
+  "frozen_eval_untouched": "citation_real_eval_v1 (131 rows) is immutable; this pack is train/dev only",
+  "git": {
+    "branch": "main",
+    "commit": "b1c61228bb19d83d1d2a3970caa9db7d7fb856f0"
+  },
+  "label_counts": {
+    "contradicts": 35,
+    "insufficient": 19,
+    "partial_support": 22,
+    "verified_support": 70
+  },
+  "label_provenance": "construction_v1_unaudited",
+  "purpose": "TRAIN-POOL expansion for the data-starved five-way verdict head (D-2026-07-04-008)",
+  "row_count": 146,
+  "sanity_problems": [],
+  "sft_rows": 146,
+  "source_count": 40,
+  "source_type_counts": {
+    "10-K": 68,
+    "10-Q": 72,
+    "20-F": 5,
+    "8-K": 1
+  },
+  "split_counts": {
+    "dev": 24,
+    "train": 122
+  },
+  "ticker_counts": {
+    "AMAT": 4,
+    "AMD": 14,
+    "AMZN": 9,
+    "ANET": 6,
+    "ARM": 5,
+    "AVGO": 7,
+    "CRWV": 4,
+    "DELL": 5,
+    "GOOGL": 8,
+    "INTC": 5,
+    "KLAC": 4,
+    "LRCX": 5,
+    "META": 8,
+    "MRVL": 9,
+    "MSFT": 6,
+    "MU": 7,
+    "NVDA": 14,
+    "ORCL": 6,
+    "QCOM": 7,
+    "SMCI": 5,
+    "VRT": 8
+  }
+}

@@ -1,0 +1,137 @@
+[
+  {
+    "audit_id": 0,
+    "sample_id": "citation_train_expansion_v1_60f8098bd2b7",
+    "claim": "Meta's first-quarter 2026 revenue rose 33% year over year on a constant-currency basis.",
+    "stored_label_at_audit": "contradicts",
+    "vote_A": "contradicts",
+    "vote_B": "contradicts",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 1,
+    "sample_id": "citation_train_expansion_v1_6422a87a0716",
+    "claim": "Microsoft's Server products and cloud services revenue increased 23% in fiscal 2025, driven by Azure and other cloud services growth of 34%.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "partial_support",
+    "vote_B": "partial_support",
+    "agree_with_stored": false
+  },
+  {
+    "audit_id": 2,
+    "sample_id": "citation_train_expansion_v1_6ad2f9088224",
+    "claim": "In September 2025 Intel agreed to sell NVIDIA 215 million common shares at $23.28 per share for $5.0 billion, a sale completed on December 26, 2025.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 3,
+    "sample_id": "citation_train_expansion_v1_70ebc706cb65",
+    "claim": "Super Micro's gross margin increased in fiscal 2025.",
+    "stored_label_at_audit": "insufficient",
+    "vote_A": "insufficient",
+    "vote_B": "insufficient",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 4,
+    "sample_id": "citation_train_expansion_v1_7714762c9f14",
+    "claim": "Qualcomm's QCT revenues declined in fiscal 2025.",
+    "stored_label_at_audit": "contradicts",
+    "vote_A": "contradicts",
+    "vote_B": "contradicts",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 5,
+    "sample_id": "citation_train_expansion_v1_7a2e00d38e4e",
+    "claim": "Dell repurchased about 11 million shares for $1.6 billion in the quarter ended May 1, 2026, fewer shares than the 22 million bought a year earlier, and fully exhausted its buyback authorization.",
+    "stored_label_at_audit": "partial_support",
+    "vote_A": "partial_support",
+    "vote_B": "partial_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 6,
+    "sample_id": "citation_train_expansion_v1_7c72fff6c4b0",
+    "claim": "AMD's Data Center net revenue fell to $12.6 billion in 2025.",
+    "stored_label_at_audit": "contradicts",
+    "vote_A": "contradicts",
+    "vote_B": "contradicts",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 7,
+    "sample_id": "citation_train_expansion_v1_850037b8ad54",
+    "claim": "During the three months ended March 28, 2026 AMD repurchased 1.1 million shares for $221 million, leaving $9.2 billion available under its repurchase program.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 8,
+    "sample_id": "citation_train_expansion_v1_93ba907fbc19",
+    "claim": "As of March 31, 2026, KLA had $10.31 billion available for repurchase under its stock repurchase program.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 9,
+    "sample_id": "citation_train_expansion_v1_9facf7c184c9",
+    "claim": "AMD's total net revenue exceeded $10 billion in the first quarter of fiscal 2026.",
+    "stored_label_at_audit": "insufficient",
+    "vote_A": "insufficient",
+    "vote_B": "insufficient",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 10,
+    "sample_id": "citation_train_expansion_v1_acff5147686e",
+    "claim": "In August 2025 Intel agreed to sell SoftBank Group 87 million shares for $2.0 billion, part of a broader capital raise that also included a U.S. government equity stake.",
+    "stored_label_at_audit": "partial_support",
+    "vote_A": "partial_support",
+    "vote_B": "partial_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 11,
+    "sample_id": "citation_train_expansion_v1_ae09858e4c54",
+    "claim": "Vertiv expects full-year 2026 capital expenditures, including capitalized software, of $425.0 million to $525.0 million to support capacity expansion.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 12,
+    "sample_id": "citation_train_expansion_v1_e1b3078d9b7f",
+    "claim": "During the three months ended May 2, 2026, Marvell repurchased 1.4 million shares for $200.0 million.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 13,
+    "sample_id": "citation_train_expansion_v1_e4713cad9eb3",
+    "claim": "Meta reported net income of $26.77 billion and diluted EPS of $10.44 for the three months ended March 31, 2026.",
+    "stored_label_at_audit": "verified_support",
+    "vote_A": "verified_support",
+    "vote_B": "verified_support",
+    "agree_with_stored": true
+  },
+  {
+    "audit_id": 14,
+    "sample_id": "citation_train_expansion_v1_f6e708a64331",
+    "claim": "Micron's dividend was $0.15 per share in each of the first, second, and third quarters of fiscal 2026.",
+    "stored_label_at_audit": "contradicts",
+    "vote_A": "contradicts",
+    "vote_B": "contradicts",
+    "agree_with_stored": true
+  }
+]
