@@ -16,6 +16,7 @@ pre-registered kill-criteria comparison when --baseline-reward is given.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -23,6 +24,36 @@ from pathlib import Path
 from reward_escalation import EscalationReward, parse_plan, render_prompt
 
 LAMBDAS = [0.1, 0.3, 0.6]
+
+
+def build_prompt(seed: dict, extra_system: str | None = None) -> str:
+    """Render one seed's prompt, optionally with an additive system-prompt block.
+
+    Pure function (no model, no I/O) so the concatenation is unit-testable
+    without a GPU. Default (extra_system falsy) returns render_prompt(seed)
+    BYTE-IDENTICALLY. When extra_system is non-empty its text is appended right
+    after the base SYSTEM_PROMPT header (before the per-seed query lines), which
+    is where an experience-library block belongs so the policy reads it as part
+    of its standing instructions. The base render is:
+
+        "{SYSTEM_PROMPT}\n\nquery: ...\nsymbol: ...\nas_of: ...\nanswer:"
+
+    We splice the extra block in as "{SYSTEM_PROMPT}\n\n{extra}\n\nquery: ...".
+    """
+    base = render_prompt(seed)
+    if not extra_system:
+        return base
+    marker = "\n\nquery: "
+    idx = base.find(marker)
+    if idx == -1:  # defensive: renderer changed shape; append to the end
+        return base + "\n\n" + extra_system.rstrip("\n")
+    head = base[:idx]
+    tail = base[idx:]
+    return head + "\n\n" + extra_system.rstrip("\n") + tail
+
+
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def majority_plan(plans: list[tuple[str, str]]) -> tuple[str, str]:
@@ -147,6 +178,13 @@ def main() -> None:
                          "add_generation_prompt=True) instead of feeding the raw "
                          "completion prompt. Output is parsed identically. Default "
                          "off keeps existing Qwen runs byte-identical.")
+    ap.add_argument("--extra-system-file", type=Path, default=None,
+                    help="model mode: ADDITIVE. Read this file and append its text "
+                         "to the system prompt for EVERY generation (both greedy "
+                         "and sampled). Use it to inject a Plan C experience-library "
+                         "block so a scored run is attributable to a specific "
+                         "library. The manifest/report records extra_system_sha256 "
+                         "and the file path. Default (unset) is byte-identical.")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--dump-preds", type=Path, default=None,
                     help="model mode only: write per-seed jsonl {seed_id, first, "
@@ -157,6 +195,17 @@ def main() -> None:
     reward = EscalationReward(args.env_dir, lam=0.3)
     ids = [sid for sid, s in reward.env.seeds.items()
            if args.split == "all" or s["split"] == args.split]
+
+    # --extra-system-file: read once, hash for attribution. Applies to model
+    # mode only (pred-file mode carries no prompt); recorded regardless so a
+    # scored run is traceable to the exact injected library text.
+    extra_system = None
+    extra_system_meta = None
+    if args.extra_system_file is not None:
+        extra_system = args.extra_system_file.read_text(encoding="utf-8")
+        extra_system_meta = {"path": str(args.extra_system_file),
+                             "sha256": sha256_text(extra_system),
+                             "chars": len(extra_system)}
     plan_of: dict[str, tuple[str, str]] = {}
     samples_of: dict[str, list[tuple[str, str]]] = {}  # sampled-mode: N plans/seed
     sampled_mode = bool(args.model) and args.n_samples > 1
@@ -216,7 +265,7 @@ def main() -> None:
             dump_fh = args.dump_preds.open("w", encoding="utf-8")
         for sid in ids:
             seed = reward.env.seeds[sid]
-            enc = build_input(render_prompt(seed))
+            enc = build_input(build_prompt(seed, extra_system))
             if sampled_mode:
                 # N samples/seed at temperature T (num_return_sequences batches them)
                 with torch.no_grad():
@@ -266,6 +315,8 @@ def main() -> None:
     res = score(reward, plan_of, ids)
     report = {"split": args.split, "n": len(ids), "missing_filled_as_gate": len(missing),
               "scores": res}
+    if extra_system_meta is not None:
+        report["extra_system"] = extra_system_meta
     if sampled_mode:
         report["decode"] = {"mode": "sampled", "temperature": args.temperature,
                             "n_samples": args.n_samples}

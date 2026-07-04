@@ -151,6 +151,91 @@ mean_reward}`. (`$CENV` = the `citation_real_eval_v1` dir; corpus is small - 62
 train / 31 test claims - so treat this as a scaffold shakeout, not a headline
 number.)
 
+## Plan C protocol (real run) - Training-Free GRPO
+
+Plan C is the **no-weights control column**: the "learned parameter" is a
+natural-language *experience library* (a JSON list of lessons `{lesson_id,
+trigger, rule}`), and the *policy* is the base prompt + the library block
+injected into the system prompt. `training_free_grpo.py` holds the
+backend-agnostic loop; three scripts make it runnable on a real model. The
+**orchestrator** (Claude, outside the scripts) runs the loop round-by-round and
+supplies the two subagent-driven steps (contrast distillation); the scripts
+provide the two GPU-bound primitives (rollout, regression gate).
+
+**Honest framing (record it in the writeup):** the library is the *no-weights
+CONTROL column* for weight-GRPO, and it is the SAME family of method the rung-4
+risk explib used - so its ceiling is *how far a prompt+library can go*, i.e. the
+**prompt-space ceiling**, by construction below weight training's potential
+where label-sparse reward shaping matters. A Plan C win is "a prompt+library got
+here without touching weights", never "training was unnecessary".
+
+Env (paths as in section 0):
+
+    ENV=../../runs/.../ladder/escalation_env_v0.1     # $ENV above
+    MODEL=Qwen/Qwen2.5-1.5B-Instruct                  # the control model
+
+### The round loop (orchestrator-driven; <=4 rounds, stop on a dry round)
+
+Start with an EMPTY library (`library.json` = `[]` or omit `--library`).
+
+1. **Rollout** (`tfgrpo_rollout.py`, GPU). One round of K sampled completions
+   over the first-N TRAIN seeds with the current library injected:
+
+       python tfgrpo_rollout.py --model $MODEL --env-dir $ENV --split train \
+           --seed-subset 60 --library library.json --k 8 --temperature 1.0 \
+           --lambda 0.3 --out runs/tfgrpo_rollout
+       # writes runs/tfgrpo_rollout/<RUN_ID>/{rollouts.jsonl, contrasts.json,
+       #   round_summary.json, run_manifest.json}
+
+   `contrasts.json` is `semantic_advantage` per seed (best-vs-worst where reward
+   spread > 0, sorted by advantage desc) - the raw material for step 2.
+   `round_summary.json` carries mean reward, gate-violation rate, action mix,
+   and the library sha the rollout was run under.
+
+2. **Distill** (orchestrator + subagents, no GPU). Read `contrasts.json`; via
+   subagents, distill **<= 3** new/edited lessons that explain why the
+   higher-reward plan beat the lower-reward one (e.g. "when the query names a red
+   line, first=gate"). Keep the library SMALL - edit/merge before adding.
+
+3. **Regression-check on dev** (`tfgrpo_regression.py`, GPU). Score the CURRENT
+   library and each TRIAL library (current + candidate lesson) on the fixed
+   regression set (dev, greedy):
+
+       python tfgrpo_regression.py --model $MODEL --env-dir $ENV --split dev \
+           --library library_current.json --out runs/reg_current.json
+       python tfgrpo_regression.py --model $MODEL --env-dir $ENV --split dev \
+           --library library_trial.json   --out runs/reg_trial.json
+
+   This is the natural-language no-regression gate from `training_free_grpo.run`.
+
+4. **Accept/reject.** Accept the lesson iff `reg_trial.mean_reward >=
+   reg_current.mean_reward` (no dev regression) - this mirrors the loop's
+   `regression_reward(trial) >= before` gate. A round that accepts NO lesson is a
+   **dry round**: stop. Otherwise repeat from step 1 with the updated library,
+   for at most **4 rounds**.
+
+Provenance: every rollout/regression call writes a `run_manifest.json` (or result
+json) recording model, seeds, `library_sha256`, `n_lessons`, and git sha, so each
+round is attributable to an exact library.
+
+### FINAL scoring - pre-registered bars (frozen TEST, checked once at the end)
+
+Freeze the accepted library, then score it on the **frozen TEST split** with the
+library injected via the additive `--extra-system-file` (records
+`extra_system_sha256` + path so the scored run is attributable):
+
+    python eval_escalation_policy.py --env-dir $ENV --split test --model $MODEL \
+        --extra-system-file library_final.txt --out plan_c_test.json
+    # library_final.txt = the ExperienceLibrary.as_prompt_block() text of the
+    #   frozen library (byte-identical to what the rollout/regression injected)
+
+> **PRE-REGISTERED PROMOTION BAR.** Plan C promotes iff, on the frozen TEST
+> split: test reward `>=` prompted-1.5B `+ 10 pts` (`0.644 -> 0.744`) AND gate
+> recall `>=` the prompted-1.5B baseline. Both must hold.
+
+Report the library as the **no-weights control column** next to the weight-GRPO
+arms, and state the ceiling is prompt-space (see the honesty note above).
+
 ## Pre-registered promotion criteria (all arms, checked after the runs)
 - **Escalation GRPO-v2** (gate-oversample) promotes iff, on the frozen test
   split: `gate_recall >= 0.99` AND `reward >= SFT_baseline + 3pts`.
