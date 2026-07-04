@@ -99,8 +99,8 @@ echo "##### PHASE B Gemma 4 cross-family PROMPTED eval ($GPY, transformers-5.13)
 # to AutoModelForImageTextToText. --chat-template wraps the rendered prompt as a
 # single user turn (Gemma-it template). Same escalation test split + ruler.
 mkdir -p runs/gemma_prompted
-E2B=google/gemma-3n-E2B-it   # effective ~2.3B (MatFormer)
-E4B=google/gemma-3n-E4B-it   # effective ~4.5B (MatFormer)
+E2B=google/gemma-4-E2B-it   # effective ~2.3B (MatFormer)
+E4B=google/gemma-4-E4B-it   # effective ~4.5B (MatFormer)
 CUDA_VISIBLE_DEVICES=0 $GPY eval_escalation_policy.py --env-dir $ENV --split test \
   --model $E2B --loader auto --chat-template --seed 0 \
   --dump-preds runs/gemma_prompted/e2b_test_preds.jsonl \
