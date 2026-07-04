@@ -37,6 +37,16 @@ def main() -> None:
     ap.add_argument("--grad-accum", type=int, default=1, help="gradient_accumulation_steps")
     ap.add_argument("--max-seq-len", type=int, default=1024)
     ap.add_argument("--lora-r", type=int, default=16)
+    ap.add_argument("--full-finetune", action="store_true",
+                    help="train the base model's FULL parameters (no peft/LoRA "
+                         "wrapping). Saves the full model into <run_dir>/full_model/. "
+                         "Default off keeps the LoRA path byte-identical. E1 probe.")
+    ap.add_argument("--optim", default="adamw_torch",
+                    help="optimizer passed to SFTConfig. Default adamw_torch; use "
+                         "adamw_bnb_8bit for the 7B full-FT arm (needs bitsandbytes).")
+    ap.add_argument("--gradient-checkpointing", action="store_true",
+                    help="enable gradient checkpointing in the config (needed at "
+                         "3B+/7B full-FT to fit the single A100 80GB).")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--resume", default=None,
                     help="checkpoint path (or 'True') to resume_from_checkpoint")
@@ -71,33 +81,48 @@ def main() -> None:
 
     ds = ds.map(to_text, remove_columns=[c for c in ds.column_names if c != "messages"])
 
-    peft_cfg = LoraConfig(
-        r=args.lora_r, lora_alpha=args.lora_r * 2, lora_dropout=0.05,
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj"], task_type="CAUSAL_LM",
-    )
+    # full-FT (E1): no peft wrapping, train all base params; else LoRA (default).
+    parameterization = "full" if args.full_finetune else "lora"
+    if args.full_finetune:
+        peft_cfg = None
+    else:
+        peft_cfg = LoraConfig(
+            r=args.lora_r, lora_alpha=args.lora_r * 2, lora_dropout=0.05,
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"], task_type="CAUSAL_LM",
+        )
     cfg = SFTConfig(
         output_dir=str(run_dir), num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum, learning_rate=args.lr,
         max_seq_length=args.max_seq_len, logging_steps=10, save_strategy="epoch",
         save_total_limit=None, seed=args.seed, bf16=True, report_to=[],
+        optim=args.optim, gradient_checkpointing=args.gradient_checkpointing,
     )
+    manifest_cfg = vars(cfg) if hasattr(cfg, "__dict__") else {}
+    manifest_cfg["parameterization"] = parameterization
+    manifest_cfg["optim"] = args.optim
     write_manifest(run_dir, run_id, seed=args.seed, argv=sys.argv,
-                   config=vars(cfg) if hasattr(cfg, "__dict__") else {},
+                   config=manifest_cfg,
                    env_seeds_version=None, base_model=args.model,
                    parent_run_id=args.parent_run)
     trainer = SFTTrainer(model=model, args=cfg, train_dataset=ds,
                          peft_config=peft_cfg, processing_class=tok,
                          callbacks=[make_log_callback(run_dir)])
     result = trainer.train(resume_from_checkpoint=args.resume)
-    trainer.save_model(str(run_dir / "adapter"))
+    # full-FT saves the whole model (loadable via --model <dir>, no --adapter);
+    # LoRA saves just the adapter into adapter/ (loadable via --adapter).
+    save_sub = "full_model" if args.full_finetune else "adapter"
+    trainer.save_model(str(run_dir / save_sub))
     (run_dir / "metrics.json").write_text(json.dumps({
         "run_id": run_id, "model": args.model, "train_file": str(args.train),
         "train_rows": len(ds), "epochs": args.epochs, "lr": args.lr,
+        "parameterization": parameterization, "optim": args.optim,
+        "gradient_checkpointing": args.gradient_checkpointing,
         "final_loss": result.training_loss,
     }, indent=1))
     print(json.dumps({"status": "sft_done", "run_id": run_id,
-                      "adapter": str(run_dir / "adapter"),
+                      "parameterization": parameterization,
+                      save_sub: str(run_dir / save_sub),
                       "final_loss": result.training_loss}, indent=1))
 
 

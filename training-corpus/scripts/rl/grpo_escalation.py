@@ -34,7 +34,22 @@ def main() -> None:
     ap.add_argument("--env-dir", type=Path, required=True)
     ap.add_argument("--lambda", dest="lam", type=float, default=0.3)
     ap.add_argument("--init-adapter", type=Path, default=None,
-                    help="optional SFT adapter to warm-start from")
+                    help="optional SFT adapter to warm-start from (LoRA mode only)")
+    ap.add_argument("--init-model", type=Path, default=None,
+                    help="full-FT mode: load base weights from a local full_model "
+                         "dir (e.g. a full-FT SFT run's <run_dir>/full_model/) "
+                         "instead of the hub --model id. E2 honest design: full-FT "
+                         "GRPO from the full-FT SFT init.")
+    ap.add_argument("--full-finetune", action="store_true",
+                    help="train the base model's FULL parameters (no peft/LoRA "
+                         "wrapping). Saves the full model into <run_dir>/full_model/. "
+                         "Default off keeps the LoRA path byte-identical. E2 probe.")
+    ap.add_argument("--optim", default="adamw_torch",
+                    help="optimizer passed to GRPOConfig. Default adamw_torch; use "
+                         "adamw_bnb_8bit for the 7B full-FT arm (needs bitsandbytes).")
+    ap.add_argument("--gradient-checkpointing", action="store_true",
+                    help="enable gradient checkpointing in the config (needed at "
+                         "3B+/7B full-FT to fit the single A100 80GB).")
     ap.add_argument("--out-dir", type=Path, required=True,
                     help="parent dir; each run writes into out-dir/<run_id>/")
     ap.add_argument("--split", default="train", choices=["train", "dev", "all"])
@@ -69,6 +84,17 @@ def main() -> None:
     if args.gate_oversample < 1:
         ap.error(f"--gate-oversample must be >= 1, got {args.gate_oversample}")
 
+    # full-FT / LoRA combos: keep them explicit and mutually exclusive. An
+    # adapter is a LoRA artifact and cannot warm-start a full-param run; the
+    # honest full-FT init is a full_model dir via --init-model.
+    if args.full_finetune and args.init_adapter:
+        ap.error("--full-finetune is incompatible with --init-adapter (an adapter "
+                 "is a LoRA artifact); for a full-FT warm start use --init-model "
+                 "<full_model dir> instead.")
+    if args.init_model and not args.full_finetune:
+        ap.error("--init-model only applies in full-FT mode; pass --full-finetune "
+                 "(or use --init-adapter for a LoRA warm start).")
+
     import torch
     import transformers
     from datasets import Dataset
@@ -93,12 +119,19 @@ def main() -> None:
             n_gate_rows += reps
     prompts = Dataset.from_list(rows)
 
+    # full-FT (E2) loads base weights from --init-model (a local full_model dir)
+    # when given, else the hub --model id; the tokenizer stays with --model.
+    parameterization = "full" if args.full_finetune else "lora"
+    load_path = str(args.init_model) if (args.full_finetune and args.init_model) else args.model
     tok = AutoTokenizer.from_pretrained(args.model)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, torch_dtype=torch.bfloat16, device_map="auto")
-    if args.init_adapter:
+        load_path, torch_dtype=torch.bfloat16, device_map="auto")
+    if args.full_finetune:
+        # no peft wrapping: all base params are trainable.
+        peft_cfg = None
+    elif args.init_adapter:
         model = PeftModel.from_pretrained(model, str(args.init_adapter), is_trainable=True)
         peft_cfg = None
     else:
@@ -156,12 +189,16 @@ def main() -> None:
         max_steps=args.steps, logging_steps=10, save_strategy="steps",
         save_steps=args.save_steps, save_total_limit=None, seed=args.seed,
         bf16=True, report_to=[],
+        optim=args.optim, gradient_checkpointing=args.gradient_checkpointing,
     )
     if args.kl_beta is not None:  # else leave TRL's default beta
         cfg_kw["beta"] = args.kl_beta
     cfg = GRPOConfig(**cfg_kw)
     manifest_cfg = vars(cfg) if hasattr(cfg, "__dict__") else {}
     # record the oversample provenance (not a GRPOConfig field) in the manifest
+    manifest_cfg["parameterization"] = parameterization
+    manifest_cfg["optim"] = args.optim
+    manifest_cfg["init_model"] = str(args.init_model) if args.init_model else None
     manifest_cfg["gate_oversample"] = args.gate_oversample
     manifest_cfg["gate_prompt_rows"] = n_gate_rows
     manifest_cfg["total_prompt_rows"] = len(prompts)
@@ -177,17 +214,23 @@ def main() -> None:
     result = trainer.train(resume_from_checkpoint=args.resume)
     gen_fh.close()
     trace_fh.close()
-    trainer.save_model(str(run_dir / "adapter"))
+    # full-FT saves the whole model (eval via --model <dir>, no --adapter);
+    # LoRA saves just the adapter into adapter/ (eval via --adapter).
+    save_sub = "full_model" if args.full_finetune else "adapter"
+    trainer.save_model(str(run_dir / save_sub))
     (run_dir / "metrics.json").write_text(json.dumps({
         "run_id": run_id, "model": args.model, "lambda": args.lam,
         "K": args.num_generations, "batch_size": args.batch_size,
         "gate_oversample": args.gate_oversample, "kl_beta": args.kl_beta,
-        "steps": args.steps,
+        "steps": args.steps, "parameterization": parameterization,
+        "optim": args.optim, "gradient_checkpointing": args.gradient_checkpointing,
         "init_adapter": str(args.init_adapter) if args.init_adapter else None,
+        "init_model": str(args.init_model) if args.init_model else None,
         "final_loss": getattr(result, "training_loss", None),
     }, indent=1))
     print(json.dumps({"status": "grpo_done", "run_id": run_id,
-                      "adapter": str(run_dir / "adapter")}, indent=1))
+                      "parameterization": parameterization,
+                      save_sub: str(run_dir / save_sub)}, indent=1))
 
 
 if __name__ == "__main__":

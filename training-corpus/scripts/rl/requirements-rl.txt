@@ -19,4 +19,10 @@ peft==0.14.0
 datasets==2.21.0
 accelerate==0.33.0
 rich
+# bitsandbytes: ONLY needed for the 7B full-FT arm's --optim adamw_bnb_8bit
+# (E1). 0.43.3 is the last 0.43.x, validated against torch 2.4.0+cu121; the
+# import is lazy (TRL/transformers pulls it in only when optim=adamw_bnb_8bit)
+# so --help and CPU smoke of the trainers work without it, and the LoRA +
+# adamw_torch paths never import it. See README "Full fine-tuning arms".
+bitsandbytes==0.43.3
 # CPU-only smoke of reward/label/env logic needs none of the above.

@@ -264,6 +264,70 @@ Scaling from Qwen2.5-0.5B to a 7B model on the single A100 80GB:
 - consider the TRL vLLM generation backend for GRPO rollout throughput,
 - reach for **gradient checkpointing first** if you OOM, before cutting batch.
 
+## Full fine-tuning arms (E1 7B-SFT, E2 0.5B-GRPO probes)
+
+All numbers so far are LoRA (r=16). Two open questions need FULL-parameter runs
+on a single A100 80GB. Both trainers gain additive flags (default behaviour
+unchanged; the LoRA + `adamw_torch` paths are byte-identical to before):
+
+- `--full-finetune`: skip peft/LoRA wrapping, train ALL base params. The full
+  model is saved to `<run_dir>/full_model/` (NOT `adapter/`); the manifest and
+  `metrics.json` record `parameterization: "full"` vs `"lora"` plus `optim`.
+- `--optim` (default `adamw_torch`): passed to the config. Use `adamw_bnb_8bit`
+  for 7B (needs `bitsandbytes`, see `requirements-rl.txt`).
+- `--gradient-checkpointing`: passed to the config; needed at 3B+/7B.
+- GRPO only: `--init-model PATH` loads BASE weights from a local `full_model/`
+  dir (e.g. a full-FT SFT run's output) instead of the hub `--model` id. This is
+  the honest full-FT GRPO init. `--full-finetune` + `--init-adapter` is an ERROR
+  (an adapter is a LoRA artifact) and points you at `--init-model`.
+
+Evaluate a full model with `eval_escalation_policy.py --model <local full_model
+dir>` and NO `--adapter`: the default `--loader causal` path calls
+`AutoModelForCausalLM.from_pretrained` on the local dir (which holds `config.json`
++ safetensors + tokenizer written by `trainer.save_model`), so it loads exactly
+like a hub id. No eval-script change is needed.
+
+Memory (single A100 80GB, bf16):
+
+| model | full-FT footprint | notes |
+|-------|-------------------|-------|
+| 0.5B  | ~8GB              | fits easily, `adamw_torch` |
+| 1.5B  | ~24GB             | `adamw_torch` |
+| 3B    | ~48GB             | add `--gradient-checkpointing` |
+| 7B    | ~50GB             | needs `--optim adamw_bnb_8bit` (+ `--gradient-checkpointing`) |
+
+### E1 - does 7B SFT degradation persist under full FT? (LoRA-was-binding)
+Full-FT SFT the 7B and eval on the frozen eval-256. Bar (pre-registered):
+
+> full-7B-SFT beats its LoRA version 0.7147 by >= 3 pts at lambda 0.3 -> "LoRA was binding"
+
+    python sft_escalation.py --model Qwen/Qwen2.5-7B-Instruct \
+        --train sft_train.jsonl --out-dir runs/sft_full_qwen7b \
+        --full-finetune --optim adamw_bnb_8bit --gradient-checkpointing \
+        --batch-size 8 --grad-accum 2 --seed 0
+    python eval_escalation_policy.py --env-dir $ENV --split test \
+        --model runs/sft_full_qwen7b/<RUN_ID>/full_model --out sft_full7b_eval.json
+
+### E2 - does the 0.5B GRPO collapse persist with all params trainable? (capacity floor)
+Honest design: full-FT GRPO from the BASE model AFTER a full-FT SFT init. First
+full-FT SFT the 0.5B, then GRPO from its `full_model/` via `--init-model`. Bar:
+
+> if full-FT 0.5B GRPO STILL loses the gate action (`gate_recall < 0.5` at greedy, matching the LoRA collapse pattern) across the run, the capacity floor is confirmed at the PARAMETERIZATION level; if it HOLDS `gate >= 0.99`, the collapse is reattributed to adapter capacity.
+
+    python sft_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct \
+        --train sft_train.jsonl --out-dir runs/sft_full_qwen05b --full-finetune --seed 0
+    python grpo_escalation.py --model Qwen/Qwen2.5-0.5B-Instruct --env-dir $ENV \
+        --lambda 0.3 --full-finetune \
+        --init-model runs/sft_full_qwen05b/<SFT_RUN_ID>/full_model \
+        --out-dir runs/grpo_full_qwen05b --seed 0 --save-steps 50
+    python eval_escalation_policy.py --env-dir $ENV --split test \
+        --model runs/grpo_full_qwen05b/<GRPO_RUN_ID>/full_model \
+        --baseline-reward <SFT_BASELINE> --out grpo_full05b_eval.json
+
+**Scope (honesty note):** full-FT results are SINGLE-SEED (seed 0) probes unless
+promoted; do not report them as error-barred headline numbers without the
+multi-seed follow-up that the LoRA arms get (Batch 4 protocol).
+
 ## Note on env_seeds versions
 The env dir ships `env_seeds_v0.1/v0.2/v0.3.json`. The loader
 (`escalation_env_v01.py`) prefers **v0.3** (gate-corrected, 160 train labels),
