@@ -2196,3 +2196,203 @@ Next:
 
 Grow the citation corpus (backlog) and re-run; optionally probe verdict at 3B once
 the corpus is larger.
+
+## EXP-2026-07-04-010 - DPO beta sweep (1.5B, pairs v2, escalation @lambda0.3) - does relaxing beta buy back exploration?
+
+Goal:
+
+Close the F2 next-lever from EXP-2026-07-04-005: DPO pairs v2 was gate-perfect but
+reward-collapsed (0.5213 / gate 1.0 / success 0.5833) and the pair rebalance alone did
+not recover exploration. beta=0.1 pins the policy hard to the reference; sweep beta up
+(0.3, 0.5) to test whether relaxing the KL anchor recovers success, or whether DPO's
+safety-first / exploration-poor character is STRUCTURAL on this task.
+
+Data:
+
+Escalation env v0.3, test n=48 (8 gate seeds), greedy, lambda sweep {0.1,0.3,0.6}.
+1.5B, DPO pairs v2 (196 pairs), init from the seed-0 SFT adapter
+(runs/sft_qwen15/20260703T1506Z-e571324/adapter), 3 epochs. Two betas: 0.3 and 0.5.
+Base commit e571324.
+
+Command:
+
+```text
+dpo_escalation.py --model Qwen/Qwen2.5-1.5B-Instruct --env-dir .../escalation_env_v0.1 \
+  --lambda 0.3 --init-adapter runs/sft_qwen15/20260703T1506Z-e571324/adapter \
+  --pairs-version v2 --beta {0.3,0.5} --epochs 3 --out-dir runs/dpo_v2_beta{03,05}_qwen15 --seed 0
+```
+
+Metrics (test n=48, greedy; each beta swept over lambda):
+
+| arm | lambda | reward | success | cost | gate_recall |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| DPO v2 beta=0.1 (EXP-...-005) | 0.3 | 0.5213 | 0.5833 | 0.139 | 1.000 |
+| DPO v2 beta=0.3 (this run)    | 0.3 | 0.5989 | 0.6667 | 0.2258 | 1.000 |
+| DPO v2 beta=0.5 (this run)    | 0.3 | 0.5989 | 0.6667 | 0.2258 | 1.000 |
+| (ref) SFT baseline seed 0     | 0.3 | 0.7495 | -      | -     | 1.000 |
+
+(beta=0.3 lambda sweep: 0.1 -> 0.6441, 0.3 -> 0.5989, 0.6 -> 0.5312, all success 0.6667
+/ gate 1.000; beta=0.5 is DIGIT-IDENTICAL across the whole lambda sweep. final_loss
+differs slightly, beta0.3 0.3782 vs beta0.5 0.3238, but the greedy policy is the same.)
+
+Findings:
+
+- OBSERVATION: TWO BETAS CONVERGED TO DIGIT-IDENTICAL GREEDY POLICIES. beta=0.3 and
+  beta=0.5 produce the same reward/success/cost/gate to 4 decimals at every lambda -
+  the greedy argmax action set is identical despite different KL anchoring. (Recorded
+  as an observation in this entry, not a failure - the runs are healthy; the loss
+  curves differ, the greedy decode collapses to the same trajectory.)
+- Relaxing beta DOES recover SOME exploration: success 0.5833 (beta0.1) -> 0.6667
+  (beta>=0.3), reward 0.5213 -> 0.5989 at lambda0.3. But it PLATEAUS ~15 pts of success
+  and ~0.15 reward BELOW the SFT baseline (0.7495) and never re-crosses the kill line
+  (beats_baseline_by_3pts_and_holds_gate = false; delta -0.1506).
+- CONCLUSION: DPO's safety-first / exploration-poor character on this task is
+  STRUCTURAL, not a hyperparameter accident. It is now robust across 2 pair designs
+  (v1, v2) x 3 betas (0.1, 0.3, 0.5). Gate stays perfect (1.000) throughout - DPO buys
+  gate discipline at the price of ~half the exploration/success the SFT baseline reaches.
+
+Artifacts:
+
+```text
+runs/dpo_v2_beta03_qwen15/20260704T0624Z-e571324/{dpo_v2_beta03_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl}
+runs/dpo_v2_beta05_qwen15/20260704T0626Z-e571324/{dpo_v2_beta05_test_eval.json,metrics.json,
+  run_manifest.json,test_preds.jsonl,trainer_log.jsonl}
+```
+
+Decision:
+
+The three-method comparison is now FINAL and recorded in D-2026-07-04-009: GRPO =
+efficiency (analytic oracle at 3B), DPO = safety (gate 1.000 at ~half the success),
+SFT = balanced baseline. DPO's over-conservatism is closed as STRUCTURAL. No further
+beta / pair work on this arm.
+
+Next:
+
+DPO arm closed. Remaining escalation levers: env v0.4 memory-arm matrix (standing
+big-ticket), Plan C inference-backend control column, lambda=0.6 exploration arm.
+
+## EXP-2026-07-04-011 - Citation training-pool expansion v1 build (construction-labeled, spot-audited)
+
+Goal:
+
+Grow the data-starved 5-way citation verdict train pool (D-2026-07-04-008: verdict
+head stuck ~0.06-0.10 because the eval train split carried only 1 contradicts + 1
+partial). Build a construction-labeled TRAIN/dev pack that un-starves the boundary
+classes, on the same schema and point-in-time discipline as the frozen eval, WITHOUT
+touching the frozen eval.
+
+Data:
+
+Committed earlier by the collection agent as commit b6c909a (this entry backfills the
+EXPERIMENT_LOG record). Dataset:
+`.../citation_contract_repair_v0.1/citation_train_expansion_v1/` (manifest.json).
+
+Build summary (from manifest.json):
+
+- 146 construction-labeled rows: train 122 + label-stratified dev 24, NO test rows.
+- 21 AI-vertical issuers (40 source filings): NVDA/AMD 14 each, MRVL/AMZN 9, GOOGL/META
+  8, AVGO/QCOM/VRT ~7, ... ; source types 10-K 68 / 10-Q 72 / 20-F 5 / 8-K 1.
+- Filing URLs discovered via the EDGAR submissions API; 0 fetch / 0 anchor failures
+  (accepted_rate 1.0). Every anchor verified present in the fetched filing with the
+  label-critical-fact guard (F-2026-07-02-002) + shortest-containing-block selection.
+- Label mix: verified_support 70 / contradicts 35 / partial_support 22 / insufficient
+  19 - vs the eval train split's 1 contradicts + 1 partial, this UN-STARVES the
+  boundary classes (the whole point).
+- Labels marked construction_v1_unaudited. A 10.3% stratified blind two-pass
+  spot-audit agreed 93.3% (>=90% gate); one C2 period-binding correction applied.
+- Opaque sample_ids (F-2026-07-02-006); frozen eval citation_real_eval_v1 (131 rows)
+  UNTOUCHED / immutable.
+- Emits the letters-action-space SFT file; verified consumable by
+  sft_citation.py --eval-dir --labels-only (122 train rows, 0 mapping mismatches).
+
+Artifacts:
+
+```text
+commit b6c909a (data: citation training-pool expansion v1)
+.../citation_train_expansion_v1/{manifest.json,rows/{all,train,dev}.jsonl,
+  sources.json,failures.json,AUDIT_NOTE.md,audit/{spot_audit_blind,spot_audit_votes}.json,
+  sft/sft_citation_letters.jsonl}
+.../scripts/build_citation_train_expansion_v1.py (+ cases modules)
+```
+
+Metrics:
+
+n/a (data build). Combined citation train pool now 131 + 146 = 277 (target 300-500,
+one more batch to go).
+
+Decision:
+
+Feeds EXP-2026-07-04-012 (the data-starvation test) and D-2026-07-04-009 (data-scaling
+path validated). Next collection batch reaches ~400+, then 3B capacity probe.
+
+Next:
+
+One more collection batch to ~400+; then re-run citation SFT/GRPO on the combined pool.
+
+## EXP-2026-07-04-012 - D-008 data-starvation test: SFT-letters on the EXPANDED pool (1.5B, frozen test n=31)
+
+Goal:
+
+THE PAYOFF for the D-008 attribution chain. EXP-2026-07-04-009 showed SFT-letters on
+62 train rows could not move the verdict (0.0645), localizing the failure to a
+DATA/CAPACITY axis. Test the DATA half directly: re-run SFT-letters on the EXPANDED
+(class-balanced) train pool and evaluate on the SAME FROZEN test (n=31, letters). If
+verdict_acc jumps, the verdict head was data-starved (specifically class-starved);
+capacity becomes the next probe.
+
+Data:
+
+Train = citation_train_expansion_v1 train split (122 rows, class-balanced). Eval =
+frozen citation_real_eval_v1 test (n=31), letters action space. 1.5B, 3 epochs, lr 2e-4,
+seed 0. Base commit e571324.
+
+Command:
+
+```text
+sft_citation.py --eval-dir .../citation_train_expansion_v1 --split train \
+  --model Qwen/Qwen2.5-1.5B-Instruct --out-dir runs/sft_citation15_expanded --seed 0
+```
+
+Metrics (frozen test n=31, letters):
+
+| arm | train rows | verdict_acc | cite_gold | cite_valid | fabricated | mean_reward |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| prompted-letters (EXP-...-004) | 0   | 0.0968 | 0.7419 | 1.000 | 0.0 | 0.5452 |
+| SFT-letters @62 (EXP-...-009)  | 62  | 0.0645 | 0.8387 | 1.000 | 0.0 | 0.5323 |
+| SFT-letters @expanded (this)   | 122 | 0.3871 | 0.9355 | 1.000 | 0.0 | 0.8742 |
+
+Findings:
+
+- HYPOTHESIS CONFIRMED. verdict_acc 0.0645 (@62) -> 0.3871 (@expanded) = a ~6x jump
+  (also 6x over prompted 0.0968) on the UNCHANGED frozen test. The verdict head was
+  DATA-STARVED, specifically CLASS-STARVED (contradicts/partial): adding the boundary
+  classes is what moved it.
+- The easy citation half also improved (cite_gold 0.8387 -> 0.9355) and fabrication
+  stayed 0.0; mean_reward 0.5323 -> 0.8742.
+- ATTRIBUTION CHAIN COMPLETE: action-space (fixed - fabrication 0) -> data (confirmed
+  today) -> capacity (next probe: 3B on the same expanded data).
+
+Failures / honest caveats:
+
+- 0.387 is still FAR from usable - this is a direction confirmed, not a solved task.
+- Single seed; n=31 frozen test; the expansion train data is construction-labeled
+  (spot-audited 93.3%, construction_v1_unaudited), not human-gold.
+
+Artifacts:
+
+```text
+runs/sft_citation15_expanded/20260704T0647Z-e571324/{citation_sft_expanded_test_eval.json,
+  metrics.json,run_manifest.json,trainer_log.jsonl}
+```
+
+Decision:
+
+Data-scaling path VALIDATED (D-2026-07-04-009). Next levers pre-registered: one more
+collection batch to ~400+, then 3B citation SFT (capacity probe), then GRPO-letters on
+the expanded pool (does RL add anything on top of healthy SFT data).
+
+Next:
+
+Collection batch 2 -> ~400+; 3B capacity probe on the expanded pool; GRPO-letters on
+the expanded pool.

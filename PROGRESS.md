@@ -2,6 +2,49 @@
 
 Last updated: 2026-07-04
 
+## Round 5 Wrap-Up: DPO beta closure, citation data-scaling confirmed 6x (2026-07-04)
+
+Two lines closed with evidence.
+
+**DPO beta sweep -> over-conservatism is STRUCTURAL (three-method comparison final).**
+The F2 next-lever from EXP-2026-07-04-005 (pairs v2 gate-perfect but reward-collapsed)
+was a beta sweep. Sweeping beta 0.3 and 0.5 (from beta=0.1) recovers SOME exploration -
+success 0.5833 -> 0.6667, reward 0.5213 -> 0.5989 at lambda0.3 - but PLATEAUS ~15 pts of
+success / ~0.15 reward below the SFT baseline 0.7495 and never re-crosses the kill line
+(delta -0.1506, gate 1.000 throughout). Robust now across 2 pair designs x 3 betas, so
+DPO's safety-first / exploration-poor character on this task is STRUCTURAL, not a
+hyperparameter accident. Observation (not a failure): beta=0.3 and beta=0.5 converge to
+DIGIT-IDENTICAL greedy policies (0.5989 / 0.6667 / 0.2258 / gate 1.0) despite different
+loss curves - same greedy argmax trajectory. The three-method comparison is now FINAL:
+GRPO = efficiency (analytic oracle at 3B), DPO = safety (gate 1.000 at ~half the
+success), SFT = balanced baseline. DPO arm closed for further beta/pair tuning.
+(EXP-2026-07-04-010, D-2026-07-04-009.)
+
+**Citation corpus expansion v1 (build).** Committed earlier as b6c909a; backfilled to
+the EXPERIMENT_LOG as EXP-2026-07-04-011. +146 construction-labeled TRAIN/dev rows (train
+122 / dev 24, NO test) from 21 AI-vertical SEC issuers (40 filings: 10-K 68 / 10-Q 72 /
+20-F 5 / 8-K 1), EDGAR submissions API, 0 fetch/anchor failures. Label mix verified 70 /
+contradicts 35 / partial 22 / insufficient 19 - the key move: the old train pool had 1
+contradicts + 1 partial, so this UN-STARVES the boundary classes. 10.3% blind spot-audit,
+93.3% agreement (>=90% gate), one C2 correction; opaque sample_ids; frozen eval untouched.
+Combined train pool now 131 + 146 = 277 (target 300-500, one more batch).
+
+**THE D-008 DATA-STARVATION TEST (the payoff).** Re-ran SFT-letters (1.5B) on the
+class-balanced EXPANDED train pool (122 rows) and evaluated on the SAME FROZEN test
+(n=31, letters): verdict_acc 0.0645 (@62 rows) -> 0.3871 (~6x; also 6x over prompted
+0.0968), cite_gold 0.8387 -> 0.9355, fabricated 0.0, mean_reward 0.5323 -> 0.8742.
+HYPOTHESIS CONFIRMED: the verdict head was data-starved, specifically CLASS-starved
+(contradicts/partial). Attribution chain now COMPLETE: action-space (fixed, fabrication
+0) -> data (confirmed today) -> capacity (next probe: 3B on the same data). Honest
+caveats: 0.387 is still far from usable; single seed; n=31; construction-labeled train
+data (spot-audited 93.3%). Data-scaling path VALIDATED (D-2026-07-04-009); pre-registered
+next levers: collection batch 2 -> ~400+, then 3B citation capacity probe, then
+GRPO-letters on the expanded pool. (EXP-2026-07-04-012.)
+
+Evidence (all local this round; weights git-excluded): `runs/dpo_v2_beta03_qwen15/`,
+`runs/dpo_v2_beta05_qwen15/`, `runs/sft_citation15_expanded/`, dataset
+`…/citation_train_expansion_v1/` (commit b6c909a).
+
 ## Rounds 3/4 Wrap-Up: multi-seed error bars, Gemma cross-family, citation SFT probe, R6 rescore (2026-07-04)
 
 Closed out the round-3 discussion items and the batch-4 GPU run with the honest

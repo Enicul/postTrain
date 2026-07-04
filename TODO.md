@@ -159,23 +159,41 @@ PROMOTED next levers (top tier):
 - [~] Plan B: grow citation corpus 131 -> 300-500 rows, then re-run citation SFT/GRPO.
   The verdict head is data-starved (D-2026-07-04-008); corpus growth is the identified
   next lever. Optionally probe the verdict at 3B once the corpus is larger.
-  DONE 2026-07-04 (partial toward 300-500): citation_train_expansion_v1 built -
-  +146 construction-labeled TRAIN/dev rows from 21 AI-vertical SEC issuers
-  (10-K/10-Q/20-F/8-K) under citation_contract_repair_v0.1/citation_train_expansion_v1/;
-  frozen eval untouched. Labels construction_v1_unaudited; 10% blind spot-audit
-  93.3% agreement (>=90% gate), one C2 correction applied. Label mix
-  verified 70 / contradicts 35 / partial 22 / insufficient 19 (un-starves the
-  boundary classes vs eval train's 1 contradicts / 1 partial). SFT letters file
-  emitted + verified via sft_citation.py --eval-dir --labels-only (0 mapping
-  mismatches). REMAINING: pool now 131 + 146 = 277; a further batch reaches
-  300-500, then re-run citation SFT/GRPO on the combined train pool.
-- [ ] DPO beta sweep: sweep beta (0.1 is likely over-constraining toward the reference)
-  to test whether exploration/success recovers, since pair v2 alone did not
-  (EXP-2026-07-04-005, D-2026-07-04-004 amended).
-- [ ] env v0.4 memory-form experiment (construction): build the four-arm matrix
-  (no-memory / structured-digest / raw-long-context / Sonnet) with pre-registered
-  kills; tests what FORM state should take for a small model. The R6 smart-review tier
-  ("retrieve memory before judging") sharpens its motivation. See
+  BATCH-1 DONE 2026-07-04 (EXP-2026-07-04-011, commit b6c909a; partial toward 300-500):
+  citation_train_expansion_v1 built - +146 construction-labeled TRAIN/dev rows from 21
+  AI-vertical SEC issuers (10-K/10-Q/20-F/8-K) under
+  citation_contract_repair_v0.1/citation_train_expansion_v1/; frozen eval untouched.
+  Labels construction_v1_unaudited; 10% blind spot-audit 93.3% agreement (>=90% gate),
+  one C2 correction applied. Label mix verified 70 / contradicts 35 / partial 22 /
+  insufficient 19 (un-starves the boundary classes vs eval train's 1 contradicts / 1
+  partial). SFT letters file emitted + verified via sft_citation.py --eval-dir
+  --labels-only (0 mapping mismatches). REMAINING: pool now 131 + 146 = 277; a further
+  batch reaches 300-500, then re-run citation SFT/GRPO on the combined train pool.
+- [x] D-008 DATA-STARVATION TEST (SFT-letters on the EXPANDED pool). DONE 2026-07-04
+  (EXP-2026-07-04-012): verdict_acc 0.0645 (@62) -> 0.3871 (@122 expanded, ~6x) on the
+  FROZEN test n=31; cite_gold 0.8387 -> 0.9355; fabricated 0.0; mean_reward 0.5323 ->
+  0.8742. HYPOTHESIS CONFIRMED - verdict head was CLASS-starved. Data-scaling path
+  VALIDATED (D-2026-07-04-009). Attribution chain complete: action-space -> data ->
+  capacity(next). Caveats: 0.387 still far from usable; single seed; n=31;
+  construction-labeled train.
+- [x] DPO beta sweep. DONE 2026-07-04 (EXP-2026-07-04-010): beta 0.3/0.5 recover some
+  exploration (success 0.5833 -> 0.6667) but plateau ~15 pts below SFT baseline 0.7495;
+  beta=0.3 and beta=0.5 DIGIT-IDENTICAL greedy policies. DPO over-conservatism is
+  STRUCTURAL (2 pair designs x 3 betas). Three-method comparison FINAL: GRPO=efficiency,
+  DPO=safety, SFT=balanced (D-2026-07-04-009). DPO escalation arm CLOSED.
+
+QUEUE (promoted next levers, in order):
+
+- [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time
+  discipline / boundary-class balance; then re-run on the combined train pool.
+- [ ] 3B CITATION SFT (capacity probe) on the expanded pool - the last link in the
+  action-space -> data -> capacity attribution chain (D-2026-07-04-009).
+- [ ] GRPO-letters on the expanded pool - does RL add anything on top of healthy SFT
+  data (D-2026-07-04-009).
+- [ ] env v0.4 memory-form experiment (construction) - STANDING BIG-TICKET: build the
+  four-arm matrix (no-memory / structured-digest / raw-long-context / Sonnet) with
+  pre-registered kills; tests what FORM state should take for a small model. The R6
+  smart-review tier ("retrieve memory before judging") sharpens its motivation. See
   `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005.
 
 SECOND tier:

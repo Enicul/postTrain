@@ -978,3 +978,58 @@ Consequence:
 - General lesson: before blaming an RL objective for a stuck sub-metric, run the SFT
   control; component decoupling under RL and a plain capability gap look identical from
   the RL run alone.
+
+## D-2026-07-04-009 - Citation data-scaling path VALIDATED (evidence-backed); DPO over-conservatism closed as STRUCTURAL (three-method comparison final)
+
+Decision:
+
+Two closures on the same day.
+
+(1) CITATION DATA-SCALING PATH IS VALIDATED, not just hypothesized. The 131 -> ~500
+train-pool growth plan is now backed by a controlled result: re-running SFT-letters on
+the class-balanced EXPANDED train pool (122 rows) lifted verdict_acc 0.0645 (@62 rows)
+-> 0.3871 (~6x) on the UNCHANGED frozen test n=31, with cite_gold 0.8387 -> 0.9355 and
+fabrication held at 0.0 (EXP-2026-07-04-012). This confirms the D-2026-07-04-008
+data-starvation diagnosis: the verdict head was class-starved (contradicts/partial),
+and adding boundary-class data is the lever that moves it. The attribution chain is now
+complete: ACTION-SPACE (fabrication 0, D-2026-07-04-002) -> DATA (confirmed today) ->
+CAPACITY (next probe). Pre-registered next levers, in order: (a) one more collection
+batch to ~400+ (277 today), (b) 3B citation SFT as the capacity probe, (c) GRPO-letters
+on the expanded pool to test whether RL adds anything on top of healthy SFT data.
+
+(2) DPO'S OVER-CONSERVATISM IS STRUCTURAL - three-method comparison closed. The DPO
+beta sweep (beta 0.3, 0.5; EXP-2026-07-04-010) recovers SOME exploration over beta=0.1
+(success 0.5833 -> 0.6667, reward 0.5213 -> 0.5989 at lambda0.3) but PLATEAUS ~15 pts of
+success / ~0.15 reward below the SFT baseline (0.7495) and never re-crosses the kill
+line. Robust across 2 pair designs x 3 betas, gate perfect (1.000) throughout. So DPO's
+safety-first / exploration-poor character on this task is a STRUCTURAL property, not a
+hyperparameter accident. The three-method comparison is FINAL: GRPO = efficiency
+(analytic oracle at 3B), DPO = safety (gate 1.000 at ~half the success), SFT = balanced
+baseline.
+
+Why:
+
+(1) The cleanest way to convert a data-starvation DIAGNOSIS into a validated PATH is to
+add the missing data and re-run the same control on the same frozen eval; a 6x verdict
+jump with everything else held constant is that confirmation. (2) An over-conservatism
+claim needs a hyperparameter sweep before it can be called structural; sweeping beta
+(the KL anchor most directly tied to exploration) across two pair designs and finding a
+persistent ~15-pt success plateau is that evidence. An interesting side observation:
+beta=0.3 and beta=0.5 converge to DIGIT-IDENTICAL greedy policies despite different loss
+curves - the greedy argmax trajectory is the same (recorded as an observation in the
+EXPERIMENT entry, not a failure).
+
+Consequence:
+
+- TODO: mark DPO beta sweep, corpus expansion batch-1, and the D-008 data-starvation
+  test DONE; queue collection batch-2 (~400+), 3B citation capacity probe, GRPO-letters
+  on the expanded pool; env v0.4 memory-arm construction stays the standing big-ticket.
+- PORTFOLIO_INDEX: the citation line carries the full attribution-chain story
+  (fabrication 87% -> 0 via action space; verdict 6x via class balance; capacity probe
+  queued); the finalized three-method (GRPO/DPO/SFT) framing; refreshed honest limits
+  (0.387 still far from usable, single seed, n=31, construction-labeled train data).
+- The DPO escalation arm is CLOSED for further beta/pair tuning.
+- General lesson: to promote a "data will fix it" hypothesis to a validated path, add
+  the specific missing slice (here the boundary classes) and re-run the identical
+  control on the frozen eval - a targeted class-balanced add is more informative than
+  bulk rows.

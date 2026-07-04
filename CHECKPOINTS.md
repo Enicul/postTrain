@@ -1258,3 +1258,60 @@ re-run (verdict data-starvation); DPO beta sweep (F2 next lever); env v0.4 memor
 construction (four-arm matrix, D-2026-07-03-002). Second tier: Plan C inference-backend
 control column, lambda=0.6 exploration. See EXP/F/D-2026-07-04-004..009, TODO.
 ```
+
+## CP-2026-07-04-003 - Round 5 wrap-up: DPO beta closure, citation data-scaling confirmed 6x
+
+Status: current
+
+```text
+DPO escalation arm closed (over-conservatism STRUCTURAL across 2 pair designs x 3
+betas). Citation data-starvation VALIDATED: SFT-letters on the class-balanced expanded
+pool jumped verdict_acc ~6x on the frozen test. All three run dirs local under
+training-corpus/scripts/rl/runs/; weights git-excluded. The infra hostname suffix in the
+three new run_manifest.json logging_dir fields was REDACTED to _REDACTED per convention.
+```
+
+Headline results:
+
+```text
+DPO BETA SWEEP (1.5B, pairs v2, escalation @lambda0.3, greedy, test n=48):
+  beta=0.1 (prior): reward 0.5213 / success 0.5833 / gate 1.000
+  beta=0.3        : reward 0.5989 / success 0.6667 / cost 0.2258 / gate 1.000
+  beta=0.5        : reward 0.5989 / success 0.6667 / cost 0.2258 / gate 1.000  (DIGIT-IDENTICAL to beta=0.3)
+  vs SFT baseline 0.7495 -> plateaus ~15 pts below; kill line not re-crossed (delta -0.1506).
+  => DPO safety-first is STRUCTURAL. Three-method FINAL: GRPO=efficiency, DPO=safety, SFT=balanced.
+CITATION EXPANSION v1 (build, commit b6c909a): +146 construction-labeled rows (train 122/dev 24,
+  no test), 21 AI issuers, 0 fetch fails, labels verified70/contradicts35/partial22/insufficient19
+  (un-starves boundary classes), 93.3% blind spot-audit. Combined train pool 131+146=277.
+D-008 DATA-STARVATION TEST (SFT-letters 1.5B on expanded pool, FROZEN test n=31, letters):
+  verdict_acc 0.0645(@62) -> 0.3871(@expanded) ~6x; cite_gold 0.8387->0.9355; fabricated 0.0;
+  mean_reward 0.5323->0.8742. HYPOTHESIS CONFIRMED - verdict head was class-starved.
+  Chain complete: action-space(fixed) -> data(confirmed) -> capacity(next 3B probe).
+  Caveats: 0.387 still far from usable; single seed; n=31; construction-labeled train.
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/dpo_v2_beta03_qwen15/20260704T0624Z-e571324/  (beta=0.3; test_eval, metrics, manifest, preds, trainer_log)
+runs/dpo_v2_beta05_qwen15/20260704T0626Z-e571324/  (beta=0.5, digit-identical greedy)
+runs/sft_citation15_expanded/20260704T0647Z-e571324/  (D-008 payoff; citation_sft_expanded_test_eval.json)
+.../citation_contract_repair_v0.1/citation_train_expansion_v1/  (dataset, commit b6c909a; manifest.json)
+runs/gpu_session_20260704/{batch4.log,r3_batch.log}  (gitignored, not committed)
+docs/PORTFOLIO_INDEX.md  (citation attribution-chain + three-method table refresh)
+```
+
+Log ids this round: EXP-2026-07-04-010 (beta sweep), -011 (expansion build backfill),
+-012 (data-starvation test); D-2026-07-04-009 (data-scaling validated + DPO structural);
+CP-2026-07-04-003. No new FAILURE entry (beta-identical policies is an EXPERIMENT
+observation).
+
+Resume:
+
+```text
+Next queue: citation collection batch 2 -> ~400+ (277 today); 3B citation SFT capacity
+probe on the expanded pool; GRPO-letters on the expanded pool (does RL add over healthy
+SFT data). Standing big-ticket: env v0.4 memory-arm construction (four-arm matrix,
+D-2026-07-03-002/005). Second tier: Plan C inference-backend control column, lambda=0.6
+exploration arm, full SFT+GRPO seed-varied 3B. See EXP/D-2026-07-04-010..012, TODO.
+```

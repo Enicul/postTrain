@@ -41,10 +41,18 @@ training seeds {0,1,2}); all other cells are **single-seed (seed 0), flagged `[s
 | **3B** | 0.4232 / 0.00 | 0.8428 / 1.000 `[s0]` | **0.8473 ± 0.0000 / gate 1.000 ± 0.0 = ORACLE ×3 seeds** | `runs/a1_prompted/`, `runs/sft_qwen3/…T1623Z…/`, `runs/agg/grpo_v2_qwen3.json` |
 | **7B** | 0.7447 / 0.75 | 0.7147 / 0.75 `[s0]` | 0.7997 / 0.875 `[s0]` | `runs/a1_prompted/`, `runs/sft_qwen7/…T1646Z…/`, `runs/grpo_v2_qwen7/…T1648Z…/` |
 
-**DPO rows (1.5B):** v1 (β=0.1) 0.5382 / gate 1.000 / success 0.58; **v2** (rebalanced
-"failed-to-escalate" pairs) 0.5213 / gate 1.000 / success 0.5833 — gate-perfect,
-reward-collapsed, and the pair fix did **not** buy back exploration (next lever = β
-sweep). Evidence: `runs/dpo_qwen15/…T1607Z…/`, `runs/dpo_v2_qwen15/…T0059Z…/`.
+**DPO rows (1.5B), β sweep closed:** v1 (β=0.1) 0.5382 / gate 1.000 / success 0.58;
+**v2** (rebalanced "failed-to-escalate" pairs, β=0.1) 0.5213 / gate 1.000 / success
+0.5833; **v2 β=0.3 and β=0.5** both 0.5989 / gate 1.000 / success 0.6667 at λ=0.3 —
+**digit-identical greedy policies**. Relaxing β recovers *some* exploration (success
+0.58 → 0.67) but **plateaus ~15 pts below the SFT baseline 0.7495** and never re-crosses
+the kill line (Δ −0.1506). So DPO's safety-first / exploration-poor character is
+**STRUCTURAL** — robust across **2 pair designs × 3 betas**, gate perfect throughout —
+not a hyperparameter accident. **The three-method comparison is now final: GRPO =
+efficiency (oracle at 3B), DPO = safety (gate 1.000 at ~half the success), SFT = balanced
+baseline** (EXP-2026-07-04-010, D-2026-07-04-009). Evidence: `runs/dpo_qwen15/…T1607Z…/`,
+`runs/dpo_v2_qwen15/…T0059Z…/`, `runs/dpo_v2_beta03_qwen15/…T0624Z…/`,
+`runs/dpo_v2_beta05_qwen15/…T0626Z…/`.
 
 **Gemma 4 cross-family row (prompted, no training):** E2B (eff 2.3B) 0.7440 / gate
 0.875 / success 0.9375; E4B (eff 4.5B) 0.7452 / gate 0.875 / success 0.9375. Evidence:
@@ -204,12 +212,15 @@ citation env v2 (D-2026-07-04-002/008).
    SFT — a 160-row LoRA is too thin to move 7B priors. Scale helps until the data
    is too thin to steer the larger model.
 
-6. **DPO / GRPO mirror image, and pair fixes have a ceiling.** On one ruler at 1.5B:
-   GRPO is reward-optimal / gate-imperfect (0.7997 / 0.875); DPO is gate-perfect /
-   reward-collapsed (v1 0.5382, v2 0.5213 / gate 1.000). Rebalancing the pairs
-   ("failed-to-escalate" negatives) did **not** buy back exploration (success stuck
-   ~0.58) — over-conservatism is not only a pair artifact; next lever is a β sweep
-   (EXP-2026-07-04-005).
+6. **DPO / GRPO mirror image — DPO's over-conservatism is STRUCTURAL (three-method
+   comparison closed).** On one ruler at 1.5B: GRPO is reward-optimal / gate-imperfect
+   (0.7997 / 0.875); DPO is gate-perfect / reward-collapsed (v1 0.5382, v2 0.5213 / gate
+   1.000). Rebalancing the pairs did **not** buy back exploration, and the **β sweep
+   (0.3, 0.5)** only recovers success to 0.6667 — **still ~15 pts below the SFT baseline
+   0.7495**, with β=0.3 and β=0.5 producing **digit-identical greedy policies**. Robust
+   across **2 pair designs × 3 betas**, so it is structural, not a hyperparameter
+   accident. Final framing: **GRPO = efficiency, DPO = safety, SFT = balanced baseline**
+   (EXP-2026-07-04-005/010, D-2026-07-04-009).
 
 7. **Gate discipline is family-dependent, not a universal small-model law.** Prompted
    Gemma 4 reaches gate 0.875 (E2B eff 2.3B and E4B eff 4.5B) where prompted Qwen 3B is
@@ -218,15 +229,26 @@ citation env v2 (D-2026-07-04-002/008).
    trained Qwen 3B still leads by ~10 pts and gates perfectly (EXP-2026-07-04-008,
    D-2026-07-04-007).
 
-8. **Action-space lesson (citation) — and where it stops.** A 1.5B cannot reliably copy
-   long evidence ids, so it fabricates (fabricated_rate 0.742 after training). Re-render
-   candidates as letter choices (A–F) mapped back by the harness and fabrication drops to
-   **0.0 in the prompted arm alone** (cite_gold 0.74 → 0.87 after GRPO) — "don't make the
-   model do the harness's job." But the **5-way verdict head stays stuck** (~0.06–0.10)
-   regardless of method, and a **supervised control also fails it** (SFT verdict 0.0645),
-   which *exonerates the RL objective*: the verdict is **data-starved** (62 train rows) /
-   capacity-limited, not a reward-shaping problem. Next lever is corpus growth 131 →
-   300–500, not more RL (D-2026-07-04-002/008, F-2026-07-04-003).
+8. **Citation, end to end — a three-link attribution chain.** *(a) Action space fixed
+   fabrication.* A 1.5B cannot reliably copy long evidence ids, so it fabricates
+   (fabricated_rate **0.87** before). Re-render candidates as letter choices (A–F) mapped
+   back by the harness and fabrication drops to **0.0 in the prompted arm alone**
+   (cite_gold 0.74 → 0.87 after GRPO) — "don't make the model do the harness's job." *(b)
+   The verdict head was data-starved, and adding the missing classes moved it 6×.* The
+   5-way verdict stayed stuck (~0.06–0.10) regardless of method, and a **supervised
+   control also failed it** (SFT verdict 0.0645 @62 rows), which *exonerated the RL
+   objective* and localized the fault to a **data/capacity** axis. We then built a
+   **class-balanced training-pool expansion** (+146 construction-labeled rows, 21
+   AI-vertical SEC issuers, verified 70 / contradicts 35 / partial 22 / insufficient 19 —
+   the old train pool had only **1 contradicts + 1 partial**; 93.3% blind spot-audit;
+   frozen eval untouched) and re-ran SFT-letters on it: **verdict_acc 0.0645 → 0.3871
+   (~6×)** on the same frozen test, cite_gold 0.84 → **0.94**, fabricated still 0.0,
+   mean_reward 0.53 → **0.87**. Data-starvation **confirmed**; it was specifically
+   *class* starvation. *(c) Capacity is the next probe* (3B on the same data), completing
+   the **action-space → data → capacity** chain. **Honest:** 0.387 is still far from
+   usable — a direction confirmed, not a solved task; single seed; n=31; the expansion
+   train data is construction-labeled (spot-audited 93.3%), not human-gold
+   (EXP-2026-07-04-004/011/012, D-2026-07-04-002/008/009, F-2026-07-04-003).
 
 ---
 
@@ -246,9 +268,12 @@ citation env v2 (D-2026-07-04-002/008).
   routing, not the running product.
 - **Single-GPU scale.** One A100 80GB; 7B used batch 8 / grad-accum 2 to fit. The
   7B tiny-data dip may be an lr/rank artifact, not a capability ceiling — un-retuned.
-- **Corpus sizes.** SFT is 160 oracle labels; the citation verdict head is trained on
-  only 62 rows (data-starved, D-2026-07-04-008). The 7B result specifically is a
-  *tiny-data* result.
+- **Corpus sizes.** SFT is 160 oracle labels; the citation verdict head was trained on
+  only 62 rows (data-starved, D-2026-07-04-008). Expanding to a class-balanced 122-row
+  pool lifted verdict_acc 6× (0.0645 → **0.3871**), confirming the diagnosis — but
+  **0.387 is still far from usable**, on a single seed and n=31, and the expansion train
+  data is **construction-labeled** (93.3% spot-audit), not human-gold. The 7B escalation
+  result specifically is a *tiny-data* result.
 - **Cross-family is prompted-only, and effective-vs-dense.** The Gemma 4 arm is
   *prompted* (no Gemma training yet); a Gemma SFT/GRPO sweep is backlog. Gemma 4 is a
   MatFormer reporting *effective* (selective-activation) params (E2B ≈ 2.3B, E4B ≈
