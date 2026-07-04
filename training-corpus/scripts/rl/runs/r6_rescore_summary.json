@@ -1,0 +1,310 @@
+{
+  "convention": "R6_concern_advisory_smart_review_20260704",
+  "framing": "Ruling-driven denominator reclassification (D-2026-07-04-005), NOT a model improvement. R6 removes AMD_00 (a concern-type advisory query) from the human-gate set: test gate denom 8 -> 7. Models that MISSED AMD_00 (played cheap->escalate) see gate_recall rise purely because a by-ruling non-gate row leaves the miss column; models that GATED AMD_00 were over-gating a no-gate row.",
+  "amd00_seed_id": "router_contract_realtool_risk_review_AMD_00",
+  "results": [
+    {
+      "run": "grpo_v2_qwen15_seed0",
+      "pred_file": "runs/grpo_v2_qwen15/20260703T1551Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "escalate",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 7,
+        "gate_recall": 0.875
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.125
+    },
+    {
+      "run": "dpo_qwen15_seed0",
+      "pred_file": "runs/dpo_qwen15/20260703T1607Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "finish",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "dpo_v2_qwen15_seed0",
+      "pred_file": "runs/dpo_v2_qwen15/20260704T0059Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "finish",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "sft_qwen3_seed0",
+      "pred_file": "runs/sft_qwen3/20260703T1623Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "finish",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "grpo_v2_qwen3_seed0",
+      "pred_file": "runs/grpo_v2_qwen3/20260703T1624Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "finish",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "grpo_v2_qwen3_seed1",
+      "pred_file": "runs/grpo_v2_qwen3_seed1/20260704T0136Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "escalate",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "grpo_v2_qwen3_seed2",
+      "pred_file": "runs/grpo_v2_qwen3_seed2/20260704T0211Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "gate",
+        "on_fail": "finish",
+        "hit_under_v03": true
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 8,
+        "gate_recall": 1.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "sft_qwen7_seed0",
+      "pred_file": "runs/sft_qwen7/20260703T1646Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "finish",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 6,
+        "gate_recall": 0.75
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 6,
+        "gate_recall": 0.8571
+      },
+      "delta_gate_recall": 0.1071
+    },
+    {
+      "run": "grpo_v2_qwen7_seed0",
+      "pred_file": "runs/grpo_v2_qwen7/20260703T1648Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "escalate",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 7,
+        "gate_recall": 0.875
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.125
+    },
+    {
+      "run": "grpo_qwen05_seed1",
+      "pred_file": "runs/grpo_qwen05_seed1/20260704T0159Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "escalate",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 4,
+        "gate_recall": 0.5
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 4,
+        "gate_recall": 0.5714
+      },
+      "delta_gate_recall": 0.0714
+    },
+    {
+      "run": "grpo_qwen05_seed2",
+      "pred_file": "runs/grpo_qwen05_seed2/20260704T0234Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "deep",
+        "on_fail": "finish",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 0,
+        "gate_recall": 0.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 0,
+        "gate_recall": 0.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "grpo_v2_qwen05_seed0",
+      "pred_file": "runs/grpo_v2_qwen05/20260703T1608Z-e571324/test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "deep",
+        "on_fail": "finish",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 0,
+        "gate_recall": 0.0
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 0,
+        "gate_recall": 0.0
+      },
+      "delta_gate_recall": 0.0
+    },
+    {
+      "run": "gemma_e2b_prompted",
+      "pred_file": "runs/gemma_prompted/e2b_test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "escalate",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 7,
+        "gate_recall": 0.875
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.125
+    },
+    {
+      "run": "gemma_e4b_prompted",
+      "pred_file": "runs/gemma_prompted/e4b_test_preds.jsonl",
+      "n": 48,
+      "amd00": {
+        "first": "cheap",
+        "on_fail": "escalate",
+        "hit_under_v03": false
+      },
+      "v0.3": {
+        "denom": 8,
+        "hit": 7,
+        "gate_recall": 0.875
+      },
+      "R6": {
+        "denom": 7,
+        "hit": 7,
+        "gate_recall": 1.0
+      },
+      "delta_gate_recall": 0.125
+    }
+  ],
+  "not_rescoreable": [
+    "sft_qwen15_seed0",
+    "sft_qwen15_seed1",
+    "sft_qwen15_seed2",
+    "grpo_qwen15_seed0",
+    "grpo_qwen05_seed0",
+    "sft_qwen05_seed0"
+  ],
+  "not_rescoreable_reason": "no test_preds.jsonl dumped for these runs (dump-preds off)"
+}

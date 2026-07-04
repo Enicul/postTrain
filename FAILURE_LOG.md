@@ -1323,3 +1323,82 @@ marks it as the rejected side, DPO will learn to never escalate. Pair
 construction must cover BOTH error directions (over- and under-escalation) or the
 learned policy inherits the one-sidedness. Completes the SFT/DPO/GRPO three-way
 picture on one ruler (EXP-2026-07-04-001).
+
+## F-2026-07-04-005 - Gemma venv torch/driver mismatch, then a hand-rolled-generate smoke test masked a working real path
+
+Symptom:
+
+Standing up the Gemma 4 cross-family arm (EXP-2026-07-04-008) in a fresh venv, the
+latest `torch` wheel refused to initialize CUDA - it required a newer NVIDIA driver
+than the box shipped (driver 12050). After reinstalling the CUDA 12.4 (`cu124`)
+wheels to match the box driver, torch worked; but a hand-rolled standalone smoke
+test then threw an unrelated `AttributeError` from a hand-written `generate` call
+against transformers 5.13, which briefly looked like the Gemma arm was broken.
+
+Evidence:
+
+```text
+runs/gemma_prompted/{e2b_test_eval.json,e4b_test_eval.json}  (the REAL eval path, which worked)
+runs/gpu_session_20260704/batch4.log                          (driver/wheel + smoke trace)
+```
+
+Diagnosis:
+
+Two independent issues stacked. (1) A genuine environment mismatch: latest-torch
+CUDA requirement > box driver 12050 -> fixed by pinning to `cu124` wheels that match
+the driver. (2) A FALSE alarm: the transformers-5.13 `AttributeError` was in a
+HAND-ROLLED `generate` wrapper written only for the smoke test, NOT in the actual
+eval harness. The real eval path (the same harness used for every Qwen arm) ran
+cleanly and produced the E2B/E4B numbers. The smoke test was testing a code path
+that would never ship.
+
+Fix:
+
+Reinstall cu124 torch wheels to match driver 12050; DISCARD the hand-rolled smoke
+harness and smoke-test THROUGH THE ACTUAL EVAL HARNESS instead.
+
+Effect / lesson:
+
+SMOKE-TEST THROUGH THE REAL PATH, NOT A HAND-ROLLED ONE. A bespoke smoke script can
+fail (or pass) for reasons that have nothing to do with the code you will actually
+run, wasting debugging time on a phantom. When validating a new model/family on an
+existing harness, exercise the harness's own entry point on one row; do not
+re-implement `generate`. Also: on a shared box, always pin CUDA wheels to the
+installed driver rather than pulling "latest."
+
+## F-2026-07-04-006 - Tooling agent wrote gemma-3n (2025 family) hub ids instead of gemma-4; caught at orchestration review
+
+Symptom:
+
+The tooling agent that drafted the Gemma arm wrote `gemma-3n` (the 2025 Gemma family)
+Hugging Face hub ids into the launch config instead of the intended `gemma-4` hub ids.
+The numbers such a run would have produced would have looked PERFECTLY NORMAL - a
+plausible small-model prompted result - with nothing in the metrics to reveal that the
+wrong model family had been evaluated.
+
+Evidence:
+
+```text
+repo commit 40b42e9  (on-box sed fix of the gemma hub ids: gemma-3n -> gemma-4)
+runs/gemma_prompted/{e2b,e4b}_run_manifest.json  (final, corrected model ids)
+```
+
+Diagnosis:
+
+A model-id authoring error, caught at ORCHESTRATION REVIEW before launch (not by any
+automated check). Because a wrong-family id still resolves to a real, loadable model
+and yields sane-looking metrics, no runtime error or anomalous number would have
+flagged it - the mistake is invisible downstream. Fixed on-box via `sed` and committed
+(40b42e9).
+
+Fix:
+
+Corrected the hub ids to the gemma-4 family before launch; committed the fix.
+
+Effect / lesson:
+
+MODEL-ID REVIEW IS PART OF EXPERIMENT REVIEW. When an experiment's whole point is the
+identity of the model (a cross-family arm), the model id is a LOAD-BEARING parameter
+and must be reviewed like a hyperparameter - wrong-family numbers look completely
+normal and would silently corrupt the cross-family conclusion. Add model-id
+verification to the pre-launch review checklist for any model-identity experiment.

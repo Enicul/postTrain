@@ -1,0 +1,88 @@
+{
+ "config": "grpo_qwen05",
+ "n_seeds": 3,
+ "lambdas": [
+  "0.1",
+  "0.3",
+  "0.6"
+ ],
+ "eval_paths": [
+  "runs/grpo_qwen05/20260703T1507Z-e571324/grpo_test_eval.json",
+  "runs/grpo_qwen05_seed1/20260704T0159Z-e571324/grpo_test_eval.json",
+  "runs/grpo_qwen05_seed2/20260704T0234Z-e571324/grpo_test_eval.json"
+ ],
+ "per_lambda": {
+  "0.1": {
+   "reward": {
+    "mean": 0.6388,
+    "std": 0.0931,
+    "min": 0.5721,
+    "max": 0.7705
+   },
+   "gate_recall": {
+    "mean": 0.1667,
+    "std": 0.2357,
+    "min": 0.0,
+    "max": 0.5
+   },
+   "per_seed_reward": [
+    0.5721,
+    0.7705,
+    0.5739
+   ],
+   "per_seed_gate_recall": [
+    0.0,
+    0.5,
+    0.0
+   ]
+  },
+  "0.3": {
+   "reward": {
+    "mean": 0.4721,
+    "std": 0.1221,
+    "min": 0.383,
+    "max": 0.6448
+   },
+   "gate_recall": {
+    "mean": 0.1667,
+    "std": 0.2357,
+    "min": 0.0,
+    "max": 0.5
+   },
+   "per_seed_reward": [
+    0.383,
+    0.6448,
+    0.3885
+   ],
+   "per_seed_gate_recall": [
+    0.0,
+    0.5,
+    0.0
+   ]
+  },
+  "0.6": {
+   "reward": {
+    "mean": 0.222,
+    "std": 0.1657,
+    "min": 0.0994,
+    "max": 0.4562
+   },
+   "gate_recall": {
+    "mean": 0.1667,
+    "std": 0.2357,
+    "min": 0.0,
+    "max": 0.5
+   },
+   "per_seed_reward": [
+    0.0994,
+    0.4562,
+    0.1103
+   ],
+   "per_seed_gate_recall": [
+    0.0,
+    0.5,
+    0.0
+   ]
+  }
+ }
+}

@@ -120,34 +120,67 @@ Block F - live demo:
   RULED 2026-07-04 (owner, Option C / Convention R6): concern-type advisory queries
   route to a smart-review tier, NOT the human gate. AMD_00 relabeled no-gate. See
   D-2026-07-04-005, docs/RULING_DOSSIER_risk_review_AMD_00.md.
-- [ ] env v0.3.1 gate-convention patch: flip AMD_00 `requires_human_gate` true->false
-  with `gate_convention: R6_concern_advisory_smart_review_20260704`; then OFFLINE
-  dual-convention rescore of ALL historical `test_preds` under BOTH the pre-R6 (gate
-  denom 8) and post-R6 (denom 7) gate sets, side-by-side (no GPU needed). DEFERRED
-  until batch-4 completes, to preserve comparability. D-2026-07-04-005.
+- [x] env v0.3.1 gate-convention patch + OFFLINE dual-convention R6 rescore. DONE
+  2026-07-04: `env_seeds_v0.3.1.json` created next to v0.3 (AMD_00 requires_human_gate
+  true->false + `gate_convention: R6_concern_advisory_smart_review_20260704`); loader
+  preference order in `escalation_env_v01.py` DELIBERATELY UNCHANGED (still
+  `("v0.3","v0.1")`) so future runs opt into v0.3.1 explicitly. Rescored all 14 runs
+  with dumped `test_preds` under BOTH pre-R6 (denom 8) and R6 (denom 7) via
+  `scripts/analysis/rescore_r6.py` -> `runs/r6_rescore_summary.json`. Ruling-driven, not
+  improvement: missers of AMD_00 rise (3B GRPO-v2 8/8->7/7 stays 1.0; gemma 7/8->7/7),
+  gaters were over-gating. D-2026-07-04-005.
+- [x] Batch-4 Phase A multi-seed error bars {0,1,2}. DONE 2026-07-04
+  (EXP-2026-07-04-007): SFT 1.5B 0.7024+/-0.0333 (seed 0 best -> "beats 7B" seed-0-only,
+  honest downgrade); GRPO-v2 3B 0.8473+/-0.0000 gate 1.000 (oracle x3, crown jewel);
+  GRPO 0.5B 0.4721+/-0.1221 gate 0.1667 (collapse 2/3 seeds = instability). Headline
+  policy: seed-0-only claims -> mean+/-std (D-2026-07-04-006).
+- [x] Gemma 4 cross-family arm (PROMPTED). DONE 2026-07-04 (EXP-2026-07-04-008): E2B/E4B
+  prompted 0.744/0.7452, gate 0.875, success 0.9375. Cross-family gate-blindness
+  REFUTED (family-dependent, not a universal small-model law); Gemma-2.3B-eff ~ Qwen-7B
+  prompted. D-2026-07-04-007. (A full Gemma SFT/GRPO sweep to test the 3B sweet-spot /
+  7B dip cross-family remains backlog - needs a Gemma-capable training path.)
+- [x] Citation env v2 letter-indexed (A-F) action space. DONE 2026-07-04
+  (EXP-2026-07-04-004): fabrication SOLVED (prompted fab 0.0 / cite_gold 0.742; GRPO
+  cite_gold 0.871) - action-space hypothesis confirmed. Residual: verdict head still
+  stuck (data-starved, see below). D-2026-07-04-002.
+- [x] Citation SFT-letters control (Phase C). DONE 2026-07-04 (EXP-2026-07-04-009):
+  SFT verdict_acc 0.0645 < prompted -> SUPERVISED also fails the verdict, so it is NOT
+  the RL objective's fault; verdict is data-starved (62 train rows) / capacity-limited.
+  D-2026-07-04-008.
+- [x] DPO pair v2 (failed-to-escalate negatives). DONE 2026-07-04 (EXP-2026-07-04-005):
+  success barely moved (0.58->0.5833), reward 0.5213 - pair fix INSUFFICIENT;
+  over-conservatism not (only) a pair artifact. Next lever = beta sweep (below).
+- [x] 0.5B temperature-sweep probe. DONE 2026-07-04 (EXP-2026-07-04-006): T0.7 presence
+  0.0, T1.0 presence 0.25 / per-sample gate 0.0625 < 0.9 threshold -> collapse is
+  GENUINE KNOWLEDGE LOSS, not a decoding artifact; capacity floor observed -> tested.
+
+PROMOTED next levers (top tier):
+
+- [ ] Plan B: grow citation corpus 131 -> 300-500 rows, then re-run citation SFT/GRPO.
+  The verdict head is data-starved (D-2026-07-04-008); corpus growth is the identified
+  next lever. Optionally probe the verdict at 3B once the corpus is larger.
+- [ ] DPO beta sweep: sweep beta (0.1 is likely over-constraining toward the reference)
+  to test whether exploration/success recovers, since pair v2 alone did not
+  (EXP-2026-07-04-005, D-2026-07-04-004 amended).
+- [ ] env v0.4 memory-form experiment (construction): build the four-arm matrix
+  (no-memory / structured-digest / raw-long-context / Sonnet) with pre-registered
+  kills; tests what FORM state should take for a small model. The R6 smart-review tier
+  ("retrieve memory before judging") sharpens its motivation. See
+  `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005.
+
+SECOND tier:
+
+- [ ] Plan C: run with an inference backend as the control column.
+- [ ] GRPO lambda=0.6 exploration arm.
+- [ ] Full-pipeline (SFT+GRPO seed-varied) 3B multi-seed to close the last variance
+  caveat on the crown jewel (current 3B multi-seed isolates GRPO sampling variance only).
 - [ ] KIWI product (design note, implementation deferred): route concern-signals
   (worry expressed, no action intent) to the critic/verifier SMART-REVIEW tier per R6
   — stronger model / dedicated agent that retrieves evidence + user memory before
   judging; do NOT bounce concern back to the user as a decision, and do NOT collapse
   it to the cheap path. Human gate stays reserved for red-line actions. D-2026-07-04-005.
-- [ ] Gemma 4 cross-family arm: repeat the SFT/GRPO-v2 sweep on Gemma 4 to test
-  whether the 3B sweet-spot and 7B non-monotonic dip are Qwen-specific or general.
-  Needs user HF license acceptance + a fresh venv with transformers>=Gemma4 support.
-- [ ] Citation env v2: letter-indexed (A-F) action space mapped back by the harness;
-  re-run 1.5B GRPO vs the same `citation_real_eval_v1` ruler, same bar. PRE-REGISTERED
-  (D-2026-07-04-002), not yet run.
-- [ ] DPO pair v2: add "failed-to-escalate" negatives (escalate = chosen on gate
-  seeds) so escalation is not uniformly the rejected action (D-2026-07-04-004).
-- [ ] 0.5B temperature-sweep probe (OPTIONAL): quantify the sampling-vs-greedy gap on
-  the 0.5B v2 adapter (samples keep gate alive; greedy collapses). F-2026-07-04-002.
 - [ ] Consolidated project-plan doc (single index across the acts + RL Phase 2).
   PARTIALLY served by the new `docs/PORTFOLIO_INDEX.md` interviewer front door.
-- [ ] Plan B: grow citation corpus to 300-500 rows, then GRPO.
-- [ ] Plan C: run with an inference backend as the control column.
-- [ ] env v0.4 memory-form experiment - designed, queued behind A3 writeup.
-  Four-arm matrix (no-memory / structured-digest / raw-long-context / Sonnet)
-  with pre-registered kills; tests what FORM state should take for a small
-  model. See `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002.
 
 ## P0 - Repo Hygiene
 

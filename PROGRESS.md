@@ -2,6 +2,68 @@
 
 Last updated: 2026-07-04
 
+## Rounds 3/4 Wrap-Up: multi-seed error bars, Gemma cross-family, citation SFT probe, R6 rescore (2026-07-04)
+
+Closed out the round-3 discussion items and the batch-4 GPU run with the honest
+revisions they forced.
+
+**Round 3 (three probes).** F1 - citation LETTERS action space (1.5B, n=31):
+the action-space hypothesis is CONFIRMED - letters drove fabricated_rate
+0.871 -> 0.0 and cite_gold 0.065 -> 0.742 in the PROMPTED arm alone (harness does the
+id copying), and GRPO lifted cite_gold to 0.871; but verdict_acc FELL 0.258 -> 0.097
+(the old higher verdict number was partly lucky guessing while citations were
+wrong), and GRPO moved cite_gold with verdict flat = component-reward decoupling.
+Pre-registered bar (fabricated==0 AND verdict+5) HALF-met -> honest partial. F2 -
+DPO pairs v2 (1.5B): success barely moved (0.58 -> 0.5833), reward 0.5213 - the pair
+fix is INSUFFICIENT; over-conservatism is not (only) a pair artifact; next lever is a
+beta sweep (backlog). F3 - 0.5B temperature probe on the collapsed v2 adapter: T0.7
+gate presence 0.0, T1.0 presence 0.25 / per-sample gate_recall 0.0625 -
+pre-registered threshold (presence>=0.9) NOT met, so the collapse is GENUINE
+KNOWLEDGE LOSS, not a decoding artifact; capacity-floor claim upgraded observed ->
+tested.
+
+**Batch 4 (three phases).** Phase A multi-seed {0,1,2}: SFT 1.5B reward@0.3
+0.7024 +/- 0.0333 [0.6772,0.7495] - SEED 0 WAS THE BEST, so "trained 1.5B beats
+prompted 7B (0.7447)" holds ONLY at seed 0, NOT at the mean (HONEST DOWNGRADE).
+GRPO-v2 3B 0.8473 +/- 0.0000, gate 1.000 +/- 0.0 - three seeds hit the analytic
+oracle EXACTLY (crown jewel replicated; isolates GRPO sampling variance only). GRPO
+0.5B plain 0.4721 +/- 0.1221, gate 0.1667 +/- 0.2357 - collapse in 2/3 seeds (seed 1
+partial, gate 0.5, beat SFT) -> collapse is high-probability instability, not
+determinism; kill unchanged. Phase B - Gemma 4 cross-family prompted (E2B eff 2.3B /
+E4B eff 4.5B): BOTH 0.744/0.7452, gate 0.875, success 0.9375 - Qwen's small-prompted
+gate blindness does NOT replicate; cross-family hypothesis REFUTED (family-dependent,
+not a universal small-model law); Gemma-2.3B-eff prompted ~ Qwen-7B prompted. Neither
+prompted Gemma clears gate 0.99; trained Qwen 3B still leads by ~10 pts -> motivation
+stands, sharper. Phase C - citation SFT-letters (1.5B, n=31): verdict_acc 0.0645
+(LOWER than prompted 0.0968, cite_gold 0.8387, fab 0.0) - SUPERVISED training ALSO
+fails the 5-way verdict, so it is NOT the RL objective's fault; the verdict is
+data-starved (62 train rows) / capacity-limited. Next lever: corpus growth 131 ->
+300-500 and/or bigger model.
+
+**Also recorded.** Two failures: (F-2026-07-04-005) Gemma venv torch/driver mismatch
+(latest torch needed a newer driver than the box's 12050; fixed via cu124 wheels) +
+the lesson that a hand-rolled generate smoke test masked a working REAL eval path -
+smoke-test through the actual harness; (F-2026-07-04-006) the tooling agent wrote
+gemma-3n (2025 family) instead of gemma-4 hub ids, caught at orchestration review and
+fixed on-box (sed + commit 40b42e9) - model-id review is part of experiment review,
+wrong-family numbers look normal. Offline DUAL-CONVENTION R6 RESCORE: from every run's
+dumped `test_preds.jsonl` (rescoreable: grpo_v2_qwen15, dpo, dpo_v2, sft/grpo_v2 3B x3
+seeds, sft/grpo_v2 7B, grpo_qwen05 seed1/seed2, grpo_v2_qwen05, gemma e2b/e4b - 14
+runs; the seed-0 sft_qwen15 / grpo_qwen15 / grpo_qwen05 / sft_qwen05 runs LACK
+dump-preds and are not rescoreable), recomputed gate_recall under R6 (AMD_00 leaves
+the gate set, denom 8 -> 7) alongside v0.3 via
+`scripts/analysis/rescore_r6.py` -> `runs/r6_rescore_summary.json`. Ruling-driven, not
+improvement (D-2026-07-04-005): missers of AMD_00 rise (3B GRPO-v2 8/8 -> 7/7 stays
+1.0; gemma 7/8 -> 7/7 = 1.0), gaters were over-gating. env v0.3.1 patch created
+(`env_seeds_v0.3.1.json` - AMD_00 requires_human_gate=false + gate_convention field)
+next to v0.3; the loader preference order in `escalation_env_v01.py` is DELIBERATELY
+UNCHANGED (still `("v0.3","v0.1")`) so future runs opt into v0.3.1 explicitly.
+
+New/updated docs: `docs/PORTFOLIO_INDEX.md` full refresh (error-bar matrix, Gemma row,
+crown-jewel + honest-downgrade narrative, R6 three-tier paragraph + rescore pointer,
+refreshed honest-limits). See EXP-2026-07-04-004..009, F-2026-07-04-005..006,
+D-2026-07-04-006..008, CP-2026-07-04-002.
+
 ## Overnight Scale Sweep + DPO + Collapse Ablation + Citation (2026-07-03 -> 07-04)
 
 Second A100 session (GPU 0, env v0.3, test n=48, oracle 0.8473, greedy seed 0),

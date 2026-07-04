@@ -1835,3 +1835,364 @@ Next:
 
 Implement citation env v2 (letter-indexed candidates) and re-run the 1.5B GRPO
 against the same `citation_real_eval_v1` ruler. See TODO.
+## EXP-2026-07-04-004 - Round 3 F1: citation LETTERS action space (1.5B), prompted vs GRPO
+
+Goal:
+
+Test the citation env v2 hypothesis (D-2026-07-04-002): if the fabrication in the
+Night-3 negative (EXP-2026-07-04-003) is a WRONG-ACTION-SPACE problem - asking a
+1.5B to copy long evidence ids verbatim - then re-rendering candidates as LETTER
+choices (A-F) with the harness mapping the letter back to the id should make
+fabrication structurally impossible and let the model actually pick evidence.
+Same frozen `citation_real_eval_v1` ruler (test n=31), same pre-registered bar
+(fabricated_rate == 0 AND verdict reward improves by >= +5).
+
+Data:
+
+`citation_real_eval_v1` (frozen, blind-double-annotated, test n=31). 1.5B base
+(Qwen2.5-1.5B-Instruct), letter-indexed action space. Prompted-letters baseline
+first as control; then GRPO-letters. Base commit e571324.
+
+Metrics (test n=31, letters action space):
+
+| arm | verdict_acc | cite_gold_rate | cite_valid_rate | fabricated_rate | mean_reward |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| prompted-letters | 0.0968 | 0.7419 | 1.000 | 0.0 | 0.5452 |
+| GRPO-letters     | 0.0968 | 0.8710 | 1.000 | 0.0 | 0.5710 |
+
+For reference, v1 raw-id prompted (EXP-2026-07-04-003): fabricated 0.871,
+cite_gold 0.0645, verdict_acc 0.2581.
+
+Findings:
+
+- ACTION-SPACE HYPOTHESIS CONFIRMED for the citation half. Letters drove
+  fabricated_rate 0.871 -> 0.0 and cite_gold 0.0645 -> 0.7419 in the PROMPTED
+  arm alone (no training) - the harness now does the id bookkeeping, exactly as
+  designed. GRPO then lifted cite_gold 0.7419 -> 0.8710. So "don't make the model
+  do the harness's job" is validated: reshaping the action space, not more RL,
+  killed fabrication.
+- BUT verdict_acc FELL 0.2581 (v1 raw-id prompted) -> 0.0968 (letters). The honest
+  reading: the old higher verdict number was partly LUCKY GUESSING while citations
+  were wrong; once letters made citation easy, the (broken) verdict head was
+  exposed with nothing to hide behind. GRPO moved cite_gold up (0.7419 -> 0.8710)
+  while verdict_acc stayed FLAT (0.0968) - COMPONENT-REWARD DECOUPLING: the reward
+  can drive the citation component without touching the verdict component.
+- Pre-registered bar is HALF-MET: fabricated_rate == 0 PASSES; verdict +5 FAILS
+  (verdict flat). Recorded as an HONEST PARTIAL - the citation-fabrication problem
+  is solved by the action-space fix; the 5-way verdict problem is a SEPARATE,
+  unsolved capability (probed further in EXP-2026-07-04-009).
+
+Artifacts:
+
+```text
+runs/citation_letters_prompted15_test_eval.json                 (prompted-letters control)
+runs/grpo_citation_letters15/20260704T0045Z-e571324/{citation_letters_grpo_test_eval.json,
+  generations.jsonl,reward_trace.jsonl,trainer_log.jsonl,metrics.json,run_manifest.json}
+```
+
+Decision:
+
+Citation env v2 letter action space is ADOPTED (fabrication solved). The residual
+verdict failure is not an RL-objective artifact but a verdict-head capability gap;
+probe whether SUPERVISED training also fails it before blaming the objective
+(-> EXP-2026-07-04-009), and grow the corpus (backlog).
+
+Next:
+
+Run citation SFT-letters to isolate whether the verdict head is data-starved /
+capacity-limited rather than an RL decoupling artifact (EXP-2026-07-04-009).
+
+## EXP-2026-07-04-005 - Round 3 F2: DPO pairs v2 (1.5B) - does the pair fix restore exploration?
+
+Goal:
+
+Test DPO pair v2 (D-2026-07-04-004): the v1 DPO collapse (gate-perfect,
+reward-collapsed) was diagnosed as a pair artifact (rejected == the escalate
+action, teaching "never escalate"). v2 adds "failed-to-escalate" negatives so
+escalation is the WINNER on hard seeds. Does balancing the pair distribution
+restore success/exploration while keeping gate discipline?
+
+Data:
+
+Escalation env v0.3, test n=48, greedy seed 0, lambda sweep. Same 1.5B init and
+ruler as v1 for a clean read. `runs/dpo_v2_qwen15_pairs.jsonl` (rebalanced pairs).
+
+Metrics (test n=48, lambda=0.3 headline; greedy):
+
+| arm | reward | gate_recall | success | cost |
+| --- | ---: | ---: | ---: | ---: |
+| DPO v1 (EXP-2026-07-04-001) | 0.5382 | 1.000 | 0.58 | 0.139 |
+| DPO v2                      | 0.5213 | 1.000 | 0.5833 | 0.2068 |
+
+(v2 lambda sweep: reward 0.5627 @0.1, 0.5213 @0.3, 0.4593 @0.6; gate 1.000 and
+success 0.5833 at all lambda.)
+
+Findings:
+
+- HONEST NEGATIVE / INSUFFICIENT FIX. Success barely moved (0.58 -> 0.5833) and
+  reward is flat-to-slightly-lower (0.5382 -> 0.5213 @0.3). The pre-registered
+  kill-check fails (delta -0.2282 vs the SFT 0.7495 baseline; gate 1.000 held but
+  reward far below baseline).
+- INTERPRETATION: the pair fix ALONE is insufficient. Over-conservatism is NOT
+  (only) a one-sided-pair artifact - balancing the pair distribution did not buy
+  back exploration. The DPO policy still under-explores (success stuck ~0.58) even
+  when escalation is no longer uniformly the rejected action. So the next lever is
+  not more pair surgery but a BETA SWEEP (beta 0.1 may be over-constraining the
+  policy toward the reference); recorded to backlog.
+
+Artifacts:
+
+```text
+runs/dpo_v2_qwen15/20260704T0059Z-e571324/{dpo_v2_test_eval.json,test_preds.jsonl,
+  trainer_log.jsonl,metrics.json,run_manifest.json}
+runs/dpo_v2_qwen15_pairs.jsonl
+```
+
+Decision:
+
+Record the honest negative; do not iterate further on pair construction. Promote a
+DPO beta sweep to the backlog as the next lever (D-2026-07-04-004 amended). SFT
+1.5B remains the promotable policy; DPO stays a bracketing datapoint, not a winner.
+
+Next:
+
+DPO beta sweep (backlog). No further pair-design iterations.
+
+## EXP-2026-07-04-006 - Round 3 F3: 0.5B temperature probe - collapse = knowledge loss, not a decoding artifact?
+
+Goal:
+
+Settle the sampling-vs-greedy split from F-2026-07-04-002: the collapsed 0.5B v2
+adapter kept the gate action alive in training SAMPLES but collapsed to gate 0.00
+in GREEDY eval. Is the greedy-0.00 a DECODING-MODE artifact (the gate mode exists
+but greedy misses it) or GENUINE KNOWLEDGE LOSS (the gate capability is gone)?
+Pre-registered threshold: gate_action_presence_rate >= 0.90 across sampled decode
+would mean "mode exists, greedy just misses it"; below it means knowledge loss.
+
+Data:
+
+The collapsed 0.5B GRPO-v2 adapter (`runs/grpo_v2_qwen05/20260703T1608Z-e571324`),
+escalation env v0.3 test n=48, 8 gate-needed seeds. Sampled decode at T=0.7 and
+T=1.0, n_samples=8, with `gate_action_presence` reported.
+
+Metrics (test n=48, sampled n=8):
+
+| decode | gate_action_presence_rate | seeds_with_gate_in_samples / 8 | per-sample gate_recall @0.3 |
+| --- | ---: | ---: | ---: |
+| T=0.7 | 0.0    | 0/8 | 0.0    |
+| T=1.0 | 0.25   | 2/8 | 0.0625 |
+
+Findings:
+
+- PRE-REGISTERED THRESHOLD NOT MET. At T=0.7 the gate action is entirely absent
+  from all 8 gate seeds' samples (presence 0.0); at T=1.0 only 2 of 8 gate seeds
+  ever surface a gate action across 8 samples (presence 0.25), and per-sample gate
+  recall is 0.0625. Presence 0.25 << 0.90 threshold.
+- CONCLUSION: the collapse is GENUINE KNOWLEDGE LOSS, not a decoding-mode artifact.
+  The gate action is not merely a non-modal but reachable branch; at low temp it is
+  extinct and even at T=1.0 it barely surfaces. The capacity-floor claim for the
+  0.5B (previously OBSERVED from the greedy collapse) is now UPGRADED to TESTED: the
+  gate capability itself is destroyed under group-relative advantage at 0.5B, not
+  hidden behind greedy decoding. (Consistent with the all-violate-group taxonomy:
+  0.55 all-violate at 0.5B - no gradient to preserve the action.)
+
+Artifacts:
+
+```text
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/{sampled_T0.7_eval.json,sampled_T1.0_eval.json}
+  (each carries gate_action_presence: {gate_needed_seeds, seeds_with_gate_in_samples,
+   gate_action_presence_rate} + scores_per_sample_avg)
+```
+
+Decision:
+
+Capacity-floor claim upgraded observed -> tested. The 0.5B kill verdict stands and
+is now evidenced at the mechanism level (knowledge loss, not decode mode). No
+further 0.5B mitigation attempts warranted at this size.
+
+Next:
+
+None for 0.5B. The multi-seed batch (EXP-2026-07-04-007) separately shows the
+collapse is high-probability (2/3 seeds) rather than deterministic.
+
+## EXP-2026-07-04-007 - Batch 4 Phase A: multi-seed error bars (SFT 1.5B, GRPO-v2 3B, GRPO 0.5B), seeds {0,1,2}
+
+Goal:
+
+Put ERROR BARS on the three load-bearing single-seed claims from the scale sweep by
+re-running each at seeds {0,1,2} and aggregating mean +/- std: (1) the "trained 1.5B
+beats prompted 7B" headline (SFT 1.5B), (2) the 3B oracle crown jewel (GRPO-v2 3B,
+which isolates GRPO SAMPLING variance since all three init from the same seed-0 3B
+SFT), (3) the 0.5B collapse (GRPO 0.5B plain - is it deterministic or probabilistic?).
+
+Data:
+
+Escalation env v0.3, test n=48 (8 gate seeds), greedy seed-0 eval, lambda sweep.
+Three training seeds per config. Aggregated by `scripts/rl/aggregate_seeds.py`
+into `runs/agg/{sft_qwen15,grpo_v2_qwen3,grpo_qwen05}.json`.
+
+Metrics (lambda=0.3, mean +/- std over 3 seeds; per-seed in the agg jsons):
+
+| config | reward mean+/-std [min,max] | gate_recall mean+/-std | per-seed reward |
+| --- | --- | --- | --- |
+| SFT 1.5B      | 0.7024 +/- 0.0333 [0.6772, 0.7495] | 0.75 +/- 0.102 | [0.7495, 0.6772*, 0.6805] |
+| GRPO-v2 3B    | 0.8473 +/- 0.0000 [0.8473, 0.8473] | 1.000 +/- 0.0  | [0.8473, 0.8473, 0.8473] |
+| GRPO 0.5B     | 0.4721 +/- 0.1221 [0.383, 0.6448]  | 0.1667 +/- 0.2357 | [0.383, 0.6448, 0.383] |
+
+(*SFT 1.5B per-seed gate_recall [0.875, 0.625, 0.75]; seed-0's 0.7495 is the MAX
+of the three. GRPO 0.5B per-seed gate_recall [0.0, 0.5, 0.0].)
+
+Findings:
+
+- HEADLINE REVISION (SFT 1.5B, honest downgrade). SEED 0 (0.7495) is the BEST of
+  the three; the MEAN is 0.7024 +/- 0.0333. The "trained 1.5B beats prompted 7B
+  (0.7447)" claim therefore holds ONLY AT SEED 0; at the mean it does NOT
+  (0.7024 < 0.7447). The portfolio headline is downgraded to a mean+/-std claim and
+  the "beats 7B" line is flagged as seed-0-only. This is exactly why multi-seed was
+  run.
+- CROWN JEWEL REPLICATED (GRPO-v2 3B). All THREE seeds converge to 0.8473 / gate
+  1.000 EXACTLY (std 0.0) - the analytic oracle, reproduced with zero variance.
+  Caveat stated honestly: this isolates GRPO SAMPLING variance only (all three
+  init from the same seed-0 3B SFT adapter), not full-pipeline (SFT+GRPO) variance.
+  Still the strongest result in the portfolio and now replicated.
+- COLLAPSE IS PROBABILISTIC, NOT DETERMINISTIC (GRPO 0.5B). Collapse in 2/3 seeds
+  (seeds 0 and 2: 0.383 / gate 0.0); seed 1 was PARTIAL (0.6448 / gate 0.5) and
+  actually BEAT the SFT baseline. Revision: the 0.5B collapse is a HIGH-PROBABILITY
+  INSTABILITY (2/3), not a deterministic law. Kill verdict UNCHANGED - no seed
+  comes near the gate 0.99 bar (best gate is 0.5), and the mean gate 0.1667 is far
+  below promotable.
+
+Artifacts:
+
+```text
+runs/agg/{sft_qwen15.json, grpo_v2_qwen3.json, grpo_qwen05.json}  (mean/std/min/max + per-seed + eval_paths)
+runs/sft_qwen15_seed1/20260704T0135Z-e571324/  runs/sft_qwen15_seed2/20260704T0210Z-e571324/
+runs/grpo_v2_qwen3_seed1/20260704T0136Z-e571324/  runs/grpo_v2_qwen3_seed2/20260704T0211Z-e571324/
+runs/grpo_qwen05_seed1/20260704T0159Z-e571324/  runs/grpo_qwen05_seed2/20260704T0234Z-e571324/
+runs/gpu_session_20260704/batch4.log
+```
+
+Decision:
+
+Portfolio headlines move from seed-0 single-point claims to mean+/-std claims
+(D-2026-07-04-006). "1.5B beats 7B" is honestly downgraded to seed-0-only; the 3B
+oracle is promoted as the replicated crown jewel (GRPO-variance-only caveat); the
+0.5B collapse is restated as 2/3-seed instability.
+
+Next:
+
+Full-pipeline (SFT+GRPO seed-varied) 3B multi-seed would close the last variance
+caveat (backlog). Report all headline cells with error bars in PORTFOLIO_INDEX.
+
+## EXP-2026-07-04-008 - Batch 4 Phase B: Gemma 4 cross-family prompted (E2B / E4B) - does small-model gate blindness generalize?
+
+Goal:
+
+Test whether the Qwen small-prompted GATE BLINDNESS (prompted gate recall: 0.5B/1.5B
+0.50, 3B 0.00) is a UNIVERSAL small-model law or FAMILY-DEPENDENT. Prompt Gemma 4
+(cross-family) on the identical env v0.3 ruler with no training and compare.
+
+Data:
+
+Escalation env v0.3, test n=48 (8 gate seeds), greedy, lambda sweep. Gemma 4
+prompted E2B (effective 2.3B) and E4B (effective 4.5B). NOTE the MatFormer caveat:
+these are EFFECTIVE-param (selective activation) sizes, not dense params, so
+size comparisons to dense Qwen are approximate.
+
+Metrics (test n=48, lambda=0.3, greedy):
+
+| arm | reward | gate_recall | success | cost |
+| --- | ---: | ---: | ---: | ---: |
+| Gemma-4 E2B (eff 2.3B) prompted | 0.7440 | 0.875 | 0.9375 | 0.5062 |
+| Gemma-4 E4B (eff 4.5B) prompted | 0.7452 | 0.875 | 0.9375 | 0.5022 |
+| (ref) Qwen-7B prompted          | 0.7447 | 0.75  | 1.0    | -     |
+| (ref) Qwen-3B prompted          | 0.4232 | 0.00  | -      | -     |
+
+Findings:
+
+- CROSS-FAMILY HYPOTHESIS REFUTED. Qwen's small-prompted gate blindness does NOT
+  replicate on Gemma 4: BOTH Gemma sizes reach gate 0.875 prompted (vs Qwen 3B's
+  0.00 and 1.5B's 0.50). The gate-discipline-is-a-universal-small-model-deficit
+  claim is FALSE; it is FAMILY-DEPENDENT (instruction-tuning / safety priors),
+  not a size law. A Gemma-2.3B-effective PROMPTED already matches a Qwen-7B
+  PROMPTED (0.744 vs 0.7447).
+- MOTIVATION STANDS, SHARPENED. Neither prompted Gemma reaches the gate 0.99 bar
+  (both stall at 0.875), and the TRAINED Qwen 3B (0.8473 / gate 1.000) leads the
+  best prompted Gemma by ~10 reward pts AND carries the gate perfectly. So training
+  still wins - the sharper framing is "training beats the best available prompt,
+  cross-family," not "small prompted models are all gate-blind."
+
+Artifacts:
+
+```text
+runs/gemma_prompted/{e2b_test_eval.json,e4b_test_eval.json,e2b_test_preds.jsonl,e4b_test_preds.jsonl}
+runs/gpu_session_20260704/batch4.log
+```
+
+Decision:
+
+Add the Gemma cross-family row to the portfolio with the effective-vs-dense param
+caveat; record the cross-family-blindness REFUTATION (family-dependent, not
+universal) as D-2026-07-04-007. Training motivation restated as "beats best
+cross-family prompt + carries the gate."
+
+Next:
+
+A full Gemma 4 SFT/GRPO sweep would test whether the 3B sweet-spot / 7B dip
+generalize across families (backlog, needs a Gemma-capable training path).
+
+## EXP-2026-07-04-009 - Batch 4 Phase C: citation SFT (letters, 1.5B) - is the verdict head data-starved?
+
+Goal:
+
+Answer the component-decoupling probe from F1 (EXP-2026-07-04-004): GRPO-letters
+lifted cite_gold while verdict_acc stayed flat (0.0968). Is the stuck verdict a
+property of the RL OBJECTIVE (component decoupling) or a deeper CAPABILITY gap?
+Supervised training is the cleanest control: if SFT ALSO fails to teach the 5-way
+verdict, the objective is exonerated and the verdict is data-starved / capacity-
+limited.
+
+Data:
+
+`citation_real_eval_v1` (test n=31), 1.5B, letters action space, argmax-SFT on the
+citation oracle labels (62 train rows). Base commit e571324.
+
+Metrics (test n=31, letters):
+
+| arm | verdict_acc | cite_gold_rate | cite_valid_rate | fabricated_rate | mean_reward |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| prompted-letters (EXP-...-004) | 0.0968 | 0.7419 | 1.000 | 0.0 | 0.5452 |
+| GRPO-letters (EXP-...-004)     | 0.0968 | 0.8710 | 1.000 | 0.0 | 0.5710 |
+| SFT-letters (this run)         | 0.0645 | 0.8387 | 1.000 | 0.0 | 0.5323 |
+
+Findings:
+
+- PROBE ANSWERED: NOT THE RL OBJECTIVE'S FAULT. SUPERVISED training ALSO fails to
+  teach the verdict - SFT verdict_acc 0.0645 is actually LOWER than prompted 0.0968
+  and GRPO 0.0968. So the flat verdict under GRPO is NOT an RL component-decoupling
+  artifact; the 5-way verdict capability is genuinely DATA-STARVED (only 62 train
+  rows) and/or capacity-limited at 1.5B. SFT reproduced the citation behavior
+  (cite_gold 0.8387, fabricated 0.0) - it learns the easy citation half fine and
+  still cannot move the verdict.
+- The verdict failure is now localized to a DATA/CAPACITY axis, not an algorithm
+  axis. Next levers are corpus growth (131 -> 300-500, already backlog) and/or a
+  bigger model - NOT reward shaping.
+
+Artifacts:
+
+```text
+runs/sft_citation15/20260704T0251Z-e571324/{citation_sft_test_eval.json,test_preds.jsonl,
+  trainer_log.jsonl,metrics.json,run_manifest.json}
+```
+
+Decision:
+
+Verdict-head failure recorded as DATA-STARVED / capacity-limited, not an RL-objective
+artifact (D-2026-07-04-008). Promote citation corpus growth (131 -> 300-500) as the
+next lever; consider a larger model for the verdict head. Close the citation-verdict
+line at 1.5B.
+
+Next:
+
+Grow the citation corpus (backlog) and re-run; optionally probe verdict at 3B once
+the corpus is larger.

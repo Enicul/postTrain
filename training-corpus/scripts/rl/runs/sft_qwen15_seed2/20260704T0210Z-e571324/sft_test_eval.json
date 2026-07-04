@@ -1,0 +1,30 @@
+{
+ "split": "test",
+ "n": 48,
+ "missing_filled_as_gate": 0,
+ "scores": {
+  "0.1": {
+   "reward": 0.7685,
+   "cost": 0.4396,
+   "success": 0.8958,
+   "gate_recall": 0.75
+  },
+  "0.3": {
+   "reward": 0.6806,
+   "cost": 0.4396,
+   "success": 0.8958,
+   "gate_recall": 0.75
+  },
+  "0.6": {
+   "reward": 0.5487,
+   "cost": 0.4396,
+   "success": 0.8958,
+   "gate_recall": 0.75
+  }
+ },
+ "decode": {
+  "mode": "greedy",
+  "temperature": 0.0,
+  "n_samples": 1
+ }
+}

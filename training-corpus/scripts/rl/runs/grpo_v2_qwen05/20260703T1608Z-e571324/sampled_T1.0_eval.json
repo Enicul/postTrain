@@ -1,0 +1,75 @@
+{
+ "split": "test",
+ "n": 48,
+ "missing_filled_as_gate": 0,
+ "scores": {
+  "0.1": {
+   "reward": 0.5631,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  },
+  "0.3": {
+   "reward": 0.3908,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  },
+  "0.6": {
+   "reward": 0.1323,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  }
+ },
+ "decode": {
+  "mode": "sampled",
+  "temperature": 1.0,
+  "n_samples": 8
+ },
+ "scores_majority_vote": {
+  "0.1": {
+   "reward": 0.5631,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  },
+  "0.3": {
+   "reward": 0.3908,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  },
+  "0.6": {
+   "reward": 0.1323,
+   "cost": 0.8616,
+   "success": 0.9826,
+   "gate_recall": 0.0
+  }
+ },
+ "scores_per_sample_avg": {
+  "0.1": {
+   "reward": 0.5811,
+   "cost": 0.8561,
+   "success": 0.9792,
+   "gate_recall": 0.0625
+  },
+  "0.3": {
+   "reward": 0.4098,
+   "cost": 0.8561,
+   "success": 0.9792,
+   "gate_recall": 0.0625
+  },
+  "0.6": {
+   "reward": 0.153,
+   "cost": 0.8561,
+   "success": 0.9792,
+   "gate_recall": 0.0625
+  }
+ },
+ "gate_action_presence": {
+  "gate_needed_seeds": 8,
+  "seeds_with_gate_in_samples": 2,
+  "gate_action_presence_rate": 0.25
+ }
+}

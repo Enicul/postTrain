@@ -1193,3 +1193,68 @@ negatives (D-2026-07-04-004); Gemma 4 cross-family arm (needs HF license + fresh
 venv w/ Gemma4 transformers support); optional 0.5B temperature-sweep probe to
 quantify the sampling-vs-greedy gap. See EXP/F/D-2026-07-04-*, TODO.
 ```
+
+## CP-2026-07-04-002 - Rounds 3/4 wrap-up: multi-seed error bars, Gemma cross-family, citation SFT probe, R6 rescore
+
+Status:
+
+```text
+Round-3 discussion items (F1/F2/F3) and batch-4 (Phases A/B/C) closed out and
+written up with the honest revisions they forced. All evidence local under
+training-corpus/scripts/rl/runs/; weights git-excluded. env v0.3.1 seed patch
+created but NOT wired into the loader (opt-in only). R6 dual-convention rescore
+done offline from dumped test_preds.
+```
+
+Headline results:
+
+```text
+ROUND 3:
+  F1 citation LETTERS (1.5B, n=31): prompted fab 0.0 / cite_gold 0.742 / verdict 0.0968
+    / reward 0.5452; GRPO fab 0.0 / cite_gold 0.871 / verdict 0.0968 / reward 0.571.
+    Action-space CONFIRMED; verdict fell 0.258->0.097 (partly lucky-guess before);
+    component decoupling. Bar HALF-met (honest partial).
+  F2 DPO v2 (1.5B): reward 0.5213 / gate 1.000 / success 0.5833 - pair fix insufficient;
+    next lever = beta sweep.
+  F3 0.5B temp probe: T0.7 presence 0.0, T1.0 presence 0.25, per-sample gate 0.0625 <
+    0.9 threshold -> collapse = genuine knowledge loss (capacity floor upgraded to tested).
+BATCH 4:
+  A SFT 1.5B reward@0.3 0.7024+/-0.0333 [0.6772,0.7495] (seed 0 best; "1.5B beats 7B"
+    seed-0-only); GRPO-v2 3B 0.8473+/-0.0000 gate 1.000+/-0.0 (oracle x3, crown jewel);
+    GRPO 0.5B 0.4721+/-0.1221 gate 0.1667+/-0.2357 (collapse 2/3 seeds, instability).
+  B Gemma-4 E2B/E4B prompted 0.744/0.7452 gate 0.875 success 0.9375 - cross-family
+    blindness REFUTED (family-dependent); Gemma-2.3B-eff ~ Qwen-7B prompted.
+  C citation SFT-letters (1.5B, n=31) verdict_acc 0.0645 < prompted - SUPERVISED also
+    fails verdict -> data-starved (62 rows), not RL's fault.
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/citation_letters_prompted15_test_eval.json
+runs/grpo_citation_letters15/20260704T0045Z-e571324/    (F1 GRPO-letters)
+runs/dpo_v2_qwen15/20260704T0059Z-e571324/  + runs/dpo_v2_qwen15_pairs.jsonl  (F2)
+runs/grpo_v2_qwen05/20260703T1608Z-e571324/{sampled_T0.7_eval.json,sampled_T1.0_eval.json}  (F3)
+runs/agg/{sft_qwen15,grpo_v2_qwen3,grpo_qwen05}.json  (A aggregates, per-seed + mean/std)
+runs/sft_qwen15_seed{1,2}/  runs/grpo_v2_qwen3_seed{1,2}/  runs/grpo_qwen05_seed{1,2}/  (A seeds)
+runs/gemma_prompted/{e2b,e4b}_test_eval.json  {e2b,e4b}_test_preds.jsonl  (B)
+runs/sft_citation15/20260704T0251Z-e571324/  (C citation SFT)
+runs/r6_rescore_summary.json + scripts/analysis/rescore_r6.py  (R6 dual-convention rescore)
+env_seeds_v0.3.1.json (next to v0.3, AMD_00 no-gate + gate_convention; loader NOT changed)
+runs/gpu_session_20260704/{batch4.log,r3_batch.log}
+docs/PORTFOLIO_INDEX.md  (full refresh)
+```
+
+Not rescoreable (no test_preds.jsonl dumped): seed-0 sft_qwen15, grpo_qwen15,
+grpo_qwen05, sft_qwen05. Rescoreable: 14 runs (grpo_v2_qwen15, dpo, dpo_v2, sft/grpo_v2
+3B x3 seeds, sft/grpo_v2 7B, grpo_qwen05 seed1/seed2, grpo_v2_qwen05, gemma e2b/e4b).
+
+Resume:
+
+```text
+Next: wire env v0.3.1 only into NEW runs that opt in (loader preference order stays
+("v0.3","v0.1") on purpose). Priority queue: citation corpus growth 131->300-500 then
+re-run (verdict data-starvation); DPO beta sweep (F2 next lever); env v0.4 memory arm
+construction (four-arm matrix, D-2026-07-03-002). Second tier: Plan C inference-backend
+control column, lambda=0.6 exploration. See EXP/F/D-2026-07-04-004..009, TODO.
+```

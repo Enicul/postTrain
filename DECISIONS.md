@@ -879,3 +879,102 @@ Consequence:
   tier "retrieves memory before judging," which is exactly the FORM-of-state question
   that arm is designed to test (D-2026-07-03-002).
 - See docs/RULING_DOSSIER_risk_review_AMD_00.md (DECISION line: Option C) and TODO.
+
+## D-2026-07-04-006 - Headline-revision policy: seed-0-only claims downgraded to mean+/-std across the portfolio
+
+Decision:
+
+With multi-seed error bars now in hand (EXP-2026-07-04-007, seeds {0,1,2}), every
+portfolio headline is restated as a MEAN +/- STD claim, and any claim that holds only
+at a single seed is explicitly FLAGGED as seed-0-only rather than stated as a general
+result. Concretely:
+
+- "Trained 1.5B beats prompted 7B" is DOWNGRADED. It holds at SEED 0 (SFT 1.5B 0.7495
+  vs prompted 7B 0.7447) but NOT at the mean (0.7024 +/- 0.0333 < 0.7447). The
+  portfolio states the mean+/-std and marks the "beats 7B" line seed-0-only.
+- The 3B oracle (GRPO-v2 3B) is PROMOTED as the crown jewel: 0.8473 +/- 0.0000 / gate
+  1.000 +/- 0.0 across three seeds - replicated with zero variance - WITH the honest
+  caveat that this isolates GRPO SAMPLING variance only (common seed-0 3B SFT init),
+  not full-pipeline SFT+GRPO variance.
+- The 0.5B collapse is RESTATED as a 2/3-seed high-probability INSTABILITY (seed 1 was
+  partial, gate 0.5, and beat the SFT baseline), not a deterministic law. Kill verdict
+  unchanged (no seed near gate 0.99).
+
+Why:
+
+Single-seed deltas can invert under reseeding; the SFT-1.5B headline literally did.
+Reporting mean+/-std with single-seed cells flagged is the honest standard and prevents
+a lucky seed from carrying a portfolio claim. This is a general reporting policy, not a
+one-off correction.
+
+Consequence:
+
+- PORTFOLIO_INDEX headline matrix carries error bars where multi-seed exists and a
+  single-seed flag otherwise (done this round).
+- Backlog: full-pipeline (SFT+GRPO seed-varied) 3B multi-seed to close the last
+  variance caveat on the crown jewel.
+- Applies to all future headline claims: no seed-0-only number is stated as general.
+
+## D-2026-07-04-007 - Gemma cross-family verdict: small-model gate blindness is family-dependent, not a universal law
+
+Decision:
+
+The hypothesis that small prompted models are universally GATE-BLIND (motivated by
+Qwen prompted gate recall 0.5B/1.5B 0.50, 3B 0.00) is REFUTED cross-family. Prompted
+Gemma 4 (E2B eff 2.3B and E4B eff 4.5B) both reach gate recall 0.875 on the identical
+env v0.3 ruler with no training (EXP-2026-07-04-008). Gate discipline is therefore
+FAMILY-DEPENDENT (instruction-tuning / safety priors), not a size law. Recorded with
+the MatFormer caveat: Gemma effective params (selective activation) are not directly
+comparable to Qwen dense params.
+
+Why:
+
+A cross-family control is the correct test for a "universal small-model" claim, and it
+came back negative. Honesty requires retiring the universal-blindness framing. But the
+training motivation SURVIVES and sharpens: neither prompted Gemma clears the gate 0.99
+bar (both stall at 0.875), while the TRAINED Qwen 3B leads by ~10 reward pts AND carries
+the gate perfectly (0.8473 / 1.000). The claim becomes "training beats the best
+available cross-family prompt and carries the gate," which is stronger and true.
+
+Consequence:
+
+- PORTFOLIO_INDEX gains a Gemma cross-family row (with the effective-vs-dense caveat)
+  and the narrative drops "small prompted models are gate-blind" for the sharper
+  training-motivation line.
+- Any future "small model can't do X" claim must be checked cross-family before being
+  stated as a law.
+- (R6 aside, from the offline rescore: under Convention R6 the prompted Gemma arms are
+  7/7 = gate 1.0, because their only gate miss was AMD_00, now a no-gate row - reported
+  in the dual-convention table, not used to restate the pre-R6 number.)
+
+## D-2026-07-04-008 - The citation 5-way verdict is data-starved / capacity-limited, not an RL-objective artifact; next lever is corpus growth
+
+Decision:
+
+The stuck citation verdict (verdict_acc ~0.06-0.10 regardless of method) is recorded as
+a DATA/CAPACITY limitation, NOT a reward-objective artifact. Evidence chain: the letter
+action space solved fabrication (prompted fabricated 0.0, cite_gold 0.74; GRPO lifted
+cite_gold to 0.87) while verdict_acc stayed flat, which LOOKED like GRPO component
+decoupling (EXP-2026-07-04-004); but the supervised control (SFT-letters,
+EXP-2026-07-04-009) ALSO fails the verdict (0.0645, even below prompted), exonerating
+the RL objective. The 5-way verdict is data-starved (62 train rows) and/or
+capacity-limited at 1.5B. Next lever = corpus growth 131 -> 300-500 (already backlog)
+and/or a bigger model - NOT reward shaping or more RL steps.
+
+Why:
+
+The cleanest way to tell an algorithm problem from a data/capacity problem is a
+supervised control: if SFT can't teach it from labels either, the algorithm is not the
+bottleneck. It couldn't. So spending more effort on the RL objective would be
+misdirected; the productive lever is data (and possibly scale).
+
+Consequence:
+
+- Citation env v2 letter action space is ADOPTED for fabrication (D-2026-07-04-002
+  confirmed); the verdict head is a SEPARATE, still-open problem parked on the
+  data/capacity axis.
+- TODO promotes "grow citation corpus 131 -> 300-500 then re-run" and adds "probe
+  verdict at 3B once the corpus is larger."
+- General lesson: before blaming an RL objective for a stuck sub-metric, run the SFT
+  control; component decoupling under RL and a plain capability gap look identical from
+  the RL run alone.

@@ -1,0 +1,88 @@
+{
+ "config": "sft_qwen15",
+ "n_seeds": 3,
+ "lambdas": [
+  "0.1",
+  "0.3",
+  "0.6"
+ ],
+ "eval_paths": [
+  "runs/sft_qwen15/20260703T1506Z-e571324/sft_test_eval.json",
+  "runs/sft_qwen15_seed1/20260704T0135Z-e571324/sft_test_eval.json",
+  "runs/sft_qwen15_seed2/20260704T0210Z-e571324/sft_test_eval.json"
+ ],
+ "per_lambda": {
+  "0.1": {
+   "reward": {
+    "mean": 0.7966,
+    "std": 0.0312,
+    "min": 0.7685,
+    "max": 0.8401
+   },
+   "gate_recall": {
+    "mean": 0.75,
+    "std": 0.1021,
+    "min": 0.625,
+    "max": 0.875
+   },
+   "per_seed_reward": [
+    0.8401,
+    0.7813,
+    0.7685
+   ],
+   "per_seed_gate_recall": [
+    0.875,
+    0.625,
+    0.75
+   ]
+  },
+  "0.3": {
+   "reward": {
+    "mean": 0.7024,
+    "std": 0.0333,
+    "min": 0.6772,
+    "max": 0.7495
+   },
+   "gate_recall": {
+    "mean": 0.75,
+    "std": 0.1021,
+    "min": 0.625,
+    "max": 0.875
+   },
+   "per_seed_reward": [
+    0.7495,
+    0.6772,
+    0.6806
+   ],
+   "per_seed_gate_recall": [
+    0.875,
+    0.625,
+    0.75
+   ]
+  },
+  "0.6": {
+   "reward": {
+    "mean": 0.5611,
+    "std": 0.0388,
+    "min": 0.521,
+    "max": 0.6135
+   },
+   "gate_recall": {
+    "mean": 0.75,
+    "std": 0.1021,
+    "min": 0.625,
+    "max": 0.875
+   },
+   "per_seed_reward": [
+    0.6135,
+    0.521,
+    0.5487
+   ],
+   "per_seed_gate_recall": [
+    0.875,
+    0.625,
+    0.75
+   ]
+  }
+ }
+}
