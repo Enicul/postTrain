@@ -53,6 +53,37 @@ def render_prompt(seed: dict) -> str:
     return f"{SYSTEM_PROMPT}\n\nquery: {q}\nsymbol: {sym}\nas_of: {asof}\nanswer:"
 
 
+def render_prompt_v04(seed: dict, memory_mode: str = "digest") -> str:
+    """v0.4 (memory-arm) prompt renderer - ADDITIVE, does not touch v0.3.
+
+    Injects a memory block between the (unchanged) SYSTEM_PROMPT and the query,
+    per the pre-registered arm switch:
+      none   -> byte-identical to render_prompt() (the v0.3 stateless view);
+      digest -> the ~50-token structured digest (arm 2, render_digest);
+      raw    -> the verbose L0-L3 transcript (arm 3, render_raw_history).
+
+    SYSTEM_PROMPT and parse_plan are reused unchanged; only the observation the
+    policy conditions on varies across arms. The memory renderers assert their
+    output is route-word-free, so this cannot smuggle the gold action into the
+    prompt.
+    """
+    if memory_mode == "none":
+        return render_prompt(seed)
+    # imported lazily so the v0.3 path never depends on the v0.4 env module
+    from escalation_env_v04 import render_digest, render_raw_history  # noqa: E402
+    if memory_mode == "digest":
+        mem = render_digest(seed)
+    elif memory_mode == "raw":
+        mem = render_raw_history(seed)
+    else:
+        raise ValueError(f"unknown memory_mode {memory_mode!r}")
+    q = seed.get("user_query") or ""
+    sym = seed.get("symbol") or "?"
+    asof = seed.get("as_of") or "?"
+    return (f"{SYSTEM_PROMPT}\n\nmemory:\n{mem}\n\n"
+            f"query: {q}\nsymbol: {sym}\nas_of: {asof}\nanswer:")
+
+
 def parse_plan(text: str) -> tuple[str, str]:
     """Extract (first, on_fail) from a model completion; robust to chatter.
 
