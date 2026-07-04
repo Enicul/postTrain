@@ -182,14 +182,31 @@ PROMOTED next levers (top tier):
   STRUCTURAL (2 pair designs x 3 betas). Three-method comparison FINAL: GRPO=efficiency,
   DPO=safety, SFT=balanced (D-2026-07-04-009). DPO escalation arm CLOSED.
 
+CITATION LINE STATUS: CLOSED pending data batch-2. The attribution chain is complete end
+to end - action-space (fabrication 0) -> data (verdict 6x) -> capacity (ruled out) -> RL
+(0.0 increment). No further capacity or RL tuning on the current 122-row pool; the sole
+remaining live lever is data (collection batch-2 -> 400+). A larger N may legitimately
+re-open the capacity question at 400+, but not at 122 rows. (D-2026-07-04-010.)
+
+- [x] 3B CITATION SFT (capacity probe) on the expanded pool. DONE 2026-07-04
+  (EXP-2026-07-04-013): 3B is WORSE than 1.5B on IDENTICAL 122-row data (verdict_acc
+  0.3871 -> 0.2903; cite_gold 0.9355 -> 0.9032; mean_reward 0.8742 -> 0.7710; fabricated
+  0.0). CAPACITY is NOT the verdict lever at this data size; "scale up to fix it" CLOSED.
+  Caveat: single seed each, n=31, construction-labeled train.
+- [x] GRPO-letters on the expanded pool (does RL add over healthy SFT data). DONE
+  2026-07-04 (EXP-2026-07-04-014): GRPO from the expanded-SFT adapter, 300 batches
+  (train-time batch verdict_acc ~0.94), frozen-test eval DIGIT-IDENTICAL to its SFT init
+  on every metric (verdict_acc 0.3871 / cite_gold 0.9355 / fabricated 0.0 / reward
+  0.8742). RL increment = EXACTLY 0.0 on healthy data; greedy test policy unchanged. Minor:
+  one train-time "<label>" template artifact in reward_trace (not in test outputs).
+  => Task-dependent RL synthesis (D-2026-07-04-010): escalation +4.9/1.5B, +0.45/3B;
+  citation verdict 0.0. "Not RL for RL's sake" now empirical, per-task.
+
 QUEUE (promoted next levers, in order):
 
 - [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time
-  discipline / boundary-class balance; then re-run on the combined train pool.
-- [ ] 3B CITATION SFT (capacity probe) on the expanded pool - the last link in the
-  action-space -> data -> capacity attribution chain (D-2026-07-04-009).
-- [ ] GRPO-letters on the expanded pool - does RL add anything on top of healthy SFT
-  data (D-2026-07-04-009).
+  discipline / boundary-class balance; then re-run on the combined train pool. THE SOLE
+  remaining live lever for the (otherwise CLOSED) citation line.
 - [ ] env v0.4 memory-form experiment (construction) - STANDING BIG-TICKET: build the
   four-arm matrix (no-memory / structured-digest / raw-long-context / Sonnet) with
   pre-registered kills; tests what FORM state should take for a small model. The R6

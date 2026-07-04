@@ -2396,3 +2396,145 @@ Next:
 
 Collection batch 2 -> ~400+; 3B capacity probe on the expanded pool; GRPO-letters on
 the expanded pool.
+
+## EXP-2026-07-04-013 - Capacity probe: 3B citation SFT-letters on the EXPANDED pool (frozen test n=31)
+
+Goal:
+
+The LAST link in the D-008 attribution chain. EXP-2026-07-04-012 confirmed the DATA half
+(SFT-letters @122 lifted verdict_acc 6x over @62 on the frozen test), leaving the
+CAPACITY half open. Test it directly: hold the data fixed (same expanded pool, same
+frozen test) and scale the model 1.5B -> 3B. If verdict_acc climbs at 3B, capacity is a
+live lever and "scale up to fix the verdict" is on the table; if it does NOT climb,
+capacity is not the bottleneck at this data size and data remains the only live lever.
+
+Data:
+
+Train = citation_train_expansion_v1 train split (122 rows, class-balanced) - IDENTICAL to
+EXP-2026-07-04-012. Eval = frozen citation_real_eval_v1 test (n=31), letters action space.
+Qwen2.5-3B-Instruct, 3 epochs, lr 2e-4, seed 0. Base commit e571324.
+
+Command:
+
+```text
+sft_citation.py --eval-dir .../citation_train_expansion_v1 --split train \
+  --model Qwen/Qwen2.5-3B-Instruct --out-dir runs/sft_citation3b_expanded --seed 0
+```
+
+Metrics (frozen test n=31, letters):
+
+| arm | model | train rows | verdict_acc | cite_gold | fabricated | mean_reward |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| SFT-letters @expanded (EXP-...-012) | 1.5B | 122 | 0.3871 | 0.9355 | 0.0 | 0.8742 |
+| SFT-letters @expanded (this)        | 3B   | 122 | 0.2903 | 0.9032 | 0.0 | 0.7710 |
+
+Findings:
+
+- CLEAN NEGATIVE. 3B is WORSE than 1.5B on IDENTICAL data (verdict_acc 0.3871 -> 0.2903;
+  cite_gold 0.9355 -> 0.9032; mean_reward 0.8742 -> 0.7710), fabrication held at 0.0.
+- CAPACITY IS NOT THE BOTTLENECK at this data size: scaling the model 2x did not move
+  the verdict; if anything the larger model is thinner-steered by 122 rows (same
+  tiny-data-dip flavor as the 7B escalation SFT non-monotonicity, EXP-...-002/005).
+- The "scale up to fix the verdict" path is CLOSED. DATA remains the only live lever
+  (collection batch-2 -> 400+).
+- Attribution chain now COMPLETE end to end: action-space (fixed fabrication) -> data
+  (confirmed, the lever) -> capacity (ruled out here).
+
+Failures / honest caveats:
+
+- Single seed each (1.5B and 3B); n=31 frozen test; construction-labeled train data
+  (spot-audited 93.3%, construction_v1_unaudited), not human-gold. A single-seed 3B<1.5B
+  gap is a directional negative, not a certified capacity law; a fuller sweep (seeds,
+  lr/rank retune for 3B) could soften it - but the burden was to SHOW capacity buys the
+  verdict, and it did not.
+
+Artifacts:
+
+```text
+runs/sft_citation3b_expanded/20260704T0658Z-e571324/{citation_sft3b_test_eval.json,
+  metrics.json,run_manifest.json,trainer_log.jsonl}
+```
+
+Decision:
+
+Capacity ruled out as the citation-verdict lever at this data size (feeds
+D-2026-07-04-010). Data-scaling (collection batch-2) is the sole remaining live lever for
+the citation line.
+
+Next:
+
+Collection batch 2 -> ~400+; re-run citation SFT on the combined pool (larger data may
+re-open a capacity question at a larger N, but not at 122 rows).
+
+## EXP-2026-07-04-014 - RL-increment on healthy data: GRPO-letters (1.5B) from the expanded-SFT adapter (frozen test n=31)
+
+Goal:
+
+The founding question, sharpened to one task: once the SFT data is HEALTHY (class-balanced
+expanded pool), does GRPO add anything on top of it for the citation verdict? Initialize
+GRPO-letters from the EXPANDED-SFT adapter (the EXP-2026-07-04-012 checkpoint, the best
+SFT we have on this task) and evaluate on the SAME frozen test. If test-side metrics rise,
+RL buys an increment on healthy data; if they do not, RL adds nothing here.
+
+Data:
+
+GRPO-letters, 1.5B, init-adapter = runs/sft_citation15_expanded/...T0647Z.../adapter
+(the EXP-...-012 SFT), env citation_real_eval_v1 (letters), 300 train batches (max_steps
+300), num_generations 8, temperature 0.9, beta 0.04, lr 1e-5, seed 0. Eval = frozen
+citation_real_eval_v1 test (n=31), greedy. Base commit e571324.
+
+Command:
+
+```text
+grpo_citation.py --eval-dir .../citation_real_eval_v1 --model Qwen/Qwen2.5-1.5B-Instruct \
+  --action-space letters --init-adapter runs/sft_citation15_expanded/…T0647Z…/adapter \
+  --out-dir runs/grpo_citation15_postexp --seed 0 --save-steps 50
+```
+
+Metrics (frozen test n=31, letters):
+
+| arm | verdict_acc | cite_gold | cite_valid | fabricated | mean_reward |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SFT-letters @expanded init (EXP-...-012) | 0.3871 | 0.9355 | 1.000 | 0.0 | 0.8742 |
+| GRPO-letters from that init (this)       | 0.3871 | 0.9355 | 1.000 | 0.0 | 0.8742 |
+
+Findings:
+
+- CLEAN NEGATIVE, and DIGIT-IDENTICAL to its SFT init on EVERY test metric. Zero
+  measurable test-side increment from GRPO on top of healthy SFT data for this task.
+- Digit-identical outputs mean the GREEDY policy did not change: GRPO did not move the
+  argmax trajectory on the frozen test at all. (Same phenomenon we saw with the DPO
+  beta=0.3/0.5 digit-identical greedy policies - the loss curve moved, the greedy path
+  did not.)
+- Train-side reward DID rise: the batch-level verdict_acc in reward_trace.jsonl reached
+  ~0.94 by batch 300 (train-set saturation / mild overfit) - but this produced NO
+  behavioral change on the held-out test. Train reward up, test unchanged = the classic
+  "nothing left for RL to teach on this eval" signature once SFT is healthy.
+
+Failures / honest caveats:
+
+- Single seed; n=31 frozen test; 300 batches only (not run to convergence - but the point
+  is that even a rising train reward bought nothing on test).
+- Minor observation: one train-time completion emitted a literal "<label>" template
+  artifact (visible in reward_trace verdict_mix, e.g. batches ~298-300); it is a rare
+  formatting slip on the train side, does not appear in the frozen-test eval outputs, and
+  does not affect the test metrics. Logged for honesty, not a blocker.
+
+Artifacts:
+
+```text
+runs/grpo_citation15_postexp/20260704T0659Z-e571324/{citation_grpo_postexp_test_eval.json,
+  metrics.json,run_manifest.json,trainer_log.jsonl,reward_trace.jsonl,generations.jsonl}
+```
+
+Decision:
+
+RL adds exactly 0.0 on top of class-balanced SFT for the citation verdict (feeds
+D-2026-07-04-010). Combined with the 3B capacity null (EXP-...-013), this closes the
+citation attribution chain: the verdict was fixed by DATA BALANCE, not by capacity and not
+by RL. "Not RL for RL's sake" is now empirical, per-task.
+
+Next:
+
+Citation line status CLOSED pending data batch-2 (277 -> ~400+); no further capacity or RL
+tuning on the current pool. Re-open only after the corpus grows.

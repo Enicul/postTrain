@@ -1,0 +1,13 @@
+{
+ "n": 31,
+ "verdict_acc": 0.2903,
+ "cite_valid_rate": 1.0,
+ "cite_gold_rate": 0.9032,
+ "fabricated_rate": 0.0,
+ "mean_reward": 0.771,
+ "split": "test",
+ "model": "Qwen/Qwen2.5-3B-Instruct",
+ "action_space": "letters",
+ "adapter": "runs/sft_citation3b_expanded/20260704T0658Z-e571324/adapter",
+ "mode": "adapter"
+}

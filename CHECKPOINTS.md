@@ -1261,7 +1261,7 @@ control column, lambda=0.6 exploration. See EXP/F/D-2026-07-04-004..009, TODO.
 
 ## CP-2026-07-04-003 - Round 5 wrap-up: DPO beta closure, citation data-scaling confirmed 6x
 
-Status: current
+Status: superseded by CP-2026-07-04-004
 
 ```text
 DPO escalation arm closed (over-conservatism STRUCTURAL across 2 pair designs x 3
@@ -1314,4 +1314,63 @@ probe on the expanded pool; GRPO-letters on the expanded pool (does RL add over 
 SFT data). Standing big-ticket: env v0.4 memory-arm construction (four-arm matrix,
 D-2026-07-03-002/005). Second tier: Plan C inference-backend control column, lambda=0.6
 exploration arm, full SFT+GRPO seed-varied 3B. See EXP/D-2026-07-04-010..012, TODO.
+```
+
+## CP-2026-07-04-004 - Round 6 wrap-up: citation chain CLOSED (capacity null, RL null, data is the lever)
+
+Status: current
+
+```text
+Citation attribution chain CLOSED end to end. Two clean negatives ran the last two links
+on the SAME frozen test (n=31, letters), everything else held fixed: (a) 3B on the
+IDENTICAL 122-row expanded pool is WORSE than 1.5B -> capacity is not the verdict lever;
+(b) GRPO-letters from the expanded-SFT adapter is DIGIT-IDENTICAL to its SFT init on
+every test metric -> RL adds 0.0 on healthy SFT data. Fabrication was fixed by
+ACTION-SPACE, the verdict by DATA BALANCE; neither by capacity, neither by RL. Founding
+"do we need RL" question answered TASK-DEPENDENTLY. Both new run dirs local under
+training-corpus/scripts/rl/runs/; weights git-excluded. The infra hostname suffix in the
+two new run_manifest.json logging_dir fields was REDACTED to _REDACTED per convention
+(redaction_note appended).
+```
+
+Headline results:
+
+```text
+CAPACITY PROBE (3B citation SFT-letters, expanded pool, FROZEN test n=31, letters):
+  1.5B (EXP-...-012): verdict_acc 0.3871 / cite_gold 0.9355 / fabricated 0.0 / reward 0.8742
+  3B   (this)       : verdict_acc 0.2903 / cite_gold 0.9032 / fabricated 0.0 / reward 0.7710
+  => 3B WORSE than 1.5B on identical data; capacity NOT the bottleneck at 122 rows. CLOSED.
+RL-INCREMENT ON HEALTHY DATA (GRPO-letters 1.5B from expanded-SFT init, 300 batches, test n=31):
+  verdict_acc 0.3871 / cite_gold 0.9355 / cite_valid 1.000 / fabricated 0.0 / reward 0.8742
+  => DIGIT-IDENTICAL to SFT init on every metric. Train-time batch verdict_acc ~0.94 (train
+  saturation) but greedy test policy unchanged => RL increment = 0.0. One train-time
+  "<label>" template artifact in reward_trace verdict_mix (not in test outputs; minor).
+TASK-DEPENDENT RL TABLE (RL over SFT, same frozen eval):
+  escalation 1.5B: +4.9 pts (0.7495 -> 0.7997); escalation 3B: +0.45 (0.8428 -> 0.8473 oracle);
+  citation verdict 1.5B: +0.0 (digit-identical). "Not RL for RL's sake" is now empirical.
+  Caveats: both probes single-seed, n=31, construction-labeled train; directional negatives.
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+runs/sft_citation3b_expanded/20260704T0658Z-e571324/    (capacity probe; citation_sft3b_test_eval.json, metrics, manifest, trainer_log)
+runs/grpo_citation15_postexp/20260704T0659Z-e571324/    (RL-increment; citation_grpo_postexp_test_eval.json, metrics, manifest, trainer_log, reward_trace, generations)
+docs/PORTFOLIO_INDEX.md    (citation section COMPLETE + task-dependent RL table)
+```
+
+Log ids this round: EXP-2026-07-04-013 (capacity probe), -014 (RL-increment);
+D-2026-07-04-010 (task-dependent RL synthesis + chain closed); CP-2026-07-04-004. No new
+FAILURE entry (both are clean negatives / EXPERIMENT observations; the "<label>" artifact
+is a minor train-side note, not a failure).
+
+Resume:
+
+```text
+Citation line CLOSED pending data batch-2 (277 -> ~400+); no further capacity/RL tuning on
+the current 122-row pool (a larger N may re-open capacity at 400+, not at 122). Queue in
+order: citation collection batch 2 -> ~400+; env v0.4 memory-arm construction (four-arm
+matrix, D-2026-07-03-002/005, standing big-ticket). Second tier: Plan C training-free /
+inference-backend GRPO, lambda=0.6 exploration arm, full SFT+GRPO seed-varied 3B. See
+EXP/D-2026-07-04-013..014, D-2026-07-04-010, TODO.
 ```

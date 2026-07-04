@@ -1033,3 +1033,79 @@ Consequence:
   the specific missing slice (here the boundary classes) and re-run the identical
   control on the frozen eval - a targeted class-balanced add is more informative than
   bulk rows.
+
+## D-2026-07-04-010 - "Do we need RL, and how much does it buy" now has a measured, TASK-DEPENDENT answer; the citation attribution chain is CLOSED (capacity null, RL null, data is the lever)
+
+Decision:
+
+The founding question of this whole project - "do we ACTUALLY need RL, and how much does
+it buy?" - now has an empirical, per-task answer, and two clean negatives today close the
+citation attribution chain.
+
+(1) THE CITATION CHAIN IS CLOSED - four questions, four answers. We ran the last two
+links today, both on the SAME frozen test (n=31, letters), holding everything else fixed:
+  - ACTION SPACE fixed FABRICATION: letter choices (A-F) mapped back by the harness drop
+    fabricated_rate 0.87 -> 0.0 (D-2026-07-04-002). "Don't make the model do the harness's
+    job."
+  - DATA BALANCE fixed the VERDICT: class-balanced expanded pool lifted verdict_acc 6x
+    (0.0645 -> 0.3871) (D-2026-07-04-009 / EXP-2026-07-04-012).
+  - CAPACITY is NOT the lever: 3B on the IDENTICAL 122-row pool is WORSE than 1.5B
+    (verdict_acc 0.3871 -> 0.2903; cite_gold 0.9355 -> 0.9032; mean_reward 0.8742 ->
+    0.7710) (EXP-2026-07-04-013). Scaling the model did not buy the verdict at this data
+    size; "scale up to fix it" is closed.
+  - RL is NOT the lever ON HEALTHY DATA: GRPO-letters initialized from the expanded-SFT
+    adapter, 300 train batches (train-time batch verdict_acc reached ~0.94), then
+    frozen-test eval is DIGIT-IDENTICAL to its SFT init on every metric (verdict_acc
+    0.3871, cite_gold 0.9355, fabricated 0.0, mean_reward 0.8742) (EXP-2026-07-04-014).
+    Train reward rose, greedy test policy did not change: zero measurable increment.
+  So: fabrication was fixed by ACTION-SPACE design, the verdict by DATA BALANCE; NEITHER
+  was fixed by capacity, and NEITHER by RL. The sole remaining live lever is data
+  (collection batch-2 -> 400+). Citation line status: CLOSED pending that data.
+
+(2) "DO WE NEED RL, AND HOW MUCH" IS TASK-DEPENDENT - and now measured. Putting the two
+tasks side by side gives a clean, honest, per-task RL-increment table (RL over the best
+SFT baseline on the same frozen eval):
+
+| task | RL increment over SFT | note |
+| --- | --- | --- |
+| escalation routing, 1.5B | +4.9 pts reward (0.7495 -> 0.7997) | RL buys efficiency below the oracle |
+| escalation routing, 3B   | +0.45 pts (0.8428 -> 0.8473 = ORACLE) | capped by the analytic oracle; SFT already near it |
+| citation verdict, 1.5B   | +0.0 (digit-identical) | on class-balanced (healthy) SFT data |
+
+  RL adds a real but small increment on escalation (larger at 1.5B where SFT is further
+  from the oracle, near-zero at 3B where SFT already hits the oracle), and EXACTLY zero on
+  the citation verdict once the SFT data is healthy. "Not RL for RL's sake" is therefore
+  an EMPIRICAL, per-task result, not a slogan: RL earned its place on escalation (and only
+  above a code-enforced safety floor, D-2026-07-03-003) and did not earn it on citation,
+  where DATA was the whole story.
+
+Why:
+
+The cleanest way to answer "does X buy the metric" is to hold everything else constant and
+toggle only X on the frozen eval. We did exactly that for both remaining citation levers:
+capacity (1.5B vs 3B, identical data) and RL (SFT vs GRPO-from-that-SFT, identical eval).
+Two digit-level negatives - 3B < 1.5B, and GRPO == its SFT init - are strong, legible
+answers precisely because nothing else moved. And the only way to make "do we need RL"
+non-hand-wavy is to report the increment per task with the oracle as the ceiling; the
+result is that RL's value is real, bounded, and task-shaped.
+
+Consequence:
+
+- TODO: mark the 3B capacity probe and the RL-increment (GRPO-on-healthy-data) DONE; set
+  the citation line status to CLOSED pending collection batch-2 (277 -> ~400+). Standing
+  queue unchanged in order: collection batch-2, env v0.4 memory arm (big-ticket), then
+  second tier (Plan C training-free/inference-backend GRPO, lambda=0.6 exploration arm,
+  full seed-varied 3B).
+- PORTFOLIO_INDEX: mark the citation section COMPLETE with the four-question/four-answer
+  chain (action space -> data -> capacity X -> RL X) and add the task-dependent RL table
+  (escalation +4.9 / +0.45 vs citation 0.0); refresh honest limits (single-seed probes,
+  n=31).
+- No further capacity or RL tuning on the CURRENT citation pool; re-open only after the
+  corpus grows (a larger N may legitimately re-open the capacity question at 400+, but not
+  at 122 rows).
+- General lesson: "do we need RL" is not a yes/no - it is an increment you MEASURE per
+  task against the SFT baseline and the oracle ceiling. Here RL bought escalation
+  efficiency and bought nothing on citation; the honest deliverable is the table, not a
+  verdict.
+- Caveat carried forward: both today's probes are single-seed, n=31, construction-labeled
+  train - directional negatives that closed the OPEN levers, not certified laws.

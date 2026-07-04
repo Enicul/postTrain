@@ -2,6 +2,44 @@
 
 Last updated: 2026-07-04
 
+## Round 6 Wrap-Up: citation chain CLOSED - capacity null, RL null, data is the lever (2026-07-04)
+
+Two clean negatives closed the citation attribution chain, and the founding "do we need
+RL" question now has a measured, task-dependent answer.
+
+**Capacity probe -> capacity is NOT the citation-verdict lever (EXP-2026-07-04-013).**
+Held the data fixed (same 122-row class-balanced expanded pool, same frozen test n=31,
+letters) and scaled the model 1.5B -> 3B. 3B is WORSE: verdict_acc 0.3871 -> 0.2903,
+cite_gold 0.9355 -> 0.9032, fabricated 0.0, mean_reward 0.8742 -> 0.7710. So at this data
+size capacity is not the bottleneck (same tiny-data-dip flavor as the 7B escalation SFT
+non-monotonicity); "scale up to fix the verdict" is CLOSED. Caveat: single seed each,
+n=31, construction-labeled train.
+
+**RL-increment on healthy data -> RL adds exactly 0.0 for the citation verdict
+(EXP-2026-07-04-014).** GRPO-letters (1.5B) initialized from the expanded-SFT adapter,
+300 train batches (train-time batch verdict_acc reached ~0.94), then frozen-test eval is
+DIGIT-IDENTICAL to its SFT init on every metric (verdict_acc 0.3871, cite_gold 0.9355,
+fabricated 0.0, mean_reward 0.8742). Digit-identical = the greedy policy did not change;
+train reward rose (train-set saturation) with no behavioral change on test. Minor honest
+note: one train-time completion emitted a literal "<label>" template artifact (in
+reward_trace verdict_mix); it does not appear in the frozen-test outputs and does not
+affect the metrics.
+
+**THE SYNTHESIS - "do we need RL, and how much" is TASK-DEPENDENT and now measured
+(D-2026-07-04-010).** RL over the best SFT baseline, per task, on the same frozen eval:
+escalation routing adds +4.9 pts at 1.5B (0.7495 -> 0.7997) and +0.45 at 3B (0.8428 ->
+0.8473 = oracle, capped by the ceiling); the citation verdict adds exactly 0.0 on
+class-balanced SFT data. Fabrication was fixed by ACTION-SPACE design, the verdict by DATA
+BALANCE - neither by capacity, neither by RL. "Not RL for RL's sake" is now an empirical,
+per-task result. The citation attribution chain is CLOSED end to end (action space -> data
+-> capacity X -> RL X); the sole remaining live lever is data (collection batch-2 ->
+400+). Citation line status: CLOSED pending that data.
+
+Evidence (all local this round; weights git-excluded): `runs/sft_citation3b_expanded/`,
+`runs/grpo_citation15_postexp/`. Log ids: EXP-2026-07-04-013 (capacity probe), -014
+(RL-increment); D-2026-07-04-010 (task-dependent RL synthesis + chain closed);
+CP-2026-07-04-004.
+
 ## Round 5 Wrap-Up: DPO beta closure, citation data-scaling confirmed 6x (2026-07-04)
 
 Two lines closed with evidence.

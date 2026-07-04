@@ -229,26 +229,50 @@ citation env v2 (D-2026-07-04-002/008).
    trained Qwen 3B still leads by ~10 pts and gates perfectly (EXP-2026-07-04-008,
    D-2026-07-04-007).
 
-8. **Citation, end to end — a three-link attribution chain.** *(a) Action space fixed
-   fabrication.* A 1.5B cannot reliably copy long evidence ids, so it fabricates
-   (fabricated_rate **0.87** before). Re-render candidates as letter choices (A–F) mapped
-   back by the harness and fabrication drops to **0.0 in the prompted arm alone**
-   (cite_gold 0.74 → 0.87 after GRPO) — "don't make the model do the harness's job." *(b)
-   The verdict head was data-starved, and adding the missing classes moved it 6×.* The
-   5-way verdict stayed stuck (~0.06–0.10) regardless of method, and a **supervised
-   control also failed it** (SFT verdict 0.0645 @62 rows), which *exonerated the RL
-   objective* and localized the fault to a **data/capacity** axis. We then built a
-   **class-balanced training-pool expansion** (+146 construction-labeled rows, 21
-   AI-vertical SEC issuers, verified 70 / contradicts 35 / partial 22 / insufficient 19 —
-   the old train pool had only **1 contradicts + 1 partial**; 93.3% blind spot-audit;
-   frozen eval untouched) and re-ran SFT-letters on it: **verdict_acc 0.0645 → 0.3871
-   (~6×)** on the same frozen test, cite_gold 0.84 → **0.94**, fabricated still 0.0,
-   mean_reward 0.53 → **0.87**. Data-starvation **confirmed**; it was specifically
-   *class* starvation. *(c) Capacity is the next probe* (3B on the same data), completing
-   the **action-space → data → capacity** chain. **Honest:** 0.387 is still far from
-   usable — a direction confirmed, not a solved task; single seed; n=31; the expansion
+8. **Citation, end to end — the attribution chain is now COMPLETE (four questions, four
+   answers).** *(a) Action space fixed fabrication.* A 1.5B cannot reliably copy long
+   evidence ids, so it fabricates (fabricated_rate **0.87** before). Re-render candidates
+   as letter choices (A–F) mapped back by the harness and fabrication drops to **0.0 in
+   the prompted arm alone** (cite_gold 0.74 → 0.87 after GRPO) — "don't make the model do
+   the harness's job." *(b) DATA balance fixed the verdict, 6×.* The 5-way verdict stayed
+   stuck (~0.06–0.10) regardless of method, and a **supervised control also failed it**
+   (SFT verdict 0.0645 @62 rows), which *exonerated the RL objective* and localized the
+   fault to a **data/capacity** axis. We built a **class-balanced training-pool
+   expansion** (+146 construction-labeled rows, 21 AI-vertical SEC issuers, verified 70 /
+   contradicts 35 / partial 22 / insufficient 19 — the old train pool had only **1
+   contradicts + 1 partial**; 93.3% blind spot-audit; frozen eval untouched) and re-ran
+   SFT-letters: **verdict_acc 0.0645 → 0.3871 (~6×)** on the same frozen test, cite_gold
+   0.84 → **0.94**, fabricated still 0.0, mean_reward 0.53 → **0.87**. Data-starvation
+   **confirmed** — specifically *class* starvation. *(c) CAPACITY is ruled out.* Scaling
+   the model 1.5B → 3B on the **identical** 122-row pool made the verdict **worse**
+   (verdict_acc 0.3871 → **0.2903**, cite_gold 0.94 → 0.90, reward 0.87 → 0.77) — capacity
+   is not the bottleneck at this data size; "scale up to fix it" is closed. *(d) RL is
+   ruled out on healthy data.* GRPO-letters initialized from the expanded-SFT adapter (300
+   train batches, train-time batch verdict_acc reached ~0.94) is **digit-identical to its
+   SFT init on every frozen-test metric** (verdict_acc 0.3871, cite_gold 0.9355, fabricated
+   0.0, reward 0.8742) — **RL adds exactly 0.0** once the SFT data is healthy; the greedy
+   policy did not move. **So: fabrication fixed by ACTION-SPACE design, the verdict by DATA
+   BALANCE — neither by capacity, neither by RL.** The chain **action-space → data →
+   capacity ✗ → RL ✗** is complete; the sole remaining lever is more data (collection
+   batch-2 → 400+). **Honest:** 0.387 is still far from usable — a direction confirmed, not
+   a solved task; the capacity and RL probes are **single seed**, **n=31**; the expansion
    train data is construction-labeled (spot-audited 93.3%), not human-gold
-   (EXP-2026-07-04-004/011/012, D-2026-07-04-002/008/009, F-2026-07-04-003).
+   (EXP-2026-07-04-004/011/012/013/014, D-2026-07-04-002/008/009/010, F-2026-07-04-003).
+
+**"Do we need RL, and how much does it buy?" — a measured, TASK-DEPENDENT answer.** RL
+over the best SFT baseline, per task, on the same frozen eval:
+
+| Task | RL increment over SFT | Note |
+| --- | --- | --- |
+| Escalation routing, 1.5B | **+4.9 pts** reward (0.7495 → 0.7997) | RL buys efficiency below the oracle |
+| Escalation routing, 3B | **+0.45 pts** (0.8428 → 0.8473 = **oracle**) | capped by the analytic oracle; SFT already near it |
+| Citation verdict, 1.5B | **+0.0** (digit-identical) | on class-balanced (healthy) SFT data |
+
+RL earns a real but bounded increment on escalation (larger where SFT is further from the
+oracle, ~zero once SFT hits the oracle) and **exactly zero** on the citation verdict once
+the data is healthy. **"Not RL for RL's sake" is therefore empirical, not a slogan** — and
+on escalation RL only ever optimizes *above* a code-enforced safety floor
+(D-2026-07-03-003, D-2026-07-04-010).
 
 ---
 
@@ -274,6 +298,14 @@ citation env v2 (D-2026-07-04-002/008).
   **0.387 is still far from usable**, on a single seed and n=31, and the expansion train
   data is **construction-labeled** (93.3% spot-audit), not human-gold. The 7B escalation
   result specifically is a *tiny-data* result.
+- **The citation capacity and RL nulls are single-seed probes.** The two negatives that
+  close the citation chain — 3B < 1.5B on identical data (capacity ✗) and GRPO
+  digit-identical to its SFT init (RL ✗) — are each **single seed, n=31**, on
+  construction-labeled train data. They are strong *because* everything else was held
+  fixed, but they are **directional negatives that closed the open levers, not certified
+  laws**; a larger corpus (batch-2 → 400+) could legitimately re-open the capacity
+  question at a larger N (not at 122 rows), and neither probe was tuned (3B lr/rank
+  un-retuned; GRPO run to 300 batches, not convergence).
 - **Cross-family is prompted-only, and effective-vs-dense.** The Gemma 4 arm is
   *prompted* (no Gemma training yet); a Gemma SFT/GRPO sweep is backlog. Gemma 4 is a
   MatFormer reporting *effective* (selective-activation) params (E2B ≈ 2.3B, E4B ≈
