@@ -222,10 +222,11 @@ FULL-PARAMETER FINE-TUNING PROBES (E1/E2) - DONE. Origin: owner's parameterizati
   be disentangled from lr-mismatch.
 - [ ] (optional, hardening) seed-varied full-GRPO-0.5B to promote the adapter-floor
   reattribution from a single-seed non-collapse to a seed-varied result.
-- [ ] NEIGHBOR GPU-PROCESS OWNERSHIP - PENDING OWNER: a ~34GB coexisting process
-  (compute_capture.py, deepseek/confiqa; same account, NOT ours) occupies GPU 0, discovered
-  during the E1 OOM chain (F-2026-07-04-007). We did not touch it; the right-to-reclaim /
-  ownership question is escalated to the owner and awaits their answer.
+- [x] NEIGHBOR GPU-PROCESS OWNERSHIP - RESOLVED 2026-07-04: owner confirmed the ~34GB
+  coexisting process (compute_capture.py, deepseek/confiqa) is THEIR OWN separate project.
+  GPU 0 is time-shared between our runs and the owner's other work. Operating rule going
+  forward: never kill; for large-memory runs (e.g. E1b) either shrink footprint (the
+  F-2026-07-04-007 batch-2 fix) or coordinate timing with the owner first.
 
 QUEUE (promoted next levers, in order):
 
