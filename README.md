@@ -1,155 +1,63 @@
-# postTrain
+# postTrain — small-model post-training for a financial copilot
 
-Auditable post-training and agentic-RL portfolio repo for KIWI.
+We trained cost-aware, safety-gated escalation-routing policies for a real
+financial copilot (KIWI) on a single A100 80GB. Every target behavior is an
+**executable environment with a pre-registered kill criterion** (≥ +3 reward
+over SFT *and* gate recall ≥ 0.99), so the data — not a vibe — decides where
+training pays. The campaign is an honesty ledger as much as a results table: it
+contains **five evidence-forced self-corrections**, including walking back a
+headline that held at seed 0 but not at the 3-seed mean, and re-attributing a
+whole "scale curve" to a hyperparameter confound. We drove the first environment
+(v0.3) to **saturation** — seven-plus configs land exactly on the analytic
+oracle — then froze it as a historical ruler and **rebuilt a harder exam**
+(v0.4: memory-dependent twin seeds, dynamic cost, 592 items). The safety
+constraint (when to escalate a risky action to a human) is never something we
+hope RL learns — it lives as a **versioned code floor** on every arm.
 
-This repository is built for interview preparation for Agent Harness,
-post-training, and agentic-RL internship roles. It is not just a final-code
-dump. It is an experiment archive: data, scripts, checkpoints, failures,
-decisions, and resume instructions should all be preserved.
+## The headline matrix
 
-## What This Repo Proves
+Escalation env v0.3, frozen test n=48, greedy decode, λ=0.3. Cells are
+`reward / gate_recall`. **Analytic oracle reward = 0.8473.** Error bars are
+mean ± std over seeds {0,1,2}; single-seed cells flagged `[s0]`.
 
-KIWI is treated as a point-in-time financial research environment:
+| Base | Prompted `[s0]` | SFT (LoRA) | GRPO-v2 | Full-SFT | Full-GRPO |
+| --- | --- | --- | --- | --- | --- |
+| **0.5B** | 0.3063 / 0.50 | 0.6061 / 0.50 `[s0]` | 0.4721 ± 0.122 / 0.167 ± 0.24 (collapse 2/3) | 0.5899 / 0.75 `[s0]` | **0.7846 ± 0.044 / 0.833 ± 0.12** (oracle 1/3) |
+| **1.5B** | 0.6444 / — | 0.7024 ± 0.033 / 0.75 ± 0.10 | 0.7997 / 0.875 `[s0]` | **0.8473 / 1.000 = ORACLE** `[s0]` | **0.8473 / 1.000 = ORACLE** `[s0]` |
+| **3B** | 0.4232 / 0.00 | 0.8428 / 1.000 `[s0]` | **0.8473 ± 0.000 / 1.000 ± 0.0 = ORACLE ×3** | **0.8473 / 1.000 = ORACLE** `[s0]` | — |
+| **7B** | 0.7447 / 0.75 | 0.7147 / 0.75 `[s0]` | 0.7997 / 0.875 `[s0]` | **0.8473 ± 0.000 / 1.000 = ORACLE ×3** | — |
 
-```text
-raw market/social/official seed
-  -> trainable task
-  -> trajectory
-  -> verifier / scorer
-  -> specialist dataset
-  -> baseline / post-training experiment
-```
+The two **zero-variance replicated** oracle solvers are **3B LoRA-GRPO** and
+**7B full-SFT**. No prompted model ever clears the gate 0.99 bar. Full companion
+rows (DPO β-sweep, Gemma-4 cross-family, R6 dual-convention gate rescore) live in
+`docs/PORTFOLIO_INDEX.md`.
 
-The goal is to show that we can run the post-training workflow ourselves:
+## Three things to look at if you have 10 minutes
 
-- define verifiable tasks,
-- collect and freeze trajectory data,
-- build small specialist datasets,
-- run baselines before GPU fine-tuning,
-- preserve failure cases,
-- improve data and harness based on observed failures.
+1. **`docs/PORTFOLIO_INDEX.md`** — the claim → evidence map. Every number above
+   links to a run dir with its manifest, git sha, and eval JSON.
+2. **`docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md`** — the collapse autopsy: GRPO's
+   group-relative advantage strands a rare hard constraint (all-K-violate rate
+   0.55 at 0.5B vs 0.00 at 1.5B → zero gradient on the −2.0 safety penalty).
+3. **`DECISIONS.md` — D-2026-07-04-013 (saturation) + the R6 ruling
+   (D-2026-07-04-005)** — judgment under ambiguity: retiring a saturated ruler,
+   and reclassifying one gate seed by owner ruling with every historical number
+   rescored under both conventions rather than silently restated.
 
-## Start Here
+## Honest limits
 
-Every agent should read these files first:
+The deployment claim ("1.5B full-FT reaches oracle") is on a **simulated,
+saturated, n=48** env v0.3; the grid-fill oracle cells are single-seed; v0.4 is
+**built but not yet run** (no v0.4 policy numbers exist). Full ledger:
+`docs/PORTFOLIO_INDEX.md` §5.
 
-1. `AGENTS.md` - universal agent operating protocol.
-2. `CODEX.md` - Codex-specific workflow and command rules.
-3. `PROGRESS.md` - current status and last known checkpoint.
-4. `TODO.md` - prioritized next work.
-5. `CHECKPOINTS.md` - where to resume from.
-6. `LEARNING_SOURCES.md` - what we extracted from external model reports and
-   what we deliberately did not adopt.
-7. `EXPERIMENT_LOG.md` and `FAILURE_LOG.md` - what happened and what broke.
-8. `docs/RECORDING_PROTOCOL.md` - summary-first recording rules for local runs.
-
-## Portfolio Entry Points
-
-- `docs/PORTFOLIO_REPORT_20260701.md` - compact interview narrative with system
-  shape, data assets, metrics, failure taxonomy, and explicit non-claims.
-- `docs/REPORT_AND_FILING_SOURCE_PLAN_20260701.md` - next source expansion plan
-  for SEC filings, earnings transcripts, public reports, and paywalled research
-  boundaries.
-- `docs/NEXT_6H_PLAN_20260630.md` - completed six-hour execution checklist and
-  remaining fork between risk repair and citation source expansion.
-
-## Current Baseline
-
-First CPU specialist baseline on the smaller `golden_v0.1` pack:
-
-```bash
-python3 -m pip install -r training-corpus/requirements-baseline.txt
-python3 training-corpus/scripts/train_specialist_baselines.py \
-  --run-id specialist_cpu_baselines_v0.1
-```
-
-Current results on `golden_v0.1`:
-
-| Specialist | Target | Test accuracy | Test macro F1 | Status |
-| --- | --- | ---: | ---: | --- |
-| router_classifier | route_label | 0.9167 | 0.9368 | usable first baseline |
-| risk_reviewer | risk_level | 0.5946 | 0.3986 | weak baseline |
-| citation_verifier | support_type | 0.2581 | 0.1441 | needs data repair before fine-tuning |
-
-Artifacts:
+## Repo map
 
 ```text
-training-corpus/runs/x-bookmarks-recent-111-20260629/curated/golden_v0.1/
-  datasets/
-  baselines/specialist_cpu_baselines_v0.1/
+docs/PORTFOLIO_INDEX.md           claim→evidence front door (start here)
+docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md   instrumented collapse autopsy
+docs/PITCH_3MIN_zh.md             spoken 3-minute pitch (中文)
+docs/SETUP.md                     env setup + CPU specialist baselines
+scripts/rl/                       env + reward + SFT/DPO/GRPO trainers + runs/
+DECISIONS.md / EXPERIMENT_LOG.md / FAILURE_LOG.md   append-only ledgers
 ```
-
-Expanded CPU specialist baseline on `kiwi-brain-ai-expanded-v0.1`:
-
-```bash
-python3 training-corpus/scripts/train_specialist_baselines.py \
-  --data-dir training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1 \
-  --out-root training-corpus/runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/baselines \
-  --run-id specialist_cpu_ai_expanded_v0.1_20260630T080225Z
-```
-
-Current results on the expanded pack:
-
-| Specialist | Target | Test accuracy | Test macro F1 | Status |
-| --- | --- | ---: | ---: | --- |
-| router_classifier | route_label | 1.0000 | 1.0000 | easy split; needs realistic holdout |
-| risk_reviewer | risk_level | 1.0000 | 1.0000 | easy binary schema; needs edge cases |
-| citation_verifier | support/verdict | 0.9000 | 0.8978 | learnable, but needs harder real spans |
-
-Interpretation:
-
-The expanded pack proves the pipeline can ingest larger KIWI datasets and run
-repeatable baselines. It does not yet prove real-world generalization. The next
-step is to evaluate these checkpoints on real tool traces, long-research
-episodes, and harder evidence-chain negatives before GPU fine-tuning.
-
-Realistic holdout result:
-
-```bash
-python3 training-corpus/scripts/evaluate_baseline_holdouts.py \
-  --run-id realistic_holdout_eval_v0.1_20260630T083000Z
-```
-
-| Holdout | Dataset | Rows | Accuracy all rows | Schema gap |
-| --- | --- | ---: | ---: | --- |
-| golden_v0.1_router_all | router_classifier | 344 | 0.3023 | yes |
-| golden_v0.1_risk_all | risk_reviewer | 181 | 0.2762 | yes |
-| golden_v0.1_citation_all | citation_verifier | 166 | 0.4819 | yes |
-| long_research_repair_25_router_all | router_classifier | 25 | 0.4800 | no |
-| real_tool_trace_pilot_10_router | router_classifier | 10 | 0.0000 | yes |
-
-This blocked immediate GPU fine-tuning. The next step is data-contract repair:
-add missing router labels (`risk_review`, `clarification_needed`), add `medium`
-risk semantics, and align citation labels across candidate evidence and
-verified support.
-
-## Repo Map
-
-```text
-AGENTS.md
-CODEX.md
-PROGRESS.md
-TODO.md
-CHECKPOINTS.md
-LEARNING_SOURCES.md
-EXPERIMENT_LOG.md
-FAILURE_LOG.md
-DECISIONS.md
-docs/
-  DATASETS.md
-  GIT_WORKFLOW.md
-  SERVER_RUNBOOK.md
-training-corpus/
-  requirements-baseline.txt
-  scripts/evaluate_baseline_holdouts.py
-  scripts/train_specialist_baselines.py
-  runs/.../golden_v0.1/
-  runs/.../kiwi-brain-ai-expanded-v0.1/
-```
-
-## Boundary
-
-This repo is not claiming that KIWI is a production trading agent. The current
-artifact is a training/evaluation substrate for financial research agents:
-router, risk reviewer, citation verifier, memo scorer, memory gate, and later
-SFT/DPO/GRPO experiments on verifiable subtasks.
