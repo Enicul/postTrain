@@ -255,6 +255,13 @@ oracle - the local-router question is ANSWERED for this task tier (safety floor 
 
 QUEUE (promoted next levers, in order):
 
+- [ ] KIWI DEMO PROJECT (launched 2026-07-07, owner-scheduled): desktop cockpit
+  redesign per the new mobile design language — make routing/gate/memory decisions
+  visible ("cockpit" panel), local-first runtime story (48GB Mac), 5-min interview
+  demo script. Survey done (3 sources exposed / 3 wire / 1 build); design doc at
+  Agent repo docs/KIWI_DESKTOP_COCKPIT_DESIGN.md AWAITING OWNER CONFIRMATION before
+  any implementation. Phases P1-P4, each independently demo-able.
+
 - [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time
   discipline / boundary-class balance; then re-run on the combined train pool. THE SOLE
   remaining live lever for the (otherwise CLOSED) citation line.
