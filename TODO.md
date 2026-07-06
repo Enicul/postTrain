@@ -258,16 +258,27 @@ QUEUE (promoted next levers, in order):
 - [ ] Citation collection BATCH 2 -> ~400+ rows (277 today), same schema / point-in-time
   discipline / boundary-class balance; then re-run on the combined train pool. THE SOLE
   remaining live lever for the (otherwise CLOSED) citation line.
-- [~] env v0.4 memory-form experiment - STANDING BIG-TICKET, NOW PROMOTED (v0.3 is SATURATED,
-  D-2026-07-04-013 - v0.4 is the successor ruler that restores discriminative power). ENV CODE
-  SHIPPED this session (commit 0cecbc0: memory-dependent seeds, dynamic cost, twin pairs).
-  DATASET ASSEMBLY IN PROGRESS: synthetic persona data generation underway; the v0.4 `staging/`
-  personas dir is BUILDER-OWNED and UNTRACKED BY DESIGN until curated - do NOT commit it.
-  REMAINING: finish persona curation, then build the four-arm matrix (no-memory /
-  structured-digest / raw-long-context / Sonnet) with pre-registered kills; tests what FORM
-  state should take for a small model. The R6 smart-review tier ("retrieve memory before
-  judging") sharpens its motivation. See `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`,
-  D-2026-07-03-002/005.
+- [~] env v0.4 memory-form experiment - STANDING BIG-TICKET, PROMOTED (v0.3 is SATURATED,
+  D-2026-07-04-013 - v0.4 is the successor ruler that restores discriminative power).
+  CONSTRUCTION COMPLETE this round (three commits):
+  - [x] ENV CODE (commit 0cecbc0): memory-dependent seeds, dynamic cost, twin pairs.
+  - [x] DATASET ASSEMBLY (commit 8e197fe; EXP-2026-07-06-001): 592 seeds (360 base + 232 twins,
+    0 pairs dropped - every pair flips gold), splits train 350 / dev 121 / test 121 (test FROZEN
+    at birth), classes anaphora 122 / cache_cost 144 / position_context 144 / stage_dependent 76 /
+    control 106, 35 action-intent gate seeds. Gold by ORACLE MATH only (D-2026-07-06-001);
+    TRUE-NEED p-convention; blind spot-audit 58/592 (100% / 94.8%). Personas synthetic_opus_v1
+    (36 simulated KIWI users, honest flag). R6 convention fired in the build pipeline.
+  - [x] EVAL HARNESS (commit 1c2e4af): eval_v04.py - arm matrix (none/digest/raw), twin-pair
+    discrimination rate (headline), per-class plan accuracy, oracle gap, token-cost (raw ~1091 vs
+    digest ~299 = 3.6x). CPU selftest green.
+  - [ ] THREE-ARM FIRST EXAM (1.5B x none/digest/raw, test 121): READY-TO-RUN, PAUSED pending GPU
+    (owner's project has priority; launched then stopped mid-arm-1, partial preds discarded,
+    nothing lost). Awaiting owner's "GPU free" signal.
+  - [ ] REMAINING after the three arms: Sonnet reference arm, then training arms per the
+    pre-registered four-arm memory-form matrix (no-memory / structured-digest / raw-long-context /
+    Sonnet) with pre-registered kills; tests what FORM state should take for a small model. The R6
+    smart-review tier ("retrieve memory before judging") sharpens its motivation. See
+    `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005, D-2026-07-06-001.
 
 SECOND tier:
 

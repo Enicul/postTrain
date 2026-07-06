@@ -1,6 +1,64 @@
 # Progress
 
-Last updated: 2026-07-04
+Last updated: 2026-07-06
+
+## Round 10 Wrap-Up: env v0.4 BUILT (env code + 592-seed twin dataset + eval harness); first three-arm exam staged then PAUSED for GPU handover to the owner (2026-07-06)
+
+The env-v0.4 CONSTRUCTION round is done. The successor ruler that restores the discriminative
+power v0.3 lost (D-2026-07-04-013) now exists as concrete, committed artifacts: env code, a
+592-seed twin-pair dataset, and an eval harness. Three commits landed this arc - `0cecbc0` (env
+code, last round), `8e197fe` (dataset), `1c2e4af` (eval harness).
+
+**A. THE DATASET (commit 8e197fe; EXP-2026-07-06-001).** 592 seeds = 360 base + 232 twins, with
+**0 twin pairs dropped - every surviving pair FLIPS gold** (a pair that does not flip is not
+admitted; the flip is the whole exam). Splits: train 350 / dev 121 / **test 121 FROZEN AT
+BIRTH**. Class mix: anaphora 122 / cache_cost 144 / position_context 144 / stage_dependent 76 /
+control 106; 35 gate seeds (all action-intent red lines). **Gold is computed by the env's OWN
+ORACLE MATH, never hand-assigned** (D-2026-07-06-001); p-values via route_mean_proxy_v03 + the
+**TRUE-NEED convention**. Blind spot-audit 58/592: **pass A 100% / pass B 94.8% (>= 90% bar)**.
+The **memory-value gap** (test, lambda=0.3) is digest-oracle 0.8219 vs none-oracle 0.8015 =
+**0.0204**, honestly capped as the **anaphora-channel floor** - it is oracle-vs-oracle, so the
+real twin discrimination that memory buys surfaces in POLICY scores, not this delta.
+
+**B. PERSONA PROVENANCE (2026-07-04, data inside 8e197fe's staging/).** Three parallel Opus
+agents simulated **36 KIWI users (12 beginner / 12 intermediate / 12 advanced)** -> 360 candidate
+queries under class quotas (exactly 1 red-line per persona), twin_hints, zh/en register matched
+to the v0.3 corpus, no route-word leakage, strict point-in-time discipline (relative cache ages
+only). Flagged **`synthetic_opus_v1`** (simulated, not real users). Notable: the advanced pack
+disguised red lines inside plausible strategies ("2x 杠杆 SOXL 当对冲") and included personas that
+violate their own stated lessons; the intermediate pack had a cache/recent_conversation field
+swap (P-I-02..12) that the builder recovered by **content-shape classification** (not by trusting
+the field name) - recorded as a data-repair note. **The R6 convention FIRED IN THE BUILD
+PIPELINE**: one concern-advisory red-line ("我要不要现在补仓摊低成本?") was auto-reclassified per
+D-2026-07-04-005 at build time - evidence conventions compound downstream (D-2026-07-06-001).
+
+**C. THE EVAL HARNESS (commit 1c2e4af).** `eval_v04.py` - arm-matrix evaluation
+(memory_mode none / digest / raw), env-inherited scoring (dynamic cost, p_no_memory switching),
+and NEW metrics: **twin-pair discrimination rate (the headline)**, per-class plan accuracy,
+arm-appropriate oracle gap, and mean prompt tokens (**raw ~1091 vs digest ~299 in selftest = the
+3.6x context-cost quantified**). CPU selftest passed all three mechanism checks.
+
+**D. A FAILURE, RECOVERED (F-2026-07-06-001).** The FIRST harness-build agent died of an API
+connection error after ~19 min leaving **ZERO traces** (no files, no commits). Because the task
+spec was idempotent, we **verified the corpse** (repo state clean) and **relaunched the identical
+spec -> 1c2e4af**. Lesson: agent runs are infrastructure too - design tasks so 死亡 = 重发. Minor
+ops note: a pkill-by-pattern stop command self-matched its own ssh session (second occurrence);
+rule going forward: kill by PID after ps-inspection, never pkill by substring on shared boxes.
+
+**E. OPERATIONAL PAUSE.** The three-arm v0.4 first exam (**1.5B x none/digest/raw, test 121**)
+was **LAUNCHED then STOPPED mid-arm-1 at the owner's request** - their other project needs GPU 0.
+Partial arm-1 preds discarded (pure eval, nothing lost; dataset + harness are committed). State:
+**READY-TO-RUN, awaiting the owner's "GPU free" signal.** Standing rule reaffirmed: **the owner's
+workloads preempt ours, never the reverse.**
+
+**NEXT.** On the GPU-free signal: re-run the three arms (twin-pair discrimination rate = headline)
+-> then the Sonnet reference arm -> then training arms per the pre-registered kills. Plan C
+(no-weights v0.3 control, prompt tier - saturation does not invalidate it) and citation batch-2
+(277 -> ~400+) remain queued.
+
+Log ids this round: EXP-2026-07-06-001 (v0.4 dataset build), F-2026-07-06-001 (harness agent
+death + idempotent relaunch), D-2026-07-06-001 (gold-by-oracle + TRUE-NEED convention),
+CP-2026-07-06-001.
 
 ## Round 9 Wrap-Up: seed replication + grid fill -> env v0.3 is SATURATED; exam upgraded to v0.4 (2026-07-04)
 

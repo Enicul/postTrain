@@ -1341,3 +1341,51 @@ Consequence:
   (measure), and it RETIRES when either every item is trivially failed (audit the items) or
   every config trivially aces it (upgrade the exam). Saturation is a first-class result, not a
   victory lap.
+
+## D-2026-07-06-001 - env v0.4 gold discipline: adopt the TRUE-NEED p-value convention and the gold-by-oracle-math-only rule (NO hand-assigned gold); the R6 convention firing in the build pipeline is evidence conventions compound
+
+Decision:
+
+For env v0.4, adopt two binding data-construction rules:
+
+1. GOLD BY ORACLE MATH ONLY. Every seed's gold routing decision is computed by the env's own
+   oracle (escalation_env_v04.py), never hand-assigned by the builder. If the oracle cannot
+   compute a gold for a seed, the seed does not enter the dataset. This closes the door on
+   label drift, annotator bias, and "the builder decided it felt like a red line."
+
+2. THE TRUE-NEED p-value convention. p-values are computed via route_mean_proxy_v03 under the
+   TRUE-NEED convention (documented in the env README / manifest): the probability reflects the
+   TRUE need for escalation given the memory the model actually holds, so that a twin pair flips
+   its gold exactly when the memory changes what the correct route is. This is what makes the
+   twin-pair exam discriminate memory-users from surface-matchers.
+
+Why:
+
+Env v0.3 saturated (D-2026-07-04-013) in part because its top-tier discrimination came from a
+small n and analytically fixed gold; v0.4's whole value is that gold DEPENDS on memory, so the
+gold-generation process must be mechanical and auditable, not hand-tuned - otherwise the twin
+flips (the entire point of the exam) would be a builder artifact rather than a property of the
+task. Computing gold from the same oracle that scores the arms guarantees the exam is internally
+consistent: the thing being measured and the thing defining "correct" share one mechanism.
+
+EVIDENCE THAT CONVENTIONS COMPOUND: during the v0.4 build the R6 concern-vs-action convention
+(D-2026-07-04-005, the AMD_00 ruling) FIRED DOWNSTREAM IN THE PIPELINE - one mislabeled
+concern-advisory red-line ("我要不要现在补仓摊低成本?") was auto-reclassified per R6 at BUILD time,
+not just at scoring time. A convention adopted to settle one disputed item three days earlier
+now silently corrects a new dataset's labels on the way in. Conventions are not one-off rulings;
+they become reusable machinery that compounds across artifacts. This is the concrete argument
+for recording conventions as first-class decisions rather than fixing items in place.
+
+Consequence:
+
+- v0.4 gold is oracle-computed for all 592 seeds; 0 hand-assigned labels. The build is a data
+  experiment (EXP-2026-07-06-001) with a blind spot-audit (58/592: pass A 100% / pass B 94.8%,
+  clears the 90% bar).
+- The R6 convention is now demonstrated to operate at TWO stages (scoring AND construction);
+  this is logged as evidence, not a coincidence.
+- The memory-value gap reported oracle-vs-oracle (0.0204 at lambda=0.3, test) is honestly capped
+  as the anaphora-channel floor; the real twin discrimination is a POLICY-score phenomenon read
+  by the eval harness, NOT an oracle-vs-oracle delta. The gold-by-oracle rule is what makes that
+  policy-vs-oracle comparison meaningful.
+- General rule going forward: prefer mechanical, oracle-derived gold over hand assignment for any
+  successor ruler; record conventions as decisions so they can compound downstream.

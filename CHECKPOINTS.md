@@ -1506,7 +1506,7 @@ EXP-2026-07-04-017, D-2026-07-04-012, D-2026-07-04-011, TODO.
 
 ## CP-2026-07-04-007 - Round 9: seed replication + grid fill -> escalation env v0.3 is SATURATED (seven-plus oracle configs); exam upgraded to v0.4
 
-Status: current
+Status: superseded by CP-2026-07-06-001 (env v0.4 built: data + eval harness landed; first three-arm exam staged then paused for GPU handover to the owner)
 
 ```text
 Two full-parameter result rounds this session close the full-FT scale grid and force the big
@@ -1578,4 +1578,104 @@ builder-owned, untracked; env code shipped commit 0cecbc0) - the successor ruler
 discriminative power; citation collection batch-2 (277 -> ~400+). Second tier: Plan C
 (no-weights v0.3 control, prompt tier - still valid), lambda=0.6 exploration arm, full
 seed-varied 3B. See EXP-2026-07-04-018/019, D-2026-07-04-013, TODO.
+```
+
+## CP-2026-07-06-001 - Round 10: env v0.4 BUILT (env code + 592-seed twin dataset + eval harness); first three-arm exam staged then PAUSED for GPU handover to the owner
+
+Status: current
+
+```text
+The env-v0.4 CONSTRUCTION round is complete: three commits landed the successor ruler that
+restores the discriminative power v0.3 lost (D-2026-07-04-013). (1) ENV CODE 0cecbc0
+(memory-dependent seeds, dynamic cost, twin pairs; shipped last round). (2) DATASET 8e197fe:
+592 seeds (360 base + 232 twins, 0 pairs dropped - every pair flips gold), splits train 350 /
+dev 121 / test 121 (TEST FROZEN AT BIRTH), classes anaphora 122 / cache_cost 144 /
+position_context 144 / stage_dependent 76 / control 106, 35 action-intent gate seeds; gold
+computed by the env's OWN ORACLE MATH (never hand-assigned, D-2026-07-06-001); p-values via
+route_mean_proxy_v03 + the TRUE-NEED convention; blind spot-audit 58/592 pass A 100% / pass B
+94.8% (>= 90% bar). Personas: three parallel Opus agents simulated 36 KIWI users (12/12/12) ->
+360 queries with twin_hints, class quotas, exactly 1 red-line/persona, zh/en register matched,
+no route-word leakage, point-in-time discipline; flagged synthetic_opus_v1; intermediate-pack
+cache/recent_conversation field swap (P-I-02..12) recovered by content-shape classification
+(data-repair note). R6 CONVENTION FIRED IN THE BUILD PIPELINE: one concern-advisory red-line
+auto-reclassified per D-2026-07-04-005 - conventions compound downstream. (3) EVAL HARNESS
+1c2e4af: eval_v04.py, arm-matrix (memory_mode none/digest/raw), env-inherited scoring, NEW
+metrics = twin-pair discrimination rate (headline), per-class plan accuracy, arm-appropriate
+oracle gap, mean prompt tokens (raw ~1091 vs digest ~299 in selftest = the 3.6x context cost
+quantified); CPU selftest passed all three mechanism checks. FAILURE (F-2026-07-06-001): the
+FIRST harness-build agent died of an API connection error after ~19 min with ZERO traces;
+idempotent relaunch (same spec) succeeded -> 1c2e4af (we verified the corpse first) + a second
+pkill-by-pattern self-match (rule: kill by PID after ps-inspection). OPERATIONAL PAUSE: the
+three-arm v0.4 first exam (1.5B x none/digest/raw, test 121) was LAUNCHED then STOPPED mid-arm-1
+at the OWNER'S REQUEST (their other project needs GPU 0); partial arm-1 preds discarded (pure
+eval, nothing lost - dataset + harness committed). State: READY-TO-RUN, awaiting the owner's
+"GPU free" signal. Standing rule reaffirmed: the owner's workloads preempt ours, never the
+reverse.
+```
+
+Repo state:
+
+```text
+HEAD before this checkpoint: 1c2e4af (eval harness for env v0.4 memory arms)
+Three v0.4 commits this arc: 0cecbc0 (env code) -> 8e197fe (dataset) -> 1c2e4af (eval harness)
+Weights git-excluded; no partial arm-1 preds committed (discarded).
+```
+
+What is DONE:
+
+```text
+- Env v0.3: SATURATED + RETIRED for top-tier comparisons (frozen historical ruler) - prior round.
+- Env v0.4 CODE: escalation_env_v04.py (0cecbc0) - memory-dependent seeds, dynamic cost, twin pairs.
+- Env v0.4 DATA: 592 seeds / 232 twins / frozen test 121 (8e197fe) - gold by oracle math, blind audit passed.
+- Env v0.4 EVAL HARNESS: eval_v04.py (1c2e4af) - arm matrix + twin-discrimination + token-cost metrics; CPU selftest green.
+```
+
+What is IN-FLIGHT:
+
+```text
+- Three-arm first exam (1.5B x none/digest/raw, test 121): LAUNCHED then PAUSED mid-arm-1 for
+  GPU handover to the owner's project. READY-TO-RUN; awaiting "GPU free". Nothing lost (pure eval).
+```
+
+What is NEXT:
+
+```text
+1. Re-run the three arms on the owner's GPU-free signal (twin-pair discrimination rate = headline).
+2. Then the Sonnet reference arm.
+3. Then training arms per the pre-registered kills (four-arm memory-form matrix).
+4. Plan C still QUEUED (no-weights v0.3 control, prompt tier - saturation does not invalidate it).
+5. Citation collection batch-2 (277 -> ~400+) still QUEUED.
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+training-corpus/scripts/escalation_env_v04.py                        (env code; commit 0cecbc0)
+training-corpus/scripts/rl/eval_v04.py                               (eval harness; commit 1c2e4af)
+training-corpus/scripts/rl/reward_escalation.py                      (reward; 0cecbc0)
+training-corpus/ladder/escalation_env_v0.4/env_seeds_v0.4.json       (592 seeds; splits/gold/twins)
+training-corpus/ladder/escalation_env_v0.4/{cost_table,outcome_table,manifest}_v0.4.json
+training-corpus/ladder/escalation_env_v0.4/{README.md,AUDIT_NOTE.md}
+training-corpus/ladder/escalation_env_v0.4/staging/personas_{beginner,intermediate,advanced}_v1.json  (synthetic_opus_v1)
+docs/PORTFOLIO_INDEX.md                                              (v0.4 exam-construction section + provenance note)
+EXPERIMENT_LOG.md EXP-2026-07-06-001                                 (dataset build as a data experiment)
+FAILURE_LOG.md   F-2026-07-06-001                                    (harness agent death + idempotent relaunch)
+DECISIONS.md     D-2026-07-06-001                                    (gold-by-oracle + TRUE-NEED convention)
+```
+
+Log ids this round: EXP-2026-07-06-001 (v0.4 dataset build); F-2026-07-06-001 (harness agent
+death + idempotent relaunch, second pkill self-match); D-2026-07-06-001 (gold-by-oracle-math +
+TRUE-NEED convention); CP-2026-07-06-001.
+
+Resume:
+
+```text
+Env v0.4 is BUILT: env code (0cecbc0) + 592-seed twin dataset (8e197fe, frozen test 121, gold by
+oracle math, blind audit 100%/94.8%) + eval harness (1c2e4af, arm matrix + twin-discrimination +
+3.6x token-cost, CPU selftest green). The three-arm first exam (1.5B x none/digest/raw) was
+LAUNCHED then PAUSED mid-arm-1 for GPU handover to the owner's project - READY-TO-RUN, nothing
+lost. NEXT: on the owner's "GPU free" signal, re-run the three arms (twin-pair discrimination
+rate is the headline) -> Sonnet reference arm -> training arms per pre-registered kills. Plan C
+(no-weights v0.3 control) and citation batch-2 remain queued. Standing rule: the owner's
+workloads preempt ours. See EXP-2026-07-06-001, F-2026-07-06-001, D-2026-07-06-001, TODO.
 ```

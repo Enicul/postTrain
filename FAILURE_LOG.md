@@ -1448,3 +1448,48 @@ right move was to shrink our own footprint and link the OOM attempts as parent r
 legible chain, not to reclaim memory we don't own. Raise accumulation as you drop batch to
 hold the effective batch size. Ownership of the neighbor process escalated to the owner
 (pending) rather than resolved unilaterally.
+
+## F-2026-07-06-001 - First env-v0.4 eval-harness build agent died of an API connection error leaving ZERO traces; idempotent relaunch succeeded (+ a second pkill-by-pattern self-match)
+
+Symptom:
+
+The FIRST agent tasked with building the env v0.4 eval harness (eval_v04.py) died of an API
+connection error after ~19 minutes. It left ZERO traces: no files on disk, no commits, no
+partial harness - a clean disappearance mid-task.
+
+Evidence:
+
+```text
+No artifacts from the first attempt (that is the finding: nothing was written).
+Successful relaunch: commit 1c2e4af (feat(rl): eval harness for env v0.4 memory arms; eval_v04.py + rl/README.md).
+Verified repo state (git status / log) BEFORE relaunch to confirm no partial harness existed.
+```
+
+Diagnosis:
+
+- The task spec was IDEMPOTENT by construction (build a named artifact to a fixed path, no
+  in-place mutation of prior state), so a death with zero traces is fully recoverable: relaunch
+  the same spec.
+- We VERIFIED THE CORPSE first: checked repo state (no files, no commits, nothing staged)
+  before relaunching, so the relaunch could not double-write or collide with a half-built
+  artifact.
+- The relaunch with the identical spec produced 1c2e4af, which passed the CPU selftest (all
+  three mechanism checks).
+
+Minor ops note (same entry): a stop command that used pkill-by-pattern SELF-MATCHED its own ssh
+session - the SECOND occurrence of the self-match trap in this campaign. The kill pattern was
+broad enough to include the process issuing it.
+
+Fix:
+
+Relaunched the harness build with the same idempotent spec (-> 1c2e4af). Going forward, on
+shared boxes: KILL BY PID after a ps-inspection, NEVER pkill by substring - a substring pattern
+on a shared box can match the caller's own session (or a neighbor's).
+
+Effect / lesson:
+
+AGENT RUNS ARE ALSO INFRASTRUCTURE - design tasks so that 死亡 = 重发 (death = relaunch). An
+idempotent task spec turns an API-connection death with zero traces into a non-event: verify the
+corpse (confirm no partial state landed), then relaunch the identical spec. The complementary
+rule (self-match trap, second occurrence): never pkill by substring on a shared box; kill by PID
+after ps-inspection so the stop command cannot match its own ssh session or a neighbor's.

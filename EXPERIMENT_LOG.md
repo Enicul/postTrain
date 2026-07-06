@@ -3011,3 +3011,104 @@ comparisons at the top; discriminative power to be restored by env v0.4 (memory-
 seeds, dynamic cost, twin pairs; code shipped this session, commit 0cecbc0; synthetic persona
 data generation in progress in staging/, untracked by design). Lesson: when every model fails
 the same item, audit the item; when every config aces the exam, upgrade the exam.
+
+## EXP-2026-07-06-001 - Escalation env v0.4 dataset assembly: the twin-pair memory exam (592 seeds from simulated KIWI personas, gold by oracle math, blind spot-audit passed)
+
+Goal:
+
+Build the un-saturated successor ruler (env v0.3 SATURATED, D-2026-07-04-013). Assemble the
+env v0.4 dataset: a memory-dependent, twin-paired escalation exam where the SAME query flips
+its gold routing decision depending on the memory the model is (or is not) given - so that a
+model which merely pattern-matches surface text cannot ace it, restoring the discriminative
+power v0.3 lost. Treat the build itself as a DATA EXPERIMENT (counts, audit, convention fires,
+honest capacity read).
+
+Data:
+
+```text
+training-corpus/ladder/escalation_env_v0.4/{env_seeds_v0.4.json,cost_table_v0.4.json,outcome_table_v0.4.json,manifest.json,README.md,AUDIT_NOTE.md}
+training-corpus/ladder/escalation_env_v0.4/staging/{personas_beginner_v1.json,personas_intermediate_v1.json,personas_advanced_v1.json}
+env code: training-corpus/scripts/escalation_env_v04.py (commit 0cecbc0)
+dataset commit: 8e197fe ; eval harness commit: 1c2e4af
+```
+
+PERSONA PROVENANCE (2026-07-04, no separate code commit - persona JSON landed inside 8e197fe's
+staging/): three parallel Opus agents simulated 36 KIWI users (12 beginner / 12 intermediate /
+12 advanced) producing 360 candidate queries under class quotas
+(anaphora / cache_cost / position_context / stage_dependent / controls, with exactly ONE
+red-line per persona). Each query carries twin_hints; zh/en register matched to the v0.3
+corpus; NO route-word leakage; strict point-in-time discipline (relative cache ages only, never
+absolute timestamps). Quality flag `synthetic_opus_v1` on the provenance. Notable content: the
+advanced pack disguised red lines inside plausible-sounding strategies ("2x 杠杆 SOXL 当对冲"),
+and personas that violate their own stated lessons (the realistic failure mode). Data-repair
+note: the intermediate pack had a cache / recent_conversation field swap in P-I-02..12; the
+builder recovered the intended semantics by CONTENT-SHAPE classification (not by trusting the
+field name) and recorded it as a repair note in AUDIT_NOTE.md.
+
+Build summary (from manifest.json):
+
+- 592 seeds = 360 base + 232 twins; 0 twin pairs dropped (EVERY surviving pair flips gold -
+  a pair that did not flip was not admitted).
+- Splits: train 350 / dev 121 / test 121; TEST FROZEN AT BIRTH (immutable from creation).
+- Class mix: anaphora 122 / cache_cost 144 / position_context 144 / stage_dependent 76 /
+  control 106.
+- 35 gate seeds, all action-intent red lines.
+
+Command:
+
+```text
+# builder pipeline (local); env's own oracle computes gold and p-values - never hand-assigned
+escalation_env_v04.py  (oracle math: gold routing + p_no_memory switching + dynamic cost)
+# gold NEVER hand-assigned; p-values via route_mean_proxy_v03 + the TRUE-NEED convention
+```
+
+Artifacts:
+
+```text
+training-corpus/ladder/escalation_env_v0.4/env_seeds_v0.4.json   (592 seeds; splits + gold + twins)
+training-corpus/ladder/escalation_env_v0.4/outcome_table_v0.4.json
+training-corpus/ladder/escalation_env_v0.4/cost_table_v0.4.json
+training-corpus/ladder/escalation_env_v0.4/manifest.json         (counts, audit, convention fires)
+training-corpus/ladder/escalation_env_v0.4/AUDIT_NOTE.md         (spot-audit + field-swap repair note)
+training-corpus/ladder/escalation_env_v0.4/staging/personas_{beginner,intermediate,advanced}_v1.json
+```
+
+Metrics:
+
+```text
+GOLD: computed by the env's own oracle math (never hand-assigned). p-values via
+  route_mean_proxy_v03 + the TRUE-NEED convention (documented).
+BLIND SPOT-AUDIT 58/592:  pass A 100%  ;  pass B 94.8%  (>= 90% bar)  -> PASS.
+R6 CONVENTION FIRED IN PIPELINE: one mislabeled concern-advisory red-line
+  ("我要不要现在补仓摊低成本?") auto-reclassified per D-2026-07-04-005 - the R6 convention
+  working DOWNSTREAM at build time, not just at scoring time.
+MEMORY-VALUE GAP (test, lambda=0.3): digest-oracle 0.8219 vs none-oracle 0.8015 = 0.0204.
+```
+
+Failures / honest caveats:
+
+- The 0.0204 memory-value gap (digest-oracle vs none-oracle) is HONESTLY CAPPED as the
+  ANAPHORA-CHANNEL FLOOR: it is oracle-vs-oracle, so it measures only the anaphora channel's
+  contribution to the analytic ceiling. The full twin discrimination that memory buys does NOT
+  surface in this oracle-vs-oracle delta - it surfaces in POLICY scores (a policy without
+  memory cannot flip the twin and eats the gold-mismatch penalty). The eval harness's twin-pair
+  discrimination rate (EXP is the dataset build; harness is commit 1c2e4af) is where the real
+  memory signal is read, not here.
+- Personas are `synthetic_opus_v1` (simulated, not real KIWI users) - flagged as provenance.
+- The intermediate-pack field swap was recovered by content-shape, not by field name; recorded
+  rather than silently trusted.
+
+Decision:
+
+Env v0.4 dataset is BUILT and internally consistent: 592 twin-paired seeds, gold by oracle math
+only, blind audit clears the 90% bar (100% / 94.8%), test frozen at birth. The R6 convention
+firing in the build pipeline is evidence that conventions COMPOUND downstream (D-2026-07-06-001).
+Feeds the eval harness (commit 1c2e4af) and the three-arm first exam (CP-2026-07-06-001).
+
+Next:
+
+Run the three-arm memory exam (memory_mode none / digest / raw) with the harness; twin-pair
+discrimination rate is the headline metric that the oracle-vs-oracle gap deliberately does not
+capture. First exam LAUNCHED then PAUSED mid-arm-1 for GPU handover to the owner's project
+(READY-TO-RUN, awaiting "GPU free"). See EXP is the dataset; harness commit 1c2e4af;
+D-2026-07-06-001; CP-2026-07-06-001.

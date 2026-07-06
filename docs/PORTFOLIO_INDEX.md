@@ -2,7 +2,7 @@
 
 *The interviewer front door. Start here; every claim links to its evidence.*
 
-Last updated: 2026-07-04 (Round 9 — env v0.3 saturated).
+Last updated: 2026-07-06 (Round 10 — env v0.4 built: code + 592-seed twin dataset + eval harness; first exam staged, paused for GPU handover).
 
 ---
 
@@ -354,6 +354,35 @@ citation env v2 (D-2026-07-04-002/008).
     the exam, upgrade the exam* — a ruler has a lifecycle, and saturation is a first-class result,
     not a victory lap. (EXP-2026-07-04-018/019, D-2026-07-04-013.)
 
+11. **The upgraded exam now has its concrete artifact: env v0.4 is BUILT (2026-07-06).** The
+    "env solved → exam upgraded" arc is no longer a promissory note — the successor ruler exists
+    as committed code, data, and a harness. **(a) The dataset (commit `8e197fe`):** **592 seeds**
+    (360 base + **232 twins**, *0 pairs dropped — every surviving twin pair FLIPS gold*), split
+    train 350 / dev 121 / **test 121 frozen at birth**; classes anaphora 122 / cache_cost 144 /
+    position_context 144 / stage_dependent 76 / control 106; 35 action-intent gate seeds. **Gold
+    is computed by the env's own oracle math — never hand-assigned** — and p-values use the
+    **TRUE-NEED convention** (D-2026-07-06-001); a blind 58/592 spot-audit clears the bar
+    (pass A 100% / pass B 94.8% ≥ 90%). Notably the **R6 concern-vs-action convention fired in the
+    build pipeline** (one advisory red-line auto-reclassified per D-2026-07-04-005) — evidence
+    that conventions *compound* downstream, operating at construction time, not just at scoring
+    time. **(b) The eval harness (commit `1c2e4af`):** `eval_v04.py` runs the arm matrix
+    (memory_mode none / digest / raw) with env-inherited scoring and new metrics — **twin-pair
+    discrimination rate** (the headline the oracle-vs-oracle gap deliberately can't capture),
+    per-class plan accuracy, arm-appropriate oracle gap, and mean prompt tokens (**raw ≈1091 vs
+    digest ≈299 in selftest = the 3.6× context-cost quantified**); CPU selftest green. **(c) The
+    first exam is staged, not yet run:** the three-arm 1.5B × {none, digest, raw} exam on the
+    frozen test-121 was launched then **paused mid-arm-1 to yield GPU 0 to the owner's project**
+    (partial preds discarded, pure eval, nothing lost) — READY-TO-RUN pending the owner's "GPU
+    free" signal. Then the Sonnet reference arm, then training arms per the pre-registered kills.
+    (EXP-2026-07-06-001, F-2026-07-06-001, D-2026-07-06-001, CP-2026-07-06-001.)
+
+    *Provenance note (honest flag):* the v0.4 seeds are grown from **synthetic personas** —
+    three parallel Opus agents simulated **36 KIWI users** (12 beginner / 12 intermediate /
+    12 advanced) under class quotas (exactly one red-line each), zh/en register matched to the
+    v0.3 corpus, no route-word leakage, strict point-in-time discipline. They are tagged
+    **`synthetic_opus_v1`** and are *simulated, not real users*; one intermediate-pack field swap
+    was recovered by content-shape (not by trusting the field name) and recorded as a repair note.
+
 **The five self-corrections (the campaign's honesty ledger).** #1 — the "trained 1.5B beats
 prompted 7B" headline held at seed 0 but not at the mean; downgraded to seed-0-only
 (D-2026-07-04-006, finding #3). #2 — the 0.5B GRPO collapse is an **adapter**-capacity floor,
@@ -395,10 +424,18 @@ on escalation RL only ever optimizes *above* a code-enforced safety floor
   analytic oracle, so v0.3 no longer discriminates strong methods at the top; it is frozen as a
   historical ruler (D-2026-07-04-013). The "1.5B full-FT reaches oracle / KIWI local-router
   answered" claim is on **env v0.3** — a simulated, n=48 ruler — for **this task tier**; env
-  v0.4 (memory-dependent seeds, dynamic cost, twin pairs) is the un-saturated successor and its
-  persona dataset is still in assembly (`staging/`, untracked by design). The scale curve is a
-  portrait of our hyperparameters, not of the models — stated as a self-correction, not a
-  finding about capability.
+  v0.4 (memory-dependent seeds, dynamic cost, twin pairs) is the un-saturated successor. The scale
+  curve is a portrait of our hyperparameters, not of the models — stated as a self-correction, not
+  a finding about capability.
+- **Env v0.4 is BUILT but NOT YET RUN — no v0.4 arm numbers exist.** The env code, the 592-seed
+  twin dataset (frozen test 121), and the eval harness are committed (`0cecbc0` / `8e197fe` /
+  `1c2e4af`), and the harness CPU selftest passes its mechanism checks — but the first three-arm
+  exam was paused mid-arm-1 to yield GPU 0 to the owner's project, so **there are zero measured
+  v0.4 policy results yet**. The memory-value figures reported so far (digest-oracle 0.8219 vs
+  none-oracle 0.8015 = 0.0204) are **oracle-vs-oracle** and are honestly capped as the
+  anaphora-channel floor; the real twin discrimination is a policy-score phenomenon that only the
+  (not-yet-run) exam will surface. The v0.4 seeds are also **synthetic** (`synthetic_opus_v1`,
+  simulated KIWI personas), not real user logs.
 - **GRPO variance isolated, not full-pipeline.** The 3B ×3-seed replication varies the
   GRPO *sampling* seed only (all three init from the same seed-0 3B SFT adapter). A
   full SFT+GRPO seed-varied 3B run (to bound total pipeline variance) is backlog.
