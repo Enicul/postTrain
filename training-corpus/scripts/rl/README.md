@@ -509,6 +509,58 @@ agent assembles `env_seeds_v0.4.json` + `outcome_table_v0.4.json` +
 `cost_table_v0.4.json` from staging - that assembly is NOT this env's job. The
 env loads those three files from its dir once assembled.
 
+### v0.4 model eval harness (`eval_v04.py`) - the arm matrix runner
+
+`eval_v04.py` scores a policy on ONE arm (`--memory-mode none|digest|raw`) with
+the env's OWN v0.4 reward math: it reuses `render_prompt_v04` + `parse_plan`
+(from `reward_escalation.py`) and reads each plan's reward straight off
+`EscalationEnvV04.expected_rewards(seed_id, lam, memory_mode)` - so the dynamic
+deep cost (`c_deep_cached` on fresh-cache seeds), the arm-appropriate cheap odds
+(`p_no_memory` on the none arm, memory-resolved `p` on digest/raw), gate logic,
+and the missed-gate penalty are all inherited, never reimplemented. Model
+loading / greedy generation / `--dump-preds` are copy-adapted from
+`eval_escalation_policy.py` (only the prompt renderer differs, to inject the arm
+memory block) - see the module docstring for the reuse/copy split.
+
+Report (JSON): per-λ `{reward, cost, success, gate_recall}` at λ {0.1,0.3,0.6},
+plus **twin-pair discrimination rate** (headline - fraction of twin pairs the
+model gives DIFFERENT plans to), per-`difficulty_class` plan accuracy
+(`plan == gold`), the arm-appropriate oracle gap at λ=0.3, and the mean
+prompt-token count for the mode (quantifies raw-vs-digest context cost).
+`memory_mode`, env dir, seeds version, and model/adapter provenance are recorded.
+
+CPU verify (no GPU, no install):
+
+    python eval_v04.py --selftest    # loads the REAL dataset, scores 3 fabricated
+                                     #   completions vs 3 real seeds, demonstrates
+                                     #   twin-discrimination, none-vs-digest p switch,
+                                     #   and the dynamic-cost effect in scoring
+
+Arm runs - **1.5B prompted, three arms, frozen TEST split** (arms 1/2/3 of the
+matrix above; `ENV04` = the shipped v0.4 dir):
+
+    ENV04=../../runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/escalation_env_v0.4
+
+    # arm 1 (baseline, stateless):
+    python eval_v04.py --env-dir $ENV04 --split test --memory-mode none \
+        --model Qwen/Qwen2.5-1.5B-Instruct --dump-preds runs/eval_v04/none_preds.jsonl \
+        --out runs/eval_v04/none_test.json
+    # arm 2 (structured digest, MAIN hypothesis):
+    python eval_v04.py --env-dir $ENV04 --split test --memory-mode digest \
+        --model Qwen/Qwen2.5-1.5B-Instruct --dump-preds runs/eval_v04/digest_preds.jsonl \
+        --out runs/eval_v04/digest_test.json
+    # arm 3 (raw long context, "context drowns small models"):
+    python eval_v04.py --env-dir $ENV04 --split test --memory-mode raw \
+        --model Qwen/Qwen2.5-1.5B-Instruct --dump-preds runs/eval_v04/raw_preds.jsonl \
+        --out runs/eval_v04/raw_test.json
+
+Arm 4 (Sonnet, frontier reference / digest arm) is a **pred-file route for
+later**: dump a Sonnet-produced `{seed_id, first, on_fail}` jsonl and score it
+the same way (a `--pred-file` path can be added to `eval_v04.py` when that arm
+runs; today's harness is the model/greedy path for the 1.5B arms). The
+pre-registered kills for these arms (main-hypothesis, compression-thesis, and
+cost/speed-vs-Sonnet) are the ones quoted verbatim above - not restated here.
+
 ### Fidelity notes carried forward (restate wherever a v0.4 number is reported)
 
 The known env-fidelity limits (model-derived `p`, always-adequate deep path,
