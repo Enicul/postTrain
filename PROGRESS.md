@@ -1,6 +1,21 @@
 # Progress
 
-Last updated: 2026-07-06
+Last updated: 2026-07-07
+
+## Interview-prep addendum: 3-day bootcamp page shipped (2026-07-07)
+
+`docs/INTERVIEW_3DAY_BOOTCAMP.html` - an interactive 3-day interview sprint plan (target:
+LLM post-training / RL algorithm roles, ByteDance/Anthropic-tier grilling). Built by
+cross-indexing three sources: our own interview pack (PORTFOLIO_INDEX / WHITEBOARD_FUNDAMENTALS /
+INTERVIEW_AGENT_HANDBOOK / PITCH_3MIN_zh), `~/Documents/rl/hands-on-modern-rl` (from-scratch
+REINFORCE/PPO/GAE/DPO/GRPO reference implementations + cheatsheets), and `~/Documents/rl/minimind`
+(hand-rolled transformer: RMSNorm/RoPE/GQA/SwiGLU/KV-cache/LoRA + DPO/PPO/GRPO trainers).
+Contents: day-by-day schedule (story drills + whiteboard derivations + code-from-blank-paper +
+1h/day LeetCode), a 12-question attack bank with safe answers AND "don't say" lists, a
+14-item unknown-unknowns sweep (memory math, ZeRO/FSDP, vLLM, async RL, DPO variants, reward
+hacking, RLVR, company-specific), Feynman self-rating cards with a persistent weakness list,
+number flashcards, and a 3-min pitch timer. Progress persists in localStorage. Published as a
+claude.ai artifact; nightly mock interviews run against INTERVIEW_AGENT_HANDBOOK.md as before.
 
 ## Round 10 Wrap-Up: env v0.4 BUILT (env code + 592-seed twin dataset + eval harness); first three-arm exam staged then PAUSED for GPU handover to the owner (2026-07-06)
 

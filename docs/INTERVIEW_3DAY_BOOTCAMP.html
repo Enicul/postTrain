@@ -1,0 +1,778 @@
+<title>三天面试冲刺 · Post-Training 作战室</title>
+<style>
+  :root{
+    --paper:#F7F8F5; --card:#FFFFFF; --ink:#182420; --muted:#5F6B63;
+    --pine:#1E6B4E; --pine-deep:#144736; --soft:#E4EFE8;
+    --amber:#B07818; --amber-soft:#F7EEDC;
+    --red:#A6373F; --red-soft:#F6E7E8;
+    --line:#DCE1DA; --code:#F0F3EE;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+    --disp:"Songti SC","STSong","Noto Serif SC",serif;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);margin:0;
+    font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15px}
+  h1,h2,h3{font-family:var(--disp);text-wrap:balance;line-height:1.3}
+  h1{font-size:26px;margin:0}
+  h2{font-size:21px;margin:34px 0 6px;border-bottom:2px solid var(--ink);padding-bottom:8px}
+  h3{font-size:17px;margin:22px 0 8px;color:var(--pine-deep)}
+  p{margin:6px 0}
+  code,pre{font-family:var(--mono);font-size:12.5px}
+  code{background:var(--code);padding:1px 5px;border-radius:3px}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:6px;
+    padding:12px 14px;overflow-x:auto;line-height:1.5;margin:8px 0}
+  pre code{background:none;padding:0}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+  th{background:var(--soft);font-weight:600}
+  td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px 90px}
+  .tablewrap{overflow-x:auto}
+
+  /* ── header ── */
+  .top{position:sticky;top:0;z-index:50;background:var(--paper);
+    border-bottom:1px solid var(--line);padding:12px 22px 0}
+  .topin{max-width:980px;margin:0 auto}
+  .brand{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .brand small{color:var(--muted)}
+  .tabs{display:flex;gap:2px;margin-top:10px;overflow-x:auto}
+  .tabbtn{appearance:none;border:1px solid var(--line);border-bottom:none;background:#EFF2ED;
+    color:var(--muted);padding:8px 14px;font-size:13.5px;cursor:pointer;
+    border-radius:8px 8px 0 0;white-space:nowrap;font-family:inherit}
+  .tabbtn:hover{color:var(--ink)}
+  .tabbtn.on{background:var(--card);color:var(--ink);font-weight:600;
+    border-color:var(--ink);position:relative}
+  .tabbtn:focus-visible{outline:2px solid var(--pine);outline-offset:-2px}
+  .prog{display:flex;align-items:center;gap:10px;padding:8px 0 10px}
+  .bar{flex:1;height:6px;background:#E5E9E3;border-radius:3px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--pine);transition:width .3s}
+  .prog span{font-family:var(--mono);font-size:12px;color:var(--muted);
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .panel{display:none;padding-top:6px}
+  .panel.on{display:block}
+
+  /* ── day map cards ── */
+  .daymap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+  .dm{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+    border-top:3px solid var(--pine)}
+  .dm b{font-family:var(--disp);font-size:16px}
+  .dm p{font-size:13px;color:var(--muted);margin:6px 0 0}
+
+  /* ── task rows ── */
+  .block{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:4px 18px 14px;margin:14px 0}
+  .block>h3{margin-top:14px}
+  .task{display:flex;gap:12px;padding:10px 0;border-top:1px dashed var(--line);cursor:pointer}
+  .task:first-of-type{border-top:none}
+  .task input{margin-top:5px;width:16px;height:16px;accent-color:var(--pine);flex:none;cursor:pointer}
+  .task b{font-size:14.5px}
+  .task .t{font-family:var(--mono);font-size:12px;color:var(--pine-deep);
+    background:var(--soft);padding:1px 7px;border-radius:3px;margin-right:8px;white-space:nowrap}
+  .task p{font-size:13.5px;color:#37423B;margin:4px 0 0}
+  .task .mat{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .task .mat code{font-size:11.5px}
+  .task .pass{font-size:12.5px;margin-top:5px;color:var(--pine-deep)}
+  .task .pass::before{content:"过关线 → ";font-weight:600}
+  .task input:checked ~ div{opacity:.45;text-decoration:line-through}
+
+  details{margin:8px 0;border:1px solid var(--line);border-radius:6px;background:#FCFDFB}
+  details summary{cursor:pointer;padding:8px 12px;font-size:13.5px;font-weight:600;
+    color:var(--pine-deep);user-select:none}
+  details summary:focus-visible{outline:2px solid var(--pine)}
+  details[open] summary{border-bottom:1px solid var(--line)}
+  details .din{padding:8px 14px 12px;font-size:13.5px}
+  details.warn summary{color:var(--red)}
+
+  /* ── killer questions ── */
+  .kq{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);
+    border-radius:6px;padding:12px 16px;margin:12px 0;scroll-margin-top:130px}
+  .kq.mid{border-left-color:var(--amber)}
+  .kq .sev{font-size:11px;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px;
+    margin-right:8px;vertical-align:2px}
+  .sev.red{background:var(--red-soft);color:var(--red)}
+  .sev.amb{background:var(--amber-soft);color:var(--amber)}
+  .kq .hint{font-size:12.5px;color:var(--muted);margin:6px 0}
+  .kq.flash{animation:fl 1.6s ease 2}
+  @keyframes fl{50%{background:var(--amber-soft)}}
+  @media (prefers-reduced-motion:reduce){.kq.flash{animation:none;outline:3px solid var(--amber)}}
+
+  /* ── feynman cards ── */
+  .feyn{background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:12px 16px;margin:10px 0}
+  .feyn .fq{font-size:14px;font-weight:600}
+  .feyn .fq::before{content:"费曼";font-family:var(--disp);font-size:11px;color:var(--card);
+    background:var(--pine);border-radius:3px;padding:2px 6px;margin-right:8px;vertical-align:2px}
+  .rates{display:flex;gap:8px;margin-top:8px}
+  .rate{appearance:none;border:1px solid var(--line);background:#fff;border-radius:5px;
+    padding:3px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;color:var(--muted)}
+  .rate:hover{border-color:var(--ink);color:var(--ink)}
+  .rate.sel-again{background:var(--red-soft);border-color:var(--red);color:var(--red);font-weight:600}
+  .rate.sel-hard{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);font-weight:600}
+  .rate.sel-good{background:var(--soft);border-color:var(--pine);color:var(--pine-deep);font-weight:600}
+
+  /* ── flip cards ── */
+  .deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px;margin:12px 0}
+  .card3d{perspective:900px;height:128px;cursor:pointer}
+  .c3in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+  .card3d.flipped .c3in{transform:rotateY(180deg)}
+  @media (prefers-reduced-motion:reduce){
+    .c3in{transition:none}
+    .card3d.flipped .c3in{transform:none}
+    .card3d.flipped .cf{display:none}
+    .card3d.flipped .cb{transform:none}
+  }
+  .cf,.cb{position:absolute;inset:0;backface-visibility:hidden;border-radius:7px;
+    padding:12px 13px;font-size:13px;display:flex;align-items:center}
+  .cf{background:var(--card);border:1px solid var(--line);font-weight:600}
+  .cb{background:var(--pine-deep);color:#EDF5F0;transform:rotateY(180deg);
+    font-family:var(--mono);font-size:12.5px;line-height:1.5}
+
+  /* ── misc ── */
+  .callout{border:1px solid var(--line);border-left:4px solid var(--pine);background:var(--card);
+    border-radius:6px;padding:10px 16px;margin:12px 0;font-size:13.5px}
+  .callout.warn{border-left-color:var(--amber);background:#FDFAF3}
+  .callout.danger{border-left-color:var(--red);background:#FDF7F7}
+  .btn{appearance:none;border:1px solid var(--pine-deep);background:var(--pine);color:#fff;
+    border-radius:6px;padding:8px 18px;font-size:14px;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--pine-deep)}
+  .btn.ghost{background:#fff;color:var(--pine-deep)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .timerbox{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--card);
+    border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:10px 0}
+  #tdisp{font-family:var(--mono);font-size:40px;font-variant-numeric:tabular-nums;min-width:120px}
+  #tphase{font-size:14px;font-weight:600;color:var(--pine-deep)}
+  .weak{font-size:13.5px}
+  .weak li{margin:3px 0}
+  .weak .wk-again{color:var(--red);font-weight:600}
+  .weak .wk-hard{color:var(--amber)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;
+    padding:1px 7px;border-radius:3px;background:var(--soft);color:var(--pine-deep);margin-right:6px}
+  .uu{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:11px 16px;margin:10px 0}
+  .uu b{font-size:14px}
+  .uu .why{font-size:12.5px;color:var(--muted);margin:4px 0}
+  ul,ol{padding-left:22px;margin:6px 0}
+  li{margin:2px 0}
+  .footer-note{color:var(--muted);font-size:12.5px;margin-top:40px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+
+<header class="top">
+  <div class="topin">
+    <div class="brand">
+      <h1>三天面试冲刺 · Post-Training 作战室</h1>
+      <small>目标:LLM 后训练 / RL 算法岗 · 字节 / Anthropic 级拷打 · 8–10h ×3 天</small>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tabbtn" data-tab="p-ov">总览与弱项</button>
+      <button class="tabbtn" data-tab="p-d1">Day 1 · 故事+地基</button>
+      <button class="tabbtn" data-tab="p-d2">Day 2 · 算法+手撕</button>
+      <button class="tabbtn" data-tab="p-d3">Day 3 · 系统+实战</button>
+      <button class="tabbtn" data-tab="p-kq">拷打题库</button>
+      <button class="tabbtn" data-tab="p-uu">Unknown Unknowns</button>
+      <button class="tabbtn" data-tab="p-ref">数字速查</button>
+    </nav>
+    <div class="prog"><div class="bar"><i id="pbar"></i></div><span id="ptext">0 / 0</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ═══════════════ 总览 ═══════════════ -->
+<section id="p-ov" class="panel">
+  <h2>作战地图</h2>
+  <p>你手里的弹药比大多数候选人多得多:一次完整的 GPU 战役(4 尺寸 × SFT/DPO/GRPO + full-FT)、五次自我修正、一条闭合的 citation 链、46KB 白板数学手册、一份面试官拷打手册。三天的任务<b>不是学新东西,而是把已有证据压进肌肉记忆,并补上项目没覆盖的盲区</b>。</p>
+  <div class="daymap">
+    <div class="dm"><b>Day 1 · 故事定型 + RL 地基</b><p>pitch 三个时长版本练到脱口而出;policy gradient → baseline → GRPO 白纸推导;五次自我修正串成一条链;collapse 机制讲成三句话。</p></div>
+    <div class="dm"><b>Day 2 · 算法纵深 + 手撕</b><p>DPO 从 Bradley-Terry 推到 loss;PPO clip + GAE;手撕 mini transformer(RMSNorm/RoPE/GQA/SwiGLU/KV cache);LoRA;三大必杀题演练。</p></div>
+    <div class="dm"><b>Day 3 · 系统 + 查漏 + 全真模拟</b><p>显存估算、分布式、推理优化、RLHF 全流程;unknown unknowns 扫雷;英文 pitch;60 分钟全真模拟;弱项总复习。</p></div>
+  </div>
+
+  <h3>三条铁律(每个练习都遵守)</h3>
+  <div class="callout">
+    <b>1. 白纸法则(费曼学习法的执行形态)</b>:任何推导/代码,先合上资料在白纸上写,写完再对照,差异处标红。看懂 ≠ 会写,面试台上只有白纸。<br>
+    <b>2. 出声法则</b>:所有故事题必须<b>出声说</b>并计时,不许默念。嘴上的卡顿只有嘴知道。<br>
+    <b>3. 评分法则</b>:每张费曼卡做完点评分(又忘了/磕绊/流畅)。"又忘了"和"磕绊"会进入下方弱项清单,Day 3 下午专门清算。
+  </div>
+
+  <h3>我的弱项清单(自动汇总)</h3>
+  <div class="callout warn" id="weakbox">
+    <ul class="weak" id="weaklist"><li>还没有评分记录——从 Day 1 的费曼卡开始。</li></ul>
+  </div>
+
+  <h3>模拟面试怎么跑(每天晚上)</h3>
+  <div class="callout">
+    项目里已有一份为"AI 面试官"写的完整手册。开一个<b>新的 Claude 会话</b>,输入:<br>
+    <code>读 /Users/lucine/Documents/Job/projects/postTrain/docs/INTERVIEW_AGENT_HANDBOOK.md,严格按 PART 2 的协议当面试官拷问我。今天用 [15min 快问 / 45min 深挖] 格式,重点攻击向量 [(a) sim≠real / (b) 代码所有权 / (c) scale 转移]。每场结束输出 weakness report:最差 3 题 + 下次重考清单。</code><br>
+    面试官手册会自带评分(事实准确/机制深度/诚实边界/时长控制 四轴 1–5 分)。<b>把每晚的最差 3 题记到这页对应的费曼卡上,点"又忘了"。</b>
+  </div>
+
+  <h3>资料三件套的分工</h3>
+  <div class="tablewrap"><table>
+    <tr><th>仓库</th><th>在这三天里的角色</th></tr>
+    <tr><td><code>postTrain/docs/</code></td><td>你的<b>故事与证据</b>:PORTFOLIO_INDEX(数字)、WHITEBOARD_FUNDAMENTALS(推导)、INTERVIEW_AGENT_HANDBOOK(拷打)、PITCH_3MIN_zh(口条)</td></tr>
+    <tr><td><code>rl/hands-on-modern-rl</code></td><td><b>算法从零实现</b>参考答案:ch05 REINFORCE / ch07 PPO+GAE / ch02+09 DPO+GRPO / 附录 C 三张速记</td></tr>
+    <tr><td><code>rl/minimind</code></td><td><b>手撕 transformer</b> 参考答案:model_minimind.py(RMSNorm/RoPE/GQA/SwiGLU/MoE/KV cache)+ model_lora.py + train_dpo/grpo.py</td></tr>
+  </table></div>
+</section>
+
+<!-- ═══════════════ DAY 1 ═══════════════ -->
+<section id="p-d1" class="panel" data-day="1">
+  <h2>Day 1 · 故事定型 + RL 地基 <span id="d1prog" class="tag"></span></h2>
+  <p>今天结束时:三个时长的 pitch 脱口而出;PG→baseline→GRPO 一条线白纸推得动;五次自我修正和 collapse 机制讲得像自己的事(它们本来就是)。</p>
+
+  <div class="block">
+    <h3>上午 · 数字定桩 + 口条(09:00–12:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1a"><div>
+      <b><span class="t">09:00–10:00</span>数字定桩</b>
+      <p>通读 PORTFOLIO_INDEX §1–§2(一段落故事 + 结果矩阵),然后去「数字速查」标签把 12 张数字卡全部翻一遍,再<b>盲翻</b>第二遍:看正面报答案,错的卡记下来。</p>
+      <div class="mat">材料:<code>docs/PORTFOLIO_INDEX.md</code> §1–2 · 本页「数字速查」标签</div>
+      <div class="pass">12 张卡盲翻 ≥10 张正确。核心四个数必须零犹豫:0.8473 / gate 1.000 / KL 5.07 vs 0.36 / +11.6pts</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1b"><div>
+      <b><span class="t">10:00–11:30</span>Pitch 三连:15s → 60s → 3min</b>
+      <p>用 PITCH_3MIN_zh 的稿子,配下面的计时器,每个版本<b>出声</b>练 5 遍。3min 版要能在任何"可被打断点"被打断后自然接住。最后一遍录音回放,听自己的口头禅和卡顿。</p>
+      <div class="mat">材料:<code>docs/PITCH_3MIN_zh.md</code>(30s 问题+60s 方法+60s 结果+30s 收束)</div>
+      <div class="pass">3min 版误差 ±15s 内;15s 电梯版完全脱稿</div>
+      <div class="timerbox">
+        <div id="tdisp">0:00</div>
+        <div id="tphase">按开始,对着计时器出声讲</div>
+        <button class="btn" id="tstart" type="button">开始</button>
+        <button class="btn ghost" id="treset" type="button">重置</button>
+      </div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1c"><div>
+      <b><span class="t">11:30–12:30</span>白板 §1–2:LM 即策略 + Policy Gradient 推导</b>
+      <p>读 WHITEBOARD §1–2,然后<b>白纸</b>推:从 J(θ)=E[R(τ)] 出发,log-derivative trick,推到 REINFORCE 估计式;说出高方差的三个来源。</p>
+      <div class="mat">材料:<code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §1–2 · 对照 <code>hands-on-modern-rl/docs/chapter05_policy_gradient/policy-gradient.md</code></div>
+      <div class="pass">合卷推导无卡点;能答"为什么用 log 概率"(数值稳定 + 梯度形式)</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>下午 · REINFORCE 与 GRPO 的骨与肉(14:00–18:00)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1d"><div>
+      <b><span class="t">14:00–15:15</span>手撕 ①:REINFORCE</b>
+      <p>白纸写 <code>compute_returns()</code>(折扣回报)+ 训练循环核心(<code>loss = -(logp * G).sum()</code>),然后跑一遍参考实现对照。</p>
+      <div class="mat">参考:<code>hands-on-modern-rl/code/chapter05_policy_gradient/reinforce_cartpole.py</code></div>
+      <div class="pass">不看资料 15 分钟内写出可运行伪代码,方向(为什么是负号)讲得清</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1e"><div>
+      <b><span class="t">15:15–16:00</span>白板 §3:baseline 无偏性证明</b>
+      <p>白纸证明 E[b·∇logπ]=0(全链条,用 ∫π=1 两边求导),说清"减 baseline 降方差但不带偏"的直觉:居中让好坏有对比。</p>
+      <div class="mat">材料:<code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §3</div>
+      <div class="pass">3 分钟内写完证明;能立刻接上"GRPO 的组均值就是这个 baseline 的免训练版"</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1f"><div>
+      <b><span class="t">16:00–17:00</span>手撕 ②:GRPO advantage + 零梯度陷阱</b>
+      <p>白纸写组内 z-score 归一化,然后手算一组数值:rewards={0.7, 0.7, 0.66, −0.04} 的标准化 advantage(WHITEBOARD 练习 3 有折叠答案)。最后推陷阱:组内全相等 → std≈0 → A≈0 → 零梯度。</p>
+      <pre><code>def grpo_advantages(rewards):            # [B, G]
+    mean = rewards.mean(dim=1, keepdim=True)
+    std  = rewards.std(dim=1, keepdim=True)
+    return (rewards - mean) / (std + 1e-8)
+# 陷阱:组内 reward 全相等 → std≈0 → A≈0 → 零梯度
+# 这正是 0.5B collapse 的引信:gate 组 55% all-violate</code></pre>
+      <div class="mat">参考:<code>hands-on-modern-rl/code/chapter09_grpo_rlvr/grpo_mechanism.py</code> · <code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §5</div>
+      <div class="pass">手算数值正确;陷阱三句话版本流畅(见下方费曼卡)</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1g"><div>
+      <b><span class="t">17:00–18:00</span>故事内化:五次自我修正 + collapse 全案</b>
+      <p>先重读 FAILURE_TAXONOMY_GRPO_COLLAPSE + PORTFOLIO_INDEX §4,然后<b>合上资料</b>把"五次修正"当一个连续的侦探故事讲一遍(出声,≤5 分钟):多 seed 降级 → adapter floor 重归因 → 7B lr 平反 → AMD_00 裁决 → v0.3 饱和升级。</p>
+      <div class="mat">材料:<code>docs/FAILURE_TAXONOMY_GRPO_COLLAPSE.md</code> · <code>docs/PORTFOLIO_INDEX.md</code> §4</div>
+      <div class="pass">五个修正一个不漏、每个带一个数字;collapse 的 KL 前兆(5.07 vs 0.36)张口就来</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>晚上 · LeetCode + 首场模拟(19:30–21:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1h"><div>
+      <b><span class="t">19:30–20:30</span>LeetCode · 数组/双指针/二分</b>
+      <p>LC 1 两数之和 → LC 15 三数之和 → LC 53 最大子数组和 → LC 33 搜索旋转排序数组 → LC 215 数组中第 K 大(要求会堆和快速选择两种)。</p>
+      <div class="pass">5 题各 ≤15min AC;LC 215 两种解法都能口述复杂度</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d1i"><div>
+      <b><span class="t">20:30–21:30</span>模拟面试:15min 快问快答 ×2</b>
+      <p>按总览页的指令开新会话,格式选 15min 快问,第一场自由,第二场指定攻击向量 (d) 五次修正链。把 weakness report 的最差 3 题在下方费曼卡点"又忘了"。</p>
+      <div class="pass">四轴评分均 ≥3;时长控制不超时</div>
+    </div></label>
+  </div>
+
+  <h3>Day 1 费曼卡(睡前全部过一遍)</h3>
+  <div class="feyn" data-id="pg"><div class="fq">向本科生解释:policy gradient 为什么成立?log-derivative trick 那一步在干嘛?</div>
+    <details><summary>对照要点</summary><div class="din">∇E[R] 不能直接算因为期望依赖 θ;∇π = π·∇logπ 把梯度塞进期望内部,变成"可采样"的形式:E[R·∇logπ]。直觉:好轨迹的概率被推高,坏的被压低,R 是推力大小。高方差三源:轨迹长、reward 稀疏、没有对比基准。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="baseline"><div class="fq">为什么减掉 baseline 不引入偏差?GRPO 的 baseline 和 PPO 的有什么本质区别?</div>
+    <details><summary>对照要点</summary><div class="din">E[b·∇logπ] = b·∇∫π = b·∇1 = 0(b 不依赖动作)。PPO 的 baseline 是<b>训练出来的</b> value model(要多养一个网络);GRPO 的 baseline 是同 prompt 采 G 条的<b>组均值</b>——免训练,代价是每步要多次采样、且组内同质时会失效(零梯度陷阱)。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="collapse"><div class="fq">三句话讲清 0.5B GRPO collapse 的机制(带数字)。</div>
+    <details><summary>对照要点</summary><div class="din">① 0.5B 太弱,gate 类样本组内 8 条采样全违规的比例高达 55%(1.5B 是 0%),组内 reward 全相等 → advantage≈0 → gate 行为拿不到任何梯度。② 非 gate 行为持续被强化,gate 动作份额从 62.6% 灭绝到 1.9%,KL 冲到 5.07(健康 run 0.36)。③ 后续 full-parameter GRPO 不崩,所以重归因为 <b>LoRA adapter 容量地板</b>,不是模型能力地板——温度探针(T=1.0 时 gate 仅 0.25)证明是真知识丢失而非解码伪影。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="fivecorr"><div class="fq">五次自我修正,按时间顺序,每个一句话+一个数字。</div>
+    <details><summary>对照要点</summary><div class="din">① 多 seed:1.5B"胜过 prompted 7B"在 3-seed 均值下不成立 → 降级结论。② 0.5B collapse 重归因:full-param 不崩 → adapter 容量地板。③ 7B full-SFT 低分是 lr 伪影:2e-4→2e-5 后 0.5079→0.8473。④ AMD_00 裁决:证据显示该样本应为 smart-review 层,test gate 分母 8→7(改考卷要走仲裁,不是改模型)。⑤ v0.3 饱和:7+ 配置全命中 oracle 0.8473 → 停止刷方法,升级 v0.4 记忆考卷。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+</section>
+
+<!-- ═══════════════ DAY 2 ═══════════════ -->
+<section id="p-d2" class="panel" data-day="2">
+  <h2>Day 2 · 算法纵深 + 手撕 Transformer <span id="d2prog" class="tag"></span></h2>
+  <p>今天结束时:DPO 从 Bradley-Terry 一路推到 loss;PPO clip 和 GAE 手到擒来;一个 decoder block 的所有部件(含 KV cache)能白纸写;三大必杀题有排练过的答案。</p>
+
+  <div class="block">
+    <h3>上午 · 偏好优化 + PPO 家族(09:00–12:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2a"><div>
+      <b><span class="t">09:00–10:30</span>DPO:从 Bradley-Terry 白纸推到 loss + 手撕</b>
+      <p>推导链:BT 偏好模型 → RLHF 目标的解析最优解 π*∝π_ref·exp(r/β) → 反解 r=β·log(π/π_ref)+β·logZ → 代回 BT 时 logZ 相消 → DPO loss。然后手撕代码(注意:序列级 logp 是<b>对 token logp 求和</b>,且要乘 completion mask)。</p>
+      <pre><code>def dpo_loss(pi_w, pi_l, ref_w, ref_l, beta=0.1):
+    # 四条“序列级” logp:policy/ref × chosen/rejected
+    logits = beta * ((pi_w - ref_w) - (pi_l - ref_l))
+    return -F.logsigmoid(logits).mean()   # 数值稳定用 logsigmoid</code></pre>
+      <div class="mat">推导:<code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §6 · 代码参考:<code>minimind/trainer/train_dpo.py</code> L34-50 · <code>hands-on-modern-rl/docs/appendix_code_cheatsheet/dpo-family.md</code></div>
+      <div class="pass">合卷推完整条链(logZ 为什么消掉必须能讲);代码含 mask 处理;β 的两种解读(偏好置信度 / 离 ref 的弹簧硬度)</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2b"><div>
+      <b><span class="t">10:30–11:30</span>PPO:clip surrogate + 为什么 GRPO 砍掉 critic</b>
+      <p>白纸写 importance ratio、clipped objective,画出 clip 的分段函数图(A&gt;0 和 A&lt;0 两支)。然后讲清 PPO→GRPO 的工程动机:去掉 value model 省一半显存和一套超参,代价是组采样和零梯度风险。</p>
+      <pre><code>ratio = torch.exp(logp_new - logp_old)
+s1 = ratio * adv
+s2 = torch.clamp(ratio, 1-eps, 1+eps) * adv
+policy_loss = -torch.min(s1, s2).mean()</code></pre>
+      <div class="mat">材料:<code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §4–5 · <code>hands-on-modern-rl/code/chapter07_ppo/ppo_from_scratch.py</code></div>
+      <div class="pass">能答追问:"clip 和 KL penalty 都是信赖域,为什么 PPO 选 clip?"(一阶近似、实现简单、不用调 β)</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2c"><div>
+      <b><span class="t">11:30–12:30</span>手撕 ③:GAE + KL 估计器</b>
+      <p>白纸写 GAE 反向递推;写 k1/k3 两种 KL 估计器;备好追问答案:"你项目为什么不用 GAE?"(序列级 reward、无 per-token value,GRPO 直接用序列 advantage)。</p>
+      <pre><code>gae = 0
+for t in reversed(range(T)):
+    delta  = r[t] + gamma * v[t+1] * (1 - done[t]) - v[t]
+    gae    = delta + gamma * lam * (1 - done[t]) * gae
+    adv[t] = gae
+# k3 估计器(低方差、非负):样本来自 π_θ
+log_r = ref_logp - new_logp
+kl = (log_r.exp() - 1 - log_r).mean()</code></pre>
+      <div class="mat">材料:<code>hands-on-modern-rl/docs/appendix_code_cheatsheet/ppo-gae.md</code> + <code>grpo-rlvr.md</code> · <code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §7–8</div>
+      <div class="pass">GAE 的 λ 两个极端(λ=0 → TD、λ=1 → MC)讲得出 bias-variance 方向;KL 在你项目里的两个身份(刹车 + 诊断)带数字</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>下午 · 手撕 Transformer + 必杀题(14:00–18:00)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2d"><div>
+      <b><span class="t">14:00–16:00</span>手撕 ④:decoder block 全家桶</b>
+      <p>顺序白纸写,每写完一个对照 minimind:<b>RMSNorm</b> → <b>RoPE</b>(precompute + apply)→ <b>GQA attention</b>(含 repeat_kv 和 causal mask)→ <b>SwiGLU FFN</b> → <b>KV cache 的增量 generate 循环</b>。最后把整个 pre-norm block 的残差结构画出来。</p>
+      <pre><code># RMSNorm:无均值中心化、无 bias —— 比 LayerNorm 便宜
+x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
+# GQA:KV 头数 &lt; Q 头数,repeat_kv 把 KV 复制到与 Q 对齐
+# KV cache 要点:past_kv 拼接、只喂新 token、position 偏移</code></pre>
+      <div class="mat">参考答案:<code>minimind/model/model_minimind.py</code>(RMSNorm L50-60 / RoPE L62-84 / Attention L91-134 / SwiGLU L136-146 / generate L257-287)</div>
+      <div class="pass">attention 一次写对 shape(B,H,T,d);能答"为什么 GQA / 为什么 RoPE 能外推(YaRN 一句话)/ 为什么 SwiGLU"</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2e"><div>
+      <b><span class="t">16:00–16:45</span>手撕 ⑤:LoRA + 项目连接</b>
+      <p>白纸写 LoRA 类(A 高斯初始化、B 零初始化——为什么?)、merge 公式 W′=W+BA·α/r。然后接上你的杀手证据:<b>0.5B LoRA-GRPO 崩、full-param 不崩 → adapter 容量地板</b>。这是全场唯一一个"我有一手实验证据"的 LoRA 面试答案。</p>
+      <div class="mat">参考:<code>minimind/model/model_lora.py</code> L6-65 · 你的证据:<code>docs/PORTFOLIO_INDEX.md</code> §4-#2</div>
+      <div class="pass">B 零初始化的原因(训练起点等价于原模型)张口就来;rank/α 的作用讲得清</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2f"><div>
+      <b><span class="t">16:45–18:00</span>必杀题演练:sim≠real / 代码所有权 / scale 转移 + citation 四问</b>
+      <p>去「拷打题库」标签,把三道红色必杀题的答案<b>出声</b>各讲 3 遍(60s 内),然后把 citation 链四问四答当故事讲一遍。这四道题决定面试生死。</p>
+      <div class="mat">材料:本页「拷打题库」 · 原文:<code>docs/INTERVIEW_AGENT_HANDBOOK.md</code> PART 3+5</div>
+      <div class="pass">三道必杀题各 ≤60s、不看稿;citation 链的四个数字(0.871→0.0 / 0.0645→0.3871 / 3B 反降 / RL+0.0)全对</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>晚上 · LeetCode + 深挖模拟(19:30–21:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2g"><div>
+      <b><span class="t">19:30–20:30</span>LeetCode · 链表/栈/哈希</b>
+      <p>LC 206 反转链表 → LC 25 K 个一组翻转(字节最爱)→ LC 146 LRU Cache → LC 20 有效括号 → LC 3 无重复字符最长子串。</p>
+      <div class="pass">LC 25 和 LC 146 必须白板级熟练——字节出场率最高的两题</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2h"><div>
+      <b><span class="t">20:30–21:30</span>模拟面试:45min 深挖 ×1</b>
+      <p>指定攻击向量 (a) sim≠real 或今天费曼卡里最弱的主题。要求面试官在中途插入一道白板题(GRPO advantage 手算或 DPO 推导)。</p>
+      <div class="pass">深挖到 depth 3 不崩;白板题现场写对</div>
+    </div></label>
+  </div>
+
+  <h3>Day 2 费曼卡</h3>
+  <div class="feyn" data-id="dpo-chain"><div class="fq">DPO 推导链讲给同事听:为什么"不训 reward model 也在隐式地用 reward"?logZ 为什么消掉?</div>
+    <details><summary>对照要点</summary><div class="din">KL 约束下 RLHF 目标有解析最优解 π*∝π_ref·exp(r/β)。反解出 r = β·log(π*/π_ref) + β·logZ(x)。代入 Bradley-Terry 的 P(y_w≻y_l)=σ(r_w−r_l) 时,两个 r 共享同一个 x,logZ(x) 相减抵消 → loss 只含四条 logp。所以 DPO = 把"最优策略的隐式 reward"直接塞进偏好分类损失;β 越大离 ref 越近。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="dpo-cons"><div class="fq">你的 DPO 为什么输给 SFT?为什么说是"结构性保守"而不是没调好?</div>
+    <details><summary>对照要点</summary><div class="din">1.5B DPO:gate 1.000 / success 0.58——完美安全但探索贫乏。证据链:pair v2 重构 + β∈{0.1,0.3,0.5} 全扫,β=0.3/0.5 恢复部分探索但仍低于 SFT(0.7495)。结论:偏好目标≠任务 reward,pair 里"更安全"的一侧系统性地被 chosen,把策略推向保守;这是目标错配,不是单点超参事故。这是"偏好目标和任务目标可能不一致"的一手负面证据。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="kvcache"><div class="fq">KV cache 为什么能加速?它的显存代价怎么算?</div>
+    <details><summary>对照要点</summary><div class="din">自回归第 t 步只有 1 个新 query,历史 K/V 不变——缓存后每步从 O(t²) 降到 O(t)。显存:2(K和V) × layers × kv_heads × head_dim × seq_len × dtype字节 × batch。例:7B(32层, GQA 8 kv头×128维)fp16、4k 上下文、batch 1 ≈ 2×32×8×128×4096×2B ≈ 0.5GB;batch 32 就是 16GB——这就是为什么推理服务的瓶颈是 KV cache,也是 PagedAttention 存在的理由。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="citechain"><div class="fq">citation 链四问四答,当侦探故事讲(每步:假设→实验→数字→判决)。</div>
+    <details><summary>对照要点</summary><div class="din">① 伪造率 0.871 是模型能力差?→ 改 action space(长 ID 抄写→A-F 选项):0.871→0.0,判决=harness 设计问题。② verdict 准确率 0.0645 是数据问题?→ class-balanced 扩数据:→0.3871(6×),判决=数据平衡是主杠杆。③ 那是不是容量不够?→ 1.5B→3B 反而 0.3871→0.2903,判决=容量不是瓶颈。④ RL 能救?→ 健康数据上 GRPO 增量 +0.0,判决=当前池子里数据是唯一杠杆,停止烧 RL。整条链的教训:先定位杠杆轴,再决定烧不烧 GPU。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+</section>
+
+<!-- ═══════════════ DAY 3 ═══════════════ -->
+<section id="p-d3" class="panel" data-day="3">
+  <h2>Day 3 · 系统 + 查漏 + 全真模拟 <span id="d3prog" class="tag"></span></h2>
+  <p>今天结束时:显存/并行/推理三件套能白板算;unknown unknowns 每条有 30 秒安全答案;英文 pitch 能讲;打完一场 60 分钟全真模拟并清算所有弱项卡。</p>
+
+  <div class="block">
+    <h3>上午 · 训练与推理系统(09:00–12:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3a"><div>
+      <b><span class="t">09:00–10:30</span>显存估算白板课(必考)</b>
+      <p>白纸手算并背下结构:<b>全参 Adam 混精 ≈ 16 字节/参数</b>(fp16 权重 2 + fp16 梯度 2 + fp32 master 4 + Adam m/v 各 4)→ 7B 就是 ~112GB,单卡 80GB 放不下。<b>然后讲你自己怎么塞进去的</b>:adamw_bnb_8bit(m/v 8→2 字节)+ gradient checkpointing + LoRA(优化器只覆盖 adapter)。这是你实操过的第一手答案,别人只能背书。</p>
+      <div class="mat">你的证据:<code>training-corpus/scripts/rl/requirements-rl.txt</code>(bitsandbytes 只为 7B full-FT 存在)· run manifests</div>
+      <div class="pass">16 字节分解不打磕;能现场算"3B 模型 LoRA r=16 要多少显存"这类变体</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3b"><div>
+      <b><span class="t">10:30–11:30</span>分布式一页纸:DDP / ZeRO / TP / PP</b>
+      <p>每个一句话 + 通信量方向:DDP(每卡全量,allreduce 梯度)→ ZeRO-1/2/3(依次切分 optimizer states / +梯度 / +参数)→ FSDP(≈ZeRO-3)→ TP(层内切矩阵,高频通信,机内)→ PP(层间切,气泡问题,机间)。诚实框架:"我单卡完成了全部实验,多卡是知识储备"——然后立刻讲对味的点:为什么 RL 训练显存压力比 SFT 大(要同时驻留 policy + ref,有时还有 reward/critic)。</p>
+      <div class="pass">被问"7B GRPO 两卡怎么摆"能给出合理方案(如 policy 训练卡 + ref/rollout 推理卡分离)</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3c"><div>
+      <b><span class="t">11:30–12:30</span>RLHF 全流程 + 推理侧 + 异步 RL</b>
+      <p>画全流程图:SFT → RM(BT loss)→ PPO(4 个模型:actor/critic/ref/RM)对比 GRPO(2 个:actor/ref)。推理侧:continuous batching、PagedAttention 一句话。异步 RL:rollout worker 与 learner 分离 → 样本 staleness → importance ratio 修正(这就把 PPO 的 ratio 讲活了)。minimind 的 SGLangRolloutEngine 就是这个架构的极简版,可引用。</p>
+      <div class="mat">材料:<code>hands-on-modern-rl/docs/chapter08_rlhf/</code> + <code>appendix_industrial_training/rl-infrastructure.md</code> · <code>minimind/trainer/rollout_engine.py</code></div>
+      <div class="pass">"PPO 桌上有几个模型、各吃多少显存"随口答;staleness 为什么需要 IS 修正讲得清</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>下午 · 扫雷 + 英文 + 全真模拟(14:00–18:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3d"><div>
+      <b><span class="t">14:00–15:00</span>Unknown Unknowns 扫雷</b>
+      <p>去「Unknown Unknowns」标签,14 条逐一过:每条读完后合上,出声给 30 秒答案。答不出的条目做记号,晚上再过一遍。</p>
+      <div class="pass">14 条每条有话说;DPO 变体四个一句话不混</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3e"><div>
+      <b><span class="t">15:00–16:00</span>英文模块(Anthropic 向)</b>
+      <p>把 90s pitch 翻成英文讲 5 遍(用 RESUME_DRAFT 英文块的现成术语:verifiable reward, frozen eval, pre-registered kill criteria, group-relative advantage, adapter capacity floor)。再准备 3 道 behavioral 的英文版:a failure you diagnosed(0.5B collapse)/ a time you changed your mind on evidence(五次修正任选)/ why this company。</p>
+      <div class="mat">材料:<code>docs/RESUME_DRAFT_zh_en.md</code> 英文块</div>
+      <div class="pass">英文 90s 版不看稿、误差 ±20s;三个 behavioral 各有 STAR 结构腹稿</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3f"><div>
+      <b><span class="t">16:00–17:30</span>全真模拟 60min</b>
+      <p>新会话,指令加码:"60 分钟全真:3min pitch 开场 → 45min 深挖(攻击向量自选最狠的)→ 1 道白板推导 → 1 段手撕(现场写 DPO loss 或 GQA attention)→ 10min 反问。全程可打断。"</p>
+      <div class="pass">四轴全 ≥4;白板与手撕零错误</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3g"><div>
+      <b><span class="t">17:30–18:30</span>弱项清算</b>
+      <p>回总览页看弱项清单,把所有"又忘了/磕绊"的卡重新做一遍白纸/出声流程,做到能点"流畅"为止。</p>
+      <div class="pass">弱项清单清零或每条都升到"磕绊"以上</div>
+    </div></label>
+  </div>
+
+  <div class="block">
+    <h3>晚上 · LeetCode + 收官(19:30–21:30)</h3>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3h"><div>
+      <b><span class="t">19:30–20:30</span>LeetCode · DP/图/采样</b>
+      <p>LC 198 打家劫舍 → LC 200 岛屿数量 → LC 56 合并区间 → LC 528 按权重随机选择(ML 岗特色:前缀和+二分)→ 手写 numpy 版 softmax + cross-entropy + 单头 attention(ML 岗手撕保留曲目,防溢出的 max-shift 别忘)。</p>
+      <div class="pass">numpy attention ≤10 分钟一次写对 shape 与 mask</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d3i"><div>
+      <b><span class="t">20:30–21:30</span>反问准备 + 装备检查</b>
+      <p>准备 5 个反问(见下方卡片)。装备:打印或平板放一份 PORTFOLIO_INDEX 数字矩阵(面试前扫读,<b>不带进场</b>);确认简历上每个数字都能被现场验算——面试官手册的攻击向量 (b) 就是随机抽一个数字让你推来源。</p>
+      <div class="pass">5 个反问背熟;简历数字自查零出入</div>
+    </div></label>
+  </div>
+
+  <h3>Day 3 费曼卡</h3>
+  <div class="feyn" data-id="mem"><div class="fq">白板:7B 全参 Adam 混精训练要多少显存?你实际是怎么在 80GB 单卡跑起来的?</div>
+    <details><summary>对照要点</summary><div class="din">16 字节/参:fp16 权重 2 + fp16 梯度 2 + fp32 master 权重 4 + Adam m,v 各 4 → 7B×16 ≈ 112GB,不含激活。实操:adamw_bnb_8bit 把 m/v 压到 ~2 字节(省 ~42GB)+ gradient checkpointing 用算力换激活显存 + 大部分实验走 LoRA(梯度和优化器只覆盖 adapter,底模只有 fp16 前向权重)。推理侧:7B fp16 权重 14GB + KV cache(按公式另算)。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="rlhf-pipe"><div class="fq">画出 RLHF 三阶段,标出 PPO 桌上的 4 个模型;GRPO 砍掉了谁、代价是什么?</div>
+    <details><summary>对照要点</summary><div class="din">SFT(格式与基本行为)→ RM(BT loss,pairwise)→ RL。PPO 四模型:actor(训)、critic/value(训)、ref(冻结,KL 锚)、RM(冻结,打分)。GRPO 砍掉 critic:advantage 用组均值代替 value 估计 → 显存和超参减半;代价:每 prompt 采 G 条(rollout 成本↑)、组内同质时零梯度(你有 0.5B 一手案例)、reward 必须是可靠的 per-sequence 标量(所以 RLVR/可验证奖励和 GRPO 天生一对——你的 escalation env 正是)。</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+  <div class="feyn" data-id="revq"><div class="fq">你的 5 个反问是什么?</div>
+    <details><summary>对照要点</summary><div class="din">① 团队的 post-training 迭代里,eval 谁负责冻结、多久升级一次考卷?(暴露你有 eval hygiene 意识)② 线上失败行为怎么回流成训练任务——有没有类似"failure→env"的闭环?③ RL 增量在你们的任务上通常靠什么诊断是真提升而非 reward hacking?④ 新人前 90 天一般 own 什么范围的实验?⑤ 团队怎么权衡"继续调参 vs 停止并换杠杆"——有没有 kill criteria 文化?(每一问都在展示你的方法论,同时真的在收集信息。)</div></details>
+    <div class="rates"><button class="rate" data-v="again">又忘了</button><button class="rate" data-v="hard">磕绊</button><button class="rate" data-v="good">流畅</button></div></div>
+</section>
+
+<!-- ═══════════════ 拷打题库 ═══════════════ -->
+<section id="p-kq" class="panel">
+  <h2>拷打题库 · 12 道按致命度排序</h2>
+  <p>红色 = 必杀(答崩基本出局),黄色 = 高频深挖。每道:先自己出声答,再开折叠对照。<b>"别说"清单和"答案"同样重要。</b></p>
+  <p><button class="btn" id="drawbtn">🎲 随机抽一题拷我</button></p>
+
+  <div class="kq" id="kq1"><div class="kqh"><span class="sev red">必杀</span><b>"你解的是模拟器,不是现实。oracle 0.8473 在真实世界一文不值。"</b></div>
+    <p class="hint">考点:sim≠real 迁移性。面试官手册排位第一的 kill 题。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">承认前提:是的,reward 来自解析环境,这是明确记录在诚实边界里的第一条。但三点:① 环境参数不是手拍的——p_cheap_success 来自三帧 frontier 模型盲集成,成本表来自真实 API 定价结构;② 我们证明的核心资产是<b>方法论而非那个数字</b>:零梯度陷阱、KL 前兆、ID 泄漏、ruler 仲裁,这些机制在任何 scale 任何环境都成立;③ 缺口我们自己先说了:下一步就是 30–50 个真实 seed 的 real-run anchoring,拿真实轨迹校准模拟 reward 的方向性——这一步已经在 roadmap 里,不是被你问出来才想到。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别说"模拟环境足够接近现实"(没证据);别说"这是行业惯例"(甩锅);别被带进"那你这个项目没意义"的框架——立刻把战场移到方法论资产上。</div></details></div>
+
+  <div class="kq" id="kq2"><div class="kqh"><span class="sev red">必杀</span><b>"代码真是你写的?我随便挑个数字,你现场推给我看。"</b></div>
+    <p class="hint">考点:所有权验证。会随机抽:0.8473 怎么来的?KL 5.07 在哪步测的?分母为什么是 7?</p>
+    <details><summary>应对协议</summary><div class="din">这题没有背答案,只有真熟。自查清单(Day 2 晚模拟时让面试官随机抽):① 0.8473 = v0.3 test 上 oracle 策略的期望 reward,7+ 配置命中即"饱和";② gate 分母 7 = 8 个 gate 样本减去 AMD_00 仲裁改判 smart-review 层;③ KL 5.07 = 0.5B collapse run 在 step≈150 的峰值,对照健康 1.5B 的 0.36;④ +11.6pts = sample_id 后缀泄漏 label 时 haiku 0.942 vs 匿名化后 0.826;⑤ 0.871→0.0 = citation 动作空间从长 ID 抄写改为 A-F 后 prompted 伪造率。任何一个卡壳,回 EXPERIMENT_LOG 查对应 run id 补课。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别含糊"大概是评测出来的";别报错小数位(0.8473 不是 0.847 或 0.85——精确复述本身就是所有权证明);承认某个具体细节要查日志比编一个强一万倍。</div></details></div>
+
+  <div class="kq" id="kq3"><div class="kqh"><span class="sev red">必杀</span><b>"160 条数据、单张卡。我们这里是百万样本、千卡集群。你的经验有什么用?"</b></div>
+    <p class="hint">考点:scale 转移。字节/Anthropic 都会问,语气可能更客气但意思一样。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">规模确实差三个数量级,但我带来的三样东西恰好是 scale-invariant 的:① <b>失败机制</b>——零梯度陷阱、KL runaway、偏好目标与任务目标错配,这些数学在千卡上只会更贵地重演;② <b>实验纪律</b>——frozen eval、预注册 kill criteria、run manifest 全复现、失败一等公民,这套在大规模下更稀缺,因为单次实验成本高一万倍,p-hacking 的代价也高一万倍;③ <b>诊断反射</b>——我的每个负结果都收敛到了明确归因(adapter 容量/lr 伪影/数据平衡),这个"先定位杠杆轴再烧卡"的循环正是大集群最需要的。小规模的短反馈循环是训练这个反射的最好道场。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别说"原理都一样"(不一样:通信、数据 pipeline、容错都是新问题——主动承认这些是你要学的);别贬低自己"我知道这只是玩具"。</div></details></div>
+
+  <div class="kq" id="kq4" ><div class="kqh"><span class="sev amb">高频</span><b>"为什么不直接用 API + prompt?你这训练是不是为了训练而训练?"</b></div>
+    <p class="hint">考点:动机合理性。你有完整的 ladder 证据。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">我们不反 API——API 在系统里是 reference、teacher 和 deep-synthesis fallback。原则是任务阶梯:rules → 简单分类器 → naive prompt → engineered prompt → 训练,<b>prompt 打到天花板就停</b>。两个方向的证据都有:citation 任务 engineered prompt 过了 kill bar(frontier 0.957),我们就没做 SFT/GRPO;escalation 任务上便宜模型掉 12.6 个 reward 点、gate recall 掉到 0.80,高频+成本+隐私+需要稳定 gate 的场景才进入训练。训练出的本地小模型承担的是高频、结构化、可验证的决策组件,不是替代 frontier 的通用能力。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别说"API 不可控/不好";别说"本地模型更强";别忘了主动提 kill bar 案例——"我们停止过训练"比"我们做了训练"更能证明判断力。</div></details></div>
+
+  <div class="kq" id="kq5"><div class="kqh"><span class="sev amb">高频</span><b>"你说 prompted baseline 不行,会不会只是你 prompt 没写好?"</b></div>
+    <p class="hint">考点:baseline 公平性。上一题的自然追击。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">这个风险是真的,所以我们不拿 naive prompt 当靶子。两个证据:① citation fabrication 一开始 0.871,我们<b>没有</b>去训练,而是改 action space(长 ID→A-F 选项),直接降到 0.0——证明我们默认先怀疑 harness 而不是先怪模型;② escalation 上做了 prompt ladder 和跨家族对照(Gemma E2B/E4B prompted 也只到 gate 0.875),多个家族的 prompted 模型都过不了 0.99 的 gate bar,而 SFT 之后稳定过——这时才说"训练把行为沉淀进权重"。另外 3B prompted 只有 0.4232 还低于 1.5B,prompt 敏感性本身就是不适合生产的证据。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别说"我们试遍了所有 prompt"(不可证);承认 prompt 优化是无界空间,所以要靠 frozen eval + 多家族对照止损。</div></details></div>
+
+  <div class="kq" id="kq6"><div class="kqh"><span class="sev amb">高频</span><b>"讲讲 0.5B collapse。你怎么确定不是随机波动?怎么确定原因?"</b></div>
+    <p class="hint">考点:机制深度 + 实验设计。你最强的一道题,把它打成表演题。</p>
+    <details><summary>诊断链答案</summary><div class="din">现象:test reward 0.383 / gate 0.0。排除随机:多 seed 复现。机制:66/120 组 all-violate(55%),组内 reward 同质 → GRPO advantage≈0 → gate 无梯度;gate 动作份额 62.6%→1.9% 灭绝曲线;KL 峰值 5.07(健康 run 0.36)。排除解码伪影:温度探针 T=0.7/1.0 下 gate presence 0.0/0.25——是真知识丢失。归因修正:full-parameter GRPO 同模型不崩 → 最终归因 <b>LoRA adapter 容量地板</b>而非模型能力地板。缓解已试:gate oversample×4 + KL β=0.2。这套完整链条就是我处理所有失败的模板:现象→排除→机制→归因→缓解。</div></details></div>
+
+  <div class="kq" id="kq7"><div class="kqh"><span class="sev amb">高频</span><b>"失败之后你们做了什么?调参调到好看为止吗?"</b></div>
+    <p class="hint">考点:p-hacking 边界。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">不是每个失败都继续调,也不是失败就放弃——每次 follow-up 都有明确 falsification target,证据关闭某条路就停。三个"继续"的例子:collapse 后做 seed/温度/oversample/KL/full-FT 五组对照;DPO 后做 pair v2 + β 三点扫;7B 低分后做 lr 对照(2e-4→2e-5,0.5079→0.8473)。两个"停止"的例子:citation verdict 在数据扩展见效、容量和 RL 都不买账后,停止在旧池子上刷 RL;v0.3 七个配置命中 oracle 后,停止刷方法,升级 v0.4 考卷——在饱和的 eval 上继续调参就是 p-hacking。</div></details></div>
+
+  <div class="kq" id="kq8"><div class="kqh"><span class="sev amb">高频</span><b>"你的 eval 凭什么可信?"</b></div>
+    <p class="hint">考点:eval hygiene——这是你区别于 99% 候选人的主场。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">四道防线,每道都有量化事故做动机:① frozen test + 预注册判据(判据不许事后改);② 泄漏检查——真抓到过:sample_id 后缀泄 label,虚高 +11.6pts(0.942→0.826),之后全量匿名化;③ ruler 版本化 + 仲裁——AMD_00 改判走完整 dossier 流程,分母 8→7,旧 checkpoint 全部 rescore,"改考卷"和"模型变好"严格分账;④ judge 校准——双盲重标注,citation 98.5%、risk 100% 一致率。所以当我说 0.8473,我能告诉你这个数字在哪些防线后面。</div></details></div>
+
+  <div class="kq" id="kq9"><div class="kqh"><span class="sev amb">高频</span><b>"DPO、GRPO、SFT 你都跑了,给我一个'什么时候用什么'的决策规则。"</b></div>
+    <p class="hint">考点:方法选型的抽象能力。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">基于一手数据的版本:<b>SFT 永远先上</b>——教格式和基本决策,性价比最高(1.5B:0.6444→0.7495)。<b>GRPO 在有可验证标量 reward、且 SFT 后仍有 headroom 时</b>加增量——但增量任务相关:1.5B +4.9 pts、3B +0.45(近天花板)、citation +0.0(瓶颈在数据)。<b>DPO 在只有偏好对、没有可靠 reward 时</b>用,但要警惕偏好目标≠任务目标——我们的 DPO 全 β 都保守化(gate 1.0 / success 0.58)。前置于一切:模型至少 1.5B(0.5B 会撞 adapter 容量地板)、数据先健康(class balance 6× 的教训)、eval 先冻结。</div></details></div>
+
+  <div class="kq" id="kq10"><div class="kqh"><span class="sev amb">高频</span><b>"v0.3 饱和了,你的 v0.4 凭什么更难?怎么防再次饱和?"</b></div>
+    <p class="hint">考点:eval 设计能力(前瞻)。注意 v0.4 还没跑,别越界 claim。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">v0.3 饱和的本质是任务被 7+ 配置打到 oracle——考卷区分度归零。v0.4 换轴考"记忆利用":592 seeds、232 <b>孪生对</b>(同表面、记忆内容翻转答案——策略不读记忆就必然错一半,这是结构性防猜);三臂对照 none/digest/raw(raw 1091 token vs digest 299,3.6× 成本差,考"用得起的记忆");动态 cache-age 成本;35 个红线 gate 种子。判据预注册(TRUE-NEED convention),gold 全部由 env oracle 生成、零手标。诚实边界:考卷已建、harness 已过烟测,<b>三臂首考还没跑</b>——我只 claim 设计,不 claim 结果。</div></details></div>
+
+  <div class="kq" id="kq11"><div class="kqh"><span class="sev amb">高频</span><b>"这模型能上生产吗?并发怎么办?"</b></div>
+    <p class="hint">考点:工程落地意识。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">分两层。模型层:训练产物是无状态推理组件(checkpoint/adapter),天然可并发,吞吐由 serving 层决定(continuous batching、KV cache 显存、LoRA 热加载)。Agent 层才是难点:session/memory/decision snapshot/trajectory 的隔离,DB 写入要 request_id 幂等,防串用户、防重试重复下单。所以架构上拆开:模型做无状态 scoring service(/gate、/escalation_score),agent runtime 负责状态隔离和编排。我们在 KIWI 产品侧的 DecisionSnapshot 冻结协议就是这个思路的落地。</div></details></div>
+
+  <div class="kq" id="kq12"><div class="kqh"><span class="sev amb">高频</span><b>"说一个这个项目最大的弱点。"</b></div>
+    <p class="hint">考点:诚实边界。答得好是加分题。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">最大弱点是<b>外部效度</b>:reward 是解析模拟的、persona 是合成的(synthetic_opus_v1)、test 集小(n=48/31)、多数配置单 seed(只有 2 个配置做了 3-seed 复现)。这些全部写在诚实边界清单里(14 条不 claim)。我按伤害排序:最伤的是 sim≠real,所以 roadmap 第一位是 real-run anchoring;其次是样本量,所以 v0.4 把 test 扩到 121 并加了孪生对结构。弱点我先于面试官知道,并且每条都有对应的下一步——这比假装没有弱点强。</div></details></div>
+</section>
+
+<!-- ═══════════════ UNKNOWN UNKNOWNS ═══════════════ -->
+<section id="p-uu" class="panel">
+  <h2>Unknown Unknowns · 项目没覆盖但大厂必问的 14 个盲区</h2>
+  <p>你的项目故事很硬,但它是单卡、单模型家族、模拟环境的战役。下面是<b>面试官默认你应该会、而项目经历不会自动教你</b>的清单。每条:为什么会被问 → 30 秒安全答案的骨架。Day 3 下午逐条出声过。</p>
+
+  <h3>A · 训练与推理系统(字节 infra 面必问)</h3>
+  <div class="uu"><b>1. 显存估算(几乎 100% 会问)</b>
+    <p class="why">为什么问:5 分钟检验你是否真训过模型。</p>
+    <p>骨架:全参 Adam 混精 16 字节/参(2+2+4+4+4);7B→112GB;LoRA 把梯度+优化器压到 adapter 规模;激活显存靠 gradient checkpointing 换;推理 = fp16 权重 + KV cache(公式见 Day 2 费曼卡)。<b>你的独家素材:80GB 单卡跑 7B full-FT 用了 bnb 8bit optimizer——讲实操细节。</b></p></div>
+  <div class="uu"><b>2. DDP / ZeRO-1/2/3 / FSDP / TP / PP</b>
+    <p class="why">为什么问:千卡集群的入场券词汇。</p>
+    <p>骨架:DDP 每卡全量+allreduce 梯度;ZeRO 依次切 optimizer states→梯度→参数;FSDP≈ZeRO-3;TP 切层内矩阵(机内 NVLink);PP 切层间(气泡);实际 = 3D 并行组合。诚实说单卡出身,然后把话题引到"RL 训练的特殊显存压力:policy+ref 同驻"。</p></div>
+  <div class="uu"><b>3. 推理优化:vLLM / PagedAttention / continuous batching / 投机解码</b>
+    <p class="why">为什么问:post-training 岗常兼推理部署;GRPO rollout 本身就是推理负载。</p>
+    <p>骨架:KV cache 是瓶颈 → PagedAttention 把 cache 分页消灭碎片;continuous batching 按 token 级调度不等最慢请求;投机解码 = 小模型草稿+大模型并行验证。连接:GRPO 每 prompt 采 G=8 条,rollout 吞吐直接决定训练速度。</p></div>
+  <div class="uu"><b>4. 异步 RL / rollout-learner 分离</b>
+    <p class="why">为什么问:2026 大厂 RL infra 的标准形态。</p>
+    <p>骨架:rollout worker(推理引擎)与 learner(训练)分离 → 权重同步有延迟 → 样本 stale → off-policy 修正靠 importance ratio(PPO 的 ratio 本来就是干这个的)。可引用 minimind 的 SGLangRolloutEngine 是极简版。</p></div>
+  <div class="uu"><b>5. 训练稳定性急救包</b>
+    <p class="why">为什么问:"训练 loss 炸了你怎么办"是经典压力题。</p>
+    <p>骨架:查序列:数据(脏样本/超长)→ lr(warmup 够不够)→ grad norm(clip 阈值)→ 精度(bf16 优于 fp16,fp16 要 loss scaling)→ 恢复:回滚 checkpoint + skip batch。你的素材:7B lr 2e-4 伪影就是 lr 敏感性的一手案例;KL 5.07 是 RL 版的"炸"。</p></div>
+
+  <h3>B · 算法盲区(算法面追问链的下一环)</h3>
+  <div class="uu"><b>6. DPO 变体一句话:IPO / KTO / SimPO / ORPO</b>
+    <p class="why">为什么问:你简历写了 DPO,追问变体是自然延伸。</p>
+    <p>IPO:把 sigmoid 换成平方损失,防 DPO 对确定性偏好的过拟合;KTO:不要成对数据,只要单条 好/坏 标签(前景理论);SimPO:去掉 ref model,用长度归一化的平均 logp 当隐式 reward;ORPO:把偏好项并进 SFT 一阶段完成。你的连接:我们的 DPO 保守化问题,SimPO 的长度归一化也救不了——因为错配在偏好数据本身。</p></div>
+  <div class="uu"><b>7. Reward hacking / Goodhart / 长度偏置</b>
+    <p class="why">为什么问:RLHF 的核心痛点,Anthropic 尤其爱问。</p>
+    <p>骨架:代理指标被过度优化就与真实目标脱钩;经典症状:长度膨胀、格式套话、谄媚。防线:KL 锚、reward model ensemble、held-out 人评、过程监督。你的素材:citation 的"抄 ID 得分"就是微型 reward hacking,解法是改 action space 而非加惩罚——设计掉漏洞比对抗漏洞便宜。</p></div>
+  <div class="uu"><b>8. Process RM vs Outcome RM / RLVR / 长 CoT RL(o1/R1 路线)</b>
+    <p class="why">为什么问:2026 后训练的最热主线;你用 GRPO,R1 也用 GRPO,必被联想。</p>
+    <p>骨架:ORM 只看结果,PRM 给每步打分(贵但抗 hacking);RLVR = 可验证奖励(数学/代码/规则)绕开 RM 不可靠性——<b>你的 escalation env 就是 RLVR 思路的 agent 版</b>;R1 证明纯 RL 能涌现反思,但依赖强 base 模型——与你"0.5B 撞地板"的发现同构,可以打包讲。</p></div>
+  <div class="uu"><b>9. on-policy vs off-policy;PPO 为什么是"近似 on-policy"</b>
+    <p class="why">为什么问:RL 基本功分界题。</p>
+    <p>骨架:PG 理论要求样本来自当前策略;PPO 用 ratio+clip 允许旧样本小幅复用(一批数据训几个 epoch);太 stale 就失效 → 这正是异步 RL 的核心张力。DPO 是完全 off-policy(数据集是死的),这也是它便宜和它错配的共同来源。</p></div>
+  <div class="uu"><b>10. Scaling laws / Chinchilla / MoE 一段话</b>
+    <p class="why">为什么问:通识雷达,考你是否关注训练全局。</p>
+    <p>骨架:Chinchilla:算力最优时参数与数据应同比扩(~20 token/参数);推理成本约束下实际都过训(小模型多喂)。MoE:FFN 换成 top-k 路由的专家组,参数↑算力不变,代价是负载均衡(aux loss)与显存;minimind 里有极简实现可引用。</p></div>
+  <div class="uu"><b>11. Tokenizer / BPE</b>
+    <p class="why">为什么问:偶发手撕题("讲讲 BPE 怎么训练")。</p>
+    <p>骨架:从字节/字符起步,迭代合并最高频相邻对直到词表满;LLM 用 byte-level BPE 保证无 OOV。知道 minimind 用 6400 词表自训过即可,不必深挖。</p></div>
+
+  <h3>C · 公司特色与临场</h3>
+  <div class="uu"><b>12. Anthropic 特色:Constitutional AI / RLAIF / 全英文 / safety 立场</b>
+    <p class="why">为什么问:价值观匹配是硬门槛,且全程英文。</p>
+    <p>骨架:CAI = 用一部"宪法"让模型自我批评改写生成偏好数据(RLAIF),降低人标依赖;你的天然连接:<b>预注册判据、失败一等公民、诚实边界清单,本质上就是 safety 文化的实验室版</b>——这个映射要主动讲。英文 behavioral 三件套 Day 3 下午准备。</p></div>
+  <div class="uu"><b>13. 字节特色:八股快问 + 现场 AC 压力</b>
+    <p class="why">为什么问:字节算法面标配 15 分钟八股连环炮 + 必有一道现场写题。</p>
+    <p>高频八股速答:LN vs BN(序列长度可变+batch 内不独立→LN;LLM 再简化为 RMSNorm 省均值中心化);AdamW vs Adam(weight decay 解耦出梯度更新,不进 m/v);为什么 decoder-only(KV cache 复用+训练并行+zero-shot 更强);温度/top-p 的作用;过拟合三板斧。写题就是每天晚上的 LeetCode 块。</p></div>
+  <div class="uu"><b>14. 数字被现场验算的风险</b>
+    <p class="why">为什么问:你简历全是精确数字——这是双刃剑,面试官手册攻击向量 (b) 就是这么设计的。</p>
+    <p>对策:简历上每个数字都要能答"怎么算的、分母是什么、在哪个文件"。Day 3 晚上的装备检查就是干这个。永远宁可说"这个细节我要查 EXPERIMENT_LOG 确认"也不现场编。</p></div>
+</section>
+
+<!-- ═══════════════ 数字速查 ═══════════════ -->
+<section id="p-ref" class="panel">
+  <h2>数字速查 · 翻牌自测</h2>
+  <p>点击卡片翻面。Day 1 早上第一件事:全部翻一遍 → 盲翻第二遍。面试当天早上再来一次。</p>
+  <div class="deck">
+    <div class="card3d"><div class="c3in"><div class="cf">皇冠成果:3B LoRA-GRPO 最终成绩?</div><div class="cb">0.8473 / gate 1.000 / std=0 ×3 seeds → 命中 oracle</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">1.5B:prompted → SFT → GRPO 三级跳?</div><div class="cb">0.6444 (gate 0.5) → 0.7495 (0.875) → 0.7981 (0.875);RL 增量 +4.9 pts</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">0.5B collapse 三个铁证数字?</div><div class="cb">all-violate 55% (66/120) · gate 份额 62.6%→1.9% · KL 峰值 5.07 vs 健康 0.36</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">7B lr 伪影:前后对比?</div><div class="cb">lr 2e-4:0.5079 / gate 0.75 → lr 2e-5:0.8473 / gate 1.000</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">DPO 最终形态(1.5B)?</div><div class="cb">gate 1.000 / success 0.58;β∈{0.1,0.3,0.5} 全扫仍低于 SFT → 结构性保守</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">citation 链四个数字?</div><div class="cb">伪造 0.871→0.0(动作空间) · verdict 0.0645→0.3871(数据 6×) · 3B 反降 0.2903 · RL +0.0</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">ID 泄漏事故的量化?</div><div class="cb">sample_id 带 label:0.942 → 匿名化:0.826,虚高 +11.6 pts</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">judge 校准两个一致率?</div><div class="cb">citation 双盲 98.5% · risk 双盲 100% · 泄漏 0 条</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">AMD_00 裁决改了什么?</div><div class="cb">human-gate → smart-review 层;test gate 分母 8→7;旧 checkpoint 全部 rescore</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">v0.4 考卷结构?</div><div class="cb">592 seeds · 232 孪生对 · train/dev/test 350/121/121 冻结 · 35 红线 gate · digest 299 vs raw 1091 token (3.6×)</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">RL 增量的任务相关性?</div><div class="cb">escalation 1.5B +4.9 · 3B +0.45(近天花板) · citation +0.0(瓶颈在数据)</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">便宜 API 为什么不够(RL phase-2 动机)?</div><div class="cb">frontier 接近 oracle,但 Haiku 掉 12.6 reward pts、gate recall 掉到 0.80 → 高频决策适合本地小模型</div></div></div>
+  </div>
+
+  <h3>公式一屏(白板热身用)</h3>
+  <pre><code>PG:        ∇J = E_τ[ Σ_t ∇log π(a_t|s_t) · Ĝ_t ]          (log-derivative trick)
+Baseline:  E[b·∇log π] = b·∇∫π = 0                        (无偏,降方差)
+PPO:       L = E[ min(r·A, clip(r,1±ε)·A) ],  r = π/π_old
+GRPO:      A_i = (R_i − mean(R_group)) / (std(R_group)+ε)  (组均值=免训练 baseline)
+DPO:       L = −log σ( β[(logπ_w−logπref_w) − (logπ_l−logπref_l)] )
+GAE:       A_t = Σ (γλ)^k δ_{t+k},  δ_t = r_t + γV(s_{t+1}) − V(s_t)
+KL(k3):    E[ exp(Δ) − 1 − Δ ],  Δ = logπ_ref − logπ_θ    (非负,低方差)
+显存:      全参Adam混精 ≈ 16 B/param;KV cache = 2·L·H_kv·d_h·T·2B·batch</code></pre>
+
+  <h3>文件索引(面试前一晚扫读顺序)</h3>
+  <div class="tablewrap"><table>
+    <tr><th>顺序</th><th>文件</th><th>用途</th></tr>
+    <tr><td class="num">1</td><td><code>docs/PORTFOLIO_INDEX.md</code> §1–2</td><td>故事 + 结果矩阵(数字最后校准)</td></tr>
+    <tr><td class="num">2</td><td><code>docs/PITCH_3MIN_zh.md</code></td><td>睡前最后一遍出声</td></tr>
+    <tr><td class="num">3</td><td><code>docs/WHITEBOARD_FUNDAMENTALS.md</code> §9</td><td>16 公式速查页</td></tr>
+    <tr><td class="num">4</td><td><code>docs/PORTFOLIO_INDEX.md</code> §5</td><td>14 条诚实边界(别让面试官先说出来)</td></tr>
+    <tr><td class="num">5</td><td>本页「拷打题库」红色三题</td><td>最后过一遍"别说"清单</td></tr>
+  </table></div>
+
+  <div class="footer-note">生成于 2026-07-07 · 依据:postTrain 面试材料包 + hands-on-modern-rl + minimind 三方盘点 · 进度与评分存于浏览器 localStorage,换浏览器会丢,弱项请同步记到纸上。</div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var LS_CK='prep3d-ck', LS_RATE='prep3d-rate', LS_TAB='prep3d-tab';
+  function load(k){ try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}} }
+  function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v))}catch(e){} }
+
+  /* tabs */
+  var tabs=[].slice.call(document.querySelectorAll('.tabbtn'));
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  function show(id){
+    tabs.forEach(function(b){b.classList.toggle('on',b.dataset.tab===id)});
+    panels.forEach(function(p){p.classList.toggle('on',p.id===id)});
+    try{localStorage.setItem(LS_TAB,id)}catch(e){}
+    window.scrollTo(0,0);
+  }
+  tabs.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.tab)})});
+  show(localStorage.getItem(LS_TAB)||'p-ov');
+
+  /* checkboxes + progress */
+  var cks=[].slice.call(document.querySelectorAll('.ck'));
+  var state=load(LS_CK);
+  function refresh(){
+    var done=0;
+    cks.forEach(function(c){ if(c.checked)done++; });
+    var pct=cks.length?Math.round(done/cks.length*100):0;
+    document.getElementById('pbar').style.width=pct+'%';
+    document.getElementById('ptext').textContent=done+' / '+cks.length+' 任务';
+    [1,2,3].forEach(function(d){
+      var day=document.querySelector('[data-day="'+d+'"]');
+      if(!day)return;
+      var list=[].slice.call(day.querySelectorAll('.ck'));
+      var dd=list.filter(function(c){return c.checked}).length;
+      var el=document.getElementById('d'+d+'prog');
+      if(el)el.textContent=dd+'/'+list.length;
+    });
+  }
+  cks.forEach(function(c){
+    c.checked=!!state[c.dataset.k];
+    c.addEventListener('change',function(){
+      state[c.dataset.k]=c.checked; save(LS_CK,state); refresh();
+    });
+  });
+  refresh();
+
+  /* flip cards */
+  [].slice.call(document.querySelectorAll('.card3d')).forEach(function(c){
+    c.setAttribute('tabindex','0');
+    function flip(){c.classList.toggle('flipped')}
+    c.addEventListener('click',flip);
+    c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}});
+  });
+
+  /* feynman ratings + weak list */
+  var rates=load(LS_RATE);
+  var LABELS={again:'又忘了',hard:'磕绊',good:'流畅'};
+  function paint(card){
+    var id=card.dataset.id, v=rates[id];
+    [].slice.call(card.querySelectorAll('.rate')).forEach(function(b){
+      b.className='rate'+(v===b.dataset.v?' sel-'+v:'');
+    });
+  }
+  function weaklist(){
+    var ul=document.getElementById('weaklist'); if(!ul)return;
+    var items=[];
+    [].slice.call(document.querySelectorAll('.feyn')).forEach(function(card){
+      var v=rates[card.dataset.id];
+      if(v==='again'||v==='hard'){
+        var q=card.querySelector('.fq').textContent;
+        items.push('<li class="wk-'+v+'">['+LABELS[v]+'] '+q+'</li>');
+      }
+    });
+    ul.innerHTML=items.length?items.join(''):'<li>暂无弱项——保持,或者你还没开始评分。</li>';
+  }
+  [].slice.call(document.querySelectorAll('.feyn')).forEach(function(card){
+    paint(card);
+    [].slice.call(card.querySelectorAll('.rate')).forEach(function(b){
+      b.addEventListener('click',function(){
+        rates[card.dataset.id]=b.dataset.v; save(LS_RATE,rates);
+        paint(card); weaklist();
+      });
+    });
+  });
+  weaklist();
+
+  /* random killer question */
+  var draw=document.getElementById('drawbtn');
+  if(draw){
+    var kqs=[].slice.call(document.querySelectorAll('.kq'));
+    draw.addEventListener('click',function(){
+      var k=kqs[Math.floor(Math.random()*kqs.length)];
+      kqs.forEach(function(x){x.classList.remove('flash')});
+      k.scrollIntoView({behavior:'smooth',block:'center'});
+      void k.offsetWidth; k.classList.add('flash');
+    });
+  }
+
+  /* pitch timer */
+  var disp=document.getElementById('tdisp'), phase=document.getElementById('tphase');
+  var elapsed=0, lastT=null, raf=null;
+  function fmt(s){var m=Math.floor(s/60),ss=Math.floor(s%60);return m+':'+(ss<10?'0':'')+ss}
+  function ph(s){
+    if(s<30)return '① 问题是什么(0:00–0:30)';
+    if(s<90)return '② 方法与设计(0:30–1:30)';
+    if(s<150)return '③ 三个硬结果(1:30–2:30)';
+    if(s<180)return '④ 收束+下一步(2:30–3:00)';
+    return '⏰ 超时——收口!';
+  }
+  function tick(now){
+    if(lastT!=null)elapsed+=(now-lastT)/1000;
+    lastT=now;
+    disp.textContent=fmt(elapsed);
+    phase.textContent=ph(elapsed);
+    disp.style.color = elapsed>=180 ? 'var(--red)' : 'var(--ink)';
+    raf=requestAnimationFrame(tick);
+  }
+  var bStart=document.getElementById('tstart'), bReset=document.getElementById('treset');
+  if(bStart){
+    bStart.addEventListener('click',function(e){
+      e.preventDefault();
+      if(raf){cancelAnimationFrame(raf);raf=null;lastT=null;bStart.textContent='继续';return}
+      bStart.textContent='暂停'; lastT=null; raf=requestAnimationFrame(tick);
+    });
+    bReset.addEventListener('click',function(e){
+      e.preventDefault();
+      if(raf)cancelAnimationFrame(raf); raf=null; lastT=null; elapsed=0;
+      disp.textContent='0:00'; disp.style.color='var(--ink)';
+      phase.textContent='按开始,对着计时器出声讲'; bStart.textContent='开始';
+    });
+  }
+})();
+</script>
