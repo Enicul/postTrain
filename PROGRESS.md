@@ -11,11 +11,21 @@ INTERVIEW_AGENT_HANDBOOK / PITCH_3MIN_zh), `~/Documents/rl/hands-on-modern-rl` (
 REINFORCE/PPO/GAE/DPO/GRPO reference implementations + cheatsheets), and `~/Documents/rl/minimind`
 (hand-rolled transformer: RMSNorm/RoPE/GQA/SwiGLU/KV-cache/LoRA + DPO/PPO/GRPO trainers).
 Contents: day-by-day schedule (story drills + whiteboard derivations + code-from-blank-paper +
-1h/day LeetCode), a 12-question attack bank with safe answers AND "don't say" lists, a
-14-item unknown-unknowns sweep (memory math, ZeRO/FSDP, vLLM, async RL, DPO variants, reward
+1h/day LeetCode), a 13-question attack bank with safe answers AND "don't say" lists, a
+15-item unknown-unknowns sweep (memory math, ZeRO/FSDP, vLLM, async RL, DPO variants, reward
 hacking, RLVR, company-specific), Feynman self-rating cards with a persistent weakness list,
 number flashcards, and a 3-min pitch timer. Progress persists in localStorage. Published as a
 claude.ai artifact; nightly mock interviews run against INTERVIEW_AGENT_HANDBOOK.md as before.
+
+v2 gap-fix pass (same day): added an ADHD execution protocol (pomodoro slicing, 5-second
+starts, 10-min stuck rule, body doubling, hyperfocus guardrail, hard stop), a re-read-your-
+own-code task (defense for attack vector (b)), the KIWI<->postTrain closure question (kq13),
+Chinese behavioral prep, and a day-of-interview protocol. Two new companion docs:
+`docs/INTERVIEW_PREP_AGENT_GUIDE.md` (handoff manual for any future coaching agent - role,
+non-negotiables, honesty red lines, ADHD collaboration rules, session templates) and
+`docs/INTERVIEW_READINESS_STANDARD.md` (the 7 hard criteria that make a project grill-proof,
+generalized from this repo, with a concrete KIWI gap list: needs PORTFOLIO_INDEX, 2-min demo
+script, product attack handbook - est. three half-days).
 
 ## Round 10 Wrap-Up: env v0.4 BUILT (env code + 592-seed twin dataset + eval harness); first three-arm exam staged then PAUSED for GPU handover to the owner (2026-07-06)
 

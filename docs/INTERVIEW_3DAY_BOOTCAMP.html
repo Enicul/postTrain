@@ -195,6 +195,21 @@
     <b>3. 评分法则</b>:每张费曼卡做完点评分(又忘了/磕绊/流畅)。"又忘了"和"磕绊"会进入下方弱项清单,Day 3 下午专门清算。
   </div>
 
+  <h3>ADHD 作战协议(为你的大脑定制)</h3>
+  <div class="callout">
+    这份计划本身已按 ADHD 友好设计:任务 ≤90 分钟、每项自带勾选框(即时完成感)、推导/代码/口述三种模式轮换(新鲜感)、弱项清单替你记忆(外部大脑)。在此之上,执行时加六条:<br>
+    <b>1. 番茄切块</b>:每个大块内部按 25+5 切;一个任务 = 2–3 个番茄。别看"3.5 小时",只看"下一个 25 分钟"。<br>
+    <b>2. 启动仪式</b>:不要"准备开始"——直接按下计时器、白纸写下第一行。启动比坚持难,把启动成本压到 5 秒。<br>
+    <b>3. 10 分钟卡壳规则</b>:卡住超过 10 分钟 → 站起来、换成出声解释模式;还不行就点"磕绊"、跳下一个任务。跳过不是失败,是调度——弱项清单会记住,Day 3 有专门清算时段。<br>
+    <b>4. 陪跑模式(body doubling)</b>:开一个 Claude 会话当监工:"我现在做 Day X 的 XX,25 分钟后回来汇报产出。"向外承诺产出是最强的外部结构;每晚模拟面试也是同一原理。<br>
+    <b>5. 心流护栏</b>:某个主题上头了,允许挖——但设 45 分钟闹钟。超时说明它该进弱项清单,而不是吃掉全天。<br>
+    <b>6. 硬停线</b>:手机放另一个房间;21:30 硬停。睡眠是记忆巩固的一部分,熬夜是负分不是加班。
+  </div>
+
+  <div class="callout warn">
+    <b>两个开考前的加分动作</b>:① <b>v0.4 三臂首考只需 ~15 分钟 GPU</b>(命令在 rl/README,GPU 0 现在空闲)——跑完就把"考卷建好但没跑"这条诚实边界升级成第一批结果,面试故事多出一章;② 面试官也会问 <b>KIWI 产品侧</b>(简历 Block 2)——题库第 13 题是双项目连接的答案骨架,别把它当"另一个项目"。
+  </div>
+
   <h3>我的弱项清单(自动汇总)</h3>
   <div class="callout warn" id="weakbox">
     <ul class="weak" id="weaklist"><li>还没有评分记录——从 Day 1 的费曼卡开始。</li></ul>
@@ -374,10 +389,16 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
       <div class="pass">B 零初始化的原因(训练起点等价于原模型)张口就来;rank/α 的作用讲得清</div>
     </div></label>
     <label class="task"><input type="checkbox" class="ck" data-k="d2f"><div>
-      <b><span class="t">16:45–18:00</span>必杀题演练:sim≠real / 代码所有权 / scale 转移 + citation 四问</b>
+      <b><span class="t">16:45–17:30</span>必杀题演练:sim≠real / 代码所有权 / scale 转移 + citation 四问</b>
       <p>去「拷打题库」标签,把三道红色必杀题的答案<b>出声</b>各讲 3 遍(60s 内),然后把 citation 链四问四答当故事讲一遍。这四道题决定面试生死。</p>
       <div class="mat">材料:本页「拷打题库」 · 原文:<code>docs/INTERVIEW_AGENT_HANDBOOK.md</code> PART 3+5</div>
       <div class="pass">三道必杀题各 ≤60s、不看稿;citation 链的四个数字(0.871→0.0 / 0.0645→0.3871 / 3B 反降 / RL+0.0)全对</div>
+    </div></label>
+    <label class="task"><input type="checkbox" class="ck" data-k="d2i"><div>
+      <b><span class="t">17:30–18:15</span>重读自己的代码(代码所有权的弹药补给)</b>
+      <p>面试官手册攻击向量 (b) 是现场抽查你的代码——最佳防御不是背答案,是重读。逐个打开 5 个核心脚本,对每个 CLI flag / 魔法数字自问"它为什么存在":<code>grpo_escalation.py</code>(gate_oversample 为什么×4?per-arm lr 为什么?)→ <code>reward_escalation.py</code>(λ-mix 在哪?parse_plan 容错了什么?)→ <code>escalation_env_v01.py</code>(p_cheap_success 怎么来的?)→ <code>eval_v04.py</code>(为什么不重算 reward 而 map 到 env dict?)→ <code>dpo_escalation.py</code>(pair 怎么构造的?)。</p>
+      <div class="mat">位置:<code>training-corpus/scripts/rl/</code></div>
+      <div class="pass">任选一个脚本,能不看代码画出它的数据流;任选一个 flag,能讲出加它的那次实验</div>
     </div></label>
   </div>
 
@@ -445,9 +466,9 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
     </div></label>
     <label class="task"><input type="checkbox" class="ck" data-k="d3e"><div>
       <b><span class="t">15:00–16:00</span>英文模块(Anthropic 向)</b>
-      <p>把 90s pitch 翻成英文讲 5 遍(用 RESUME_DRAFT 英文块的现成术语:verifiable reward, frozen eval, pre-registered kill criteria, group-relative advantage, adapter capacity floor)。再准备 3 道 behavioral 的英文版:a failure you diagnosed(0.5B collapse)/ a time you changed your mind on evidence(五次修正任选)/ why this company。</p>
+      <p>把 90s pitch 翻成英文讲 5 遍(用 RESUME_DRAFT 英文块的现成术语:verifiable reward, frozen eval, pre-registered kill criteria, group-relative advantage, adapter capacity floor)。再准备 3 道 behavioral 的英文版:a failure you diagnosed(0.5B collapse)/ a time you changed your mind on evidence(五次修正任选)/ why this company。<b>同三个故事再备中文版</b>并加两道国内特供:为什么转向 post-training(从产品失败到训练的自然路径)/ 职业规划——中文大厂 HR 面和 leader 面同款必考。</p>
       <div class="mat">材料:<code>docs/RESUME_DRAFT_zh_en.md</code> 英文块</div>
-      <div class="pass">英文 90s 版不看稿、误差 ±20s;三个 behavioral 各有 STAR 结构腹稿</div>
+      <div class="pass">英文 90s 版不看稿、误差 ±20s;中英 behavioral 各有 STAR 结构腹稿</div>
     </div></label>
     <label class="task"><input type="checkbox" class="ck" data-k="d3f"><div>
       <b><span class="t">16:00–17:30</span>全真模拟 60min</b>
@@ -489,7 +510,7 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
 
 <!-- ═══════════════ 拷打题库 ═══════════════ -->
 <section id="p-kq" class="panel">
-  <h2>拷打题库 · 12 道按致命度排序</h2>
+  <h2>拷打题库 · 13 道按致命度排序</h2>
   <p>红色 = 必杀(答崩基本出局),黄色 = 高频深挖。每道:先自己出声答,再开折叠对照。<b>"别说"清单和"答案"同样重要。</b></p>
   <p><button class="btn" id="drawbtn">🎲 随机抽一题拷我</button></p>
 
@@ -545,11 +566,16 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
   <div class="kq" id="kq12"><div class="kqh"><span class="sev amb">高频</span><b>"说一个这个项目最大的弱点。"</b></div>
     <p class="hint">考点:诚实边界。答得好是加分题。</p>
     <details><summary>60 秒安全答案</summary><div class="din">最大弱点是<b>外部效度</b>:reward 是解析模拟的、persona 是合成的(synthetic_opus_v1)、test 集小(n=48/31)、多数配置单 seed(只有 2 个配置做了 3-seed 复现)。这些全部写在诚实边界清单里(14 条不 claim)。我按伤害排序:最伤的是 sim≠real,所以 roadmap 第一位是 real-run anchoring;其次是样本量,所以 v0.4 把 test 扩到 121 并加了孪生对结构。弱点我先于面试官知道,并且每条都有对应的下一步——这比假装没有弱点强。</div></details></div>
+
+  <div class="kq mid" id="kq13"><div class="kqh"><span class="sev amb">高频</span><b>"简历上还有个 Agent 产品(KIWI),它和训练项目什么关系?"</b></div>
+    <p class="hint">考点:双项目连接。答不好会显得项目是拼凑的;答好了故事完整度翻倍。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">闭环关系——KIWI 发问,postTrain 回答。KIWI 是个人金融研究 copilot 桌面产品:真实痛点是信息洪流(同一结论刷屏式推送),digest 引擎把同结论合并、按 impact 排序、一张卡一键批准;决策记录用 DecisionSnapshot 点时冻结,防事后美化。训练项目的三个任务(escalation 路由 / risk gate / citation 校验)<b>全部来自 KIWI 的真实失败模式</b>;反向,训练侧的部署判决(1.5B full-FT 命中 oracle、红线规则留在代码层)就是 KIWI 本地路由的选型答案。一个是产品侧的问题清单,一个是训练侧的答案清单,中间的管道是"failure → env → frozen eval → 训练/不训练的判决"。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别把 KIWI 讲成独立的"第二个项目"(会被追问深度,战线拉太长);别主动深入产品实现细节——被问再展开,主战场保持在 post-training;别 claim 用户量/收入(它是自用优先的产品)。</div></details></div>
 </section>
 
 <!-- ═══════════════ UNKNOWN UNKNOWNS ═══════════════ -->
 <section id="p-uu" class="panel">
-  <h2>Unknown Unknowns · 项目没覆盖但大厂必问的 14 个盲区</h2>
+  <h2>Unknown Unknowns · 项目没覆盖但大厂必问的 15 个盲区</h2>
   <p>你的项目故事很硬,但它是单卡、单模型家族、模拟环境的战役。下面是<b>面试官默认你应该会、而项目经历不会自动教你</b>的清单。每条:为什么会被问 → 30 秒安全答案的骨架。Day 3 下午逐条出声过。</p>
 
   <h3>A · 训练与推理系统(字节 infra 面必问)</h3>
@@ -599,6 +625,19 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
   <div class="uu"><b>14. 数字被现场验算的风险</b>
     <p class="why">为什么问:你简历全是精确数字——这是双刃剑,面试官手册攻击向量 (b) 就是这么设计的。</p>
     <p>对策:简历上每个数字都要能答"怎么算的、分母是什么、在哪个文件"。Day 3 晚上的装备检查就是干这个。永远宁可说"这个细节我要查 EXPERIMENT_LOG 确认"也不现场编。</p></div>
+  <div class="uu"><b>15. 中文 behavioral:动机与稳定性</b>
+    <p class="why">为什么问:国内大厂 HR 面 / leader 面必考;技术面全过也可能死在这一轮。</p>
+    <p>骨架:为什么做 post-training 方向(从自己产品的失败行为出发,是最自然的动机故事)/ 职业规划(把"失败→环境→训练→判决"这套工程化,规模只会放大它的价值)/ 能接受强度吗(用三天冲刺本身当证据)/ 讲一次被证据打脸(五次修正任选其一,现成的)。全部用 STAR 结构备中文腹稿,Day 3 下午与英文版一起练。</p></div>
+
+  <h3>面试当天协议(所有准备的收口)</h3>
+  <div class="callout">
+    <b>前一晚</b>:按「数字速查」的文件索引顺序扫读,23:00 前睡——不再学任何新东西。<br>
+    <b>当天早上</b>:数字卡盲翻一轮(10 分钟)+ 15s pitch 出声热嗓;ADHD 提示:面试前 30 分钟不碰手机。<br>
+    <b>白板协议</b>:先复述问题确认理解 → 说框架("我打算从 X 推到 Y")→ 再动笔;写错大方划掉,别擦擦抹抹。<br>
+    <b>手撕协议</b>:边写边讲,shape 先行(先把张量维度注释写出来再填逻辑)。<br>
+    <b>被问倒协议</b>:"这个具体数字/细节我需要查实验日志确认——但机制是……"诚实 + 机制兜底,永远好过现场编。<br>
+    <b>收尾</b>:反问 5 选 3(Day 3 费曼卡),最后一问留给"团队怎么权衡继续调参 vs 换杠杆"。
+  </div>
 </section>
 
 <!-- ═══════════════ 数字速查 ═══════════════ -->
