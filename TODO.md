@@ -278,14 +278,21 @@ QUEUE (promoted next levers, in order):
   - [x] EVAL HARNESS (commit 1c2e4af): eval_v04.py - arm matrix (none/digest/raw), twin-pair
     discrimination rate (headline), per-class plan accuracy, oracle gap, token-cost (raw ~1091 vs
     digest ~299 = 3.6x). CPU selftest green.
-  - [ ] THREE-ARM FIRST EXAM (1.5B x none/digest/raw, test 121): READY-TO-RUN, PAUSED pending GPU
-    (owner's project has priority; launched then stopped mid-arm-1, partial preds discarded,
-    nothing lost). Awaiting owner's "GPU free" signal.
-  - [ ] REMAINING after the three arms: Sonnet reference arm, then training arms per the
-    pre-registered four-arm memory-form matrix (no-memory / structured-digest / raw-long-context /
-    Sonnet) with pre-registered kills; tests what FORM state should take for a small model. The R6
-    smart-review tier ("retrieve memory before judging") sharpens its motivation. See
-    `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005, D-2026-07-06-001.
+  - [x] THREE-ARM FIRST EXAM (1.5B PROMPTED x none/digest/raw, test 121): DONE
+    (EXP-2026-07-08-001, D-2026-07-08-001, CP-2026-07-08-001). Reward@0.3 none 0.7052 / digest
+    0.7022 / raw 0.4770 ; twin_disc 0/48 -> 2/48 -> 5/48 ; success 0.984 / 0.950 / 0.645 ; tokens
+    305 / 456 / 1078. TWO READS: memory needs training (digest ~= none) + long context drowns the
+    1.5B (raw -23 reward / -34 pts success; compression thesis HOLDS at the prompted baseline).
+    Honest terminus of the escalation line; caveats: single seed, prompted-only, degenerate
+    policy, memory-independent gate. Evidence: training-corpus/scripts/rl/runs/eval_v04/.
+  - [ ] REMAINING (FROZEN for interview season - the real next test): the TRAINED memory arms
+    (TRAINED arm-1 digest vs TRAINED arm-2 raw = the pre-registered MAIN kill) + the Sonnet
+    reference arm, per the four-arm memory-form matrix (no-memory / structured-digest /
+    raw-long-context / Sonnet) with pre-registered kills; tests what FORM state should take for a
+    small model. The prompted baseline above establishes the capability is NOT free without
+    training. The R6 smart-review tier ("retrieve memory before judging") sharpens its motivation.
+    See `docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md`, D-2026-07-03-002/005, D-2026-07-06-001,
+    D-2026-07-08-001.
 
 SECOND tier:
 

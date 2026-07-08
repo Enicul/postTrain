@@ -1,0 +1,222 @@
+{
+ "memory_mode": "raw",
+ "env_dir": "../../runs/overnight-20260629-v0.6-ai-expanded/curated/kiwi-brain-ai-expanded-v0.1/ladder/escalation_env_v0.4",
+ "seeds_version": "env_seeds_v0.4.json",
+ "split": "test",
+ "n": 121,
+ "scores": {
+  "0.1": {
+   "reward": 0.545,
+   "cost": 0.3402,
+   "success": 0.6452,
+   "gate_recall": 0.3333
+  },
+  "0.3": {
+   "reward": 0.477,
+   "cost": 0.3402,
+   "success": 0.6452,
+   "gate_recall": 0.3333
+  },
+  "0.6": {
+   "reward": 0.375,
+   "cost": 0.3402,
+   "success": 0.6452,
+   "gate_recall": 0.3333
+  }
+ },
+ "twin_pair_discrimination": {
+  "twin_pairs_scored": 48,
+  "twin_pairs_discriminated": 5,
+  "twin_discrimination_rate": 0.1042,
+  "examples": [
+   {
+    "pair": [
+     "v04_8a4285999f7e",
+     "v04_c55c3b5ccef4"
+    ],
+    "query": "英伟达今天多少钱一股了",
+    "plan_a": {
+     "seed": "v04_c55c3b5ccef4",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_8a4285999f7e",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_9e03294657fe",
+     "v04_f7edcfbab59e"
+    ],
+    "query": "帮我看下超微这30天到底跌了多少",
+    "plan_a": {
+     "seed": "v04_f7edcfbab59e",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_9e03294657fe",
+     "first": "cheap",
+     "on_fail": "finish"
+    },
+    "discriminated": true
+   },
+   {
+    "pair": [
+     "v04_033dd0592d7b",
+     "v04_d914cfe6d971"
+    ],
+    "query": "把微软这份财报里的重点数字帮我列一下",
+    "plan_a": {
+     "seed": "v04_d914cfe6d971",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_033dd0592d7b",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_449e46700bb7",
+     "v04_f3e187f22240"
+    ],
+    "query": "AVGO 现在多少钱",
+    "plan_a": {
+     "seed": "v04_f3e187f22240",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_449e46700bb7",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_caa9724ca9e1",
+     "v04_e300f61051cd"
+    ],
+    "query": "我看到有人说某个大客户要自己做芯片了 broadcom 会不会崩",
+    "plan_a": {
+     "seed": "v04_e300f61051cd",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_caa9724ca9e1",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_d9822740112f",
+     "v04_fc688f58ed76"
+    ],
+    "query": "帮我把美光这季报的经营讨论翻译成人话",
+    "plan_a": {
+     "seed": "v04_d9822740112f",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_fc688f58ed76",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_ba18e3853ec5",
+     "v04_f0e6f05dafaa"
+    ],
+    "query": "有人跟我说内存要跌价了 美光是不是要凉",
+    "plan_a": {
+     "seed": "v04_f0e6f05dafaa",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_ba18e3853ec5",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   },
+   {
+    "pair": [
+     "v04_7ff8cbe077f5",
+     "v04_f74f04d9122a"
+    ],
+    "query": "我老是被博主带节奏 你能不能教我以后怎么自己判断这种话真假",
+    "plan_a": {
+     "seed": "v04_f74f04d9122a",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "plan_b": {
+     "seed": "v04_7ff8cbe077f5",
+     "first": "cheap",
+     "on_fail": "escalate"
+    },
+    "discriminated": false
+   }
+  ]
+ },
+ "plan_accuracy": {
+  "overall_plan_accuracy": 0.3058,
+  "per_difficulty_class": {
+   "anaphora": {
+    "n": 26,
+    "plan_accuracy": 0.2692
+   },
+   "cache_cost": {
+    "n": 30,
+    "plan_accuracy": 0.2667
+   },
+   "control": {
+    "n": 21,
+    "plan_accuracy": 0.3333
+   },
+   "position_context": {
+    "n": 30,
+    "plan_accuracy": 0.2333
+   },
+   "stage_dependent": {
+    "n": 14,
+    "plan_accuracy": 0.5714
+   }
+  }
+ },
+ "arm_oracle_gap_lambda0.3": {
+  "lambda": 0.3,
+  "arm_oracle_mean_reward": 0.8219,
+  "policy_mean_reward": 0.477,
+  "oracle_gap": 0.3449
+ },
+ "model": "Qwen/Qwen2.5-1.5B-Instruct",
+ "adapter": null,
+ "loader": "causal",
+ "chat_template": false,
+ "seed": 0,
+ "decode": {
+  "mode": "greedy",
+  "temperature": 0.0,
+  "n_samples": 1
+ },
+ "missing_filled_as_gate": 0,
+ "mean_prompt_tokens": 1077.8,
+ "token_count_method": "tokenizer"
+}

@@ -2,7 +2,7 @@
 
 *The interviewer front door. Start here; every claim links to its evidence.*
 
-Last updated: 2026-07-06 (Round 10 — env v0.4 built: code + 592-seed twin dataset + eval harness; first exam staged, paused for GPU handover).
+Last updated: 2026-07-08 (Round 11 — env v0.4 FIRST EXAM run at the prompted baseline: memory needs training, long context drowns the 1.5B, compression thesis holds; trained arms frozen for interview season).
 
 ---
 
@@ -370,11 +370,23 @@ citation env v2 (D-2026-07-04-002/008).
     discrimination rate** (the headline the oracle-vs-oracle gap deliberately can't capture),
     per-class plan accuracy, arm-appropriate oracle gap, and mean prompt tokens (**raw ≈1091 vs
     digest ≈299 in selftest = the 3.6× context-cost quantified**); CPU selftest green. **(c) The
-    first exam is staged, not yet run:** the three-arm 1.5B × {none, digest, raw} exam on the
-    frozen test-121 was launched then **paused mid-arm-1 to yield GPU 0 to the owner's project**
-    (partial preds discarded, pure eval, nothing lost) — READY-TO-RUN pending the owner's "GPU
-    free" signal. Then the Sonnet reference arm, then training arms per the pre-registered kills.
-    (EXP-2026-07-06-001, F-2026-07-06-001, D-2026-07-06-001, CP-2026-07-06-001.)
+    first exam is RUN (2026-07-08) at the PROMPTED baseline** — the three-arm 1.5B × {none, digest,
+    raw} exam on the frozen test-121 (48 twin pairs, 6 gate seeds, greedy seed 0). Reward @ λ=0.3
+    **none 0.7052 / digest 0.7022 / raw 0.4770**; success **0.984 / 0.950 / 0.645**; twin
+    discrimination **0/48 → 2/48 → 5/48**; prompt tokens **305 / 456 / 1078**. **Two honest reads:**
+    (i) **memory needs training** — structured digest buys ≈zero reward over no-memory and moves
+    twin discrimination only 0% → 4.2%, so the prompted 1.5B barely uses the memory it is handed
+    (the none-arm 0/48 is the correct null — no memory ⇒ identical twin plans by construction);
+    (ii) **long context drowns the small model** — raw (1078 tok) costs **−22.8 pts reward** and
+    **−34 pts success** vs no-memory, so the **compression thesis holds** (pre-registered Kill-2:
+    raw *did* collapse vs digest). *Nuance kept honest:* raw carries the **most** usable memory
+    signal (highest twin discrimination, 10.4%) yet is net strongly negative because it destroys
+    base competence — "more signal, worse outcome" is the drowning mechanism, not a contradiction.
+    This is the **prompted baseline** (it plays the role A1 played on v0.3 — the capability is
+    *not* free at the prompt tier, which motivates training); the **trained memory arms + the
+    Sonnet reference arm are the real pre-registered kill and are frozen for interview season.**
+    (EXP-2026-07-08-001, D-2026-07-08-001, CP-2026-07-08-001; earlier build EXP-2026-07-06-001,
+    F-2026-07-06-001, D-2026-07-06-001, CP-2026-07-06-001.)
 
     *Provenance note (honest flag):* the v0.4 seeds are grown from **synthetic personas** —
     three parallel Opus agents simulated **36 KIWI users** (12 beginner / 12 intermediate /
@@ -427,15 +439,20 @@ on escalation RL only ever optimizes *above* a code-enforced safety floor
   v0.4 (memory-dependent seeds, dynamic cost, twin pairs) is the un-saturated successor. The scale
   curve is a portrait of our hyperparameters, not of the models — stated as a self-correction, not
   a finding about capability.
-- **Env v0.4 is BUILT but NOT YET RUN — no v0.4 arm numbers exist.** The env code, the 592-seed
-  twin dataset (frozen test 121), and the eval harness are committed (`0cecbc0` / `8e197fe` /
-  `1c2e4af`), and the harness CPU selftest passes its mechanism checks — but the first three-arm
-  exam was paused mid-arm-1 to yield GPU 0 to the owner's project, so **there are zero measured
-  v0.4 policy results yet**. The memory-value figures reported so far (digest-oracle 0.8219 vs
-  none-oracle 0.8015 = 0.0204) are **oracle-vs-oracle** and are honestly capped as the
-  anaphora-channel floor; the real twin discrimination is a policy-score phenomenon that only the
-  (not-yet-run) exam will surface. The v0.4 seeds are also **synthetic** (`synthetic_opus_v1`,
-  simulated KIWI personas), not real user logs.
+- **Env v0.4 has only a PROMPTED-ONLY, SINGLE-SEED first exam — the trained arms (the real test)
+  are frozen.** The three-arm 1.5B × {none, digest, raw} exam is now run (2026-07-08,
+  EXP-2026-07-08-001) and yields two directional reads — memory needs training (digest ≈ none) and
+  long context drowns the 1.5B (raw −23 reward / −34 pts success, compression thesis holds — but
+  **at the prompted baseline only**). Caveats we do **not** paper over: **single seed (seed 0,
+  greedy), no error bars**; **prompted-only** — no training arms and no Sonnet reference arm this
+  round (deliberately frozen for interview season), so this is a baseline, **not** the
+  pre-registered main kill (trained arm-2 vs trained arm-1); the **prompted 1.5B policy is
+  degenerate** (mostly cheap → escalate, little plan diversity), which partly explains the low
+  *absolute* twin discrimination; and **gate recall 0.333 is memory-independent** (identical
+  across arms) and low because prompted small models gate poorly (consistent with v0.3 A1). The
+  earlier oracle-vs-oracle memory-value figure (digest-oracle 0.8219 vs none-oracle 0.8015 =
+  0.0204) remains an anaphora-channel floor, not the policy result. The v0.4 seeds are also
+  **synthetic** (`synthetic_opus_v1`, simulated KIWI personas), not real user logs.
 - **GRPO variance isolated, not full-pipeline.** The 3B ×3-seed replication varies the
   GRPO *sampling* seed only (all three init from the same seed-0 3B SFT adapter). A
   full SFT+GRPO seed-varied 3B run (to bound total pipeline variance) is backlog.

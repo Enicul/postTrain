@@ -1,6 +1,32 @@
 # Progress
 
-Last updated: 2026-07-07
+Last updated: 2026-07-08
+
+## Round 11 Wrap-Up: env v0.4 FIRST EXAM RUN (three memory arms, 1.5B prompted) - memory needs training, long context drowns the 1.5B, compression thesis holds (2026-07-08)
+
+The three-arm v0.4 exam that Round 10 staged and paused has RUN at the PROMPTED baseline
+(EXP-2026-07-08-001, D-2026-07-08-001, CP-2026-07-08-001). 1.5B prompted x {none, digest, raw}
+on the frozen test-121, 48 twin pairs, 6 gate seeds, greedy seed 0 (reward @ lambda=0.3):
+
+| arm    | reward@0.3 | success | gate_recall  | twin_discrimination | mean_prompt_tokens |
+| none   | 0.7052     | 0.9839  | 0.333 (2/6)  | 0.0000 (0/48)       | 305                |
+| digest | 0.7022     | 0.9504  | 0.333 (2/6)  | 0.0417 (2/48)       | 456                |
+| raw    | 0.4770     | 0.6452  | 0.333 (2/6)  | 0.1042 (5/48)       | 1078               |
+
+Two honest reads. (1) MEMORY NEEDS TRAINING - structured digest buys ~zero reward over no-memory
+(0.7022 vs 0.7052) and twin discrimination rises only 0% -> 4.2%; the prompted 1.5B barely uses
+the digest. The none-arm 0/48 is the correct null (no memory -> identical twin plans by
+construction). (2) LONG CONTEXT DROWNS SMALL MODELS - raw (1078 tok) costs -22.8 reward and -34
+pts success vs none; the compression thesis is SUPPORTED (pre-registered Kill-2: raw DID collapse
+vs digest). Nuance kept for honesty: raw has the HIGHEST twin discrimination (10.4%) - it carries
+MORE usable signal but destroys base competence, net strongly negative ("more signal, worse
+outcome" = the drowning mechanism). This is the PROMPTED baseline (plays A1's v0.3 role); it
+closes the "exam upgraded" arc with real policy numbers and is the honest CURRENT TERMINUS of the
+escalation line. The TRAINED arms (digest vs raw = the real pre-registered main kill) and the
+Sonnet reference arm stay FROZEN for interview season. Caveats: single seed; prompted-only; the
+prompted 1.5B policy is degenerate (mostly cheap->escalate); gate 0.333 is memory-independent
+(identical across arms) and low because prompted small models gate poorly. Evidence:
+training-corpus/scripts/rl/runs/eval_v04/{none,digest,raw}_test.json + _preds.jsonl + v04_arms.log.
 
 ## Interview-prep addendum: 3-day bootcamp page shipped (2026-07-07)
 

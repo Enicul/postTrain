@@ -1582,7 +1582,7 @@ seed-varied 3B. See EXP-2026-07-04-018/019, D-2026-07-04-013, TODO.
 
 ## CP-2026-07-06-001 - Round 10: env v0.4 BUILT (env code + 592-seed twin dataset + eval harness); first three-arm exam staged then PAUSED for GPU handover to the owner
 
-Status: current
+Status: superseded by CP-2026-07-08-001 (the paused three-arm first exam has now RUN at the prompted baseline: memory needs training, long context drowns 1.5B, compression thesis holds)
 
 ```text
 The env-v0.4 CONSTRUCTION round is complete: three commits landed the successor ruler that
@@ -1678,4 +1678,93 @@ lost. NEXT: on the owner's "GPU free" signal, re-run the three arms (twin-pair d
 rate is the headline) -> Sonnet reference arm -> training arms per pre-registered kills. Plan C
 (no-weights v0.3 control) and citation batch-2 remain queued. Standing rule: the owner's
 workloads preempt ours. See EXP-2026-07-06-001, F-2026-07-06-001, D-2026-07-06-001, TODO.
+```
+
+## CP-2026-07-08-001 - Round 11: env v0.4 FIRST EXAM RUN (three memory arms, 1.5B prompted) - memory needs training, long context drowns the 1.5B, compression thesis holds; the honest current terminus of the escalation line
+
+Status: current
+
+```text
+The paused three-arm v0.4 exam (CP-2026-07-06-001) has RUN at the PROMPTED baseline
+(EXP-2026-07-08-001). 1.5B prompted x {none, digest, raw} on the frozen test-121, 48 twin pairs,
+6 gate seeds, greedy seed 0 (reward @ lambda=0.3):
+  none   reward 0.7052  success 0.9839  gate 0.333(2/6)  twin_disc 0.0000(0/48)  305 tok
+  digest reward 0.7022  success 0.9504  gate 0.333(2/6)  twin_disc 0.0417(2/48)  456 tok
+  raw    reward 0.4770  success 0.6452  gate 0.333(2/6)  twin_disc 0.1042(5/48)  1078 tok
+TWO HONEST READS. (1) MEMORY NEEDS TRAINING: structured digest ~= no-memory on reward (0.7022 vs
+0.7052) and twin disc only 0% -> 4.2% - the prompted 1.5B barely uses the digest. The none-arm
+twin_disc 0/48 is the correct null (no memory -> identical twin plans by construction). (2) LONG
+CONTEXT DROWNS SMALL MODELS: raw (1078 tok) costs -22.8 reward and -34 pts success vs none;
+compression thesis SUPPORTED (pre-registered Kill-2: raw DID collapse vs digest). NUANCE: raw
+has the HIGHEST twin disc (10.4%) - it carries MORE usable signal but destroys base competence,
+net strongly negative ("more signal, worse outcome" = the drowning mechanism). This is the
+PROMPTED baseline (plays A1's v0.3 role); the TRAINED arms are the real pre-registered kill and
+stay FROZEN for interview season. Recorded as the honest CURRENT TERMINUS of the escalation line.
+CAVEATS: single seed; prompted-only; the prompted 1.5B policy is degenerate (mostly
+cheap->escalate, low plan diversity, partly explaining low absolute twin disc); gate 0.333 is
+memory-independent (identical across arms) and low because prompted small models gate poorly.
+```
+
+Repo state:
+
+```text
+HEAD before this checkpoint: 32741b4 (docs: bootcamp v2 + coach-agent guide + interview-readiness).
+This checkpoint commits: EXPERIMENT_LOG EXP-2026-07-08-001, DECISIONS D-2026-07-08-001,
+CHECKPOINTS CP-2026-07-08-001, PROGRESS + TODO updates, docs/PORTFOLIO_INDEX.md refresh, and the
+v0.4 evidence dir runs/eval_v04/ (test.json + preds.jsonl + v04_arms.log; no weights).
+Evidence scanned clean: no hostnames / no /home paths / no keys - no redaction needed.
+```
+
+What is DONE:
+
+```text
+- Env v0.3: SATURATED + RETIRED for top-tier comparisons (frozen historical ruler).
+- Env v0.4 CODE / DATA / EVAL HARNESS: 0cecbc0 / 8e197fe / 1c2e4af (prior rounds).
+- Env v0.4 FIRST EXAM (three memory arms, 1.5B PROMPTED): RUN - EXP-2026-07-08-001. The exam now
+  has real policy numbers, closing the "exam upgraded" arc at the prompted baseline.
+```
+
+What is FROZEN (interview-season scope, the real next test):
+
+```text
+- TRAINED arm-1 (digest) vs TRAINED arm-2 (raw): the pre-registered MAIN kill - NOT run.
+- Sonnet reference arm: NOT run.
+```
+
+What is NEXT (unchanged, frozen):
+
+```text
+1. TRAINED arm-1 (digest) vs TRAINED arm-2 (raw) - the pre-registered main kill.
+2. Then the Sonnet reference arm.
+3. Then the full four-arm memory-form matrix per the pre-registered kills.
+4. Plan C still QUEUED (no-weights v0.3 control). Citation batch-2 still QUEUED.
+```
+
+Evidence paths (postTrain, this repo; weights excluded by .gitignore):
+
+```text
+training-corpus/scripts/rl/runs/eval_v04/none_test.json    + none_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/digest_test.json  + digest_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/raw_test.json     + raw_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/v04_arms.log      (arm headers + token counts)
+training-corpus/scripts/rl/eval_v04.py                     (eval harness; commit 1c2e4af)
+docs/PORTFOLIO_INDEX.md                                    (v0.4 section + honest-limits refreshed)
+EXPERIMENT_LOG.md EXP-2026-07-08-001 ; DECISIONS.md D-2026-07-08-001 ; CHECKPOINTS.md CP-2026-07-08-001
+```
+
+Log ids this round: EXP-2026-07-08-001 (v0.4 three-arm first exam, prompted baseline);
+D-2026-07-08-001 (arc closed at prompted baseline; trained arms frozen; honest terminus);
+CP-2026-07-08-001.
+
+Resume:
+
+```text
+Env v0.4 FIRST EXAM is RUN at the prompted baseline (EXP-2026-07-08-001): 1.5B x {none, digest,
+raw} on frozen test-121. Two honest reads - memory needs training (digest ~= none, twin disc
+0->4.2%) and long context drowns the 1.5B (raw -23 reward / -34 pts success; compression thesis
+holds). This closes the "exam upgraded" arc at the prompted baseline and is the honest CURRENT
+TERMINUS of the escalation line. TRAINED arms (digest vs raw = the real pre-registered kill) and
+the Sonnet reference arm are deliberately FROZEN for interview season. Caveats: single seed,
+prompted-only, degenerate prompted policy, memory-independent gate. NEXT (frozen): trained arm-1
+vs arm-2 -> Sonnet arm -> four-arm matrix. See EXP-2026-07-08-001, D-2026-07-08-001, TODO.
 ```

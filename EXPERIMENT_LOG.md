@@ -3112,3 +3112,108 @@ discrimination rate is the headline metric that the oracle-vs-oracle gap deliber
 capture. First exam LAUNCHED then PAUSED mid-arm-1 for GPU handover to the owner's project
 (READY-TO-RUN, awaiting "GPU free"). See EXP is the dataset; harness commit 1c2e4af;
 D-2026-07-06-001; CP-2026-07-06-001.
+
+## EXP-2026-07-08-001 - Escalation env v0.4 FIRST EXAM (three memory arms, 1.5B PROMPTED baseline): memory needs training, and long context drowns the small model (compression thesis holds at the prompted baseline)
+
+Goal:
+
+Run the env v0.4 three-arm memory exam that CP-2026-07-06-001 staged and paused. Read, at the
+PROMPTED baseline, whether a small model exploits memory when it is handed to it, and in what
+FORM. Three arms over the identical frozen test: `none` (no memory), `digest` (structured
+memory summary), `raw` (full raw history). Headline metric = twin-pair discrimination rate (the
+same query flips its gold when memory changes; a model that only surface-matches cannot flip).
+The prompted baseline plays here the role A1 played on v0.3: it establishes that the new
+capability is NOT free at the prompt tier, which is what MOTIVATES training. The training arms
+are deliberately FROZEN this round (interview-season scope).
+
+Data:
+
+```text
+env: training-corpus/ladder/escalation_env_v0.4 (dataset 8e197fe; frozen test n=121)
+seeds_version: env_seeds_v0.4.json ; split: test ; 48 twin pairs scored ; 6 gate seeds in test
+model: Qwen/Qwen2.5-1.5B-Instruct (PROMPTED, adapter=null, causal loader, no chat template)
+decode: greedy, temperature 0.0, n_samples 1, seed 0 (single seed)
+```
+
+Command:
+
+```text
+# eval harness eval_v04.py (commit 1c2e4af), one pass per arm on the frozen test
+#   memory_mode in {none, digest, raw}; lambda sweep {0.1, 0.3, 0.6}; twin-pair discrimination
+# batch driver / arm log: training-corpus/scripts/rl/runs/eval_v04/v04_arms.log
+```
+
+Artifacts:
+
+```text
+training-corpus/scripts/rl/runs/eval_v04/none_test.json    + none_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/digest_test.json  + digest_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/raw_test.json     + raw_preds.jsonl
+training-corpus/scripts/rl/runs/eval_v04/v04_arms.log      (arm headers + token counts; V04_ARMS_COMPLETE)
+```
+
+Metrics:
+
+```text
+1.5B PROMPTED, frozen test n=121, 48 twin pairs, 6 gate seeds, greedy seed 0 (reward @ lambda=0.3):
+
+| arm    | reward@0.3 | success | gate_recall  | twin_discrimination | mean_prompt_tokens |
+| none   | 0.7052     | 0.9839  | 0.333 (2/6)  | 0.0000 (0/48)       | 305                |
+| digest | 0.7022     | 0.9504  | 0.333 (2/6)  | 0.0417 (2/48)       | 456                |
+| raw    | 0.4770     | 0.6452  | 0.333 (2/6)  | 0.1042 (5/48)       | 1078               |
+
+Full lambda sweep (reward): none 0.8469/0.7052/0.4927 ; digest 0.8236/0.7022/0.5201 ;
+  raw 0.5450/0.4770/0.3750  (lambda = 0.1 / 0.3 / 0.6).
+arm-oracle gap @0.3: none 0.0962 (arm-oracle 0.8015) ; digest 0.1197 (0.8219) ; raw 0.3449 (0.8219).
+per-class plan accuracy (none): anaphora 0.462 / cache_cost 0.500 / control 0.286 /
+  position_context 0.000 / stage_dependent 0.500 ; overall 0.331. (digest 0.314 ; raw 0.306.)
+```
+
+Interpretation:
+
+- FINDING 1 - MEMORY NEEDS TRAINING. Structured `digest` gives ~ZERO reward benefit over
+  `none` (0.7022 vs 0.7052, -0.3 pts) and lifts twin discrimination only 0% -> 4.2% (0/48 ->
+  2/48). The prompted 1.5B barely uses the memory it is handed. The `none`-arm twin_disc = 0/48
+  is a clean sanity check: with no memory the twin pair is identical by construction, so
+  identical plans are the CORRECT null - the harness reads exactly 0, as it must.
+- FINDING 2 - LONG CONTEXT DROWNS SMALL MODELS (the compression thesis, SUPPORTED and
+  mechanistic). `raw` (1078 tok) reward 0.477 (-22.8 pts vs `none`); success crashes
+  0.984 -> 0.645 (-34 pts). NUANCE: `raw` has the HIGHEST twin discrimination (10.4%, 5/48) -
+  the raw history carries MORE usable signal and occasionally flips the twin - but it
+  simultaneously DESTROYS base competence. More signal present, carrier capability collapses,
+  net strongly negative. This quantifies the "drowning" mechanism directly. The structured
+  `digest` (456 tok) AVOIDS the drowning (success stays 0.950) but the prompted 1.5B still
+  can't exploit it (Finding 1).
+- PRE-REGISTERED KILL CONTEXT (docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md). The MAIN kill compares
+  TRAINED arm-2 vs TRAINED arm-1 and is NOT run this round. Kill-2 (compression): "if raw does
+  NOT collapse vs digest, the compression thesis is falsified." Raw DID collapse (-23 reward
+  vs digest, -34 pts success), so the compression thesis is SUPPORTED at the PROMPTED baseline.
+  The trained arms remain the real test and are frozen (interview-season scope).
+
+Failures / honest caveats:
+
+- SINGLE SEED (seed 0, greedy). No error bars; directional read only.
+- PROMPTED-ONLY. No training arms and no Sonnet reference arm this round (deliberately frozen).
+  This is a baseline, not the pre-registered main kill.
+- The prompted 1.5B policy is DEGENERATE: mostly cheap -> escalate regardless of seed (visible
+  in the *_preds.jsonl and the twin examples, where nearly every plan is {cheap, escalate}).
+  That degeneracy partly explains the low ABSOLUTE twin discrimination - there is little plan
+  diversity for memory to move.
+- GATE recall 0.333 (2/6) is MEMORY-INDEPENDENT: identical across all three arms because
+  red-line detection does not need memory. It is low because prompted small models gate poorly -
+  consistent with the v0.3 A1 prompted baseline.
+
+Decision:
+
+The v0.4 first exam COMPLETES the "exam upgraded" arc: the successor ruler now has real policy
+numbers, not just "built." At the prompted baseline the two headline reads land honestly -
+memory is unusable without training (digest ~= none), and long raw context drowns the 1.5B
+(compression thesis holds, -23 reward / -34 pts success). Recorded as the honest CURRENT
+TERMINUS of the escalation line; trained memory arms + the Sonnet reference arm stay frozen for
+interview season. (D-2026-07-08-001, CP-2026-07-08-001.)
+
+Next:
+
+When GPU/scope reopens: TRAINED arm-1 (digest) vs TRAINED arm-2 (raw) - the real pre-registered
+kill - then the Sonnet reference arm. Until then, this prompted three-arm result is the terminus.
+Evidence: runs/eval_v04/{none,digest,raw}_test.json + _preds.jsonl + v04_arms.log.

@@ -1389,3 +1389,42 @@ Consequence:
   policy-vs-oracle comparison meaningful.
 - General rule going forward: prefer mechanical, oracle-derived gold over hand assignment for any
   successor ruler; record conventions as decisions so they can compound downstream.
+
+## D-2026-07-08-001 - env v0.4 FIRST EXAM closes the "exam upgraded" arc at the PROMPTED baseline: memory is unusable without training and the compression thesis holds; trained arms stay frozen (interview-season scope) - the honest current terminus of the escalation line
+
+Decision:
+
+The escalation line's "env solved -> exam upgraded -> exam BUILT" arc is now closed at the
+PROMPTED baseline with real policy numbers (EXP-2026-07-08-001). The three-arm v0.4 exam
+(1.5B prompted x none/digest/raw, frozen test n=121) returns two honest reads: (1) MEMORY IS
+UNUSABLE WITHOUT TRAINING - structured digest buys ~zero reward over no-memory (0.7022 vs
+0.7052) and moves twin discrimination only 0% -> 4.2%; (2) LONG RAW CONTEXT DROWNS THE SMALL
+MODEL - raw (1078 tok) costs -23 reward and -34 pts success vs none, so the compression thesis
+is SUPPORTED (pre-registered Kill-2: raw DID collapse vs digest). We RECORD this as the honest
+CURRENT TERMINUS of the escalation storyline and KEEP the trained memory arms + the Sonnet
+reference arm FROZEN for interview season - they are the real pre-registered kill, not run.
+
+Why:
+
+The prompted baseline plays the role A1 played on v0.3: it demonstrates the new capability is
+NOT free at the prompt tier, which is the empirical motivation for training. Reporting it now
+turns "env v0.4 is BUILT but has zero arm numbers" (the standing honest-limit) into a measured
+result, while refusing to overclaim: the main kill (trained arm-2 vs trained arm-1) is
+deliberately out of scope this season. Closing the arc here - with the caveats stated rather
+than the trained arms rushed - keeps the storyline honest and interview-ready.
+
+Consequence:
+
+- The escalation line has a stated terminus: prompted baseline done, trained arms frozen as the
+  named next-step. PORTFOLIO_INDEX honest-limits updated from "NOT YET RUN / zero v0.4 policy
+  results" to "prompted-only first exam run, single seed, trained arms frozen."
+- The two findings are load-bearing but caveated: single seed; prompted-only; the prompted 1.5B
+  policy is degenerate (mostly cheap->escalate), which partly explains low ABSOLUTE twin
+  discrimination; gate recall 0.333 is memory-independent (identical across arms) and low
+  because prompted small models gate poorly (consistent with v0.3 A1).
+- Nuance preserved for honesty: raw carries the MOST usable memory signal (highest twin disc,
+  10.4%) yet is net strongly negative because it destroys base competence - "more signal, worse
+  outcome" is the mechanism, not a contradiction.
+- Standing next-step (unchanged, frozen): TRAINED arm-1 (digest) vs TRAINED arm-2 (raw) as the
+  pre-registered main kill, then the Sonnet reference arm. See EXP-2026-07-08-001,
+  CP-2026-07-08-001, docs/ESCALATION_ENV_V04_MEMORY_DESIGN.md.
