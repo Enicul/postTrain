@@ -152,6 +152,22 @@
   .uu{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:11px 16px;margin:10px 0}
   .uu b{font-size:14px}
   .uu .why{font-size:12.5px;color:var(--muted);margin:4px 0}
+
+  /* ── story spine ── */
+  .spinechain{background:var(--pine-deep);color:#EDF5F0;border-radius:8px;padding:16px 20px;
+    font-family:var(--disp);font-size:19px;letter-spacing:.06em;text-align:center;margin:14px 0}
+  .spinechain small{display:block;font-family:inherit;font-size:12px;opacity:.75;
+    letter-spacing:.02em;margin-top:6px}
+  .beat{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:14px 18px;margin:12px 0}
+  .beat .anchor{display:inline-block;font-family:var(--disp);font-size:14px;color:#fff;
+    background:var(--pine-deep);border-radius:4px;padding:2px 10px;margin-right:10px;vertical-align:2px}
+  .beat .spine{font-size:15.5px;font-weight:700;line-height:1.55;margin:4px 0 2px}
+  .beat .hooks{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .notebox{width:100%;min-height:60px;border:1px dashed var(--line);border-radius:6px;
+    background:#FCFDFB;padding:8px 10px;font-family:inherit;font-size:13px;
+    margin-top:10px;resize:vertical;box-sizing:border-box;color:var(--ink)}
+  .notebox:focus{outline:2px solid var(--pine);border-color:transparent}
   ul,ol{padding-left:22px;margin:6px 0}
   li{margin:2px 0}
   .footer-note{color:var(--muted);font-size:12.5px;margin-top:40px;border-top:1px solid var(--line);padding-top:12px}
@@ -165,6 +181,7 @@
     </div>
     <nav class="tabs" role="tablist">
       <button class="tabbtn" data-tab="p-ov">总览与弱项</button>
+      <button class="tabbtn" data-tab="p-story">故事主线</button>
       <button class="tabbtn" data-tab="p-d1">Day 1 · 故事+地基</button>
       <button class="tabbtn" data-tab="p-d2">Day 2 · 算法+手撕</button>
       <button class="tabbtn" data-tab="p-d3">Day 3 · 系统+实战</button>
@@ -231,6 +248,67 @@
   </table></div>
 </section>
 
+<!-- ═══════════════ 故事主线 ═══════════════ -->
+<section id="p-story" class="panel">
+  <h2>故事主线 · 六个锚点,只背六句</h2>
+  <p><b>用法</b>:你只需要背下面这条链和每拍的<b>一句主线</b>——总共六句话。展开内容是"面试官挖到这拍时才用的弹药",读熟即可,<b>不背</b>。这就是面试的真实流程:你给短版,他挖哪你开哪。每拍下面有对话框:排练时讲不顺的、自己不信的、怕被打的,随手记;攒够了点底部按钮一键复制发给 Claude,我们迭代叙事。笔记存在浏览器里不会丢。</p>
+
+  <div class="spinechain">撞墙 → 转向 → 恐慌 → 测量 → 翻案 → 纪律
+    <small>开场定位一句:"我在一家金融创业公司,给理财 copilot 训练本地决策模型——起点是一个真实的产品失败,终点是一套判断'训练值不值'的方法。"</small>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">1 撞墙</span></div>
+    <p class="spine">"我们先试了 AI 自主找 alpha 做量化,发现瓶颈不在生成策略、在验证策略——而验证需要人。"</p>
+    <details><summary>展开弹药(被挖时用)</summary><div class="din">2025-10 起点。为什么生成不是优势:策略生成太便宜,拟合了回测的策略和曲线过拟合的噪声分不开(生成上千个总有碰巧好看的 = 多重检验陷阱);市场非平稳、有反身性,边缘一旦被行动就衰减;LLM 在严谨数值推理上不可靠。所以对小团队,可持续优势在<b>验证</b>侧,而验证需要人的判断。</div></details>
+    <p class="hooks">追问预警:"是不是你们不会用 AI?"→ 题库 kq14。⚠️ 永远别说"夕阳产业""随机猜测"。</p>
+    <textarea class="notebox" data-note="s1" placeholder="这一拍我的困惑 / 讲不顺的地方 / 怕被怎么打……"></textarea>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">2 转向</span></div>
+    <p class="spine">"所以转向人在环路的 copilot——让人做决策,AI 蒸馏知识、递送信息;我负责记忆这一层。"</p>
+    <details><summary>展开弹药</summary><div class="din">转向为什么自然:探索自动化时我们实际在做的就是蒸馏自己+专家的领域知识,真正积累的资产是知识+信息优势 → 打包知识+新闻+回测 = KIWI。我的领地:每用户记忆怎么存、个人 agent 的长期记忆、新闻/回测怎么消化才能交互流畅。现状:<b>1000+ 注册、80–90 活跃(含我们自己)</b>——自用优先,我们是第一批用户。</div></details>
+    <p class="hooks">追问预警:"产品做起来了吗?"→ kq16(如实,不吹);"为什么不用 API 调度?"→ 延迟+成本,kq4。</p>
+    <textarea class="notebox" data-note="s2" placeholder="这一拍我的困惑……"></textarea>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">3 恐慌</span></div>
+    <p class="spine">"做产品时发现 agent 决策不稳定——这是涉及钱的产品,我们恐慌了,于是上三重保障:代码红线 + prompt + 后训练。"</p>
+    <details><summary>展开弹药</summary><div class="din">四类事故(必被要求举例):① 引用不存在的来源——长 ID 场景 prompted 伪造率 <b>0.871</b>;② 最恐慌的:用户"2 倍杠杆 SOXL 当对冲",agent 替用户背书("这思路不错")而不是升级人工专家;③ 乱烧钱:同一查询时而秒答时而拉全研究链,成本差一个量级;④ 同结论新闻刷屏轰炸。<b>"交给人"要说精确</b>:三档 = 自动放行 → 智能复核(smart-review)→ <b>人工专家熔断</b>(就是我们蒸馏知识的那批专家)——危险不在"谁决定",在 agent 红线上自作主张哄用户进危险操作。硬约束留代码层,不赌 RL 学会(后来 0.5B collapse 实验证明了这个决定)。</div></details>
+    <p class="hooks">追问预警:"专家档谁做、90 用户撑得住吗?"→ 如实说 early-stage,别吹成 24/7 审核流水线。</p>
+    <textarea class="notebox" data-note="s3" placeholder="这一拍我的困惑……"></textarea>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">4 测量</span></div>
+    <p class="spine">"我把失败当测量问题:每个行为写成可验证奖励的环境,判据事先注册——数据说不值,就不值。"</p>
+    <details><summary>展开弹药</summary><div class="din">环境:真实 KIWI query,首动作三选一(便宜/深挖/熔断),reward = 正确性 − λ×累计成本,漏熔断 −2.0。<b>预注册 kill bar</b>:训练要算数须 &gt;SFT+3pts 且 gate recall 0.99——事先划线,不事后凑。矩阵:{SFT, DPO, GRPO} × {0.5B…7B} × {LoRA, full-FT},每 run 带 manifest(配置+git sha+依赖冻结)。<b>我会停</b>:citation 任务 engineered prompt 过了 kill bar(frontier 0.957),就没做 SFT/GRPO——不为训练而训练。</div></details>
+    <p class="hooks">追问预警:"环境是模拟的吧?"→ 是,但 p 来自盲测集成结果表,kq1;"是不是你 prompt 没写好?"→ kq5。</p>
+    <textarea class="notebox" data-note="s4" placeholder="这一拍我的困惑……"></textarea>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">5 翻案</span></div>
+    <p class="spine">"三个硬结果:3B 三种子零方差命中理论最优;0.5B 崩塌被我诊断成 adapter 容量地板;考卷被考爆——一路上我主动推翻自己五次。"</p>
+    <details><summary>展开弹药</summary><div class="din">① <b>0.8473 / gate 1.000 / std=0 ×3 seeds</b>(3B GRPO-v2)——零方差压在解析天花板上。② collapse 诊断链:组内全违规 55%(1.5B 为 0)→ GRPO 组内优势≈0 → −2.0 惩罚传不出梯度;gate 份额 62.6%→1.9% 灭绝;KL 峰 5.07 vs 健康 0.36;温度探针排除解码伪影;<b>full-FT 同模型不崩 → 翻案:adapter 容量地板,非模型能力地板</b>。③ 7+ 配置命中同一 oracle → v0.3 顶端失去区分度,冻结成历史标尺。五次修正:多 seed 撤头条 / 0.5B 重归因 / 7B lr 平反(0.5079→0.8473)/ AMD_00 仲裁(分母 8→7)/ 饱和升级 v0.4。</div></details>
+    <p class="hooks">追问预警:数字现场验算 → kq2;collapse 全案 → kq6;"失败后调参到好看?"→ kq7。</p>
+    <textarea class="notebox" data-note="s5" placeholder="这一拍我的困惑……"></textarea>
+  </div>
+
+  <div class="beat">
+    <div><span class="anchor">6 纪律</span></div>
+    <p class="spine">"新考卷 v0.4 考记忆,首考给了两条结论:记忆需要训练、长上下文淹死小模型——产品和训练是一个闭环,真正值钱的是这套纪律。"</p>
+    <details><summary>展开弹药</summary><div class="din">v0.4:36 个模拟 KIWI 用户 → <b>592 道孪生题</b>(记忆翻转则答案翻转,不读记忆必错一半)。首考(1.5B prompted 基线,test 121/48 twin):① digest≈none(0.7022 vs 0.7052,twin 判别 0→4.2%)→ <b>记忆利用不是 prompt 白给的,得训进去,训练臂是下一步</b>;② raw(1078 token)twin 判别最高(10.4%)但 success 0.984→0.645(<b>−34pts</b>)→ 长上下文淹死小模型,<b>压缩论点被证实 = 我在产品里"给摘要不给原文 dump"的设计被训练侧独立佐证</b>。收束:值钱的不是数字,是纪律——先划判据、数据淘汰方法、失败如实记账、证据关路就停。产品发现失败,训练把失败变成可测可训的任务再回答它;我产品侧的记忆系统,正是训练侧 v0.4 考的能力。</div></details>
+    <p class="hooks">追问预警:"v0.4 凭什么更难?"→ kq10;"记忆考卷和你产品什么关系?"→ kq17(送分,主动往这引)。</p>
+    <textarea class="notebox" data-note="s6" placeholder="这一拍我的困惑……"></textarea>
+  </div>
+
+  <p><button class="btn" id="copynotes" type="button">📋 复制全部笔记(发给 Claude 迭代故事)</button></p>
+  <p class="hooks">完整口述版在 <code>docs/PROJECT_STORY_FULL_zh.md</code>,背景因果链在 <code>docs/PROJECT_BACKSTORY.md</code>——展开弹药卡壳时回去查。</p>
+</section>
+
 <!-- ═══════════════ DAY 1 ═══════════════ -->
 <section id="p-d1" class="panel" data-day="1">
   <h2>Day 1 · 故事定型 + RL 地基 <span id="d1prog" class="tag"></span></h2>
@@ -246,7 +324,7 @@
     </div></label>
     <label class="task"><input type="checkbox" class="ck" data-k="d1b"><div>
       <b><span class="t">10:00–11:30</span>Pitch 三连:15s → 60s → 3min</b>
-      <p>用 PITCH_3MIN_zh 的稿子,配下面的计时器,每个版本<b>出声</b>练 5 遍。3min 版要能在任何"可被打断点"被打断后自然接住。最后一遍录音回放,听自己的口头禅和卡顿。</p>
+      <p><b>先去「故事主线」标签把六句主线背到脱口而出</b>(撞墙→转向→恐慌→测量→翻案→纪律),再用 PITCH_3MIN_zh 的稿子配下面的计时器,每个版本<b>出声</b>练 5 遍。3min 版要能在任何"可被打断点"被打断后自然接住。最后一遍录音回放,听自己的口头禅和卡顿。练完把讲不顺的地方记进主线页对应拍的对话框。</p>
       <div class="mat">材料:<code>docs/PITCH_3MIN_zh.md</code>(30s 问题+60s 方法+60s 结果+30s 收束)</div>
       <div class="pass">3min 版误差 ±15s 内;15s 电梯版完全脱稿</div>
       <div class="timerbox">
@@ -787,6 +865,43 @@ KL(k3):    E[ exp(Δ) − 1 − Δ ],  Δ = logπ_ref − logπ_θ    (非负,�
     });
   });
   weaklist();
+
+  /* story notes: persist + copy */
+  var LS_NOTES='prep3d-notes';
+  var notes=load(LS_NOTES);
+  var boxes=[].slice.call(document.querySelectorAll('.notebox'));
+  boxes.forEach(function(t){
+    t.value=notes[t.dataset.note]||'';
+    t.addEventListener('input',function(){
+      notes[t.dataset.note]=t.value; save(LS_NOTES,notes);
+    });
+  });
+  var cpBtn=document.getElementById('copynotes');
+  if(cpBtn){
+    cpBtn.addEventListener('click',function(){
+      var out=['故事主线笔记(供迭代叙事):',''];
+      [].slice.call(document.querySelectorAll('.beat')).forEach(function(b){
+        var a=b.querySelector('.anchor').textContent;
+        var s=b.querySelector('.spine').textContent;
+        var n=(b.querySelector('.notebox').value||'').trim();
+        out.push('【'+a+'】'+s);
+        out.push(n?('困惑/问题:'+n):'困惑/问题:(无)');
+        out.push('');
+      });
+      var text=out.join('\n');
+      function ok(){cpBtn.textContent='✅ 已复制——粘贴给 Claude 即可';
+        setTimeout(function(){cpBtn.textContent='📋 复制全部笔记(发给 Claude 迭代故事)'},2500);}
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(ok,function(){fallback()});
+      }else{fallback()}
+      function fallback(){
+        var ta=document.createElement('textarea');ta.value=text;
+        document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');ok()}catch(e){alert('复制失败,请手动全选笔记')}
+        document.body.removeChild(ta);
+      }
+    });
+  }
 
   /* random killer question */
   var draw=document.getElementById('drawbtn');
