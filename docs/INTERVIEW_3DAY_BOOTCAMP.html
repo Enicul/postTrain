@@ -207,7 +207,7 @@
   </div>
 
   <div class="callout warn">
-    <b>两个开考前的加分动作</b>:① <b>v0.4 三臂首考只需 ~15 分钟 GPU</b>(命令在 rl/README,GPU 0 现在空闲)——跑完就把"考卷建好但没跑"这条诚实边界升级成第一批结果,面试故事多出一章;② 面试官也会问 <b>KIWI 产品侧</b>(简历 Block 2)——题库第 13 题是双项目连接的答案骨架,别把它当"另一个项目"。
+    <b>故事已升级(2026-07-08)</b>:① <b>v0.4 三臂首考已跑完</b>——prompted 基线出了两条 headline(记忆需要训练 / 长上下文淹没小模型,压缩论点被证实),"考卷建好但没跑"这条诚实边界作废,换成"prompted 基线已出、训练臂待跑";数字见「数字速查」新卡与 <code>docs/PROJECT_BACKSTORY.md</code>;② 完整产品前传(AI 量化→copilot→记忆系统→三重保障)已写进 <b><code>docs/PROJECT_BACKSTORY.md</code></b>,深挖必读;③ 面试官会问 <b>KIWI 产品侧</b>——题库第 13 题是双项目连接骨架,别把它当"另一个项目"。
   </div>
 
   <h3>我的弱项清单(自动汇总)</h3>
@@ -510,7 +510,7 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
 
 <!-- ═══════════════ 拷打题库 ═══════════════ -->
 <section id="p-kq" class="panel">
-  <h2>拷打题库 · 13 道按致命度排序</h2>
+  <h2>拷打题库 · 17 道按致命度排序</h2>
   <p>红色 = 必杀(答崩基本出局),黄色 = 高频深挖。每道:先自己出声答,再开折叠对照。<b>"别说"清单和"答案"同样重要。</b></p>
   <p><button class="btn" id="drawbtn">🎲 随机抽一题拷我</button></p>
 
@@ -557,7 +557,7 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
 
   <div class="kq" id="kq10"><div class="kqh"><span class="sev amb">高频</span><b>"v0.3 饱和了,你的 v0.4 凭什么更难?怎么防再次饱和?"</b></div>
     <p class="hint">考点:eval 设计能力(前瞻)。注意 v0.4 还没跑,别越界 claim。</p>
-    <details><summary>60 秒安全答案</summary><div class="din">v0.3 饱和的本质是任务被 7+ 配置打到 oracle——考卷区分度归零。v0.4 换轴考"记忆利用":592 seeds、232 <b>孪生对</b>(同表面、记忆内容翻转答案——策略不读记忆就必然错一半,这是结构性防猜);三臂对照 none/digest/raw(raw 1091 token vs digest 299,3.6× 成本差,考"用得起的记忆");动态 cache-age 成本;35 个红线 gate 种子。判据预注册(TRUE-NEED convention),gold 全部由 env oracle 生成、零手标。诚实边界:考卷已建、harness 已过烟测,<b>三臂首考还没跑</b>——我只 claim 设计,不 claim 结果。</div></details></div>
+    <details><summary>60 秒安全答案</summary><div class="din">v0.3 饱和的本质是任务被 7+ 配置打到 oracle——考卷区分度归零。v0.4 换轴考"记忆利用":592 seeds、232 <b>孪生对</b>(同表面、记忆内容翻转答案——策略不读记忆就必然错一半,这是结构性防猜);三臂对照 none/digest/raw;动态 cache-age 成本;35 个红线 gate 种子。判据预注册(TRUE-NEED convention),gold 全部由 env oracle 生成、零手标。<b>首考已跑(1.5B prompted 基线,test 121/48 twin)</b>,两条 headline:① 记忆需要训练——digest 对 none 几乎零增益(0.7022 vs 0.7052,twin 判别 0→4.2%),prompt 阶段用不上记忆;② 长上下文淹没小模型——raw(1078 token)信号最多但 success 崩 -34pts(0.984→0.645),<b>压缩论点被机制性证实</b>。诚实边界:这是 prompted 基线,<b>训练臂是下一步</b>——我 claim 基线发现,不 claim 训练结果。</div></details></div>
 
   <div class="kq" id="kq11"><div class="kqh"><span class="sev amb">高频</span><b>"这模型能上生产吗?并发怎么办?"</b></div>
     <p class="hint">考点:工程落地意识。</p>
@@ -570,7 +570,26 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
   <div class="kq mid" id="kq13"><div class="kqh"><span class="sev amb">高频</span><b>"简历上还有个 Agent 产品(KIWI),它和训练项目什么关系?"</b></div>
     <p class="hint">考点:双项目连接。答不好会显得项目是拼凑的;答好了故事完整度翻倍。</p>
     <details><summary>60 秒安全答案</summary><div class="din">闭环关系——KIWI 发问,postTrain 回答。KIWI 是个人金融研究 copilot 桌面产品:真实痛点是信息洪流(同一结论刷屏式推送),digest 引擎把同结论合并、按 impact 排序、一张卡一键批准;决策记录用 DecisionSnapshot 点时冻结,防事后美化。训练项目的三个任务(escalation 路由 / risk gate / citation 校验)<b>全部来自 KIWI 的真实失败模式</b>;反向,训练侧的部署判决(1.5B full-FT 命中 oracle、红线规则留在代码层)就是 KIWI 本地路由的选型答案。一个是产品侧的问题清单,一个是训练侧的答案清单,中间的管道是"failure → env → frozen eval → 训练/不训练的判决"。</div></details>
-    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别把 KIWI 讲成独立的"第二个项目"(会被追问深度,战线拉太长);别主动深入产品实现细节——被问再展开,主战场保持在 post-training;别 claim 用户量/收入(它是自用优先的产品)。</div></details></div>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别把 KIWI 讲成独立的"第二个项目"(会被追问深度,战线拉太长);别主动深入产品实现细节——被问再展开,主战场保持在 post-training;可如实说 1000+ 注册 / 80–90 活跃,但别 claim 收入。</div></details></div>
+
+  <div class="kq" id="kq14"><div class="kqh"><span class="sev red">必杀</span><b>"你们一开始想让 AI 自主做量化,没做成——是不是你们不会用 AI?"</b></div>
+    <p class="hint">考点:纯 AI 量化失败的技术原因。AI 大厂必问,答"夕阳产业/随机猜测"当场出局。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">我们的结论不是"AI 做不了量化",而是关于瓶颈在哪:对小团队,可持续优势<b>不在生成策略</b>——生成很便宜,而且一个拟合了回测的策略和曲线过拟合的噪声无法区分(生成上千个总有碰巧好看的=多重检验陷阱),市场非平稳有反身性、边缘被行动就衰减,LLM 本身在严谨数值推理上也不可靠。优势<b>在验证策略,而验证需要人的判断</b>。所以我们转向人在环路的 copilot:让人做决策,让 AI 蒸馏知识、递送信息。这个判断直接驱动了后面的一切——人在环路 → 决策不稳定 → 三重保障 → 后训练。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别说"量化是夕阳产业"(Citadel/Two Sigma 创纪录利润,会被击穿)——要narrow成"小团队/散户能拿到的系统性 alpha 在衰减";别说"AI 生成的策略是随机猜测"(显得不懂 ML)——要说"生成便宜、验证是墙"。</div></details></div>
+
+  <div class="kq mid" id="kq15"><div class="kqh"><span class="sev amb">高频</span><b>"你们对用户决策打点收集轨迹——拿这些数据干嘛?"</b></div>
+    <p class="hint">考点:数据伦理(红线)。答错会踩"平台与用户对赌"的伦理雷。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">轨迹打点的已实现用途是<b>决策质量复盘和产品改进</b>:我们用 DecisionSnapshot 在决策发生的当下冻结上下文,防止事后美化,这样能回看系统在哪个决策点出错、为什么错——这也正是把产品失败转成可训练任务的来源。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">绝不主动提"收集用户决策以反向大众做交易"——这是伦理红旗(front-running 既视感),Anthropic 尤其致命。若被直接追问:那是内部研究假设、<b>从未上线实施</b>(事实如此),已实现的只有决策质量复盘。</div></details></div>
+
+  <div class="kq mid" id="kq16"><div class="kqh"><span class="sev amb">高频</span><b>"1000 注册但只有 80 个活跃,产品是不是没做起来?"</b></div>
+    <p class="hint">考点:商业现状。诚实 + 不心虚。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">还早期,如实说:1000+ 注册、80–90 在活跃使用,包括我们自己。KIWI 的设计哲学本来就是<b>自用优先</b>——我们是自己的第一批用户,产品先解决我们真实的研究痛点(信息洪流、决策不稳定),再外扩。真实用户 + 真实金融场景恰恰是这些训练任务有产品根基、不是拍脑袋造的证据。</div></details>
+    <details class="warn"><summary>⚠️ 别说</summary><div class="din">别吹留存/收入/增长曲线;别为激活率找借口——承认早期比粉饰强。</div></details></div>
+
+  <div class="kq mid" id="kq17"><div class="kqh"><span class="sev amb">送分</span><b>"记忆系统是你在产品里做的,那 postTrain 的 v0.4 记忆考卷和它什么关系?"</b></div>
+    <p class="hint">考点:产品↔训练闭环。这是送分题,主动往这引。</p>
+    <details><summary>60 秒安全答案</summary><div class="din">同一个问题的两端。产品侧我负责用户的长期记忆怎么存、新闻/回测信息怎么消化;训练侧 v0.4 考卷考的正是"策略到底用不用记忆"——孪生对设计:同一问题、记忆内容翻转则正确答案翻转,不读记忆就必然错一半。首考还给了产品直接佐证:raw 原文 dump(1078 token)把 1.5B 的 success 从 0.984 砸到 0.645,而 digest(456 token)几乎不掉——这正是我们产品里"给摘要不给原文 dump"的设计,被训练侧独立证明了。</div></details></div>
 </section>
 
 <!-- ═══════════════ UNKNOWN UNKNOWNS ═══════════════ -->
@@ -654,7 +673,8 @@ x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + eps) * weight
     <div class="card3d"><div class="c3in"><div class="cf">ID 泄漏事故的量化?</div><div class="cb">sample_id 带 label:0.942 → 匿名化:0.826,虚高 +11.6 pts</div></div></div>
     <div class="card3d"><div class="c3in"><div class="cf">judge 校准两个一致率?</div><div class="cb">citation 双盲 98.5% · risk 双盲 100% · 泄漏 0 条</div></div></div>
     <div class="card3d"><div class="c3in"><div class="cf">AMD_00 裁决改了什么?</div><div class="cb">human-gate → smart-review 层;test gate 分母 8→7;旧 checkpoint 全部 rescore</div></div></div>
-    <div class="card3d"><div class="c3in"><div class="cf">v0.4 考卷结构?</div><div class="cb">592 seeds · 232 孪生对 · train/dev/test 350/121/121 冻结 · 35 红线 gate · digest 299 vs raw 1091 token (3.6×)</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">v0.4 考卷结构?</div><div class="cb">592 seeds · 232 孪生对 · train/dev/test 350/121/121 冻结 · 35 红线 gate · gold 全由 env oracle 生成</div></div></div>
+    <div class="card3d"><div class="c3in"><div class="cf">v0.4 首考两条 headline(1.5B prompted)?</div><div class="cb">① 记忆需训练:digest≈none(0.7022 vs 0.7052,twin 0→4.2%) ② raw 淹没:success 0.984→0.645(-34pts),twin 判别 10.4% 最高但决策更差 → 压缩论点成立</div></div></div>
     <div class="card3d"><div class="c3in"><div class="cf">RL 增量的任务相关性?</div><div class="cb">escalation 1.5B +4.9 · 3B +0.45(近天花板) · citation +0.0(瓶颈在数据)</div></div></div>
     <div class="card3d"><div class="c3in"><div class="cf">便宜 API 为什么不够(RL phase-2 动机)?</div><div class="cb">frontier 接近 oracle,但 Haiku 掉 12.6 reward pts、gate recall 掉到 0.80 → 高频决策适合本地小模型</div></div></div>
   </div>
